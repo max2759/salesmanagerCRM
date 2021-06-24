@@ -54,7 +54,6 @@
     </welcome-file-list>
 
 
-
     <filter>
         <filter-name>ShiroFilter</filter-name>
         <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
@@ -68,8 +67,6 @@
     <dispatcher>INCLUDE</dispatcher>
     <dispatcher>ERROR</dispatcher>
     </filter-mapping>
-
-
 
 
 </web-app>
