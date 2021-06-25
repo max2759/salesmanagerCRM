@@ -1,6 +1,6 @@
 package be.atc.salesmanagercrm.utils;
 
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -14,11 +14,10 @@ import java.util.*;
  *
  * @author Renaud DIANA
  */
+@Slf4j
 public class EntityFinderImpl<T> implements EntityFinder<T>, Serializable {
 
     private static final long serialVersionUID = 1L;
-    // Log4j
-    private static Logger log = Logger.getLogger(EntityFinderImpl.class);
 
     /**
      * Default constructor
@@ -131,7 +130,7 @@ public class EntityFinderImpl<T> implements EntityFinder<T>, Serializable {
         Iterator<Map.Entry<K, V>> itr = entries.iterator();
         while (itr.hasNext()) {
             Map.Entry<K, V> entry = itr.next();
-            if ((boolean) entry.getKey().toString().toLowerCase().contains("date"))
+            if (entry.getKey().toString().toLowerCase().contains("date"))
                 query.setParameter((String) entry.getKey(), (Date) entry.getValue(), TemporalType.DATE);
             else
                 query.setParameter((String) entry.getKey(), entry.getValue());
