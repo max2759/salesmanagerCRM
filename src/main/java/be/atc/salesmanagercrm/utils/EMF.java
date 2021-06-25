@@ -4,6 +4,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import static be.atc.salesmanagercrm.utils.Constants.PERSISTENCE_UNIT_NAME;
+
 /**
  * Class to get a connection to the database
  *
@@ -11,8 +13,8 @@ import javax.persistence.Persistence;
  */
 public final class EMF {
 
-    private static EntityManagerFactory emfInstance =
-            Persistence.createEntityManagerFactory("locacarjsf");
+    private static final EntityManagerFactory emfInstance =
+            Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 
     private EMF() {
     }
