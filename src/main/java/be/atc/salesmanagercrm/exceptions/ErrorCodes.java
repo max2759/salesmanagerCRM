@@ -1,0 +1,49 @@
+package be.atc.salesmanagercrm.exceptions;
+
+public enum ErrorCodes {
+
+    USER_NOT_FOUND(1000),
+    USER_NOT_VALID(1001),
+
+    CONTACT_NOT_FOUND(2000),
+    CONTACT_NOT_VALID(2001),
+
+    COMPAGNY_NOT_FOUND(3000),
+    COMPAGNY_NOT_VALID(3001),
+
+    NOTE_NOT_FOUND(4000),
+    NOTE_NOT_VALID(4001),
+
+    TASK_NOT_FOUND(5000),
+    TASK_NOT_VALID(5001),
+
+    TASKTYPE_NOT_FOUND(6000),
+    TASKTYPE_NOT_VALID(6001),
+
+    TRANSACTION_NOT_FOUND(7000),
+    TRANSACTION_NOT_VALID(7001),
+
+    TRANSACTIONTYPE_NOT_FOUND(8000),
+    TRANSACTIONTYPE_NOT_VALID(8001),
+
+    TRANSACTIONPHASE_NOT_FOUND(9000),
+    TRANSACTIONPHASE_NOT_VALID(9001),
+
+    VOUCHER_NOT_FOUND(10000),
+    VOUCHER_NOT_VALID(10001),
+
+    VOUCHERSTATUS_NOT_FOUND(11000),
+    VOUCHERSTATUS_NOT_VALID(11001),
+
+    ;
+
+    private final int code;
+
+    ErrorCodes(int code) {
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
+    }
+}

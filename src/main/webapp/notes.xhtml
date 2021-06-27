@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">#{bundle['notes.title']}</ui:define>
+    <ui:define name="content">
+
+        <f:metadata>
+            <f:viewAction action="#{notesBean.createNewEntity}"/>
+        </f:metadata>
+        <h:body>
+            <h1>Notes</h1>
+            <h:form>
+
+                <h3>Création d'une note</h3>
+
+                <div>
+                    <h:outputLabel>Message : </h:outputLabel>
+                    <h:inputTextarea value="#{notesBean.entity.message}"></h:inputTextarea>
+                </div>
+                <h:commandButton value="Valider"
+                                 action="#{notesBean.save}"
+                >
+                </h:commandButton>
+
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
