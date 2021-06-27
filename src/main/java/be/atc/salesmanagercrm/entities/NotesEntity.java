@@ -6,6 +6,12 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "notes", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "Notes.findNotesEntityByContactsByIdContacts", query = "select n from NotesEntity n where n.contactsByIdContacts.id = :id"),
+        @NamedQuery(name = "Notes.findNotesEntityByCompaniesByIdCompanies", query = "select n from NotesEntity n where n.companiesByIdCompanies.id = :id"),
+        @NamedQuery(name = "Notes.findAll", query = "SELECT n from NotesEntity n"),
+
+})
 public class NotesEntity {
     private int id;
     private LocalDateTime creationDate;

@@ -10,18 +10,18 @@ import java.util.List;
  */
 public interface NotesDao {
 
-    void save(NotesEntity entity, EntityManager em);
+    void save(EntityManager em, NotesEntity entity);
 
-    NotesEntity findById(int id);
+    NotesEntity findById(EntityManager em, int id);
 
-    List<NotesEntity> findNotesEntityByContactsByIdContacts(int id);
+    List<NotesEntity> findNotesEntityByContactsByIdContacts(EntityManager em, int id);
 
-    List<NotesEntity> findNotesEntityByCompagniesByIdCompagnies(int id);
+    List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(EntityManager em, int id);
 
     List<NotesEntity> findAll();
 
-    void delete(int id);
+    void delete(EntityManager em, NotesEntity entity);
 
-    void update(NotesEntity entity);
+    void update(EntityManager em, NotesEntity entity);
 
 }
