@@ -84,7 +84,7 @@ public class CheckEntities implements Serializable {
             UsersEntity usersEntity = usersDao.findById(em, entity.getId());
             if (usersEntity == null) {
                 log.warn("User with ID {} was not found in the DB", entity.getId());
-                throw new InvalidEntityException(
+                throw new EntityNotFoundException(
                         "Aucun utilisateur avec l ID " + entity.getId() + " n a ete trouve dans la BDD", ErrorCodes.USER_NOT_FOUND
                 );
             }
