@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -25,7 +25,7 @@ import java.util.Optional;
 
 @Slf4j
 @Named(value = "notesBean")
-@SessionScoped
+@RequestScoped
 public class NotesBean implements Serializable {
 
     private static final long serialVersionUID = -2338626292552177485L;
@@ -38,7 +38,7 @@ public class NotesBean implements Serializable {
     private UsersEntity usersEntity = new UsersEntity();
     @Getter
     @Setter
-    private NotesEntity entity;
+    private NotesEntity notesEntity;
 
 
     /**
@@ -60,6 +60,9 @@ public class NotesBean implements Serializable {
         try {
             checkEntities.checkUser(entity.getUsersByIdUsers());
         } catch (InvalidEntityException exception) {
+            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            return;
+        } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         }
@@ -216,6 +219,11 @@ public class NotesBean implements Serializable {
         }
     }
 
+    /**
+     * Update NoteEntity
+     *
+     * @param entity NoteEntity
+     */
     protected void update(NotesEntity entity) {
 
         try {
@@ -255,7 +263,6 @@ public class NotesBean implements Serializable {
         }
 
     }
-
 
     /**
      * Validate Note !
