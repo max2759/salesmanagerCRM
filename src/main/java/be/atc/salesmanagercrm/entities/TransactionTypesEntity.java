@@ -12,6 +12,7 @@ public class TransactionTypesEntity {
     private Collection<TransactionsEntity> transactionsById;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -22,7 +23,7 @@ public class TransactionTypesEntity {
     }
 
     @Basic
-    @Column(name = "Label")
+    @Column(name = "Label", nullable = false)
     public String getLabel() {
         return label;
     }

@@ -11,6 +11,7 @@ public class CompaniesContactsEntity {
     private ContactsEntity contactsByIdContacts;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;

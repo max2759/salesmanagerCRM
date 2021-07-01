@@ -21,6 +21,7 @@ public class NotesEntity {
     private CompaniesEntity companiesByIdCompanies;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -31,7 +32,7 @@ public class NotesEntity {
     }
 
     @Basic
-    @Column(name = "Creation_Date")
+    @Column(name = "Creation_Date", nullable = false)
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
@@ -41,7 +42,7 @@ public class NotesEntity {
     }
 
     @Basic
-    @Column(name = "Message")
+    @Column(name = "Message", nullable = false)
     public String getMessage() {
         return message;
     }

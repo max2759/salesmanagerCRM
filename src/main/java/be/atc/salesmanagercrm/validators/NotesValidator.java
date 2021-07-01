@@ -1,6 +1,7 @@
 package be.atc.salesmanagercrm.validators;
 
 import be.atc.salesmanagercrm.entities.NotesEntity;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -10,6 +11,7 @@ import javax.faces.validator.ValidatorException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @FacesValidator("notesValidator")
 public class NotesValidator implements Validator {
 
@@ -27,6 +29,11 @@ public class NotesValidator implements Validator {
         if (entity.getMessage() == null || entity.getMessage().isEmpty()) {
             errors.add("Veuillez renseigner un message dans votre note");
         }
+
+        CheckEntitiesValidator checkEntitiesValidator = new CheckEntitiesValidator();
+
+        checkEntitiesValidator.checkUser(entity.getUsersByIdUsers());
+
 
         return errors;
     }

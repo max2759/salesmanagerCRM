@@ -1,4 +1,4 @@
-package be.atc.salesmanagercrm.beans;
+package be.atc.salesmanagercrm.validators;
 
 import be.atc.salesmanagercrm.dao.CompaniesDao;
 import be.atc.salesmanagercrm.dao.ContactsDao;
@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 @Slf4j
 @SessionScoped
-public class CheckEntities implements Serializable {
+public class CheckEntitiesValidator implements Serializable {
 
     private static final long serialVersionUID = -6795998607327751632L;
 

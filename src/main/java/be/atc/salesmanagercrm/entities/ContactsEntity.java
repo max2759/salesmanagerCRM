@@ -30,6 +30,7 @@ public class ContactsEntity {
     private Collection<VouchersEntity> vouchersById;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -40,7 +41,7 @@ public class ContactsEntity {
     }
 
     @Basic
-    @Column(name = "Lastname")
+    @Column(name = "Lastname", nullable = false)
     public String getLastname() {
         return lastname;
     }
@@ -50,7 +51,7 @@ public class ContactsEntity {
     }
 
     @Basic
-    @Column(name = "Firstname")
+    @Column(name = "Firstname", nullable = false)
     public String getFirstname() {
         return firstname;
     }
@@ -80,7 +81,7 @@ public class ContactsEntity {
     }
 
     @Basic
-    @Column(name = "Register_Date")
+    @Column(name = "Register_Date", nullable = false)
     public LocalDateTime getRegisterDate() {
         return registerDate;
     }
@@ -110,7 +111,7 @@ public class ContactsEntity {
     }
 
     @Basic
-    @Column(name = "IsActive")
+    @Column(name = "IsActive", nullable = false)
     public boolean isActive() {
         return isActive;
     }
