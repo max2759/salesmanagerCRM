@@ -30,11 +30,6 @@ public class NotesValidator implements Validator {
             errors.add("Veuillez renseigner un message dans votre note");
         }
 
-        CheckEntitiesValidator checkEntitiesValidator = new CheckEntitiesValidator();
-
-        checkEntitiesValidator.checkUser(entity.getUsersByIdUsers());
-
-
         return errors;
     }
 

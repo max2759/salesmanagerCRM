@@ -14,31 +14,41 @@ public class TasksDaoImpl extends EntityFinderImpl<TasksEntity> implements Tasks
     }
 
     @Override
-    public TasksEntity findById(EntityManager em, int id) {
-        return em.find(TasksEntity.class, id);
+    public TasksEntity findById(EntityManager em, int id, int idUser) {
+        return em.createNamedQuery("Tasks.findById",
+                TasksEntity.class)
+                .setParameter("id", id)
+                .setParameter("idUser", idUser)
+                .getSingleResult();
     }
 
     @Override
-    public List<TasksEntity> findTasksEntityByContactsByIdContacts(EntityManager em, int id) {
+    public List<TasksEntity> findTasksEntityByContactsByIdContacts(EntityManager em, int id, int idUser) {
 
         return em.createNamedQuery("Tasks.findTasksEntityByContactsByIdContacts",
                 TasksEntity.class)
                 .setParameter("id", id)
+                .setParameter("idUser", idUser)
                 .getResultList();
     }
 
     @Override
-    public List<TasksEntity> findTasksEntityByCompaniesByIdCompanies(EntityManager em, int id) {
+    public List<TasksEntity> findTasksEntityByCompaniesByIdCompanies(EntityManager em, int id, int idUser) {
 
         return em.createNamedQuery("Tasks.findTasksEntityByCompaniesByIdCompanies",
                 TasksEntity.class)
                 .setParameter("id", id)
+                .setParameter("idUser", idUser)
                 .getResultList();
     }
 
     @Override
-    public List<TasksEntity> findAll() {
-        return this.findByNamedQuery("Tasks.findAll", new TasksEntity());
+    public List<TasksEntity> findAll(EntityManager em, int idUser) {
+
+        return em.createNamedQuery("Tasks.findAll",
+                TasksEntity.class)
+                .setParameter("idUser", idUser)
+                .getResultList();
     }
 
     @Override

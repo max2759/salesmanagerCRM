@@ -12,13 +12,13 @@ public interface NotesDao {
 
     void save(EntityManager em, NotesEntity entity);
 
-    NotesEntity findById(EntityManager em, int id);
+    NotesEntity findById(EntityManager em, int id, int idUser);
 
-    List<NotesEntity> findNotesEntityByContactsByIdContacts(EntityManager em, int id);
+    List<NotesEntity> findNotesEntityByContactsByIdContacts(EntityManager em, int id, int idUser);
 
-    List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(EntityManager em, int id);
+    List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(EntityManager em, int id, int idUser);
 
-    List<NotesEntity> findAll();
+    List<NotesEntity> findAll(EntityManager em, int idUser);
 
     void delete(EntityManager em, NotesEntity entity);
 

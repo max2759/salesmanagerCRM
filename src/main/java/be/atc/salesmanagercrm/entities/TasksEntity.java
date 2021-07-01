@@ -9,9 +9,10 @@ import java.util.Objects;
 @Entity
 @Table(name = "tasks", schema = "salesmanagercrm")
 @NamedQueries({
-        @NamedQuery(name = "Tasks.findTasksEntityByContactsByIdContacts", query = "select t from TasksEntity t where t.contactsByIdContacts.id = :id"),
-        @NamedQuery(name = "Tasks.findTasksEntityByCompaniesByIdCompanies", query = "select t  from TasksEntity t where t.companiesByIdCompanies.id = :id"),
-        @NamedQuery(name = "Tasks.findAll", query = "SELECT n from NotesEntity n"),
+        @NamedQuery(name = "Tasks.findTasksEntityByContactsByIdContacts", query = "select t from TasksEntity t where (t.contactsByIdContacts.id = :id and t.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Tasks.findTasksEntityByCompaniesByIdCompanies", query = "select t from TasksEntity t where (t.companiesByIdCompanies.id = :id and t.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Tasks.findAll", query = "SELECT t from TasksEntity t where t.usersByIdUsers.id = :idUser"),
+        @NamedQuery(name = "Tasks.findById", query = "SELECT t from TasksEntity t where (t.id = :id and t.usersByIdUsers.id = :idUser)"),
 
 })
 
