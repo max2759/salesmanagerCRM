@@ -17,31 +17,40 @@ public class NotesDaoImpl extends EntityFinderImpl<NotesEntity> implements Notes
     }
 
     @Override
-    public NotesEntity findById(EntityManager em, int id) {
-        return em.find(NotesEntity.class, id);
+    public NotesEntity findById(EntityManager em, int id, int idUser) {
+        return em.createNamedQuery("Notes.findById",
+                NotesEntity.class)
+                .setParameter("id", id)
+                .setParameter("idUser", idUser)
+                .getSingleResult();
     }
 
     @Override
-    public List<NotesEntity> findNotesEntityByContactsByIdContacts(EntityManager em, int id) {
+    public List<NotesEntity> findNotesEntityByContactsByIdContacts(EntityManager em, int id, int idUser) {
 
         return em.createNamedQuery("Notes.findNotesEntityByContactsByIdContacts",
                 NotesEntity.class)
                 .setParameter("id", id)
+                .setParameter("idUser", idUser)
                 .getResultList();
     }
 
     @Override
-    public List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(EntityManager em, int id) {
+    public List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(EntityManager em, int id, int idUser) {
 
         return em.createNamedQuery("Notes.findNotesEntityByCompaniesByIdCompanies",
                 NotesEntity.class)
                 .setParameter("id", id)
+                .setParameter("idUser", idUser)
                 .getResultList();
     }
 
     @Override
-    public List<NotesEntity> findAll() {
-        return this.findByNamedQuery("Notes.findAll", new NotesEntity());
+    public List<NotesEntity> findAll(EntityManager em, int idUser) {
+        return em.createNamedQuery("Notes.findAll",
+                NotesEntity.class)
+                .setParameter("idUser", idUser)
+                .getResultList();
     }
 
     @Override

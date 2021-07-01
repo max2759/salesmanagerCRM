@@ -5,7 +5,7 @@ import lombok.Getter;
 public class InvalidOperationException extends RuntimeException {
 
     @Getter
-    private ErrorCodes errorCode;
+    private ErrorCodes errorCodes;
 
     public InvalidOperationException(String message) {
         super(message);
@@ -15,13 +15,13 @@ public class InvalidOperationException extends RuntimeException {
         super(message, cause);
     }
 
-    public InvalidOperationException(String message, Throwable cause, ErrorCodes errorCode) {
+    public InvalidOperationException(String message, Throwable cause, ErrorCodes errorCodes) {
         super(message, cause);
-        this.errorCode = errorCode;
+        this.errorCodes = errorCodes;
     }
 
-    public InvalidOperationException(String message, ErrorCodes errorCode) {
+    public InvalidOperationException(String message, ErrorCodes errorCodes) {
         super(message);
-        this.errorCode = errorCode;
+        this.errorCodes = errorCodes;
     }
 }

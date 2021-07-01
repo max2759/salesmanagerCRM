@@ -118,5 +118,4 @@ public class CheckEntities implements Serializable {
             }
         }
     }
-
 }
