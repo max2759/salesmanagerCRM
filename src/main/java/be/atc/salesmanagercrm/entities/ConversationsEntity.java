@@ -14,6 +14,7 @@ public class ConversationsEntity {
     private UsersEntity usersByIdUsers;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -24,7 +25,7 @@ public class ConversationsEntity {
     }
 
     @Basic
-    @Column(name = "Creation_Date")
+    @Column(name = "Creation_Date", nullable = false)
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
@@ -34,7 +35,7 @@ public class ConversationsEntity {
     }
 
     @Basic
-    @Column(name = "Message")
+    @Column(name = "Message", nullable = false)
     public String getMessage() {
         return message;
     }
@@ -44,7 +45,7 @@ public class ConversationsEntity {
     }
 
     @Basic
-    @Column(name = "IsActive")
+    @Column(name = "IsActive", nullable = false)
     public boolean isActive() {
         return isActive;
     }

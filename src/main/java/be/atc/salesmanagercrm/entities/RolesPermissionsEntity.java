@@ -11,6 +11,7 @@ public class RolesPermissionsEntity {
     private PermissionsEntity permissionsByIdPermissions;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;

@@ -12,6 +12,7 @@ public class JobTitlesEntity {
     private Collection<ContactsEntity> contactsById;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -22,7 +23,7 @@ public class JobTitlesEntity {
     }
 
     @Basic
-    @Column(name = "Label")
+    @Column(name = "Label", nullable = false)
     public String getLabel() {
         return label;
     }

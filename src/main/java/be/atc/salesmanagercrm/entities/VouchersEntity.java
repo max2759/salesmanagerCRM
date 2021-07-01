@@ -23,6 +23,7 @@ public class VouchersEntity {
     private VoucherStatusEntity voucherStatusByIdVoucherStatus;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -33,7 +34,7 @@ public class VouchersEntity {
     }
 
     @Basic
-    @Column(name = "Title")
+    @Column(name = "Title", nullable = false)
     public String getTitle() {
         return title;
     }
@@ -52,6 +53,7 @@ public class VouchersEntity {
         this.description = description;
     }
 
+    @Enumerated(EnumType.STRING)
     @Basic
     @Column(name = "Priority")
     public EnumPriority getPriority() {
@@ -63,7 +65,7 @@ public class VouchersEntity {
     }
 
     @Basic
-    @Column(name = "Creation_Date")
+    @Column(name = "Creation_Date", nullable = false)
     public LocalDateTime getCreationDate() {
         return creationDate;
     }

@@ -19,13 +19,14 @@ import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Named(value = "tasksBean")
 @RequestScoped
 public class TasksBean implements Serializable {
 
-    private static final long serialVersionUID = -7131593542829187292L;
+    private static final long serialVersionUID = 8865671023396118126L;
 
     @Getter
     @Setter
@@ -46,7 +47,7 @@ public class TasksBean implements Serializable {
         try {
             validateTask(entity);
         } catch (InvalidEntityException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
 
@@ -55,10 +56,10 @@ public class TasksBean implements Serializable {
         try {
             checkEntities.checkUser(entity.getUsersByIdUsers());
         } catch (InvalidEntityException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         } catch (EntityNotFoundException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         }
 
@@ -66,7 +67,7 @@ public class TasksBean implements Serializable {
             try {
                 checkEntities.checkContact(entity.getContactsByIdContacts());
             } catch (EntityNotFoundException exception) {
-                log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 return;
             }
         }
@@ -75,7 +76,7 @@ public class TasksBean implements Serializable {
             try {
                 checkEntities.checkCompany(entity.getCompaniesByIdCompanies());
             } catch (EntityNotFoundException exception) {
-                log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 return;
             }
         }
@@ -84,7 +85,7 @@ public class TasksBean implements Serializable {
             try {
                 checkEntities.checkTaskType(entity.getTaskTypesByIdTaskTypes());
             } catch (EntityNotFoundException exception) {
-                log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 return;
             }
         }
@@ -93,7 +94,7 @@ public class TasksBean implements Serializable {
             try {
                 validateTaskDateEnd(entity);
             } catch (InvalidEntityException exception) {
-                log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             }
         }
 
@@ -117,6 +118,28 @@ public class TasksBean implements Serializable {
         }
     }
 
+    /**
+     * Find Task by ID
+     *
+     * @param id TasksEntity
+     * @return Task Entity
+     */
+    protected TasksEntity findById(int id) {
+        if (id == 0) {
+            log.error("Task ID is null");
+            return null;
+        }
+
+        EntityManager em = EMF.getEM();
+        Optional<TasksEntity> optionalTasksEntity = Optional.ofNullable(dao.findById(em, id));
+        em.clear();
+        em.close();
+        return optionalTasksEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucune tâche avec l'ID " + id + " n a ete trouve dans la BDD",
+                        ErrorCodes.TASK_NOT_FOUND
+                ));
+    }
 
     /**
      * Validate Task !

@@ -12,6 +12,7 @@ public class TaskTypesEntity {
     private Collection<TasksEntity> tasksById;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -22,7 +23,7 @@ public class TaskTypesEntity {
     }
 
     @Basic
-    @Column(name = "Label")
+    @Column(name = "Label", nullable = false)
     public String getLabel() {
         return label;
     }
