@@ -13,6 +13,7 @@ public class TransactionHistoriesEntity {
     private TransactionPhasesEntity transactionPhasesByIdTransactionPhases;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -23,7 +24,7 @@ public class TransactionHistoriesEntity {
     }
 
     @Basic
-    @Column(name = "Save_Date")
+    @Column(name = "Save_Date", nullable = false)
     public LocalDateTime getSaveDate() {
         return saveDate;
     }

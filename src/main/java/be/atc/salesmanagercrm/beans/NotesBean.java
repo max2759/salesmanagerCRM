@@ -51,7 +51,7 @@ public class NotesBean implements Serializable {
         try {
             validateNote(entity);
         } catch (InvalidEntityException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
 
@@ -60,10 +60,10 @@ public class NotesBean implements Serializable {
         try {
             checkEntities.checkUser(entity.getUsersByIdUsers());
         } catch (InvalidEntityException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         } catch (EntityNotFoundException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         }
 
@@ -71,7 +71,7 @@ public class NotesBean implements Serializable {
             try {
                 checkEntities.checkContact(entity.getContactsByIdContacts());
             } catch (EntityNotFoundException exception) {
-                log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 return;
             }
         }
@@ -80,7 +80,7 @@ public class NotesBean implements Serializable {
             try {
                 checkEntities.checkCompany(entity.getCompaniesByIdCompanies());
             } catch (EntityNotFoundException exception) {
-                log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 return;
             }
         }
@@ -117,12 +117,12 @@ public class NotesBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        Optional<NotesEntity> notesEntity = Optional.ofNullable(dao.findById(em, id));
+        Optional<NotesEntity> optionalNotesEntity = Optional.ofNullable(dao.findById(em, id));
         em.clear();
         em.close();
-        return notesEntity.orElseThrow(() ->
+        return optionalNotesEntity.orElseThrow(() ->
                 new EntityNotFoundException(
-                        "Aucune Note avec l'ID = " + id + " n a ete trouvee dans la BDD",
+                        "Aucune Note avec l ID " + id + " n a ete trouvee dans la BDD",
                         ErrorCodes.NOTE_NOT_FOUND
                 ));
     }
@@ -196,7 +196,7 @@ public class NotesBean implements Serializable {
         try {
             notesEntity = findById(id);
         } catch (EntityNotFoundException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         }
 
@@ -229,7 +229,7 @@ public class NotesBean implements Serializable {
         try {
             validateNote(entity);
         } catch (InvalidEntityException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         }
 
@@ -237,7 +237,7 @@ public class NotesBean implements Serializable {
             NotesEntity notesEntity = findById(entity.getId());
             entity.setCreationDate(notesEntity.getCreationDate());
         } catch (EntityNotFoundException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         }
         CheckEntities checkEntities = new CheckEntities();

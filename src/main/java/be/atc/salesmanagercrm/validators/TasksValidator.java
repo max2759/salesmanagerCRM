@@ -21,7 +21,7 @@ public class TasksValidator {
         if (entity.getUsersByIdUsers() == null) {
             errors.add("L'utilisateur n'existe pas !");
         }
-        if (entity.getTitle().isEmpty() || entity.getTitle() == null) {
+        if (entity.getTitle() == null || entity.getTitle().isEmpty()) {
             errors.add("Veuillez renseigner un titre dans votre tâche");
         }
         if (entity.getPriority() != null) {
@@ -29,7 +29,7 @@ public class TasksValidator {
                     !Arrays.stream(EnumPriority.values())
                             .map(EnumPriority::getLabel)
                             .collect(Collectors.toSet())
-                            .contains(entity.getPriority())
+                            .contains(entity.getPriority().getLabel())
             ) {
                 errors.add("Veuillez renseigner une priorité valide");
             }
