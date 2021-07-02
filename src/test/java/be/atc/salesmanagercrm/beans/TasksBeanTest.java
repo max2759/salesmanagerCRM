@@ -170,15 +170,15 @@ class TasksBeanTest {
 
     @Test
     void findAll() {
-        int idUser = 10;
-        List<TasksEntity> TasksEntity = tasksBean.findAll(idUser);
+        int idUser = 1;
+        List<TasksEntity> tasksEntities = tasksBean.findAll(idUser);
 
 
-        boolean test = !TasksEntity.isEmpty();
+        boolean test = !tasksEntities.isEmpty();
 
-        log.info("Le test vaut : " + test + ". La liste contient : " + (long) TasksEntity.size() + " taches");
+        log.info("Le test vaut : " + test + ". La liste contient : " + (long) tasksEntities.size() + " taches");
 
-        assertThat(test).isEqualTo(false);
+        assertThat(test).isEqualTo(true);
     }
 
 
