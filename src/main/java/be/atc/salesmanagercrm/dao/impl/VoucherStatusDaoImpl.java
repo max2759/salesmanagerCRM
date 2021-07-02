@@ -5,7 +5,6 @@ import be.atc.salesmanagercrm.entities.VoucherStatusEntity;
 
 import javax.persistence.EntityManager;
 
-
 /**
  * @author Younes Arifi
  */

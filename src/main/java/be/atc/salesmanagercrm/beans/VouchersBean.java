@@ -24,6 +24,9 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author Younes Arifi
+ */
 @Slf4j
 @Named(value = "vouchersBean")
 @RequestScoped
@@ -122,6 +125,13 @@ public class VouchersBean implements Serializable {
         }
     }
 
+    /**
+     * Find Voucher entity by id
+     *
+     * @param id     Voucher
+     * @param idUser User
+     * @return VouchersEntity
+     */
     protected VouchersEntity findById(int id, int idUser) {
         if (id == 0) {
             log.error("Voucher ID is null");
@@ -335,6 +345,12 @@ public class VouchersBean implements Serializable {
         }
     }
 
+    /**
+     * Save Voucher Histories ! Use after create or update
+     *
+     * @param entity VouchersEntity
+     * @return VoucherHistoriesEntity
+     */
     private VoucherHistoriesEntity saveVoucherHistories(VouchersEntity entity) {
         VoucherHistoriesEntity voucherHistoriesEntity = new VoucherHistoriesEntity();
 

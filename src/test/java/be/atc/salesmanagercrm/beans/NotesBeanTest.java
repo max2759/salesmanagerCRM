@@ -18,13 +18,13 @@ class NotesBeanTest {
     private NotesBean notesBean;
 
     @BeforeEach
-    public void initNotes() {
+    public void init() {
         log.info("Appel avant chaque test");
         notesBean = new NotesBean();
     }
 
     @AfterEach
-    public void undefOrders() {
+    public void after() {
         log.info("Appel après chaque test");
         notesBean = null;
     }
@@ -45,7 +45,7 @@ class NotesBeanTest {
     }
 
     @Test
-    void findbyIdShouldReturnFalse() {
+    void findByIdShouldReturnFalse() {
         int id = 1;
         int idUser = 1014;
 
@@ -63,7 +63,7 @@ class NotesBeanTest {
     }
 
     @Test
-    void findbyIdShouldReturnTrue() {
+    void findByIdShouldReturnTrue() {
         int id = 1;
         int idUser = 1;
 
