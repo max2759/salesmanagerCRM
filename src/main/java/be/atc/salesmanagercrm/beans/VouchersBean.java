@@ -1,13 +1,16 @@
 package be.atc.salesmanagercrm.beans;
 
-import be.atc.salesmanagercrm.dao.TasksDao;
-import be.atc.salesmanagercrm.dao.impl.TasksDaoImpl;
-import be.atc.salesmanagercrm.entities.TasksEntity;
+import be.atc.salesmanagercrm.dao.VoucherHistoriesDao;
+import be.atc.salesmanagercrm.dao.VouchersDao;
+import be.atc.salesmanagercrm.dao.impl.VoucherHistoriesDaoImpl;
+import be.atc.salesmanagercrm.dao.impl.VouchersDaoImpl;
+import be.atc.salesmanagercrm.entities.VoucherHistoriesEntity;
+import be.atc.salesmanagercrm.entities.VouchersEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
-import be.atc.salesmanagercrm.validators.TasksValidator;
+import be.atc.salesmanagercrm.validators.VouchersValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,30 +25,29 @@ import java.util.Collections;
 import java.util.List;
 
 @Slf4j
-@Named(value = "tasksBean")
+@Named(value = "vouchersBean")
 @RequestScoped
-public class TasksBean implements Serializable {
+public class VouchersBean implements Serializable {
 
-    private static final long serialVersionUID = 8865671023396118126L;
-
-    @Getter
-    @Setter
-    private TasksDao dao = new TasksDaoImpl();
+    private static final long serialVersionUID = -8603892740414606326L;
 
     @Getter
     @Setter
-    private TasksEntity tasksEntity;
+    private VouchersDao dao = new VouchersDaoImpl();
 
+    @Getter
+    @Setter
+    private VouchersEntity vouchersEntity;
 
     /**
-     * Save Task Entity
+     * Save Voucher Entity
      *
-     * @param entity TasksEntity
+     * @param entity VouchersEntity
      */
-    protected void save(TasksEntity entity) {
+    protected void save(VouchersEntity entity) {
 
         try {
-            validateTask(entity);
+            validateVoucher(entity);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
@@ -55,12 +57,13 @@ public class TasksBean implements Serializable {
 
         if (entity.getEndDate() != null) {
             try {
-                validateTaskDateEnd(entity);
+                validateVoucherDateEnd(entity);
             } catch (InvalidEntityException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 return;
             }
         }
+
         CheckEntities checkEntities = new CheckEntities();
 
         try {
@@ -68,6 +71,13 @@ public class TasksBean implements Serializable {
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            return;
+        }
+
+        try {
+            checkEntities.checkVoucherStatus(entity.getVoucherStatusByIdVoucherStatus());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
@@ -91,16 +101,7 @@ public class TasksBean implements Serializable {
             }
         }
 
-        if (entity.getTaskTypesByIdTaskTypes() != null) {
-            try {
-                checkEntities.checkTaskType(entity.getTaskTypesByIdTaskTypes());
-            } catch (EntityNotFoundException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                return;
-            }
-        }
-
-        entity.setStatus(true);
+        VoucherHistoriesEntity voucherHistoriesEntity = saveVoucherHistories(entity);
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -108,6 +109,8 @@ public class TasksBean implements Serializable {
             tx = em.getTransaction();
             tx.begin();
             dao.save(em, entity);
+            VoucherHistoriesDao voucherHistoriesDao = new VoucherHistoriesDaoImpl();
+            voucherHistoriesDao.save(em, voucherHistoriesEntity);
             tx.commit();
             log.info("Persist ok");
         } catch (Exception ex) {
@@ -119,15 +122,9 @@ public class TasksBean implements Serializable {
         }
     }
 
-    /**
-     * Find Task by ID
-     *
-     * @param id TasksEntity
-     * @return Task Entity
-     */
-    protected TasksEntity findById(int id, int idUser) {
+    protected VouchersEntity findById(int id, int idUser) {
         if (id == 0) {
-            log.error("Task ID is null");
+            log.error("Voucher ID is null");
             return null;
         }
         if (idUser == 0) {
@@ -141,8 +138,8 @@ public class TasksBean implements Serializable {
         } catch (Exception ex) {
             log.info("Nothing");
             throw new EntityNotFoundException(
-                    "Aucune tâche avec l ID " + id + " et l ID User " + idUser + " n a ete trouve dans la BDD",
-                    ErrorCodes.TASK_NOT_FOUND
+                    "Aucun ticket avec l ID " + id + " et l ID User " + idUser + " n a ete trouve dans la BDD",
+                    ErrorCodes.VOUCHER_NOT_FOUND
             );
         } finally {
             em.clear();
@@ -151,12 +148,12 @@ public class TasksBean implements Serializable {
     }
 
     /**
-     * Find tasks entities by id contact
+     * Find vouchers entities by id contact
      *
      * @param id Contact
-     * @return List TasksEntities
+     * @return List VouchersEntities
      */
-    protected List<TasksEntity> findTasksEntityByContactsByIdContacts(int id, int idUser) {
+    protected List<VouchersEntity> findVouchersEntityByContactsByIdContacts(int id, int idUser) {
         if (id == 0) {
             log.error("Contact ID is null");
             return Collections.emptyList();
@@ -167,21 +164,22 @@ public class TasksBean implements Serializable {
         }
         EntityManager em = EMF.getEM();
 
-        List<TasksEntity> tasksEntities = dao.findTasksEntityByContactsByIdContacts(em, id, idUser);
+        List<VouchersEntity> vouchersEntities = dao.findVouchersEntityByContactsByIdContacts(em, id, idUser);
 
         em.clear();
         em.close();
 
-        return tasksEntities;
+        return vouchersEntities;
     }
 
+
     /**
-     * Find tasks entities by id company
+     * Find vouchers entities by id company
      *
      * @param id Company
-     * @return List TasksEntities
+     * @return List VouchersEntities
      */
-    protected List<TasksEntity> findTasksEntityByCompaniesByIdCompanies(int id, int idUser) {
+    protected List<VouchersEntity> findVouchersEntityByCompaniesByIdCompanies(int id, int idUser) {
         if (id == 0) {
             log.error("Company ID is null");
             return Collections.emptyList();
@@ -192,97 +190,51 @@ public class TasksBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        List<TasksEntity> tasksEntities = dao.findTasksEntityByCompaniesByIdCompanies(em, id, idUser);
+        List<VouchersEntity> vouchersEntities = dao.findVouchersEntityByCompaniesByIdCompanies(em, id, idUser);
 
         em.clear();
         em.close();
 
-        return tasksEntities;
+        return vouchersEntities;
     }
 
-
     /**
-     * Find All tasks Entities
+     * Find All vouchers Entities
      *
-     * @return List TasksEntity
+     * @return List VouchersEntity
      */
-    protected List<TasksEntity> findAll(int idUser) {
+    protected List<VouchersEntity> findAll(int idUser) {
         if (idUser == 0) {
             log.error("User ID is null");
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
-        List<TasksEntity> tasksEntities = dao.findAll(em, idUser);
+        List<VouchersEntity> vouchersEntities = dao.findAll(em, idUser);
 
         em.clear();
         em.close();
 
-        return tasksEntities;
+        return vouchersEntities;
     }
 
 
     /**
-     * delete task by id
+     * Update VouchersEntity
      *
-     * @param id Task
+     * @param entity VouchersEntity
      */
-    protected void delete(int id, int idUser) {
-        if (id == 0) {
-            log.error("Task ID is null");
-            return;
-        }
-        if (idUser == 0) {
-            log.error("User ID is null");
-            return;
-        }
-
-        TasksEntity tasksEntity;
+    protected void update(VouchersEntity entity) {
 
         try {
-            tasksEntity = findById(id, idUser);
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            return;
-        }
-
-        EntityManager em = EMF.getEM();
-        em.getTransaction();
-
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            dao.delete(em, tasksEntity);
-            tx.commit();
-            log.info("Delete ok");
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.error("Delete Error");
-        } finally {
-            em.clear();
-            em.close();
-        }
-    }
-
-
-    /**
-     * Update TasksEntity
-     *
-     * @param entity TasksEntity
-     */
-    protected void update(TasksEntity entity) {
-
-        try {
-            validateTask(entity);
+            validateVoucher(entity);
         } catch (InvalidEntityException exception) {
-
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
 
         try {
-            TasksEntity tasksEntityToFind = findById(entity.getId(), entity.getUsersByIdUsers().getId());
-            entity.setCreationDate(tasksEntityToFind.getCreationDate());
+            VouchersEntity vouchersEntityToFind = findById(entity.getId(), entity.getUsersByIdUsers().getId());
+            entity.setCreationDate(vouchersEntityToFind.getCreationDate());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
@@ -290,7 +242,7 @@ public class TasksBean implements Serializable {
 
         if (entity.getEndDate() != null) {
             try {
-                validateTaskDateEnd(entity);
+                validateVoucherDateEnd(entity);
             } catch (InvalidEntityException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 return;
@@ -304,6 +256,13 @@ public class TasksBean implements Serializable {
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            return;
+        }
+
+        try {
+            checkEntities.checkVoucherStatus(entity.getVoucherStatusByIdVoucherStatus());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
@@ -327,14 +286,7 @@ public class TasksBean implements Serializable {
             }
         }
 
-        if (entity.getTaskTypesByIdTaskTypes() != null) {
-            try {
-                checkEntities.checkTaskType(entity.getTaskTypesByIdTaskTypes());
-            } catch (EntityNotFoundException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                return;
-            }
-        }
+        VoucherHistoriesEntity voucherHistoriesEntity = saveVoucherHistories(entity);
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -342,6 +294,8 @@ public class TasksBean implements Serializable {
             tx = em.getTransaction();
             tx.begin();
             dao.update(em, entity);
+            VoucherHistoriesDao voucherHistoriesDao = new VoucherHistoriesDaoImpl();
+            voucherHistoriesDao.save(em, voucherHistoriesEntity);
             tx.commit();
             log.info("Update ok");
         } catch (Exception ex) {
@@ -351,29 +305,45 @@ public class TasksBean implements Serializable {
             em.clear();
             em.clear();
         }
+
     }
 
-
     /**
-     * Validate Task !
+     * Validate Voucher !
      *
-     * @param entity TasksEntity
+     * @param entity VouchersEntity
      */
-    private void validateTask(TasksEntity entity) {
-        List<String> errors = TasksValidator.validate(entity);
+    private void validateVoucher(VouchersEntity entity) {
+        List<String> errors = VouchersValidator.validate(entity);
         if (!errors.isEmpty()) {
-            log.error("Task is not valide {}", entity);
-            throw new InvalidEntityException("La tache n est pas valide", ErrorCodes.TASK_NOT_VALID, errors);
+            log.error("Voucher is not valide {}", entity);
+            throw new InvalidEntityException("Le ticket n est pas valide", ErrorCodes.VOUCHER_NOT_VALID, errors);
         }
     }
 
-    private void validateTaskDateEnd(TasksEntity entity) {
+    /**
+     * Validate Voucher Date End
+     *
+     * @param entity VouchersEntity
+     */
+    private void validateVoucherDateEnd(VouchersEntity entity) {
         if (entity.getEndDate() != null) {
             if (entity.getEndDate().isBefore(entity.getCreationDate())) {
-                log.error("Task end date in not valide {}", entity);
-                throw new InvalidEntityException("La date de fin de tâche doit etre superieur à la date de creation", ErrorCodes.TASK_NOT_VALID);
+                log.error("Voucher end date in not valide {}", entity);
+                throw new InvalidEntityException("La date de fin du ticket doit etre superieur à la date de creation", ErrorCodes.VOUCHER_NOT_VALID);
             }
         }
     }
+
+    private VoucherHistoriesEntity saveVoucherHistories(VouchersEntity entity) {
+        VoucherHistoriesEntity voucherHistoriesEntity = new VoucherHistoriesEntity();
+
+        voucherHistoriesEntity.setVouchersByIdVouchers(entity);
+        voucherHistoriesEntity.setVoucherStatusByIdVoucherStatus(entity.getVoucherStatusByIdVoucherStatus());
+        voucherHistoriesEntity.setSaveDate(LocalDateTime.now());
+
+        return voucherHistoriesEntity;
+    }
+
 
 }
