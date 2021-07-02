@@ -15,6 +15,7 @@ public class CitiesEntity {
     private CountriesEntity countriesByIdCountries;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -35,7 +36,7 @@ public class CitiesEntity {
     }
 
     @Basic
-    @Column(name = "Postal_Code")
+    @Column(name = "Postal_Code", nullable = false)
     public String getPostalCode() {
         return postalCode;
     }
@@ -45,7 +46,7 @@ public class CitiesEntity {
     }
 
     @Basic
-    @Column(name = "Label")
+    @Column(name = "Label", nullable = false)
     public String getLabel() {
         return label;
     }

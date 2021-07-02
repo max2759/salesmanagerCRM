@@ -1,14 +1,13 @@
 package be.atc.salesmanagercrm.beans;
 
-import be.atc.salesmanagercrm.dao.NotesDao;
-import be.atc.salesmanagercrm.dao.impl.NotesDaoImpl;
-import be.atc.salesmanagercrm.entities.NotesEntity;
-import be.atc.salesmanagercrm.entities.UsersEntity;
+import be.atc.salesmanagercrm.dao.TasksDao;
+import be.atc.salesmanagercrm.dao.impl.TasksDaoImpl;
+import be.atc.salesmanagercrm.entities.TasksEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
-import be.atc.salesmanagercrm.validators.NotesValidator;
+import be.atc.salesmanagercrm.validators.TasksValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -23,37 +22,46 @@ import java.util.Collections;
 import java.util.List;
 
 @Slf4j
-@Named(value = "notesBean")
+@Named(value = "tasksBean")
 @RequestScoped
-public class NotesBean implements Serializable {
+public class TasksBean implements Serializable {
 
-    private static final long serialVersionUID = -2338626292552177485L;
+    private static final long serialVersionUID = 8865671023396118126L;
 
     @Getter
     @Setter
-    private NotesDao dao = new NotesDaoImpl();
+    private TasksDao dao = new TasksDaoImpl();
+
     @Getter
     @Setter
-    private UsersEntity usersEntity = new UsersEntity();
-    @Getter
-    @Setter
-    private NotesEntity notesEntity;
+    private TasksEntity tasksEntity;
 
 
     /**
-     * Save Note Entity !
+     * Save Task Entity
      *
-     * @param entity NotesEntity
+     * @param entity TasksEntity
      */
-    protected void save(NotesEntity entity) {
+    protected void save(TasksEntity entity) {
 
         try {
-            validateNote(entity);
+            validateTask(entity);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
 
+
+        entity.setCreationDate(LocalDateTime.now());
+
+        if (entity.getEndDate() != null) {
+            try {
+                validateTaskDateEnd(entity);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                return;
+            }
+        }
         CheckEntities checkEntities = new CheckEntities();
 
         try {
@@ -84,7 +92,16 @@ public class NotesBean implements Serializable {
             }
         }
 
-        entity.setCreationDate(LocalDateTime.now());
+        if (entity.getTaskTypesByIdTaskTypes() != null) {
+            try {
+                checkEntities.checkTaskType(entity.getTaskTypesByIdTaskTypes());
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                return;
+            }
+        }
+
+        entity.setStatus(true);
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -104,12 +121,12 @@ public class NotesBean implements Serializable {
     }
 
     /**
-     * Find Note by ID
+     * Find Task by ID
      *
-     * @param id NotesEntity
-     * @return Notes Entity
+     * @param id TasksEntity
+     * @return Task Entity
      */
-    protected NotesEntity findById(int id, int idUser) {
+    protected TasksEntity findById(int id, int idUser) {
         if (id == 0) {
             log.error("Task ID is null");
             return null;
@@ -125,8 +142,8 @@ public class NotesBean implements Serializable {
         } catch (Exception ex) {
             log.info("Nothing");
             throw new EntityNotFoundException(
-                    "Aucune Note avec l ID " + id + " et l ID User " + idUser + " n a ete trouvee dans la BDD",
-                    ErrorCodes.NOTE_NOT_FOUND
+                    "Aucune tâche avec l ID " + id + " et l ID User " + idUser + " n a ete trouve dans la BDD",
+                    ErrorCodes.TASK_NOT_FOUND
             );
         } finally {
             em.clear();
@@ -135,12 +152,12 @@ public class NotesBean implements Serializable {
     }
 
     /**
-     * Find Notes entities by id Contact
+     * Find tasks entities by id Task
      *
      * @param id Contact
-     * @return List NotesEntity
+     * @return List TasksEntities
      */
-    protected List<NotesEntity> findNotesEntityByContactsByIdContacts(int id, int idUser) {
+    protected List<TasksEntity> findTasksEntityByContactsByIdContacts(int id, int idUser) {
         if (id == 0) {
             log.error("Contact ID is null");
             return Collections.emptyList();
@@ -149,24 +166,23 @@ public class NotesBean implements Serializable {
             log.error("User ID is null");
             return Collections.emptyList();
         }
-
         EntityManager em = EMF.getEM();
 
-        List<NotesEntity> notesEntities = dao.findNotesEntityByContactsByIdContacts(em, id, idUser);
+        List<TasksEntity> tasksEntities = dao.findTasksEntityByContactsByIdContacts(em, id, idUser);
 
         em.clear();
         em.close();
 
-        return notesEntities;
+        return tasksEntities;
     }
 
     /**
-     * Find Notes Entities by Id Company
+     * Find tasks entities by id Task
      *
      * @param id Company
-     * @return List NotesEntity
+     * @return List TasksEntities
      */
-    protected List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(int id, int idUser) {
+    protected List<TasksEntity> findTasksEntityByCompaniesByIdCompanies(int id, int idUser) {
         if (id == 0) {
             log.error("Contact ID is null");
             return Collections.emptyList();
@@ -177,38 +193,39 @@ public class NotesBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-
-        List<NotesEntity> notesEntities = dao.findNotesEntityByCompaniesByIdCompanies(em, id, idUser);
+        List<TasksEntity> tasksEntities = dao.findTasksEntityByCompaniesByIdCompanies(em, id, idUser);
 
         em.clear();
         em.close();
 
-        return notesEntities;
+        return tasksEntities;
     }
 
+
     /**
-     * Find All Notes Entities
+     * Find All tasks Entities
      *
-     * @return List NotesEntity
+     * @return List TasksEntity
      */
-    protected List<NotesEntity> findAll(int idUser) {
+    protected List<TasksEntity> findAll(int idUser) {
         if (idUser == 0) {
             log.error("User ID is null");
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
-        List<NotesEntity> notesEntities = dao.findAll(em, idUser);
+        List<TasksEntity> tasksEntities = dao.findAll(em, idUser);
 
         em.clear();
         em.close();
 
-        return notesEntities;
+        return tasksEntities;
     }
 
+
     /**
-     * delete note by id
+     * delete task by id
      *
-     * @param id note
+     * @param id Task
      */
     protected void delete(int id, int idUser) {
         if (id == 0) {
@@ -220,10 +237,10 @@ public class NotesBean implements Serializable {
             return;
         }
 
-        NotesEntity notesEntity;
+        TasksEntity tasksEntity;
 
         try {
-            notesEntity = findById(id, idUser);
+            tasksEntity = findById(id, idUser);
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
@@ -236,7 +253,7 @@ public class NotesBean implements Serializable {
         try {
             tx = em.getTransaction();
             tx.begin();
-            dao.delete(em, notesEntity);
+            dao.delete(em, tasksEntity);
             tx.commit();
             log.info("Delete ok");
         } catch (Exception ex) {
@@ -248,27 +265,38 @@ public class NotesBean implements Serializable {
         }
     }
 
+
     /**
-     * Update NoteEntity
+     * Update TasksEntity
      *
-     * @param entity NoteEntity
+     * @param entity TasksEntity
      */
-    protected void update(NotesEntity entity) {
+    protected void update(TasksEntity entity) {
 
         try {
-            validateNote(entity);
+            validateTask(entity);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         }
 
         try {
-            NotesEntity notesEntity = findById(entity.getId(), entity.getUsersByIdUsers().getId());
-            entity.setCreationDate(notesEntity.getCreationDate());
+            TasksEntity tasksEntity = findById(entity.getId(), entity.getUsersByIdUsers().getId());
+            entity.setCreationDate(tasksEntity.getCreationDate());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         }
+
+        if (entity.getEndDate() != null) {
+            try {
+                validateTaskDateEnd(entity);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                return;
+            }
+        }
+
         CheckEntities checkEntities = new CheckEntities();
 
         try {
@@ -293,6 +321,15 @@ public class NotesBean implements Serializable {
         if (entity.getCompaniesByIdCompanies() != null) {
             try {
                 checkEntities.checkCompany(entity.getCompaniesByIdCompanies());
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                return;
+            }
+        }
+
+        if (entity.getTaskTypesByIdTaskTypes() != null) {
+            try {
+                checkEntities.checkTaskType(entity.getTaskTypesByIdTaskTypes());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 return;
@@ -317,16 +354,26 @@ public class NotesBean implements Serializable {
 
     }
 
+
     /**
-     * Validate Note !
+     * Validate Task !
      *
-     * @param entity NotesEntity
+     * @param entity TasksEntity
      */
-    private void validateNote(NotesEntity entity) {
-        List<String> errors = NotesValidator.validate(entity);
+    private void validateTask(TasksEntity entity) {
+        List<String> errors = TasksValidator.validate(entity);
         if (!errors.isEmpty()) {
-            log.error("Note is not valide {}", entity);
-            throw new InvalidEntityException("La note n est pas valide", ErrorCodes.NOTE_NOT_VALID, errors);
+            log.error("Task is not valide {}", entity);
+            throw new InvalidEntityException("La tache n est pas valide", ErrorCodes.TASK_NOT_VALID, errors);
+        }
+    }
+
+    private void validateTaskDateEnd(TasksEntity entity) {
+        if (entity.getEndDate() != null) {
+            if (entity.getEndDate().isBefore(entity.getCreationDate())) {
+                log.error("Task end date in not valide {}", entity);
+                throw new InvalidEntityException("La date de fin de tâche doit etre superieur à la date de creation", ErrorCodes.TASK_NOT_VALID);
+            }
         }
     }
 

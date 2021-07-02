@@ -6,12 +6,17 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "task_types", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "TaskTypes.findAll", query = "SELECT tT from TaskTypesEntity tT"),
+
+})
 public class TaskTypesEntity {
     private int id;
     private String label;
     private Collection<TasksEntity> tasksById;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -22,7 +27,7 @@ public class TaskTypesEntity {
     }
 
     @Basic
-    @Column(name = "Label")
+    @Column(name = "Label", nullable = false)
     public String getLabel() {
         return label;
     }

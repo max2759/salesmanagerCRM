@@ -4,7 +4,7 @@ public enum EnumPriority {
     ELEVEE("Elevée"),
     MOYENNE("Moyenne"),
     FAIBLE("Faible"),
-            ;
+    ;
 
     private final String label;
 

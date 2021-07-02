@@ -15,6 +15,7 @@ public class AddressesEntity {
     private CompaniesEntity companiesByIdCompanies;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -25,7 +26,7 @@ public class AddressesEntity {
     }
 
     @Basic
-    @Column(name = "Street")
+    @Column(name = "Street", nullable = false)
     public String getStreet() {
         return street;
     }
@@ -35,7 +36,7 @@ public class AddressesEntity {
     }
 
     @Basic
-    @Column(name = "Number")
+    @Column(name = "Number", nullable = false)
     public String getNumber() {
         return number;
     }

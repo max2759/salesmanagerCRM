@@ -26,6 +26,7 @@ public class UsersEntity {
     private Collection<VouchersEntity> vouchersById;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -36,7 +37,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "Firstname")
+    @Column(name = "Firstname", nullable = false)
     public String getFirstname() {
         return firstname;
     }
@@ -46,7 +47,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "Lastname")
+    @Column(name = "Lastname", nullable = false)
     public String getLastname() {
         return lastname;
     }
@@ -56,7 +57,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "Username")
+    @Column(name = "Username", nullable = false, unique = true)
     public String getUsername() {
         return username;
     }
@@ -66,7 +67,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "Password")
+    @Column(name = "Password", nullable = false)
     public String getPassword() {
         return password;
     }
@@ -76,7 +77,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "Email")
+    @Column(name = "Email", nullable = false)
     public String getEmail() {
         return email;
     }
@@ -86,7 +87,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "Register_Date")
+    @Column(name = "Register_Date", nullable = false)
     public LocalDateTime getRegisterDate() {
         return registerDate;
     }
@@ -96,7 +97,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "IsActive")
+    @Column(name = "IsActive", nullable = false)
     public boolean isActive() {
         return isActive;
     }

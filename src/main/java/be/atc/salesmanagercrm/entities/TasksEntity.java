@@ -8,6 +8,14 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tasks", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "Tasks.findTasksEntityByContactsByIdContacts", query = "select t from TasksEntity t where (t.contactsByIdContacts.id = :id and t.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Tasks.findTasksEntityByCompaniesByIdCompanies", query = "select t from TasksEntity t where (t.companiesByIdCompanies.id = :id and t.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Tasks.findAll", query = "SELECT t from TasksEntity t where t.usersByIdUsers.id = :idUser"),
+        @NamedQuery(name = "Tasks.findById", query = "SELECT t from TasksEntity t where (t.id = :id and t.usersByIdUsers.id = :idUser)"),
+
+})
+
 public class TasksEntity {
     private int id;
     private String title;
@@ -22,6 +30,7 @@ public class TasksEntity {
     private TaskTypesEntity taskTypesByIdTaskTypes;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -32,7 +41,7 @@ public class TasksEntity {
     }
 
     @Basic
-    @Column(name = "Title")
+    @Column(name = "Title", nullable = false)
     public String getTitle() {
         return title;
     }
@@ -41,6 +50,7 @@ public class TasksEntity {
         this.title = title;
     }
 
+    @Enumerated(EnumType.STRING)
     @Basic
     @Column(name = "Priority")
     public EnumPriority getPriority() {
@@ -52,7 +62,7 @@ public class TasksEntity {
     }
 
     @Basic
-    @Column(name = "Creation_Date")
+    @Column(name = "Creation_Date", nullable = false)
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
@@ -82,7 +92,7 @@ public class TasksEntity {
     }
 
     @Basic
-    @Column(name = "Status")
+    @Column(name = "Status", nullable = false)
     public boolean isStatus() {
         return status;
     }

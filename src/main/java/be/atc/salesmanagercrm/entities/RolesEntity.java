@@ -14,6 +14,7 @@ public class RolesEntity {
     private Collection<UsersEntity> usersById;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -24,7 +25,7 @@ public class RolesEntity {
     }
 
     @Basic
-    @Column(name = "Label")
+    @Column(name = "Label", nullable = false, unique = true)
     public String getLabel() {
         return label;
     }
@@ -34,7 +35,7 @@ public class RolesEntity {
     }
 
     @Basic
-    @Column(name = "IsActive")
+    @Column(name = "IsActive", nullable = false)
     public boolean isActive() {
         return isActive;
     }

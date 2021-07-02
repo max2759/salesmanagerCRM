@@ -37,6 +37,7 @@ public class CompaniesEntity {
     private Collection<VouchersEntity> vouchersById;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -47,7 +48,7 @@ public class CompaniesEntity {
     }
 
     @Basic
-    @Column(name = "Label")
+    @Column(name = "Label", nullable = false)
     public String getLabel() {
         return label;
     }
@@ -117,7 +118,7 @@ public class CompaniesEntity {
     }
 
     @Basic
-    @Column(name = "Register_Date")
+    @Column(name = "Register_Date", nullable = false)
     public LocalDateTime getRegisterDate() {
         return registerDate;
     }
@@ -207,7 +208,7 @@ public class CompaniesEntity {
     }
 
     @Basic
-    @Column(name = "IsActive")
+    @Column(name = "IsActive", nullable = false)
     public boolean isActive() {
         return isActive;
     }

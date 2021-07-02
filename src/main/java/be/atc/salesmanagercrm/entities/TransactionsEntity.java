@@ -22,6 +22,7 @@ public class TransactionsEntity {
     private TransactionPhasesEntity transactionPhasesByIdTransactionPhases;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -32,7 +33,7 @@ public class TransactionsEntity {
     }
 
     @Basic
-    @Column(name = "Title")
+    @Column(name = "Title", nullable = false)
     public String getTitle() {
         return title;
     }
@@ -72,7 +73,7 @@ public class TransactionsEntity {
     }
 
     @Basic
-    @Column(name = "IsActive")
+    @Column(name = "IsActive", nullable = false)
     public boolean isActive() {
         return isActive;
     }

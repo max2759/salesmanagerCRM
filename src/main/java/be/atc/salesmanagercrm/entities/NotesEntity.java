@@ -7,9 +7,11 @@ import java.util.Objects;
 @Entity
 @Table(name = "notes", schema = "salesmanagercrm")
 @NamedQueries({
-        @NamedQuery(name = "Notes.findNotesEntityByContactsByIdContacts", query = "select n from NotesEntity n where n.contactsByIdContacts.id = :id"),
-        @NamedQuery(name = "Notes.findNotesEntityByCompaniesByIdCompanies", query = "select n from NotesEntity n where n.companiesByIdCompanies.id = :id"),
-        @NamedQuery(name = "Notes.findAll", query = "SELECT n from NotesEntity n"),
+        @NamedQuery(name = "Notes.findNotesEntityByContactsByIdContacts", query = "select n from NotesEntity n where (n.contactsByIdContacts.id = :id and n.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Notes.findNotesEntityByCompaniesByIdCompanies", query = "select n from NotesEntity n where (n.companiesByIdCompanies.id = :id and n.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Notes.findAll", query = "SELECT n from NotesEntity n where n.usersByIdUsers.id = :idUser"),
+        @NamedQuery(name = "Notes.findById", query = "SELECT n from NotesEntity n where (n.id = :id and n.usersByIdUsers.id = :idUser)"),
+
 
 })
 public class NotesEntity {
@@ -21,6 +23,7 @@ public class NotesEntity {
     private CompaniesEntity companiesByIdCompanies;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public int getId() {
         return id;
@@ -31,7 +34,7 @@ public class NotesEntity {
     }
 
     @Basic
-    @Column(name = "Creation_Date")
+    @Column(name = "Creation_Date", nullable = false)
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
@@ -41,7 +44,7 @@ public class NotesEntity {
     }
 
     @Basic
-    @Column(name = "Message")
+    @Column(name = "Message", nullable = false)
     public String getMessage() {
         return message;
     }
