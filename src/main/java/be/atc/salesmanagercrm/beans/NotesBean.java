@@ -22,6 +22,9 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author Younes Arifi
+ */
 @Slf4j
 @Named(value = "notesBean")
 @RequestScoped

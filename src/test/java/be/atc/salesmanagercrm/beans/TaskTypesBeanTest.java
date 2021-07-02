@@ -17,13 +17,13 @@ class TaskTypesBeanTest {
     private TaskTypesBean taskTypesBean;
 
     @BeforeEach
-    public void initNotes() {
+    public void init() {
         log.info("Appel avant chaque test");
         taskTypesBean = new TaskTypesBean();
     }
 
     @AfterEach
-    public void undefOrders() {
+    public void after() {
         log.info("Appel après chaque test");
         taskTypesBean = null;
     }

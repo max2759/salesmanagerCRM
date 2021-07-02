@@ -17,13 +17,13 @@ class VouchersBeanTest {
     private VouchersBean vouchersBean;
 
     @BeforeEach
-    public void initNotes() {
+    public void init() {
         log.info("Appel avant chaque test");
         vouchersBean = new VouchersBean();
     }
 
     @AfterEach
-    public void undefOrders() {
+    public void after() {
         log.info("Appel après chaque test");
         vouchersBean = null;
     }

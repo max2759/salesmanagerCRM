@@ -24,6 +24,8 @@ public class CheckEntities implements Serializable {
     CompaniesDao companiesDao = new CompaniesDaoImpl();
     TaskTypesDao taskTypesDao = new TaskTypesDaoImpl();
     VoucherStatusDao voucherStatusDao = new VoucherStatusDaoImpl();
+    TransactionTypesDao transactionTypesDao = new TransactionTypesDaoImpl();
+    TransactionPhasesDao transactionPhasesDao = new TransactionPhasesDaoImpl();
 
     /**
      * Check if Contact exist in DB
@@ -124,6 +126,44 @@ public class CheckEntities implements Serializable {
                 log.warn("Voucher Status with ID {} was not found in the DB", entity.getId());
                 throw new EntityNotFoundException(
                         "Aucun statut de ticket avec l ID " + entity.getId() + " n a ete trouvee dans la BDD", ErrorCodes.VOUCHERSTATUS_NOT_FOUND
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if TransactionType exit in DB
+     *
+     * @param entity TransactionTypesEntity
+     */
+    public void checkTransactionTypes(TransactionTypesEntity entity) {
+        if (entity != null) {
+            EntityManager em = EMF.getEM();
+
+            TransactionTypesEntity transactionTypesEntity = transactionTypesDao.findById(em, entity.getId());
+            if (transactionTypesEntity == null) {
+                log.warn("Transation Type with ID {} was not found in the DB", entity.getId());
+                throw new EntityNotFoundException(
+                        "Aucun type de transaction avec l ID " + entity.getId() + " n a ete trouvee dans la BDD", ErrorCodes.TRANSACTIONTYPE_NOT_FOUND
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if TransactionPhase exit in DB
+     *
+     * @param entity TransactionPhasesEntity
+     */
+    public void checkTransactionPhases(TransactionPhasesEntity entity) {
+        if (entity != null) {
+            EntityManager em = EMF.getEM();
+
+            TransactionPhasesEntity transactionPhasesEntity = transactionPhasesDao.findById(em, entity.getId());
+            if (transactionPhasesEntity == null) {
+                log.warn("Transation phase with ID {} was not found in the DB", entity.getId());
+                throw new EntityNotFoundException(
+                        "Aucune phase de transaction avec l ID " + entity.getId() + " n a ete trouvee dans la BDD", ErrorCodes.TRANSACTIONPHASE_NOT_FOUND
                 );
             }
         }
