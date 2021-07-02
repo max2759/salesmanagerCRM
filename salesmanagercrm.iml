@@ -40,6 +40,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.18.20" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.31" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.31" level="project" />
+    <orderEntry type="library" name="Maven: org.primefaces:primefaces:10.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.validation:validation-api:2.0.1.Final" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.hk2.external:bean-validator:2.1.92" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.assertj:assertj-core-java8:1.0.0m1" level="project" />

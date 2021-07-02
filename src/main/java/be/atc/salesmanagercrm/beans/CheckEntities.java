@@ -44,7 +44,7 @@ public class CheckEntities implements Serializable {
     }
 
     /**
-     * Check uf company exist in DB
+     * Check if company exist in DB
      *
      * @param entity : CompaniesEntity
      */
