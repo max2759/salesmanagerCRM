@@ -6,6 +6,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "task_types", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "TaskTypes.findAll", query = "SELECT tT from TaskTypesEntity tT"),
+
+})
 public class TaskTypesEntity {
     private int id;
     private String label;
