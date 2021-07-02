@@ -21,8 +21,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * @author Younes Arifi
+ */
 @Slf4j
 @Named(value = "notesBean")
 @RequestScoped
@@ -110,21 +112,29 @@ public class NotesBean implements Serializable {
      * @param id NotesEntity
      * @return Notes Entity
      */
-    protected NotesEntity findById(int id) {
+    protected NotesEntity findById(int id, int idUser) {
         if (id == 0) {
-            log.error("Note ID is null");
+            log.error("Task ID is null");
+            return null;
+        }
+        if (idUser == 0) {
+            log.error("User ID is null");
             return null;
         }
 
         EntityManager em = EMF.getEM();
-        Optional<NotesEntity> optionalNotesEntity = Optional.ofNullable(dao.findById(em, id));
-        em.clear();
-        em.close();
-        return optionalNotesEntity.orElseThrow(() ->
-                new EntityNotFoundException(
-                        "Aucune Note avec l ID " + id + " n a ete trouvee dans la BDD",
-                        ErrorCodes.NOTE_NOT_FOUND
-                ));
+        try {
+            return dao.findById(em, id, idUser);
+        } catch (Exception ex) {
+            log.info("Nothing");
+            throw new EntityNotFoundException(
+                    "Aucune Note avec l ID " + id + " et l ID User " + idUser + " n a ete trouvee dans la BDD",
+                    ErrorCodes.NOTE_NOT_FOUND
+            );
+        } finally {
+            em.clear();
+            em.close();
+        }
     }
 
     /**
@@ -133,15 +143,19 @@ public class NotesBean implements Serializable {
      * @param id Contact
      * @return List NotesEntity
      */
-    protected List<NotesEntity> findNotesEntityByContactsByIdContacts(int id) {
+    protected List<NotesEntity> findNotesEntityByContactsByIdContacts(int id, int idUser) {
         if (id == 0) {
             log.error("Contact ID is null");
+            return Collections.emptyList();
+        }
+        if (idUser == 0) {
+            log.error("User ID is null");
             return Collections.emptyList();
         }
 
         EntityManager em = EMF.getEM();
 
-        List<NotesEntity> notesEntities = dao.findNotesEntityByContactsByIdContacts(em, id);
+        List<NotesEntity> notesEntities = dao.findNotesEntityByContactsByIdContacts(em, id, idUser);
 
         em.clear();
         em.close();
@@ -155,15 +169,19 @@ public class NotesBean implements Serializable {
      * @param id Company
      * @return List NotesEntity
      */
-    protected List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(int id) {
+    protected List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(int id, int idUser) {
         if (id == 0) {
-            log.error("Contact ID is null");
+            log.error("Company ID is null");
+            return Collections.emptyList();
+        }
+        if (idUser == 0) {
+            log.error("User ID is null");
             return Collections.emptyList();
         }
 
         EntityManager em = EMF.getEM();
 
-        List<NotesEntity> notesEntities = dao.findNotesEntityByCompaniesByIdCompanies(em, id);
+        List<NotesEntity> notesEntities = dao.findNotesEntityByCompaniesByIdCompanies(em, id, idUser);
 
         em.clear();
         em.close();
@@ -176,8 +194,18 @@ public class NotesBean implements Serializable {
      *
      * @return List NotesEntity
      */
-    protected List<NotesEntity> findAll() {
-        return dao.findAll();
+    protected List<NotesEntity> findAll(int idUser) {
+        if (idUser == 0) {
+            log.error("User ID is null");
+            return Collections.emptyList();
+        }
+        EntityManager em = EMF.getEM();
+        List<NotesEntity> notesEntities = dao.findAll(em, idUser);
+
+        em.clear();
+        em.close();
+
+        return notesEntities;
     }
 
     /**
@@ -185,16 +213,20 @@ public class NotesBean implements Serializable {
      *
      * @param id note
      */
-    protected void delete(int id) {
+    protected void delete(int id, int idUser) {
         if (id == 0) {
-            log.error("Note ID is null");
+            log.error("Task ID is null");
+            return;
+        }
+        if (idUser == 0) {
+            log.error("User ID is null");
             return;
         }
 
         NotesEntity notesEntity;
 
         try {
-            notesEntity = findById(id);
+            notesEntity = findById(id, idUser);
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
@@ -229,12 +261,12 @@ public class NotesBean implements Serializable {
         try {
             validateNote(entity);
         } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
 
         try {
-            NotesEntity notesEntity = findById(entity.getId());
+            NotesEntity notesEntity = findById(entity.getId(), entity.getUsersByIdUsers().getId());
             entity.setCreationDate(notesEntity.getCreationDate());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
@@ -242,9 +274,33 @@ public class NotesBean implements Serializable {
         }
         CheckEntities checkEntities = new CheckEntities();
 
-        checkEntities.checkUser(entity.getUsersByIdUsers());
-        checkEntities.checkContact(entity.getContactsByIdContacts());
-        checkEntities.checkCompany(entity.getCompaniesByIdCompanies());
+        try {
+            checkEntities.checkUser(entity.getUsersByIdUsers());
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            return;
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            return;
+        }
+
+        if (entity.getContactsByIdContacts() != null) {
+            try {
+                checkEntities.checkContact(entity.getContactsByIdContacts());
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                return;
+            }
+        }
+
+        if (entity.getCompaniesByIdCompanies() != null) {
+            try {
+                checkEntities.checkCompany(entity.getCompaniesByIdCompanies());
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                return;
+            }
+        }
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -253,10 +309,10 @@ public class NotesBean implements Serializable {
             tx.begin();
             dao.update(em, entity);
             tx.commit();
-            log.info("Persist ok");
+            log.info("Update ok");
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
-            log.info("Persist echec");
+            log.info("Update echec");
         } finally {
             em.clear();
             em.clear();
@@ -273,7 +329,6 @@ public class NotesBean implements Serializable {
         List<String> errors = NotesValidator.validate(entity);
         if (!errors.isEmpty()) {
             log.error("Note is not valide {}", entity);
-            log.info(errors.toString());
             throw new InvalidEntityException("La note n est pas valide", ErrorCodes.NOTE_NOT_VALID, errors);
         }
     }

@@ -18,13 +18,13 @@ class NotesBeanTest {
     private NotesBean notesBean;
 
     @BeforeEach
-    public void initNotes() {
+    public void init() {
         log.info("Appel avant chaque test");
         notesBean = new NotesBean();
     }
 
     @AfterEach
-    public void undefOrders() {
+    public void after() {
         log.info("Appel après chaque test");
         notesBean = null;
     }
@@ -45,11 +45,31 @@ class NotesBeanTest {
     }
 
     @Test
-    void findbyId() {
+    void findByIdShouldReturnFalse() {
         int id = 1;
+        int idUser = 1014;
+
         NotesEntity notesEntity = null;
         try {
-            notesEntity = notesBean.findById(id);
+            notesEntity = notesBean.findById(id, idUser);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+        }
+
+        boolean test = notesEntity != null;
+
+        log.info("Le test vaut : " + test);
+        assertThat(test).isEqualTo(false);
+    }
+
+    @Test
+    void findByIdShouldReturnTrue() {
+        int id = 1;
+        int idUser = 1;
+
+        NotesEntity notesEntity = null;
+        try {
+            notesEntity = notesBean.findById(id, idUser);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
         }
@@ -59,12 +79,14 @@ class NotesBeanTest {
         log.info("Le test vaut : " + test);
         assertThat(test).isEqualTo(true);
     }
-
     @Test
     void findEntityNotesEntityByContactsByIdContactsShouldReturnTrue() {
-        int id = 1;
 
-        List<NotesEntity> notesEntities = notesBean.findNotesEntityByContactsByIdContacts(id);
+        // Mettre un id correct
+        int id = 1;
+        int idUser = 1;
+
+        List<NotesEntity> notesEntities = notesBean.findNotesEntityByContactsByIdContacts(id, idUser);
 
         boolean test = !notesEntities.isEmpty();
 
@@ -75,9 +97,13 @@ class NotesBeanTest {
 
     @Test
     void findEntityNotesEntityByContactsByIdContactsShouldReturnFalse() {
-        int id = 15111;
 
-        List<NotesEntity> notesEntities = notesBean.findNotesEntityByContactsByIdContacts(id);
+        // Mettre un id incorrect
+        int id = 1;
+
+        int idUser = 11;
+
+        List<NotesEntity> notesEntities = notesBean.findNotesEntityByContactsByIdContacts(id, idUser);
 
         boolean test = !notesEntities.isEmpty();
 
@@ -89,9 +115,12 @@ class NotesBeanTest {
 
     @Test
     void findEntityNotesEntityByCompaniesByIdCompaniesShouldReturnTrue() {
-        int id = 1;
 
-        List<NotesEntity> notesEntities = notesBean.findNotesEntityByCompaniesByIdCompanies(id);
+        // Mettre un id correct
+        int id = 1;
+        int idUser = 1;
+
+        List<NotesEntity> notesEntities = notesBean.findNotesEntityByCompaniesByIdCompanies(id, idUser);
 
         boolean test = !notesEntities.isEmpty();
 
@@ -102,9 +131,12 @@ class NotesBeanTest {
 
     @Test
     void findEntityNotesEntityByCompaniesByIdCompaniesShouldReturnFalse() {
-        int id = 15111;
 
-        List<NotesEntity> notesEntities = notesBean.findNotesEntityByCompaniesByIdCompanies(id);
+        // Mettre un id incorrect
+        int id = 195;
+        int idUser = 1;
+
+        List<NotesEntity> notesEntities = notesBean.findNotesEntityByCompaniesByIdCompanies(id, idUser);
 
         boolean test = !notesEntities.isEmpty();
 
@@ -115,31 +147,33 @@ class NotesBeanTest {
 
     @Test
     void findAll() {
-        List<NotesEntity> notesEntities = notesBean.findAll();
+        int idUser = 1;
+        List<NotesEntity> notesEntities = notesBean.findAll(idUser);
 
 
         boolean test = !notesEntities.isEmpty();
 
-        log.info("Le test vaut : " + test + ". La liste contient : " + notesEntities.stream().count() + " notes");
+        log.info("Le test vaut : " + test + ". La liste contient : " + (long) notesEntities.size() + " notes");
 
         assertThat(test).isEqualTo(true);
     }
 
     @Test
     void delete() {
-        int id = 4;
+        int id = 12;
+        int idUser = 1;
 
-        notesBean.delete(id);
+        notesBean.delete(id, idUser);
 
     }
 
     @Test
     void update() {
         UsersEntity usersEntity = new UsersEntity();
-        usersEntity.setId(1);
+        usersEntity.setId(10);
 
         NotesEntity notesEntity = new NotesEntity();
-        notesEntity.setId(10);
+        notesEntity.setId(1);
         notesEntity.setMessage("Message modifié");
         notesEntity.setUsersByIdUsers(usersEntity);
 

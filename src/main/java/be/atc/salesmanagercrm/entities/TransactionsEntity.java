@@ -7,6 +7,13 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "transactions", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "Transactions.findTransactionsEntityByContactsByIdContacts", query = "select t from TransactionsEntity t where (t.contactsByIdContacts.id = :id and t.usersByIdUsers.id = :idUser and t.active = true)"),
+        @NamedQuery(name = "Transactions.findTransactionsEntityByCompaniesByIdCompanies", query = "select t from TransactionsEntity t where (t.companiesByIdCompanies.id = :id and t.usersByIdUsers.id = :idUser and t.active = true)"),
+        @NamedQuery(name = "Transactions.findAll", query = "SELECT t from TransactionsEntity t where (t.usersByIdUsers.id = :idUser and t.active = true)"),
+        @NamedQuery(name = "Transactions.findById", query = "SELECT t from TransactionsEntity t where (t.id = :id and t.usersByIdUsers.id = :idUser and t.active = true)"),
+
+})
 public class TransactionsEntity {
     private int id;
     private String title;
