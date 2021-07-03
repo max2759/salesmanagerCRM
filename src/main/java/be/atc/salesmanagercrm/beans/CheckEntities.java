@@ -1,17 +1,8 @@
 package be.atc.salesmanagercrm.beans;
 
-import be.atc.salesmanagercrm.dao.CompaniesDao;
-import be.atc.salesmanagercrm.dao.ContactsDao;
-import be.atc.salesmanagercrm.dao.TaskTypesDao;
-import be.atc.salesmanagercrm.dao.UsersDao;
-import be.atc.salesmanagercrm.dao.impl.CompaniesDaoImpl;
-import be.atc.salesmanagercrm.dao.impl.ContactsDaoImpl;
-import be.atc.salesmanagercrm.dao.impl.TaskTypesDaoImpl;
-import be.atc.salesmanagercrm.dao.impl.UsersDaoImpl;
-import be.atc.salesmanagercrm.entities.CompaniesEntity;
-import be.atc.salesmanagercrm.entities.ContactsEntity;
-import be.atc.salesmanagercrm.entities.TaskTypesEntity;
-import be.atc.salesmanagercrm.entities.UsersEntity;
+import be.atc.salesmanagercrm.dao.*;
+import be.atc.salesmanagercrm.dao.impl.*;
+import be.atc.salesmanagercrm.entities.*;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
@@ -32,6 +23,7 @@ public class CheckEntities implements Serializable {
     UsersDao usersDao = new UsersDaoImpl();
     CompaniesDao companiesDao = new CompaniesDaoImpl();
     TaskTypesDao taskTypesDao = new TaskTypesDaoImpl();
+    JobTitlesDao jobTitlesDao = new JobTitlesDaoImpl();
 
     /**
      * Check if Contact exist in DB
@@ -98,6 +90,19 @@ public class CheckEntities implements Serializable {
         }
     }
 
+    public void checkJobTitlesLabel(JobTitlesEntity jobTitlesEntity) {
+        if (jobTitlesEntity != null) {
+            EntityManager em = EMF.getEM();
+
+            if (jobTitlesDao.findByLabel(em, jobTitlesEntity.getLabel())) {
+                log.warn("Job Title label already exist");
+                throw new InvalidEntityException(
+                        "L'intitulé du poste " + jobTitlesEntity.getLabel() + " existe déjà", ErrorCodes.JOBTITLES_NOT_VALID
+                );
+            }
+        }
+    }
+
 
     /**
      * Check if TaskType exist in DB
@@ -118,4 +123,6 @@ public class CheckEntities implements Serializable {
             }
         }
     }
+
+
 }
