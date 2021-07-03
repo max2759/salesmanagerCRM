@@ -5,6 +5,9 @@ import be.atc.salesmanagercrm.entities.TaskTypesEntity;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+/**
+ * @author Younes Arifi
+ */
 public interface TaskTypesDao {
 
     void save(EntityManager em, TaskTypesEntity entity);

@@ -22,6 +22,9 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author Younes Arifi
+ */
 @Slf4j
 @Named(value = "notesBean")
 @RequestScoped
@@ -168,7 +171,7 @@ public class NotesBean implements Serializable {
      */
     protected List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(int id, int idUser) {
         if (id == 0) {
-            log.error("Contact ID is null");
+            log.error("Company ID is null");
             return Collections.emptyList();
         }
         if (idUser == 0) {
@@ -258,7 +261,7 @@ public class NotesBean implements Serializable {
         try {
             validateNote(entity);
         } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
 

@@ -7,6 +7,9 @@ import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+/**
+ * @author Younes Arifi
+ */
 public class TaskTypesDaoImpl extends EntityFinderImpl<TaskTypesEntity> implements TaskTypesDao {
     @Override
     public void save(EntityManager em, TaskTypesEntity entity) {

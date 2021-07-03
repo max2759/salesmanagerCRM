@@ -20,6 +20,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Younes Arifi
+ */
 @Slf4j
 @Named(value = "taskTypesBean")
 @RequestScoped

@@ -1,33 +1,31 @@
 package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.entities.*;
-import be.atc.salesmanagercrm.enums.EnumPriority;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-class TasksBeanTest {
+class VouchersBeanTest {
 
-    private TasksBean tasksBean;
+    private VouchersBean vouchersBean;
 
     @BeforeEach
     public void init() {
         log.info("Appel avant chaque test");
-        tasksBean = new TasksBean();
+        vouchersBean = new VouchersBean();
     }
 
     @AfterEach
     public void after() {
         log.info("Appel après chaque test");
-        tasksBean = null;
+        vouchersBean = null;
     }
 
     @Test
@@ -36,41 +34,42 @@ class TasksBeanTest {
         UsersEntity usersEntity = new UsersEntity();
         CompaniesEntity companiesEntity = new CompaniesEntity();
         ContactsEntity contactsEntity = new ContactsEntity();
-        TaskTypesEntity taskTypesEntity = new TaskTypesEntity();
+        VoucherStatusEntity voucherStatusEntity = new VoucherStatusEntity();
 
         usersEntity.setId(1);
         companiesEntity.setId(1);
         contactsEntity.setId(1);
-        taskTypesEntity.setId(1);
+        voucherStatusEntity.setId(1);
 
-        TasksEntity entity = new TasksEntity();
+        VouchersEntity entity = new VouchersEntity();
 
         entity.setUsersByIdUsers(usersEntity);
-        entity.setPriority(EnumPriority.ELEVEE);
-        entity.setEndDate(LocalDateTime.now().plusMonths(1));
-        entity.setTitle("Task Test");
+//        entity.setPriority(EnumPriority.ELEVEE);
+//        entity.setEndDate(LocalDateTime.now().plusMonths(1));
+        entity.setTitle("Voucher Test");
+        entity.setVoucherStatusByIdVoucherStatus(voucherStatusEntity);
 
         entity.setCompaniesByIdCompanies(companiesEntity);
         entity.setContactsByIdContacts(contactsEntity);
-        entity.setTaskTypesByIdTaskTypes(taskTypesEntity);
-        tasksBean.save(entity);
+        vouchersBean.save(entity);
     }
+
 
     @Test
     void findByIdShouldReturnFalse() {
 
         // Mettre un id incorrect
-        int id = 12;
-        int idUser = 11;
-        TasksEntity tasksEntity = null;
+        int id = 10;
+        int idUser = 1;
+        VouchersEntity vouchersEntity = null;
 
         try {
-            tasksEntity = tasksBean.findById(id, idUser);
+            vouchersEntity = vouchersBean.findById(id, idUser);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
         }
 
-        boolean test = tasksEntity != null;
+        boolean test = vouchersEntity != null;
 
         log.info("Le test vaut : " + test);
         assertThat(test).isEqualTo(false);
@@ -82,17 +81,17 @@ class TasksBeanTest {
     void findByIdShouldReturnTrue() {
 
         // Mettre un id correct
-        int id = 12;
+        int id = 1;
         int idUser = 1;
-        TasksEntity tasksEntity = null;
+        VouchersEntity vouchersEntity = null;
 
         try {
-            tasksEntity = tasksBean.findById(id, idUser);
+            vouchersEntity = vouchersBean.findById(id, idUser);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
         }
 
-        boolean test = tasksEntity != null;
+        boolean test = vouchersEntity != null;
 
         log.info("Le test vaut : " + test);
         assertThat(test).isEqualTo(true);
@@ -100,16 +99,16 @@ class TasksBeanTest {
     }
 
     @Test
-    void findTasksEntityByContactsByIdContactsShouldReturnTrue() {
+    void findVouchersEntityByContactsByIdContactsShouldReturnTrue() {
 
         // Mettre un id correct
         int id = 1;
         int idUser = 1;
 
-        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByContactsByIdContacts(id, idUser);
+        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByContactsByIdContacts(id, idUser);
 
 
-        boolean test = !tasksEntities.isEmpty();
+        boolean test = !vouchersEntities.isEmpty();
 
         log.info("Le test vaut : " + test);
 
@@ -117,17 +116,17 @@ class TasksBeanTest {
     }
 
     @Test
-    void findTasksEntityByContactsByIdContactsShouldReturnFalse() {
+    void findVouchersEntityByContactsByIdContactsShouldReturnFalse() {
 
         // Mettre un id incorrect
-        int id = 1;
+        int id = 10;
 
-        int idUser = 11;
+        int idUser = 1;
 
-        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByContactsByIdContacts(id, idUser);
+        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByContactsByIdContacts(id, idUser);
 
 
-        boolean test = !tasksEntities.isEmpty();
+        boolean test = !vouchersEntities.isEmpty();
 
         log.info("Le test vaut : " + test);
 
@@ -135,16 +134,16 @@ class TasksBeanTest {
     }
 
     @Test
-    void findTasksEntityByCompaniesByIdCompaniesShouldReturnTrue() {
+    void findVouchersEntityByCompaniesByIdCompaniesShouldReturnTrue() {
 
         // Mettre un id correct
         int id = 1;
         int idUser = 1;
 
-        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByCompaniesByIdCompanies(id, idUser);
+        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByCompaniesByIdCompanies(id, idUser);
 
 
-        boolean test = !tasksEntities.isEmpty();
+        boolean test = !vouchersEntities.isEmpty();
 
         log.info("Le test vaut : " + test);
 
@@ -152,16 +151,16 @@ class TasksBeanTest {
     }
 
     @Test
-    void findTasksEntityByCompaniesByIdCompaniesShouldReturnFalse() {
+    void findVouchersEntityByCompaniesByIdCompaniesShouldReturnFalse() {
 
         // Mettre un id incorrect
         int id = 195;
         int idUser = 1;
 
-        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByCompaniesByIdCompanies(id, idUser);
+        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByCompaniesByIdCompanies(id, idUser);
 
 
-        boolean test = !tasksEntities.isEmpty();
+        boolean test = !vouchersEntities.isEmpty();
 
         log.info("Le test vaut : " + test);
 
@@ -171,38 +170,31 @@ class TasksBeanTest {
     @Test
     void findAll() {
         int idUser = 1;
-        List<TasksEntity> tasksEntities = tasksBean.findAll(idUser);
+        List<VouchersEntity> vouchersEntities = vouchersBean.findAll(idUser);
 
 
-        boolean test = !tasksEntities.isEmpty();
+        boolean test = !vouchersEntities.isEmpty();
 
-        log.info("Le test vaut : " + test + ". La liste contient : " + (long) tasksEntities.size() + " taches");
+        log.info("Le test vaut : " + test + ". La liste contient : " + (long) vouchersEntities.size() + " taches");
 
         assertThat(test).isEqualTo(true);
-    }
-
-
-    @Test
-    void delete() {
-        int id = 12;
-        int idUser = 1;
-
-        tasksBean.delete(id, idUser);
-
     }
 
     @Test
     void update() {
         UsersEntity usersEntity = new UsersEntity();
+        VoucherStatusEntity voucherStatusEntity = new VoucherStatusEntity();
+        voucherStatusEntity.setId(3);
         usersEntity.setId(1);
 
-        TasksEntity tasksEntity = new TasksEntity();
-        tasksEntity.setId(11);
-        tasksEntity.setTitle("Titre modifié");
-        tasksEntity.setDescription("Description Modifié");
+        VouchersEntity vouchersEntity = new VouchersEntity();
+        vouchersEntity.setId(3);
+        vouchersEntity.setTitle("Titre modifié");
+        vouchersEntity.setDescription("Description Modifié");
+        vouchersEntity.setVoucherStatusByIdVoucherStatus(voucherStatusEntity);
 
-        tasksEntity.setUsersByIdUsers(usersEntity);
+        vouchersEntity.setUsersByIdUsers(usersEntity);
 
-        tasksBean.update(tasksEntity);
+        vouchersBean.update(vouchersEntity);
     }
 }
