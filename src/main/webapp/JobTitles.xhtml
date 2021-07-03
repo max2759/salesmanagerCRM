@@ -18,11 +18,14 @@
             <h3>Création d'un intitulé de poste</h3>
 
             <div>
-               <h:outputLabel>Intitulé du poste : </h:outputLabel>
-               <h:inputText value="#{jobtitlesBean.jobTitlesEntity.label}" required="true"></h:inputText>
+                <h:outputLabel>Intitulé du poste : </h:outputLabel>
+                <h:inputText id="jobTitlesLabel" value="#{jobtitlesBean.jobTitlesEntity.label}" required="true">
+                    <f:validator validatorId="JobTitlesValidator"></f:validator>
+                </h:inputText>
+                <h:messages style="color:red;"/>
             </div>
             <h:commandButton value="Valider"
-                             action="#{jobtitlesBean.addJobTitles}"
+                             action="#{jobtitlesBean.saveJobTitles}"
             >
             </h:commandButton>
 

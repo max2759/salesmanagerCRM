@@ -7,12 +7,14 @@ import java.util.List;
 
 public interface JobTitlesDao {
 
-    public void add( EntityManager em, JobTitlesEntity jobTitlesEntity);
+    void add(EntityManager em, JobTitlesEntity jobTitlesEntity);
 
-    public List<JobTitlesEntity> findAll();
+    List<JobTitlesEntity> findAll();
 
     void update(EntityManager em, JobTitlesEntity jobTitlesEntity);
 
     JobTitlesEntity findById(EntityManager em, int id);
+
+    boolean findByLabel(EntityManager em, String label);
 
 }

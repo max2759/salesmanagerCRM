@@ -3,6 +3,7 @@ package be.atc.salesmanagercrm.beans;
 import be.atc.salesmanagercrm.dao.JobTitlesDao;
 import be.atc.salesmanagercrm.dao.impl.JobTitlesDaoImpl;
 import be.atc.salesmanagercrm.entities.JobTitlesEntity;
+import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,12 +33,22 @@ public class JobTitlesBean implements Serializable {
     @Setter
     private JobTitlesEntity jobTitlesEntity = new JobTitlesEntity();
 
-    public void addJobTitles() {
+    public void saveJobTitles() {
+        addJobTitles(jobTitlesEntity);
+    }
 
+    protected void addJobTitles(JobTitlesEntity jobTitlesEntity) {
+
+        CheckEntities checkEntities = new CheckEntities();
+
+        try {
+            checkEntities.checkJobTitlesLabel(jobTitlesEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            return;
+        }
 
         EntityManager em = EMF.getEM();
-
-
         EntityTransaction tx = null;
 
         try {
@@ -58,4 +69,6 @@ public class JobTitlesBean implements Serializable {
     public void findAll() {
         jobTitlesEntities = jobTitlesDao.findAll();
     }
+
+
 }
