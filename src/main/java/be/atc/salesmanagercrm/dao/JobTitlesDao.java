@@ -5,6 +5,9 @@ import be.atc.salesmanagercrm.entities.JobTitlesEntity;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+/**
+ * @author Maximilien Zabbara
+ */
 public interface JobTitlesDao {
 
     void add(EntityManager em, JobTitlesEntity jobTitlesEntity);
