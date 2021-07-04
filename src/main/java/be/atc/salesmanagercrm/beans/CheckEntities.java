@@ -168,4 +168,24 @@ public class CheckEntities implements Serializable {
             }
         }
     }
+
+
+    /**
+     * Check if user exist in DB
+     *
+     * @param entity : UsersEntity
+     */
+
+    public void checkUserByUsername(UsersEntity entity) {
+        if (entity == null) {
+            UsersEntity usersEntity = usersDao.findByUsername(entity.getUsername());
+            if (usersEntity != null) {
+                log.warn("User exists yet", entity.getUsername());
+                throw new EntityNotFoundException(
+                        "Il y a déjà un utilisateur avec ce pseudo: " + entity.getUsername(), ErrorCodes.USER_NOT_FOUND
+                );
+            }
+        }
+    }
+
 }

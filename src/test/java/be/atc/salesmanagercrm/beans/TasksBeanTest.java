@@ -50,7 +50,7 @@ class TasksBeanTest {
         entity.setEndDate(LocalDateTime.now().plusMonths(1));
         entity.setTitle("Task Test");
 
-        entity.setCompaniesByIdCompanies(companiesEntity);
+     //   entity.setCompaniesByIdCompanies(companiesEntity);
         entity.setContactsByIdContacts(contactsEntity);
         entity.setTaskTypesByIdTaskTypes(taskTypesEntity);
         tasksBean.save(entity);
