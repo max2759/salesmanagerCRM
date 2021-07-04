@@ -7,6 +7,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "Users.findNUserByUsernameAndPassword", query = "select u from UsersEntity u where u.username = :username and u.password = :password"),
+        @NamedQuery(name = "Users.findByUsername", query = "select u from UsersEntity u where u.username = :username"),
+})
 public class UsersEntity {
     private int id;
     private String firstname;
