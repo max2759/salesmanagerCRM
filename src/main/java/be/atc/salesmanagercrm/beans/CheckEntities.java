@@ -23,6 +23,7 @@ public class CheckEntities implements Serializable {
     UsersDao usersDao = new UsersDaoImpl();
     CompaniesDao companiesDao = new CompaniesDaoImpl();
     TaskTypesDao taskTypesDao = new TaskTypesDaoImpl();
+    JobTitlesDao jobTitlesDao = new JobTitlesDaoImpl();
     VoucherStatusDao voucherStatusDao = new VoucherStatusDaoImpl();
     TransactionTypesDao transactionTypesDao = new TransactionTypesDaoImpl();
     TransactionPhasesDao transactionPhasesDao = new TransactionPhasesDaoImpl();
@@ -87,6 +88,19 @@ public class CheckEntities implements Serializable {
                 log.warn("User with ID {} is not active", entity.getId());
                 throw new InvalidEntityException(
                         "L utilisateur avec l id " + usersEntity.getId() + " est desactive", ErrorCodes.USER_NOT_VALID
+                );
+            }
+        }
+    }
+
+    public void checkJobTitlesLabel(JobTitlesEntity jobTitlesEntity) {
+        if (jobTitlesEntity != null) {
+            EntityManager em = EMF.getEM();
+
+            if (jobTitlesDao.findByLabel(em, jobTitlesEntity.getLabel())) {
+                log.warn("Job Title label already exist");
+                throw new InvalidEntityException(
+                        "L'intitulé du poste " + jobTitlesEntity.getLabel() + " existe déjà", ErrorCodes.JOBTITLES_NOT_VALID
                 );
             }
         }

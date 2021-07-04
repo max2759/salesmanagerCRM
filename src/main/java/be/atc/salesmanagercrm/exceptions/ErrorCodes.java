@@ -35,6 +35,9 @@ public enum ErrorCodes {
     VOUCHERSTATUS_NOT_FOUND(11000),
     VOUCHERSTATUS_NOT_VALID(11001),
 
+    JOBTITLES_NOT_VALID(12000),
+    JOBTITLES_NOT_FOUND(120001),
+
     ;
 
     private final int code;

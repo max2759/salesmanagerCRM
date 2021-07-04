@@ -1,9 +1,6 @@
 package be.atc.salesmanagercrm.beans;
 
-import be.atc.salesmanagercrm.entities.CompaniesEntity;
-import be.atc.salesmanagercrm.entities.ContactsEntity;
-import be.atc.salesmanagercrm.entities.TaskTypesEntity;
-import be.atc.salesmanagercrm.entities.UsersEntity;
+import be.atc.salesmanagercrm.entities.*;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import lombok.extern.slf4j.Slf4j;
@@ -87,6 +84,25 @@ class CheckEntitiesTest {
             checkEntities.checkTaskType(entity);
         } catch (EntityNotFoundException exception) {
             log.info("test on est dans le catch");
+            return;
+        }
+
+        log.info("test de fin");
+    }
+
+    @Test
+    void checkJobTitlesLabel() {
+        JobTitlesEntity jobTitlesEntity = new JobTitlesEntity();
+
+        jobTitlesEntity.setLabel("test");
+
+        CheckEntities checkEntities = new CheckEntities();
+        log.info("Début du test");
+
+        try {
+            checkEntities.checkJobTitlesLabel(jobTitlesEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         }
 
