@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+/**
+ * @author Maximilien Zabbara
+ */
 @Slf4j
 public class JobTitlesDaoImpl extends EntityFinderImpl<JobTitlesEntity> implements JobTitlesDao {
 
