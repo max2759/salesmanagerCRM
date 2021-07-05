@@ -107,10 +107,18 @@ public class JobTitlesBean implements Serializable {
     }
 
     /**
-     * List of all job titles
+     * Find all jobtitles entities
+     *
+     * @return List of JobTitles Entity
      */
-    public void findAll() {
-        jobTitlesEntities = jobTitlesDao.findAll();
+    protected List<JobTitlesEntity> findAll() {
+        EntityManager em = EMF.getEM();
+        List<JobTitlesEntity> jobTitlesEntities = jobTitlesDao.findAll();
+
+        em.clear();
+        em.close();
+
+        return jobTitlesEntities;
     }
 
     /**
