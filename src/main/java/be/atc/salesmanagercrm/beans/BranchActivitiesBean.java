@@ -1,8 +1,8 @@
 package be.atc.salesmanagercrm.beans;
 
-import be.atc.salesmanagercrm.dao.JobTitlesDao;
-import be.atc.salesmanagercrm.dao.impl.JobTitlesDaoImpl;
-import be.atc.salesmanagercrm.entities.JobTitlesEntity;
+import be.atc.salesmanagercrm.dao.BranchActivitiesDao;
+import be.atc.salesmanagercrm.dao.impl.BranchActivitiesImpl;
+import be.atc.salesmanagercrm.entities.BranchActivitiesEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
@@ -22,40 +22,28 @@ import java.util.List;
  * @author Maximilien Zabbara
  */
 @Slf4j
-@Named(value = "jobtitlesBean")
+@Named(value = "branchActivitiesBean")
 @ViewScoped
-public class JobTitlesBean implements Serializable {
+public class BranchActivitiesBean implements Serializable {
 
     @Getter
     @Setter
-    private JobTitlesDao jobTitlesDao = new JobTitlesDaoImpl();
+    private BranchActivitiesDao branchActivitiesDao = new BranchActivitiesImpl();
 
     @Getter
     @Setter
-    private List<JobTitlesEntity> jobTitlesEntities;
-
-    @Getter
-    @Setter
-    private JobTitlesEntity jobTitlesEntity = new JobTitlesEntity();
+    private BranchActivitiesEntity branchActivitiesEntity = new BranchActivitiesEntity();
 
     /**
-     * public method that call addJobTitle
-     */
-    public void saveJobTitles() {
-        addJobTitle(jobTitlesEntity);
-    }
-
-    /**
-     * Save job title
+     * Save branch activities title
      *
-     * @param jobTitlesEntity
+     * @param branchActivitiesEntity
      */
-    protected void addJobTitle(JobTitlesEntity jobTitlesEntity) {
-
+    protected void addBranchActivities(BranchActivitiesEntity branchActivitiesEntity) {
         CheckEntities checkEntities = new CheckEntities();
 
         try {
-            checkEntities.checkJobTitlesLabel(jobTitlesEntity);
+            checkEntities.checkBranchActivitiesLabel(branchActivitiesEntity);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
@@ -67,7 +55,7 @@ public class JobTitlesBean implements Serializable {
         try {
             tx = em.getTransaction();
             tx.begin();
-            jobTitlesDao.add(em, jobTitlesEntity);
+            branchActivitiesDao.add(em, branchActivitiesEntity);
             tx.commit();
             log.info("Persist ok");
         } catch (Exception ex) {
@@ -80,25 +68,38 @@ public class JobTitlesBean implements Serializable {
     }
 
     /**
-     * Find job title by id
+     * Find all Branch activities
      *
-     * @param id JobTitles
-     * @return JobTitlesEntity
+     * @return
      */
-    protected JobTitlesEntity findById(int id) {
+    protected List<BranchActivitiesEntity> findAll() {
+        EntityManager em = EMF.getEM();
+        List<BranchActivitiesEntity> branchActivitiesEntities = branchActivitiesDao.findAll();
+        em.clear();
+        em.close();
+        return branchActivitiesEntities;
+    }
+
+    /**
+     * Find Branch Activity by label
+     *
+     * @param id BranchActivities
+     * @return BranchActivitiesEntity
+     */
+    protected BranchActivitiesEntity findById(int id) {
         if (id == 0) {
-            log.error("Job_Titles ID is null");
+            log.error("Branch_Activities ID is null");
             return null;
         }
 
         EntityManager em = EMF.getEM();
         try {
-            return jobTitlesDao.findById(em, id);
+            return branchActivitiesDao.findById(em, id);
         } catch (Exception ex) {
             log.info("Nothing");
             throw new EntityNotFoundException(
-                    "Aucun intitulé de poste avec l ID " + id + " n'a ete trouve dans la DB",
-                    ErrorCodes.JOBTITLES_NOT_FOUND
+                    "Aucun secteur d'activié avec l ID " + id + " n'a été trouve dans la DB",
+                    ErrorCodes.BRANCHACTIVITIES_NOT_FOUND
             );
         } finally {
             em.clear();
@@ -107,29 +108,14 @@ public class JobTitlesBean implements Serializable {
     }
 
     /**
-     * Find all jobtitles entities
+     * Update BranchActivities
      *
-     * @return List of JobTitles Entity
+     * @param branchActivitiesEntity
      */
-    protected List<JobTitlesEntity> findAll() {
-        EntityManager em = EMF.getEM();
-        List<JobTitlesEntity> jobTitlesEntities = jobTitlesDao.findAll();
-
-        em.clear();
-        em.close();
-
-        return jobTitlesEntities;
-    }
-
-    /**
-     * Update JobTitles
-     *
-     * @param jobTitlesEntity
-     */
-    protected void update(JobTitlesEntity jobTitlesEntity) {
+    protected void updateBranchActivitiesLabel(BranchActivitiesEntity branchActivitiesEntity) {
 
         try {
-            findById(jobTitlesEntity.getId());
+            findById(branchActivitiesEntity.getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
@@ -138,7 +124,7 @@ public class JobTitlesBean implements Serializable {
         CheckEntities checkEntities = new CheckEntities();
 
         try {
-            checkEntities.checkJobTitlesLabel(jobTitlesEntity);
+            checkEntities.checkBranchActivitiesLabel(branchActivitiesEntity);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
@@ -149,7 +135,7 @@ public class JobTitlesBean implements Serializable {
         try {
             tx = em.getTransaction();
             tx.begin();
-            jobTitlesDao.update(em, jobTitlesEntity);
+            branchActivitiesDao.update(em, branchActivitiesEntity);
             tx.commit();
             log.info("Update ok");
         } catch (Exception ex) {
@@ -159,8 +145,6 @@ public class JobTitlesBean implements Serializable {
             em.clear();
             em.clear();
         }
-
     }
-
 
 }

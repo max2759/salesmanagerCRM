@@ -108,4 +108,23 @@ class CheckEntitiesTest {
 
         log.info("test de fin");
     }
+
+    @Test
+    void checkBranchActivitiesLabel() {
+        BranchActivitiesEntity branchActivitiesEntity = new BranchActivitiesEntity();
+
+        branchActivitiesEntity.setLabel("test");
+
+        CheckEntities checkEntities = new CheckEntities();
+        log.info("Début du test");
+
+        try {
+            checkEntities.checkBranchActivitiesLabel(branchActivitiesEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            return;
+        }
+
+        log.info("Fin du test");
+    }
 }

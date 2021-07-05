@@ -38,6 +38,9 @@ public enum ErrorCodes {
     JOBTITLES_NOT_VALID(12000),
     JOBTITLES_NOT_FOUND(120001),
 
+    BRANCHACTIVITIESLABEL_NOT_VALID(13000),
+    BRANCHACTIVITIES_NOT_FOUND(13001),
+
     ;
 
     private final int code;

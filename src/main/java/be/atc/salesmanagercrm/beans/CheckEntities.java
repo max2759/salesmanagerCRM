@@ -24,6 +24,7 @@ public class CheckEntities implements Serializable {
     CompaniesDao companiesDao = new CompaniesDaoImpl();
     TaskTypesDao taskTypesDao = new TaskTypesDaoImpl();
     JobTitlesDao jobTitlesDao = new JobTitlesDaoImpl();
+    BranchActivitiesDao branchActivitiesDao = new BranchActivitiesImpl();
     VoucherStatusDao voucherStatusDao = new VoucherStatusDaoImpl();
     TransactionTypesDao transactionTypesDao = new TransactionTypesDaoImpl();
     TransactionPhasesDao transactionPhasesDao = new TransactionPhasesDaoImpl();
@@ -93,6 +94,11 @@ public class CheckEntities implements Serializable {
         }
     }
 
+    /**
+     * Check if JobTitle already exist in DB
+     *
+     * @param jobTitlesEntity
+     */
     public void checkJobTitlesLabel(JobTitlesEntity jobTitlesEntity) {
         if (jobTitlesEntity != null) {
             EntityManager em = EMF.getEM();
@@ -101,6 +107,24 @@ public class CheckEntities implements Serializable {
                 log.warn("Job Title label already exist");
                 throw new InvalidEntityException(
                         "L'intitulé du poste " + jobTitlesEntity.getLabel() + " existe déjà", ErrorCodes.JOBTITLES_NOT_VALID
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if Branch_Activities label already exist in DB
+     *
+     * @param branchActivitiesEntity
+     */
+    public void checkBranchActivitiesLabel(BranchActivitiesEntity branchActivitiesEntity) {
+        if (branchActivitiesEntity != null) {
+            EntityManager em = EMF.getEM();
+
+            if (branchActivitiesDao.findByLabel(em, branchActivitiesEntity.getLabel())) {
+                log.warn("Branch activities label already exist");
+                throw new InvalidEntityException(
+                        "L'intitulé du poste " + branchActivitiesEntity.getLabel() + " existe déjà", ErrorCodes.BRANCHACTIVITIESLABEL_NOT_VALID
                 );
             }
         }
