@@ -1,7 +1,7 @@
 package be.atc.salesmanagercrm.validators;
 
 import be.atc.salesmanagercrm.beans.CheckEntities;
-import be.atc.salesmanagercrm.entities.BranchActivitiesEntity;
+import be.atc.salesmanagercrm.entities.JobTitlesEntity;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -15,39 +15,27 @@ import javax.faces.validator.ValidatorException;
 import java.util.Locale;
 
 @Slf4j
-@FacesValidator("BranchActivitiesValidator")
-public class BranchActivitiesValidator implements Validator {
+@FacesValidator("jobTitlesLabelValidator")
+public class JobTitlesLabelValidator implements Validator {
+
     Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Override
     public void validate(FacesContext facesContext, UIComponent uiComponent, Object value) throws ValidatorException {
 
-        if (value == null) {
-            log.info("Branch activity label is empty");
-            throw new ValidatorException(new FacesMessage(getMessageError()));
-        }
-
         CheckEntities checkEntities = new CheckEntities();
 
-        BranchActivitiesEntity branchActivitiesEntity = new BranchActivitiesEntity();
+        JobTitlesEntity jobTitlesEntity = new JobTitlesEntity();
 
-        branchActivitiesEntity.setLabel((String) value);
+        jobTitlesEntity.setLabel((String) value);
 
         try {
-            checkEntities.checkBranchActivitiesLabel(branchActivitiesEntity);
+            checkEntities.checkJobTitlesLabel(jobTitlesEntity);
         } catch (InvalidEntityException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             throw new ValidatorException(new FacesMessage(getMessageErrorLabelAlreadyExist()));
         }
-    }
 
-    /**
-     * Return message for empty label
-     *
-     * @return jsf utils message
-     */
-    private String getMessageError() {
-        return JsfUtils.returnMessage(locale, "branchActivities.labelError");
     }
 
     /**
@@ -56,6 +44,6 @@ public class BranchActivitiesValidator implements Validator {
      * @return jsf utils message
      */
     private String getMessageErrorLabelAlreadyExist() {
-        return JsfUtils.returnMessage(locale, "branchActivities.labelExist");
+        return JsfUtils.returnMessage(locale, "jobTitles.labelExist");
     }
 }

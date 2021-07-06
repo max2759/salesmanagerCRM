@@ -1,55 +1,41 @@
 package be.atc.salesmanagercrm.validators;
 
-import be.atc.salesmanagercrm.beans.CheckEntities;
 import be.atc.salesmanagercrm.entities.JobTitlesEntity;
-import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.validator.FacesValidator;
-import javax.faces.validator.Validator;
-import javax.faces.validator.ValidatorException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+/**
+ * @author Maximilien Zabbara
+ */
 @Slf4j
-@FacesValidator("JobTitlesValidator")
-public class JobTitlesValidator implements Validator {
+public class JobTitlesValidator {
 
-    Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+    public static List<String> validate(JobTitlesEntity jobTitlesEntity) {
+
+        List<String> errors = new ArrayList<>();
+
+        Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+        FacesMessage msg = null;
 
 
-    @Override
-    public void validate(FacesContext facesContext, UIComponent uiComponent, Object value) throws ValidatorException {
-
-        if (value == null) {
-            log.info("Job title label is empty");
-            throw new ValidatorException(new FacesMessage(getMessageError()));
+        if (jobTitlesEntity == null) {
+            errors.add("Le label est obligatoire !");
+            msg = new FacesMessage(JsfUtils.returnMessage(locale, "jobTitles.labelError"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return errors;
+        }
+        if (jobTitlesEntity.getLabel() == null || jobTitlesEntity.getLabel().isEmpty()) {
+            errors.add("Le label est obligatoire !");
+            msg = new FacesMessage(JsfUtils.returnMessage(locale, "jobTitles.labelError"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
 
-        CheckEntities checkEntities = new CheckEntities();
-
-        JobTitlesEntity jobTitlesEntity = new JobTitlesEntity();
-
-        jobTitlesEntity.setLabel((String) value);
-
-        try {
-            checkEntities.checkJobTitlesLabel(jobTitlesEntity);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            throw new ValidatorException(new FacesMessage(getMessageError()));
-        }
-
-    }
-
-    /**
-     * Return message for size error
-     *
-     * @return
-     */
-    private String getMessageError() {
-        return JsfUtils.returnMessage(locale, "jobTitles.labelError");
+        return errors;
     }
 }
