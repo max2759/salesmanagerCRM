@@ -7,6 +7,7 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import be.atc.salesmanagercrm.validators.JobTitlesValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -26,17 +27,18 @@ import java.util.List;
 @ViewScoped
 public class JobTitlesBean implements Serializable {
 
+
     @Getter
     @Setter
     private JobTitlesDao jobTitlesDao = new JobTitlesDaoImpl();
 
     @Getter
     @Setter
-    private List<JobTitlesEntity> jobTitlesEntities;
+    private JobTitlesEntity jobTitlesEntity = new JobTitlesEntity();
 
     @Getter
     @Setter
-    private JobTitlesEntity jobTitlesEntity = new JobTitlesEntity();
+    private List<JobTitlesEntity> jobTitlesEntityList;
 
     /**
      * public method that call addJobTitle
@@ -51,6 +53,13 @@ public class JobTitlesBean implements Serializable {
      * @param jobTitlesEntity
      */
     protected void addJobTitle(JobTitlesEntity jobTitlesEntity) {
+
+        try {
+            validateJobTitles(jobTitlesEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
 
         CheckEntities checkEntities = new CheckEntities();
 
@@ -104,6 +113,10 @@ public class JobTitlesBean implements Serializable {
             em.clear();
             em.close();
         }
+    }
+
+    public void findAllJobTitles() {
+        jobTitlesEntityList = findAll();
     }
 
     /**
@@ -160,6 +173,19 @@ public class JobTitlesBean implements Serializable {
             em.clear();
         }
 
+    }
+
+    /**
+     * Validate JobTitles !
+     *
+     * @param entity JobTitles
+     */
+    private void validateJobTitles(JobTitlesEntity entity) {
+        List<String> errors = JobTitlesValidator.validate(entity);
+        if (!errors.isEmpty()) {
+            log.error("Job title is not valid {}", entity);
+            throw new InvalidEntityException("L'intitulé du poste n'est pas valide", ErrorCodes.JOBTITLES_NOT_VALID, errors);
+        }
     }
 
 

@@ -22,9 +22,10 @@ public class CheckEntities implements Serializable {
     ContactsDao contactsDao = new ContactsDaoImpl();
     UsersDao usersDao = new UsersDaoImpl();
     CompaniesDao companiesDao = new CompaniesDaoImpl();
+    CompanyTypesDao companyTypesDao = new CompanyTypesDaoImpl();
     TaskTypesDao taskTypesDao = new TaskTypesDaoImpl();
     JobTitlesDao jobTitlesDao = new JobTitlesDaoImpl();
-    BranchActivitiesDao branchActivitiesDao = new BranchActivitiesImpl();
+    BranchActivitiesDao branchActivitiesDao = new BranchActivitiesDaoImpl();
     VoucherStatusDao voucherStatusDao = new VoucherStatusDaoImpl();
     TransactionTypesDao transactionTypesDao = new TransactionTypesDaoImpl();
     TransactionPhasesDao transactionPhasesDao = new TransactionPhasesDaoImpl();
@@ -164,6 +165,44 @@ public class CheckEntities implements Serializable {
                 log.warn("Voucher Status with ID {} was not found in the DB", entity.getId());
                 throw new EntityNotFoundException(
                         "Aucun statut de ticket avec l ID " + entity.getId() + " n a ete trouvee dans la BDD", ErrorCodes.VOUCHERSTATUS_NOT_FOUND
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if CompanyTypes exist in DB
+     *
+     * @param companyTypesEntity
+     */
+    public void checkCompanyTypes(CompanyTypesEntity companyTypesEntity) {
+        if (companyTypesEntity != null) {
+            EntityManager em = EMF.getEM();
+
+            CompanyTypesEntity companyTypesEntityToCheck = companyTypesDao.findById(em, companyTypesEntity.getId());
+            if (companyTypesEntityToCheck == null) {
+                log.warn("Company type with ID {} was not found in the DB", companyTypesEntity.getId());
+                throw new EntityNotFoundException(
+                        "Aucun type de société avec l ID " + companyTypesEntity.getId() + " n a ete trouvé dans la DB", ErrorCodes.COMPANYTYPES_NOT_FOUND
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if branch activities exist
+     *
+     * @param branchActivitiesEntity
+     */
+    public void checkBranchActivities(BranchActivitiesEntity branchActivitiesEntity) {
+        if (branchActivitiesEntity != null) {
+            EntityManager em = EMF.getEM();
+
+            BranchActivitiesEntity branchActivitiesEntityToCheck = branchActivitiesDao.findById(em, branchActivitiesEntity.getId());
+            if (branchActivitiesEntityToCheck == null) {
+                log.warn("Company type with ID {} was not found in the DB", branchActivitiesEntity.getId());
+                throw new EntityNotFoundException(
+                        "Aucun type de société avec l ID " + branchActivitiesEntity.getId() + " n a ete trouvé dans la DB", ErrorCodes.BRANCHACTIVITIES_NOT_FOUND
                 );
             }
         }

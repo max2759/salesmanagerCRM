@@ -1,7 +1,7 @@
 package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.dao.BranchActivitiesDao;
-import be.atc.salesmanagercrm.dao.impl.BranchActivitiesImpl;
+import be.atc.salesmanagercrm.dao.impl.BranchActivitiesDaoImpl;
 import be.atc.salesmanagercrm.entities.BranchActivitiesEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
@@ -28,7 +28,7 @@ public class BranchActivitiesBean implements Serializable {
 
     @Getter
     @Setter
-    private BranchActivitiesDao branchActivitiesDao = new BranchActivitiesImpl();
+    private BranchActivitiesDao branchActivitiesDao = new BranchActivitiesDaoImpl();
 
     @Getter
     @Setter

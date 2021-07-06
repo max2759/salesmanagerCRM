@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Slf4j
-public class BranchActivitiesImpl extends EntityFinderImpl<BranchActivitiesEntity> implements BranchActivitiesDao {
+public class BranchActivitiesDaoImpl extends EntityFinderImpl<BranchActivitiesEntity> implements BranchActivitiesDao {
 
     @Override
     public void add(EntityManager em, BranchActivitiesEntity branchActivitiesEntity) {
