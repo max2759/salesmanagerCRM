@@ -2,6 +2,7 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
                 template="WEB-INF/templates/template.xhtml">
 
     <ui:define name="title">#{bundle['register.title']}</ui:define>
@@ -20,20 +21,41 @@
                 <p:inputText value="#{usersBean.usersEntity.lastname}" required="true"></p:inputText>
                 <br/>
                 <p:outputLabel value="#{bundle['user.username']}">*</p:outputLabel>
-                <p:inputText value="#{usersBean.usersEntity.username}" required="true"></p:inputText>
+                <p:inputText value="#{usersBean.usersEntity.username}" required="true">
+                    <f:validator validatorId="userUsernameValidator"></f:validator>
+                </p:inputText>
+                <h:messages style="color:red;"/>
+
                 <br/>
-                <p:outputLabel value="#{bundle['user.password']}">*</p:outputLabel>
-                <p:inputText value="#{usersBean.usersEntity.password}" required="true"></p:inputText>
+                <div class="p-field p-grid">
+                    <p:outputLabel value="#{bundle['user.password']}">*</p:outputLabel>
+                    <div class="p-col">
+                        <p:password value="#{usersBean.usersEntity.password}" match="password2" required="true">
+                            <f:validateRegex pattern="((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})"/>
+                        </p:password>
+                    </div>
+                </div>
                 <br/>
+                <div class="p-field p-grid">
+                    <p:outputLabel for="password2" styleClass="p-col-fixed" style="width:100px"
+                                   value="#{bundle['user.password2']}"/>
+                    <div class="p-col">
+                        <p:password id="password2" value="#{usersBean.password2}" label="password2" required="true"/>
+                    </div>
+                </div>
+
                 <!--verifier si le mail est obligatoire -->
                 <br/>
-                <p:outputLabel value="#{bundle['email']}">*</p:outputLabel>
-                <p:inputText value="#{usersBean.usersEntity.email}"></p:inputText>
+                <p:outputLabel value="#{bundle['email']}"></p:outputLabel>
+                <p:inputText value="#{usersBean.usersEntity.email}">
+
+                </p:inputText>
                 <br/>
 
                 <p:commandButton value="Valider" action="#{usersBean.register}"/>
 
             </h:form>
+
 
         </h:body>
     </ui:define>

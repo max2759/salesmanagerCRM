@@ -3,6 +3,7 @@ package be.atc.salesmanagercrm.dao;
 import be.atc.salesmanagercrm.entities.UsersEntity;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 public interface UsersDao {
 
@@ -14,5 +15,5 @@ public interface UsersDao {
 
     void register(EntityManager em, UsersEntity usersEntity);
 
-
+    List<UsersEntity> findAllUsers(EntityManager em);
 }

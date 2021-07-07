@@ -6,6 +6,7 @@ import be.atc.salesmanagercrm.utils.EMF;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.List;
 
 /**
  * @author Larché Marie-Élise
@@ -44,6 +45,13 @@ public class UsersDaoImpl implements UsersDao {
 
     public void register(EntityManager em, UsersEntity usersEntity) {
         em.persist(usersEntity);
+    }
+
+    @Override
+    public List<UsersEntity> findAllUsers(EntityManager em) {
+        return em.createNamedQuery("Users.findAllUsers",
+                UsersEntity.class)
+                .getResultList();
     }
 
 }
