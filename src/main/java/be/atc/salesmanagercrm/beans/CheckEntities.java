@@ -191,7 +191,7 @@ public class CheckEntities implements Serializable {
      */
 
     public void checkUserByUsername(UsersEntity entity) {
-        if (entity == null) {
+        if (entity != null) {
             UsersEntity usersEntity = usersDao.findByUsername(entity.getUsername());
             if (usersEntity != null) {
                 log.warn("User exists yet", entity.getUsername());

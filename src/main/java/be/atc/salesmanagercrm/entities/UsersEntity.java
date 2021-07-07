@@ -10,6 +10,7 @@ import java.util.Objects;
 @NamedQueries({
         @NamedQuery(name = "Users.findNUserByUsernameAndPassword", query = "select u from UsersEntity u where u.username = :username and u.password = :password"),
         @NamedQuery(name = "Users.findByUsername", query = "select u from UsersEntity u where u.username = :username"),
+        @NamedQuery(name = "Users.findAllUsers", query = "select u from UsersEntity u"),
 })
 public class UsersEntity {
     private int id;
