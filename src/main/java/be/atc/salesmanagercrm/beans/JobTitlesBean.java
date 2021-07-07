@@ -142,6 +142,13 @@ public class JobTitlesBean implements Serializable {
     protected void update(JobTitlesEntity jobTitlesEntity) {
 
         try {
+            validateJobTitles(jobTitlesEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
+
+        try {
             findById(jobTitlesEntity.getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());

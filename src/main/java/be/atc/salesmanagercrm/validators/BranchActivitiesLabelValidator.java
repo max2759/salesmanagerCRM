@@ -1,7 +1,7 @@
 package be.atc.salesmanagercrm.validators;
 
 import be.atc.salesmanagercrm.beans.CheckEntities;
-import be.atc.salesmanagercrm.entities.JobTitlesEntity;
+import be.atc.salesmanagercrm.entities.BranchActivitiesEntity;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -18,27 +18,26 @@ import java.util.Locale;
  * @author Maximilien Zabbara
  */
 @Slf4j
-@FacesValidator("jobTitlesLabelValidator")
-public class JobTitlesLabelValidator implements Validator {
-
+@FacesValidator("branchActivitiesLabelValidator")
+public class BranchActivitiesLabelValidator implements Validator {
     Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Override
     public void validate(FacesContext facesContext, UIComponent uiComponent, Object value) throws ValidatorException {
 
+
         CheckEntities checkEntities = new CheckEntities();
 
-        JobTitlesEntity jobTitlesEntity = new JobTitlesEntity();
+        BranchActivitiesEntity branchActivitiesEntity = new BranchActivitiesEntity();
 
-        jobTitlesEntity.setLabel((String) value);
+        branchActivitiesEntity.setLabel((String) value);
 
         try {
-            checkEntities.checkJobTitlesLabel(jobTitlesEntity);
+            checkEntities.checkBranchActivitiesLabel(branchActivitiesEntity);
         } catch (InvalidEntityException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             throw new ValidatorException(new FacesMessage(getMessageErrorLabelAlreadyExist()));
         }
-
     }
 
     /**
@@ -47,6 +46,6 @@ public class JobTitlesLabelValidator implements Validator {
      * @return jsf utils message
      */
     private String getMessageErrorLabelAlreadyExist() {
-        return JsfUtils.returnMessage(locale, "jobTitles.labelExist");
+        return JsfUtils.returnMessage(locale, "branchActivities.labelExist");
     }
 }
