@@ -16,12 +16,29 @@
         <error-code>404</error-code>
         <location>/errorPages/404.xhtml</location>
     </error-page>
-    <!-- Changer cette valeur à "Production" lors du déploiement final de l'application -->
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
-    <!-- forcer le conteneur à considérer un tel contenu comme une valeur nulle plutôt que comme une chaîne vide -->
+
+
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>barcelona-#{guestPreferences.theme}</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+        <param-value>/WEB-INF/primefaces-barcelona.taglib.xml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.SUBMIT</param-name>
+        <param-value>partial</param-value>
+    </context-param>
+
     <context-param>
         <param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
         <param-value>true</param-value>

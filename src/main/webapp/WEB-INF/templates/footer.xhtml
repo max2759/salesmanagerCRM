@@ -1,18 +1,22 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html">
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui">
 
-    <h:head>
-
-    </h:head>
-
-    <footer>
-
-        <div>
-            <div>
-                © 2021 Copyright:
-                Younes Arifi - Maximilien Zabbarra - Marie-Elise Larche
+    <div class="footer clearfix">
+        <div class="card">
+            <div class="ui-g footer-content">
+                <div class="ui-g-12 ui-md-6">
+                    <p:graphicImage name="images/logo-black.png" library="barcelona-layout"/>
+                    <span>PrimeFaces BARCELONA</span>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <a href="https://github.com/primefaces"><i class="fa fa-github"></i></a>
+                    <a href="https://www.facebook.com/groups/primefaces"><i class="fa fa-facebook"></i></a>
+                    <a href="http://twitter.com/primefaces"><i class="fa fa-twitter"></i></a>
+                </div>
             </div>
         </div>
-    </footer>
+
+    </div>
 </ui:composition>
