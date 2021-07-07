@@ -7,6 +7,8 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.SessionScoped;
@@ -19,14 +21,31 @@ public class CheckEntities implements Serializable {
 
     private static final long serialVersionUID = -6795998607327751632L;
 
-    ContactsDao contactsDao = new ContactsDaoImpl();
-    UsersDao usersDao = new UsersDaoImpl();
-    CompaniesDao companiesDao = new CompaniesDaoImpl();
-    TaskTypesDao taskTypesDao = new TaskTypesDaoImpl();
-    JobTitlesDao jobTitlesDao = new JobTitlesDaoImpl();
-    VoucherStatusDao voucherStatusDao = new VoucherStatusDaoImpl();
-    TransactionTypesDao transactionTypesDao = new TransactionTypesDaoImpl();
-    TransactionPhasesDao transactionPhasesDao = new TransactionPhasesDaoImpl();
+    @Getter
+    @Setter
+    private ContactsDao contactsDao = new ContactsDaoImpl();
+    @Getter
+    @Setter
+    private UsersDao usersDao = new UsersDaoImpl();
+    @Getter
+    @Setter
+    private CompaniesDao companiesDao = new CompaniesDaoImpl();
+    @Getter
+    @Setter
+    private TaskTypesDao taskTypesDao = new TaskTypesDaoImpl();
+    @Getter
+    @Setter
+    private JobTitlesDao jobTitlesDao = new JobTitlesDaoImpl();
+    @Getter
+    @Setter
+    private VoucherStatusDao voucherStatusDao = new VoucherStatusDaoImpl();
+    @Getter
+    @Setter
+    private TransactionTypesDao transactionTypesDao = new TransactionTypesDaoImpl();
+    @Getter
+    @Setter
+    private TransactionPhasesDao transactionPhasesDao = new TransactionPhasesDaoImpl();
+
 
     /**
      * Check if Contact exist in DB
