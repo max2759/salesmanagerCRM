@@ -6,6 +6,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "branch_activities", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "BranchActivities.findAll", query = "SELECT b from BranchActivitiesEntity b order by b.id DESC"),
+        @NamedQuery(name = "BranchActivities.findByLabel", query = "select b from BranchActivitiesEntity b where ( lower(b.label) like lower(concat('%', :label ,'%')))")
+})
 public class BranchActivitiesEntity {
     private int id;
     private String label;
