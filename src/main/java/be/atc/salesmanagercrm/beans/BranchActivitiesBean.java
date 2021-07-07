@@ -7,6 +7,7 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import be.atc.salesmanagercrm.validators.BranchActivitiesValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,14 @@ public class BranchActivitiesBean implements Serializable {
      * @param branchActivitiesEntity
      */
     protected void addBranchActivities(BranchActivitiesEntity branchActivitiesEntity) {
+
+        try {
+            validateBranchActivities(branchActivitiesEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
+
         CheckEntities checkEntities = new CheckEntities();
 
         try {
@@ -114,6 +123,14 @@ public class BranchActivitiesBean implements Serializable {
      */
     protected void updateBranchActivitiesLabel(BranchActivitiesEntity branchActivitiesEntity) {
 
+
+        try {
+            validateBranchActivities(branchActivitiesEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
+
         try {
             findById(branchActivitiesEntity.getId());
         } catch (EntityNotFoundException exception) {
@@ -144,6 +161,19 @@ public class BranchActivitiesBean implements Serializable {
         } finally {
             em.clear();
             em.clear();
+        }
+    }
+
+    /**
+     * Validate BranchActivities !
+     *
+     * @param entity BranchActivities
+     */
+    private void validateBranchActivities(BranchActivitiesEntity entity) {
+        List<String> errors = BranchActivitiesValidator.validate(entity);
+        if (!errors.isEmpty()) {
+            log.error("BranchActivities is not valid {}", entity);
+            throw new InvalidEntityException("Le secteur d'activité n'est pas valide", ErrorCodes.BRANCHACTIVITIESLABEL_NOT_VALID, errors);
         }
     }
 

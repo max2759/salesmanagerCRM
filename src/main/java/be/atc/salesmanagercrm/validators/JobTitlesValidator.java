@@ -25,13 +25,13 @@ public class JobTitlesValidator {
 
 
         if (jobTitlesEntity == null) {
-            errors.add("Le label est obligatoire !");
+            errors.add("L'intitulé du poste est obligatoire !");
             msg = new FacesMessage(JsfUtils.returnMessage(locale, "jobTitles.labelError"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return errors;
         }
         if (jobTitlesEntity.getLabel() == null || jobTitlesEntity.getLabel().isEmpty()) {
-            errors.add("Le label est obligatoire !");
+            errors.add("L'intitulé du poste est obligatoire !");
             msg = new FacesMessage(JsfUtils.returnMessage(locale, "jobTitles.labelError"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
