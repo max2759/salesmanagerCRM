@@ -3,6 +3,7 @@ package be.atc.salesmanagercrm.beans;
 import be.atc.salesmanagercrm.dao.UsersDao;
 import be.atc.salesmanagercrm.dao.impl.UsersDaoImpl;
 import be.atc.salesmanagercrm.entities.UsersEntity;
+import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
 import be.atc.salesmanagercrm.validators.UsersValidator;
@@ -22,11 +23,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 /**
@@ -49,6 +52,12 @@ public class UsersBean implements Serializable {
     @Setter
     @Inject
     private RolesBean rolesBean;
+    @Getter
+    @Setter
+    private String password2;
+
+    private HttpServletRequest request;
+
 
     /**
      * @throws NoSuchAlgorithmException
@@ -58,9 +67,14 @@ public class UsersBean implements Serializable {
 
         LocalDateTime currentDate = LocalDateTime.now();
 
-        //valid if username is free
+        //    log.info(password2);
+
+        //valid if no errors
         try {
-            UsersValidator.validateRegister(usersEntity);
+            List<String> errors = UsersValidator.validateRegister(usersEntity, password2);
+            if (!errors.isEmpty()) {
+                return;
+            }
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
@@ -79,7 +93,6 @@ public class UsersBean implements Serializable {
         }
         //  System.out.println(s.toString());
         String hashPass = s.toString();
-
 
         usersEntity.setPassword(hashPass);
         usersEntity.setActive(true);
@@ -177,6 +190,18 @@ public class UsersBean implements Serializable {
     }
 
 
+    protected List<UsersEntity> findAllUsers() {
+
+        EntityManager em = EMF.getEM();
+        List<UsersEntity> usersEntities = dao.findAllUsers(em);
+
+        em.clear();
+        em.close();
+
+        return usersEntities;
+    }
+
+
     public void securityUtils() {
         Subject usr = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken("mike", "abcdef");
@@ -189,5 +214,20 @@ public class UsersBean implements Serializable {
         log.info("User [" + usr.getPrincipal() + "] logged in successfully.");
     }
 
+    private void validateUsers(UsersEntity entity) {
+        List<String> errors = UsersValidator.validate(entity);
+        if (!errors.isEmpty()) {
+            log.error("Register is not valide {}", entity);
+            throw new InvalidEntityException("L'inscription n est pas valide", ErrorCodes.USER_NOT_VALID, errors);
+        }
+    }
+
+    public String getPassword2() {
+        return password2;
+    }
+
+    public void setPassword2(String password2) {
+        this.password2 = password2;
+    }
 
 }
