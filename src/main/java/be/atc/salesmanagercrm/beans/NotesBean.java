@@ -462,5 +462,4 @@ public class NotesBean implements Serializable {
             throw new InvalidEntityException("La note n est pas valide", ErrorCodes.NOTE_NOT_VALID, errors);
         }
     }
-
 }

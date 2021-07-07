@@ -8,7 +8,7 @@
    <ui:define name="content">
 
    <f:metadata>
-         <f:viewAction action="#{jobtitlesBean.findAll}"/>
+         <f:viewAction action="#{jobtitlesBean.findAllJobTitles}"/>
       </f:metadata>
 
       <h:body>
@@ -17,13 +17,13 @@
 
             <h3>Création d'un intitulé de poste</h3>
 
-            <div>
-                <h:outputLabel>Intitulé du poste : </h:outputLabel>
-                <h:inputText id="jobTitlesLabel" value="#{jobtitlesBean.jobTitlesEntity.label}" required="true">
-                    <f:validator validatorId="JobTitlesValidator"></f:validator>
-                </h:inputText>
-                <h:messages style="color:red;"/>
-            </div>
+             <div>
+                 <h:outputLabel>Intitulé du poste : </h:outputLabel>
+                 <h:inputText id="jobTitlesLabel" value="#{jobtitlesBean.jobTitlesEntity.label}">
+                     <f:validator validatorId="jobTitlesLabelValidator"></f:validator>
+                 </h:inputText>
+                 <h:messages style="color:red;"/>
+             </div>
             <h:commandButton value="Valider"
                              action="#{jobtitlesBean.saveJobTitles}"
             >
@@ -31,12 +31,12 @@
 
          </h:form>
 
-         <h:dataTable value="#{jobtitlesBean.jobTitlesEntities}" var="jobtitles">
-            <h:column>
-               <f:facet name="header">#{bundle['fxs.jobtitles.title']}</f:facet>
-               <h:outputText value="#{jobtitles.label}"></h:outputText>
-            </h:column>
-         </h:dataTable>
+          <h:dataTable value="#{jobtitlesBean.jobTitlesEntityList}" var="jobtitles">
+              <h:column>
+                  <f:facet name="header">#{bundle['fxs.jobtitles.title']}</f:facet>
+                  <h:outputText value="#{jobtitles.label}"></h:outputText>
+              </h:column>
+          </h:dataTable>
       </h:body>
    </ui:define>
 </ui:composition>

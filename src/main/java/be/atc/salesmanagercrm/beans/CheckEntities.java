@@ -32,10 +32,16 @@ public class CheckEntities implements Serializable {
     private CompaniesDao companiesDao = new CompaniesDaoImpl();
     @Getter
     @Setter
+    private CompanyTypesDao companyTypesDao = new CompanyTypesDaoImpl();
+    @Getter
+    @Setter
     private TaskTypesDao taskTypesDao = new TaskTypesDaoImpl();
     @Getter
     @Setter
     private JobTitlesDao jobTitlesDao = new JobTitlesDaoImpl();
+    @Getter
+    @Setter
+    private BranchActivitiesDao branchActivitiesDao = new BranchActivitiesDaoImpl();
     @Getter
     @Setter
     private VoucherStatusDao voucherStatusDao = new VoucherStatusDaoImpl();
@@ -112,6 +118,11 @@ public class CheckEntities implements Serializable {
         }
     }
 
+    /**
+     * Check if JobTitle already exist in DB
+     *
+     * @param jobTitlesEntity
+     */
     public void checkJobTitlesLabel(JobTitlesEntity jobTitlesEntity) {
         if (jobTitlesEntity != null) {
             EntityManager em = EMF.getEM();
@@ -120,6 +131,24 @@ public class CheckEntities implements Serializable {
                 log.warn("Job Title label already exist");
                 throw new InvalidEntityException(
                         "L'intitulé du poste " + jobTitlesEntity.getLabel() + " existe déjà", ErrorCodes.JOBTITLES_NOT_VALID
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if Branch_Activities label already exist in DB
+     *
+     * @param branchActivitiesEntity
+     */
+    public void checkBranchActivitiesLabel(BranchActivitiesEntity branchActivitiesEntity) {
+        if (branchActivitiesEntity != null) {
+            EntityManager em = EMF.getEM();
+
+            if (branchActivitiesDao.findByLabel(em, branchActivitiesEntity.getLabel())) {
+                log.warn("Branch activities label already exist");
+                throw new InvalidEntityException(
+                        "L'intitulé du poste " + branchActivitiesEntity.getLabel() + " existe déjà", ErrorCodes.BRANCHACTIVITIESLABEL_NOT_VALID
                 );
             }
         }
@@ -159,6 +188,44 @@ public class CheckEntities implements Serializable {
                 log.warn("Voucher Status with ID {} was not found in the DB", entity.getId());
                 throw new EntityNotFoundException(
                         "Aucun statut de ticket avec l ID " + entity.getId() + " n a ete trouvee dans la BDD", ErrorCodes.VOUCHERSTATUS_NOT_FOUND
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if CompanyTypes exist in DB
+     *
+     * @param companyTypesEntity
+     */
+    public void checkCompanyTypes(CompanyTypesEntity companyTypesEntity) {
+        if (companyTypesEntity != null) {
+            EntityManager em = EMF.getEM();
+
+            CompanyTypesEntity companyTypesEntityToCheck = companyTypesDao.findById(em, companyTypesEntity.getId());
+            if (companyTypesEntityToCheck == null) {
+                log.warn("Company type with ID {} was not found in the DB", companyTypesEntity.getId());
+                throw new EntityNotFoundException(
+                        "Aucun type de société avec l ID " + companyTypesEntity.getId() + " n a ete trouvé dans la DB", ErrorCodes.COMPANYTYPES_NOT_FOUND
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if branch activities exist
+     *
+     * @param branchActivitiesEntity
+     */
+    public void checkBranchActivities(BranchActivitiesEntity branchActivitiesEntity) {
+        if (branchActivitiesEntity != null) {
+            EntityManager em = EMF.getEM();
+
+            BranchActivitiesEntity branchActivitiesEntityToCheck = branchActivitiesDao.findById(em, branchActivitiesEntity.getId());
+            if (branchActivitiesEntityToCheck == null) {
+                log.warn("Company type with ID {} was not found in the DB", branchActivitiesEntity.getId());
+                throw new EntityNotFoundException(
+                        "Aucun type de société avec l ID " + branchActivitiesEntity.getId() + " n a ete trouvé dans la DB", ErrorCodes.BRANCHACTIVITIES_NOT_FOUND
                 );
             }
         }
