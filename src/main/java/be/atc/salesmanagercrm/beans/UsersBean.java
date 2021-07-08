@@ -55,6 +55,9 @@ public class UsersBean implements Serializable {
     @Getter
     @Setter
     private String password2;
+    @Getter
+    @Setter
+    private List<UsersEntity> usersEntityList;
 
     private HttpServletRequest request;
 
@@ -189,9 +192,14 @@ public class UsersBean implements Serializable {
         System.exit(0);
     }
 
+    public void findAllUsers() {
+        log.info("bgin findallusers");
+        usersEntityList = findAll();
+        log.info(String.valueOf(usersEntityList));
+    }
 
-    protected List<UsersEntity> findAllUsers() {
-
+    protected List<UsersEntity> findAll() {
+        log.info("begin findall");
         EntityManager em = EMF.getEM();
         List<UsersEntity> usersEntities = dao.findAllUsers(em);
 
