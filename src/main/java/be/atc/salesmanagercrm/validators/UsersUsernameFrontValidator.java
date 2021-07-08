@@ -27,7 +27,6 @@ public class UsersUsernameFrontValidator implements Validator {
         CheckEntities checkEntities = new CheckEntities();
 
         UsersEntity usersEntity = new UsersEntity();
-
         usersEntity.setUsername((String) value);
 
         try {
@@ -37,7 +36,6 @@ public class UsersUsernameFrontValidator implements Validator {
             throw new ValidatorException(new FacesMessage(getMessageErrorUsernameAlreadyExist()));
         }
     }
-
 
     /**
      * Return message for username already in DB

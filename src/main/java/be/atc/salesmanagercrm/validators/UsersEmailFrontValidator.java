@@ -14,9 +14,12 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import java.util.Locale;
 
+/**
+ * @author Larche Marie-Élise
+ */
 @Slf4j
-@FacesValidator("userPasswordValidator")
-public class UsersPasswordFrontValidator implements Validator {
+@FacesValidator("userEmailValidator")
+public class UsersEmailFrontValidator implements Validator {
     Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Override
@@ -24,14 +27,14 @@ public class UsersPasswordFrontValidator implements Validator {
         CheckEntities checkEntities = new CheckEntities();
 
         UsersEntity usersEntity = new UsersEntity();
-        usersEntity.setPassword((String) value);
+        usersEntity.setEmail((String) value);
 
 
         try {
-            checkEntities.checkPasswordRegexe(usersEntity);
+            checkEntities.checkUserByUsername(usersEntity);
         } catch (InvalidOperationException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            throw new ValidatorException(new FacesMessage(getMessageErrorPaswword()));
+            throw new ValidatorException(new FacesMessage(getMessageEmailError()));
         }
     }
 
@@ -40,8 +43,8 @@ public class UsersPasswordFrontValidator implements Validator {
      *
      * @return jsf utils message
      */
-    private String getMessageErrorPaswword() {
-        return JsfUtils.returnMessage(locale, "users.regexPassError");
+    private String getMessageEmailError() {
+        return JsfUtils.returnMessage(locale, "users.errorEmailRegex");
     }
 
 

@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">#{bundle['usersList.title']}</ui:define>
+    <ui:define name="content">
+
+        <f:metadata>
+            <f:viewAction action="#{jobtitlesBean.findAllJobTitles}"/>
+        </f:metadata>
+
+        <h:body>
+            <h1>#{bundle['usersList.title']}</h1>
+
+            <h:dataTable value="#{usersBean.usersEntityList}" var="user">
+                <h:column>
+                    <f:facet name="header">#{bundle['user.username']}</f:facet>
+                    <h:outputText value="#{user.username}"></h:outputText>
+                </h:column>
+            </h:dataTable>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
