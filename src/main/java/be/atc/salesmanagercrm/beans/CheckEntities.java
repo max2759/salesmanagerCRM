@@ -6,6 +6,7 @@ import be.atc.salesmanagercrm.entities.*;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
+import be.atc.salesmanagercrm.exceptions.InvalidOperationException;
 import be.atc.salesmanagercrm.utils.EMF;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.SessionScoped;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @SessionScoped
@@ -281,8 +284,49 @@ public class CheckEntities implements Serializable {
             UsersEntity usersEntity = usersDao.findByUsername(entity.getUsername());
             if (usersEntity != null) {
                 log.warn("User exists yet", entity.getUsername());
-                throw new EntityNotFoundException(
+                throw new InvalidEntityException(
                         "Il y a déjà un utilisateur avec ce pseudo: " + entity.getUsername(), ErrorCodes.USER_NOT_FOUND
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if user exist in DB
+     *
+     * @param entity : UsersEntity
+     */
+
+    public void checkPasswordRegexe(UsersEntity entity) {
+        if (entity != null) {
+            Pattern pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?])[A-Za-z\\d@$!%*?]{8,}$");
+            Matcher matcher = pattern.matcher(entity.getPassword());
+            boolean bool = matcher.matches();
+            if (bool == false) {
+                log.warn("wrong regex password", entity.getPassword());
+                throw new InvalidOperationException(
+                        "Le mot de passe doit posséder au minimum 8 caractéres, 1 chiffre, 1 caractére spécial et une majuscule " + entity.getPassword(), ErrorCodes.USER_BAD_PASS_REGEX
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if user exist in DB
+     *
+     * @param entity : UsersEntity
+     */
+
+    public void checkEmailRegexe(UsersEntity entity) {
+        if (entity != null) {
+            Pattern pattern = Pattern.compile("#^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\\.[a-z]{2,4}$#");
+            Matcher matcher = pattern.matcher(entity.getEmail());
+            boolean bool = matcher.matches();
+
+            if (bool == false) {
+                log.warn("wrong regex email", entity.getEmail());
+                throw new InvalidOperationException(
+                        "Votre adresse mail n'est pas valide " + entity.getEmail(), ErrorCodes.USER_BAD_EMAIL_REGEX
                 );
             }
         }

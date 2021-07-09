@@ -39,7 +39,7 @@ public class UsersValidator {
 
         String usernname = entity.getUsername();
         boolean validPass = validatePassword(entity);
-
+        boolean validMail = validateEmail(entity);
 
         UsersEntity result = dao.findByUsername(usernname);
 
@@ -52,8 +52,11 @@ public class UsersValidator {
         if (pass2.isEmpty()) {
             errors.add("Votre 2e mot de passe est inexistant. Veuillez le réinsérer");
         }
-        if (vaidateMatchPassword(entity, pass2) == false) {
+        if (vaidateMatchPassword(entity.getPassword(), pass2) == false) {
             errors.add("Vos mots de passe doivent être identique");
+        }
+        if (validMail == false) {
+            errors.add("Votre email n'est pas valide");
         }
         return errors;
     }
@@ -67,8 +70,17 @@ public class UsersValidator {
         return matchFound;
     }
 
-    public static boolean vaidateMatchPassword(UsersEntity entity, String pass2) {
-        boolean bool = entity.getPassword().equals(pass2);
+    public static boolean validateEmail(UsersEntity entity) {
+        String regex = "#^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\\.[a-z]{2,4}$#";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(entity.getPassword());
+        boolean matchFound = matcher.find();
+
+        return matchFound;
+    }
+
+    public static boolean vaidateMatchPassword(String pass, String pass2) {
+        boolean bool = pass.equals(pass2);
         return bool;
     }
 
