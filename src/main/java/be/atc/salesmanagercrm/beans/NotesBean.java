@@ -2,6 +2,8 @@ package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.dao.NotesDao;
 import be.atc.salesmanagercrm.dao.impl.NotesDaoImpl;
+import be.atc.salesmanagercrm.entities.CompaniesEntity;
+import be.atc.salesmanagercrm.entities.ContactsEntity;
 import be.atc.salesmanagercrm.entities.NotesEntity;
 import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
@@ -47,6 +49,12 @@ public class NotesBean implements Serializable {
     private UsersEntity usersEntity = new UsersEntity();
     @Getter
     @Setter
+    private ContactsEntity contactsEntity = new ContactsEntity();
+    @Getter
+    @Setter
+    private CompaniesEntity companiesEntity = new CompaniesEntity();
+    @Getter
+    @Setter
     private NotesEntity notesEntity;
     @Getter
     @Setter
@@ -61,18 +69,42 @@ public class NotesBean implements Serializable {
         log.info("message : " + notesEntity.getMessage());
 
         usersEntity.setId(1);
+        contactsEntity.setId(1);
 
         notesEntity.setUsersByIdUsers(usersEntity);
+        notesEntity.setContactsByIdContacts(contactsEntity);
 
         save(notesEntity);
-        listEntities();
+
+        // TODO : Corriger ça
+        createNewEntity();
+        listEntitiesContacts();
+//        listEntitiesCompanies();
     }
 
-    public void listEntities() {
-        log.info("method : listEntities()");
+    /**
+     * Find all entities for Contacts
+     */
+    public void listEntitiesContacts() {
+        log.info("method : listEntitiesContacts()");
         usersEntity.setId(1);
+        contactsEntity.setId(1);
 
-        notesEntities = findAll(usersEntity.getId());
+        notesEntities = findNotesEntityByContactsByIdContacts(contactsEntity.getId(), usersEntity.getId());
+        for (NotesEntity n : notesEntities) {
+            test.put(n.getId(), false);
+        }
+    }
+
+    /**
+     * Find all entities for Companies
+     */
+    public void listEntitiesCompanies() {
+        log.info("method : listEntitiesCompanies()");
+        usersEntity.setId(1);
+        companiesEntity.setId(1);
+
+        notesEntities = findNotesEntityByCompaniesByIdCompanies(companiesEntity.getId(), usersEntity.getId());
         for (NotesEntity n : notesEntities) {
             test.put(n.getId(), false);
         }
@@ -81,6 +113,7 @@ public class NotesBean implements Serializable {
     public void createNewEntity() {
         log.info("method : createNewEntity()");
         notesEntity = new NotesEntity();
+        notesEntities = new ArrayList<>();
     }
 
     public void onRowEdit(RowEditEvent<NotesEntity> event) {
@@ -89,7 +122,11 @@ public class NotesBean implements Serializable {
         notesEntityToUpdate.setMessage(event.getObject().getMessage());
 
         update(notesEntityToUpdate);
-        listEntities();
+
+
+        // TODO : Corriger ça
+//        listEntitiesCompanies();
+        listEntitiesContacts();
     }
 
     public void onRowCancel(RowEditEvent<NotesEntity> event) {
@@ -99,7 +136,11 @@ public class NotesBean implements Serializable {
 
     public void deleteEntity() {
         delete(Integer.parseInt(getParam("idEntity")), 1);
-        listEntities();
+
+
+        // TODO : Corriger ça
+        listEntitiesContacts();
+//        listEntitiesCompanies();
     }
 
     /**

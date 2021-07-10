@@ -18,10 +18,9 @@
         <h:form>
             <h3>#{bundle['notes.title']}</h3>
 
-            <p:growl id="msgs" life="2000"/>
             <div>
                 <p:outputLabel value="#{bundle['notes.message']}"/>
-                <p:textEditor widgetVar="editor2" value="#{notesBean.notesEntity.message}" height="100"
+<!--                <p:textEditor widgetVar="editor2" value="#{notesBean.notesEntity.message}" height="100"
                               placeholder="#{bundle['notes.messageHolder']}">
                     <f:facet name="toolbar">
                             <span>
@@ -31,10 +30,18 @@
                                 <button class="ql-strike"></button>
                             </span>
                     </f:facet>
-                </p:textEditor>
+                </p:textEditor>-->
 
-                <p:commandButton value="#{bundle['notes.save']}" icon="pi pi-check"
-                                 update=":form:msgs"
+                <div class="card card-w-title">
+                    <h1>#{bundle['notes.title']}</h1>
+                    <p:inputTextarea rows="3" value="#{notesBean.notesEntity.message}"
+                                     placeholder="#{bundle['notes.messageHolder']}" autoResize="false"/>
+
+                </div>
+
+                <p:commandButton styleClass="green-btn" style="width:auto;margin-bottom:10px;"
+                                 value="#{bundle['notes.save']}" icon="pi pi-check"
+                                 update="@(form) msgs"
                                  action="#{notesBean.saveEntity}"/>
             </div>
         </h:form>
