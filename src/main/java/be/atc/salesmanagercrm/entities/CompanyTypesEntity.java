@@ -8,6 +8,7 @@ import java.util.Objects;
 @Table(name = "company_types", schema = "salesmanagercrm")
 @NamedQueries({
         @NamedQuery(name = "CompanyTypes.findAll", query = "SELECT ct from CompanyTypesEntity ct"),
+        @NamedQuery(name = "CompanyTypes.findByLabel", query = "select ct from CompanyTypesEntity ct where ( lower(ct.label) like lower(concat('%', :label ,'%')))")
 })
 public class CompanyTypesEntity {
     private int id;

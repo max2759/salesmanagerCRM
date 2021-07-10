@@ -14,6 +14,9 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author Maximilien Zabbara
+ */
 @Slf4j
 @Named(value = "companyTypesBean")
 @ViewScoped
@@ -23,6 +26,26 @@ public class CompanyTypesBean implements Serializable {
     @Setter
     private CompanyTypesDao companyTypesDao = new CompanyTypesDaoImpl();
 
+    @Getter
+    @Setter
+    private CompanyTypesEntity companyTypesEntity = new CompanyTypesEntity();
+
+    @Getter
+    @Setter
+    private List<CompanyTypesEntity> companyTypesEntities;
+
+    /**
+     * public method that call findAll
+     */
+    public void findAllCompanyTypes() {
+        companyTypesEntities = findAll();
+    }
+
+    /**
+     * Find all Company Types
+     *
+     * @return List of Company Types Entity
+     */
     protected List<CompanyTypesEntity> findAll() {
         EntityManager em = EMF.getEM();
         List<CompanyTypesEntity> companyTypesEntities = companyTypesDao.findAll();
