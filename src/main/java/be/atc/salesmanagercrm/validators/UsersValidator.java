@@ -22,66 +22,64 @@ public class UsersValidator {
     @Setter
     private static UsersDao dao = new UsersDaoImpl();
 
-    public static List<String> validate(UsersEntity entity) {
+    public static List<String> validate(UsersEntity entity, String pass2) {
         List<String> errors = new ArrayList<>();
 
-        return errors;
-    }
-
-    public static List<String> validateRegister(UsersEntity entity, String pass2) {
-        List<String> errors = new ArrayList<>();
+        log.info(String.valueOf(entity));
 
         if (entity == null) {
             errors.add("La reception des données à échouée");
             errors.add("Veuillez recommencer votre inscription");
             return errors;
         }
-
-        String usernname = entity.getUsername();
-        boolean validPass = validatePassword(entity);
-        boolean validMail = validateEmail(entity);
-
-        UsersEntity result = dao.findByUsername(usernname);
-
-        if (result != null) {
-            errors.add("Votre nom d'utilisateur est déjà pris");
+        if (entity.getRolesByIdRoles() == null) {
+            errors.add("Le rôle est vide");
         }
-        if (validPass == false) {
-            errors.add("Votre mot de passe doit faire 8 caractéres, posséder une majuscule et un chiffre ou un caractére spécial");
+        if (entity.getLastname() == null || entity.getLastname().isEmpty()) {
+            errors.add("Le nom de famille est vide");
         }
-        if (pass2.isEmpty()) {
-            errors.add("Votre 2e mot de passe est inexistant. Veuillez le réinsérer");
+        if (entity.getFirstname() == null || entity.getFirstname().isEmpty()) {
+            errors.add("Le prénom est vide");
         }
-        if (vaidateMatchPassword(entity.getPassword(), pass2) == false) {
-            errors.add("Vos mots de passe doivent être identique");
-        }
-        if (validMail == false) {
+        if (entity.getEmail() == null || entity.getEmail().isEmpty()) {
+            errors.add("L'email ne peut pas être vide'");
+        } else if (!validateEmail(entity)) {
             errors.add("Votre email n'est pas valide");
         }
+        if (entity.getPassword() == null || entity.getPassword().isEmpty() || pass2 == null || pass2.isEmpty()) {
+            errors.add("Votre mot de passe ne peut pas être vide");
+        } else if (!validatePassword(entity.getPassword()) || !validatePassword(pass2)) {
+            errors.add("Votre mot de passe doit faire 6 caractéres, posséder une majuscule et un chiffre ou un caractére spécial");
+        } else if (!vaidateMatchPassword(entity.getPassword(), pass2)) {
+            errors.add("Vos mots de passe doivent être identique");
+        }
+        if (entity.getUsername() == null || entity.getUsername().isEmpty()) {
+            errors.add("Votre pseudo ne peux pas être vide");
+        }
+
+
         return errors;
     }
 
-    public static boolean validatePassword(UsersEntity entity) {
+    public static boolean validatePassword(String password) {
         String regex = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(entity.getPassword());
-        boolean matchFound = matcher.find();
+        Matcher matcher = pattern.matcher(password);
 
-        return matchFound;
+        return matcher.find();
     }
+
 
     public static boolean validateEmail(UsersEntity entity) {
         String regex = "#^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\\.[a-z]{2,4}$#";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(entity.getPassword());
-        boolean matchFound = matcher.find();
+        Matcher matcher = pattern.matcher(entity.getEmail());
 
-        return matchFound;
+        return matcher.find();
     }
 
     public static boolean vaidateMatchPassword(String pass, String pass2) {
-        boolean bool = pass.equals(pass2);
-        return bool;
+        return pass.equals(pass2);
     }
 
 }
