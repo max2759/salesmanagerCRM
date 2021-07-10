@@ -2,24 +2,109 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 template="WEB-INF/templates/template.xhtml">
 
     <ui:define name="title">#{bundle['usersList.title']}</ui:define>
     <ui:define name="content">
 
         <f:metadata>
-            <f:viewAction action="#{jobtitlesBean.findAllJobTitles}"/>
+            <f:viewAction action="#{usersBean.findAllUsers}"/>
         </f:metadata>
 
         <h:body>
             <h1>#{bundle['usersList.title']}</h1>
 
             <h:dataTable value="#{usersBean.usersEntityList}" var="user">
+
                 <h:column>
                     <f:facet name="header">#{bundle['user.username']}</f:facet>
-                    <h:outputText value="#{user.username}"></h:outputText>
+                    <p:outputLabel value="#{user.username}"></p:outputLabel>
                 </h:column>
+
+                <h:column>
+                    <f:facet name="header">#{bundle['firstname']}</f:facet>
+                    <p:outputLabel value="#{user.firstname}"></p:outputLabel>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">#{bundle['lastname']}</f:facet>
+                    <p:outputLabel value="#{user.lastname}"></p:outputLabel>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">#{bundle['role']}</f:facet>
+                    <p:outputLabel value="#{user.rolesByIdRoles.label}"></p:outputLabel>
+                </h:column>
+
+                <h:column>
+                    <h:form>
+                        <!-- bouton edit -->
+                        <f:facet name="header">#{bundle['edit']}</f:facet>
+
+                        <!-- appel de showmodalPopup -->
+                        <h:commandLink styleClass="btn btn-outline-primary btn-sm"
+                                       action="#{usersBean.showPopupModal}">
+                            <p:outputLabel value="Valider"/>
+                            <f:param name="id" value="#{user.id}"></f:param>
+
+                            <f:ajax render="@all"/>
+                            <i class="fas fa-edit"></i>
+                        </h:commandLink>
+                    </h:form>
+                </h:column>
+
+                <!-- <h:column>
+                     <h:commandButton styleClass="btn btn-outline-dark btn-sm"
+                                      value="#{bundle['fxs.insurancesList.close']}"
+                                      action="#{usersBean.showUpdateUsersAdmin(user.id)}">
+                         <f:ajax render="@all"></f:ajax>
+                     </h:commandButton>
+                 </h:column> -->
+
             </h:dataTable>
+
+
+            <!-- affichage du modal -->
+            <f:view>
+                <h:panelGroup id="popupEdit" layout="block" styleClass="popup-panel-overlay"
+                              rendered="#{usersBean.showPopup}">
+
+                    <h:form id="formPopup">
+                        <div class="popup-panel">
+
+                            <div class="form-group">
+                                <h:outputLabel value="ID" for="idUser"></h:outputLabel>
+                                <h:outputText id="idUser" value="#{usersBean.usersEntity.id}"
+                                              styleClass="form-control"></h:outputText>
+                            </div>
+
+                            <div class="form-group">
+                                <h:outputLabel value="username" for="username"></h:outputLabel>
+                                <h:inputText value="#{usersBean.usersEntity.username}" styleClass="form-control"
+                                             required="true"
+                                             pt:placeholder="Votre user ici..."
+                                             requiredMessage="#{bundle['fxs.insurancesList.required']}"
+                                             id="username">
+                                </h:inputText>
+                                <h:message styleClass="alert alert-danger" role="alert" for="username"></h:message>
+                            </div>
+
+                            <!-- button save edit -->
+
+                            <span>
+                        <h:commandButton styleClass="btn btn-outline-dark btn-sm"
+                                         value="#{bundle['close']}"
+                                         action="#{usersBean.hidePopupModal}">
+                            <f:ajax render="@all"></f:ajax>
+                        </h:commandButton>
+                    </span>
+
+                        </div>
+                    </h:form>
+                </h:panelGroup>
+            </f:view>
 
 
         </h:body>

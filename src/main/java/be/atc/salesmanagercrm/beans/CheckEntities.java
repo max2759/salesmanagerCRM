@@ -54,6 +54,9 @@ public class CheckEntities implements Serializable {
     @Getter
     @Setter
     private TransactionPhasesDao transactionPhasesDao = new TransactionPhasesDaoImpl();
+    @Getter
+    @Setter
+    private RolesDao rolesDao = new RolesDaoImpl();
 
 
     /**
@@ -286,6 +289,25 @@ public class CheckEntities implements Serializable {
                 log.warn("User exists yet", entity.getUsername());
                 throw new InvalidEntityException(
                         "Il y a déjà un utilisateur avec ce pseudo: " + entity.getUsername(), ErrorCodes.USER_NOT_FOUND
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if user exist in DB
+     *
+     * @param entity : UsersEntity
+     */
+
+    public void checkRole(RolesEntity entity) {
+        if (entity != null) {
+            EntityManager em = EMF.getEM();
+            RolesEntity rolesEntity = rolesDao.findById(em, entity.getId());
+            if (rolesEntity == null) {
+                log.warn("Roles doesn't exists yet", entity.getId());
+                throw new EntityNotFoundException(
+                        "Ce rôle n'existe pas: " + entity.getId(), ErrorCodes.ROLES_NOT_FOUND
                 );
             }
         }
