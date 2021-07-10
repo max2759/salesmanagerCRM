@@ -70,7 +70,6 @@
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
 
-
     <filter>
         <filter-name>ShiroFilter</filter-name>
         <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>

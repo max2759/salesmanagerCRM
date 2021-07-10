@@ -13,4 +13,6 @@ public interface CompanyTypesDao {
     List<CompanyTypesEntity> findAll();
 
     CompanyTypesEntity findById(EntityManager em, int id);
+
+    CompanyTypesEntity findByLabel(EntityManager em, String label);
 }
