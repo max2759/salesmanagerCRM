@@ -15,20 +15,61 @@
 <cc:implementation>
     <f:view>
 
+
         <h3>#{bundle['notes.list']}</h3>
 
 
-        <h:form>
+        <h:form id="form">
+
             <div class="card">
-                <p:dataTable var="note" value="#{notesBean.notesEntities}">
-                    <p:column headerText="Code">
-                        <h:outputText value="#{note.id}"/>
+                <p:dataTable id="note1" var="note" value="#{notesBean.notesEntities}" editable="true"
+                             style="margin-bottom:20px">
+
+                    <p:ajax event="rowEdit" listener="#{notesBean.onRowEdit}" update="@this msgs"/>
+                    <p:ajax event="rowEditCancel" listener="#{notesBean.onRowCancel}" update="@this msgs"/>
+
+
+                    <p:column>
+
+                        <h:outputText styleClass="boldText" value="#{bundle['notes.remarks']} "/>
+                        <h:outputText title="#{bundle['by']} : #{note.usersByIdUsers.email}"
+                                      value="#{bundle['by']} #{note.usersByIdUsers.username}"/>
+
+                        <h:outputText value=" #{note.creationDate}">
+                            <f:convertDateTime type="localDate"
+                                               pattern="dd/MM/yy ' #{bundle['at']} ' HH:mm:ss"/>
+                        </h:outputText>
+
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText escape="false" value="#{note.message}"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputTextarea widgetVar="editor1" value="#{note.message}" required="true"
+                                                 rows="6"
+                                                 cols="100"
+                                                 autoResize="false" label="Name"/>
+
+                            </f:facet>
+
+                        </p:cellEditor>
+
+                        <p:rowEditor editTitle="#{bundle['edit']}"
+                                     cancelTitle="#{bundle['cancel']}"
+                                     saveTitle="#{bundle['save']}"/>
+
+
+                        <p:commandLink update="@form msgs"
+                                       action="#{notesBean.deleteEntity}">
+                            <i class="ui-icon ui-icon-delete-forever"></i>
+                            <f:param name="idEntity" value="#{note.id}"/>
+                        </p:commandLink>
                     </p:column>
-                    <p:column headerText="Name">
-                        <h:outputText escape="false" value="#{note.message}"/>
-                    </p:column>
+
+
                 </p:dataTable>
             </div>
+
         </h:form>
 
     </f:view>

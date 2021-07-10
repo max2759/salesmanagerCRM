@@ -35,10 +35,14 @@ public class BranchActivitiesBean implements Serializable {
     @Setter
     private BranchActivitiesEntity branchActivitiesEntity = new BranchActivitiesEntity();
 
+    @Getter
+    @Setter
+    private List<BranchActivitiesEntity> branchActivitiesEntityList;
+
     /**
      * Save branch activities title
      *
-     * @param branchActivitiesEntity
+     * @param branchActivitiesEntity BranchActitivities
      */
     protected void addBranchActivities(BranchActivitiesEntity branchActivitiesEntity) {
 
@@ -77,9 +81,16 @@ public class BranchActivitiesBean implements Serializable {
     }
 
     /**
+     * public method that call findAll
+     */
+    public void findAllBranchActivities() {
+        branchActivitiesEntityList = findAll();
+    }
+
+    /**
      * Find all Branch activities
      *
-     * @return
+     * @return List of BranchActivities
      */
     protected List<BranchActivitiesEntity> findAll() {
         EntityManager em = EMF.getEM();
@@ -119,7 +130,7 @@ public class BranchActivitiesBean implements Serializable {
     /**
      * Update BranchActivities
      *
-     * @param branchActivitiesEntity
+     * @param branchActivitiesEntity BranchActivities
      */
     protected void updateBranchActivitiesLabel(BranchActivitiesEntity branchActivitiesEntity) {
 

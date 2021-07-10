@@ -16,6 +16,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Maximilien Zabbara
@@ -33,11 +35,22 @@ public class CompaniesBean implements Serializable {
     @Setter
     private CompaniesEntity companiesEntity;
 
+    @Getter
+    @Setter
+    private List<CompaniesEntity> companiesEntityList;
+
+
+    /**
+     * public method that call save
+     */
+    public void saveCompany() {
+        save(companiesEntity);
+    }
 
     /**
      * Save Companies Entity
      *
-     * @param companiesEntity
+     * @param companiesEntity CompaniesEntity
      */
     protected void save(CompaniesEntity companiesEntity) {
 
@@ -89,6 +102,28 @@ public class CompaniesBean implements Serializable {
             em.clear();
             em.clear();
         }
+    }
+
+
+    /**
+     * Find all Companies entities by userID
+     *
+     * @param idUser idUser
+     * @return List CompaniesEntities
+     */
+    protected List<CompaniesEntity> findAll(int idUser) {
+        if (idUser == 0) {
+            log.error("User ID is null");
+            return Collections.emptyList();
+        }
+
+        EntityManager em = EMF.getEM();
+        List<CompaniesEntity> companiesEntities = companiesDao.findAll(em, idUser);
+
+        em.clear();
+        em.close();
+
+        return companiesEntities;
     }
 
 }

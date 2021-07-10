@@ -1,6 +1,5 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
@@ -9,72 +8,18 @@
 
     <ui:define name="title">#{bundle['notes.title']}</ui:define>
     <ui:define name="content">
-        <div class="ui-g">
+        <div class="ui-g ui-fluid">
             <div class="ui-g-12">
-                <div class="card">
-                    <f:metadata>
-                        <f:viewAction action="#{notesBean.createNewEntity}"/>
-                        <f:viewAction action="#{notesBean.listEntities}"/>
-                    </f:metadata>
+                <f:metadata>
+                    <f:viewAction action="#{notesBean.createNewEntity}"/>
+                    <f:viewAction action="#{notesBean.listEntitiesContacts}"/>
+                </f:metadata>
 
-                    <h3>#{bundle['notes.list']}</h3>
-
-
-                    <h:form id="form">
-                        <p:growl id="msgs" life="2000"/>
-
-                        <div class="card">
-                            <p:dataTable id="note1" var="note" value="#{notesBean.notesEntities}" editable="true"
-                                         style="margin-bottom:20px">
-
-                                <p:ajax event="rowEdit" listener="#{notesBean.onRowEdit}" update=":form:msgs"/>
-                                <p:ajax event="rowEditCancel" listener="#{notesBean.onRowCancel}" update=":form:msgs"/>
+                <p:growl id="msgs" life="2000"/>
 
 
-                                <p:column>
-
-                                    <h:outputText class="p-text-bold" value="#{bundle['notes.remarks']} "/>
-                                    <h:outputText title="#{bundle['by']} : #{note.usersByIdUsers.email}"
-                                                  value="#{bundle['by']} #{note.usersByIdUsers.username}"/>
-
-                                    <h:outputText value=" #{note.creationDate}">
-                                        <f:convertDateTime type="localDate"
-                                                           pattern="dd/MM/yy ' #{bundle['at']} ' HH:mm:ss"/>
-                                    </h:outputText>
-
-                                    <p:cellEditor>
-                                        <f:facet name="output">
-                                            <h:outputText escape="false" value="#{note.message}"/>
-                                        </f:facet>
-                                        <f:facet name="input">
-                                            <p:inputTextarea widgetVar="editor1" value="#{note.message}" required="true"
-                                                             rows="6"
-                                                             cols="60"
-                                                             autoResize="false" label="Name"/>
-
-                                        </f:facet>
-
-                                    </p:cellEditor>
-
-                                    <p:commandLink value="#{bundle['delete']}" update="note1 :form:msgs"
-                                                   action="#{notesBean.deleteEntity}">
-                                        <f:param name="idEntity" value="#{note.id}"/>
-                                    </p:commandLink>
-                                    <p:rowEditor editTitle="#{bundle['edit']}" cancelTitle="#{bundle['cancel']}"
-                                                 saveTitle="#{bundle['save']}"/>
-
-                                </p:column>
-
-
-                            </p:dataTable>
-                        </div>
-
-                    </h:form>
-
+                <fxs:listNotes id="listNotes"/>
                     <fxs:createNotes id="createNotes"/>
-
-                    <!--        <fxs:listNotes id="listNotes"/>-->
-                </div>
             </div>
         </div>
 
