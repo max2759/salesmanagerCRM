@@ -21,4 +21,12 @@ public class CompanyTypesDaoImpl extends EntityFinderImpl<CompanyTypesEntity> im
     public CompanyTypesEntity findById(EntityManager em, int id) {
         return em.find(CompanyTypesEntity.class, id);
     }
+
+    @Override
+    public CompanyTypesEntity findByLabel(EntityManager em, String label) {
+        return em.createNamedQuery("CompanyTypes.findByLabel",
+                CompanyTypesEntity.class)
+                .setParameter("label", label)
+                .getSingleResult();
+    }
 }

@@ -2,7 +2,9 @@ package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.dao.UsersDao;
 import be.atc.salesmanagercrm.dao.impl.UsersDaoImpl;
+import be.atc.salesmanagercrm.entities.RolesEntity;
 import be.atc.salesmanagercrm.entities.UsersEntity;
+import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
@@ -10,6 +12,13 @@ import be.atc.salesmanagercrm.validators.UsersValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -43,11 +52,20 @@ public class UsersBean implements Serializable {
     private UsersEntity usersEntity = new UsersEntity();
     @Getter
     @Setter
+    private RolesEntity rolesEntity = new RolesEntity();
+    @Getter
+    @Setter
     @Inject
     private RolesBean rolesBean;
     @Getter
     @Setter
     private String password2;
+    @Getter
+    @Setter
+    private List<UsersEntity> usersEntityList;
+    @Getter
+    @Setter
+    private boolean showPopup;
 
     private HttpServletRequest request;
 
@@ -57,21 +75,31 @@ public class UsersBean implements Serializable {
      */
     public void register() throws NoSuchAlgorithmException {
         //regex password + hash + pseudo unique
+        log.info(String.valueOf(usersEntity.getEmail()));
+        log.info(String.valueOf(rolesEntity.getId()));
 
-        LocalDateTime currentDate = LocalDateTime.now();
-
-        //    log.info(password2);
-
-        //valid if no errors
         try {
-            List<String> errors = UsersValidator.validateRegister(usersEntity, password2);
-            if (!errors.isEmpty()) {
-                return;
-            }
+            validateUsers(usersEntity, password2);
         } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
+
+        CheckEntities checkEntities = new CheckEntities();
+        try {
+            checkEntities.checkUserByUsername(usersEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
+
+        try {
+            checkEntities.checkRole(usersEntity.getRolesByIdRoles());
+        } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         }
+
 
         //if it's ok, hash the password
         //verifier dans le cahier des charge si il est generé automatiquement
@@ -84,12 +112,10 @@ public class UsersBean implements Serializable {
         for (byte b : hash) {
             s.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
         }
-        //  System.out.println(s.toString());
         String hashPass = s.toString();
 
         usersEntity.setPassword(hashPass);
         usersEntity.setActive(true);
-        usersEntity.setRolesByIdRoles(rolesBean.findById(1));
         usersEntity.setRegisterDate(LocalDateTime.now());
 
         EntityManager em = EMF.getEM();
@@ -184,9 +210,14 @@ public class UsersBean implements Serializable {
     }
 */
 
+    public void findAllUsers() {
+        log.info("bgin findallusers");
+        usersEntityList = findAll();
+        log.info(String.valueOf(usersEntityList));
+    }
 
-    protected List<UsersEntity> findAllUsers() {
-
+    protected List<UsersEntity> findAll() {
+        log.info("begin findall");
         EntityManager em = EMF.getEM();
         List<UsersEntity> usersEntities = dao.findAllUsers(em);
 
@@ -194,6 +225,12 @@ public class UsersBean implements Serializable {
         em.close();
 
         return usersEntities;
+    }
+
+    public void updateUsersAdmin(UsersEntity entity) {
+        log.info("begin updateUsrAdmin");
+
+
     }
 
 /*
@@ -211,20 +248,29 @@ public class UsersBean implements Serializable {
     }
 */
 
-    private void validateUsers(UsersEntity entity) {
-        List<String> errors = UsersValidator.validate(entity);
+    private void validateUsers(UsersEntity entity, String password2) {
+        List<String> errors = UsersValidator.validate(entity, password2);
         if (!errors.isEmpty()) {
             log.error("Register is not valide {}", entity);
             throw new InvalidEntityException("L'inscription n est pas valide", ErrorCodes.USER_NOT_VALID, errors);
         }
     }
 
-    public String getPassword2() {
-        return password2;
+    /**
+     * Ouvrir le popup d'edition ou d'ajout
+     */
+    public void showPopupModal() {
+        log.info("Show PopupModal");
+        showPopup = true;
     }
 
-    public void setPassword2(String password2) {
-        this.password2 = password2;
+    /**
+     * Ouvrir le popup d'edition ou d'ajout
+     */
+    public void hidePopupModal() {
+        log.info("Show PopupModal");
+        showPopup = false;
     }
+
 
 }

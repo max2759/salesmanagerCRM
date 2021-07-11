@@ -1,12 +1,16 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:f="http://java.sun.com/jsf/core"
                 template="WEB-INF/templates/template.xhtml">
 
     <ui:define name="title">#{bundle['register.title']}</ui:define>
     <ui:define name="content">
+
+        <f:metadata>
+            <f:viewAction action="#{rolesBean.findAllRoles}"/>
+        </f:metadata>
 
         <h:body>
             <h1>Register</h1>
@@ -28,13 +32,13 @@
                 </p:inputText>
                 <h:messages style="color:red;"/>
 
+
                 <br/>
                 <div class="p-field p-grid">
                     <p:outputLabel value="#{bundle['user.password']}">*</p:outputLabel>
                     <div class="p-col">
                         <p:password value="#{usersBean.usersEntity.password}" match="password2" required="true">
                             <f:validator validatorId="userPasswordValidator"></f:validator>
-                            <!-- <f:validateRegex pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?])[A-Za-z\d@$!%*?]{8,}$"></f:validateRegex> -->
                         </p:password>
                     </div>
                 </div>
@@ -47,13 +51,23 @@
                     </div>
                 </div>
 
-                <!--verifier si le mail est obligatoire -->
+                <!--verifier si le mail est obligatoire  -->
                 <br/>
-                <p:outputLabel value="#{bundle['email']}"></p:outputLabel>
-                <p:inputText value="#{usersBean.usersEntity.email}">
-                    <f:
+                <p:outputLabel value="#{bundle['email']}"> * </p:outputLabel>
+                <p:inputText value="#{usersBean.usersEntity.email}" required="true">
+                    <f:validator validatorId="userEmailValidator"></f:validator>
                 </p:inputText>
                 <br/>
+
+
+                <h:panelGroup styleClass="form-group">
+                    <h:selectOneMenu id="citiesDisplay" styleClass="form-group"
+                                     value="#{usersBean.rolesEntity.id}">
+                        <f:selectItem itemValue="#{null}" itemLabel=" "/>
+                        <f:selectItems value="#{rolesBean.rolesEntitiesSelectItems}"/>
+                    </h:selectOneMenu>
+                    <h:message for="citiesDisplay"/>
+                </h:panelGroup>
 
 
                 <p:commandButton value="Valider" action="#{usersBean.register}"/>
