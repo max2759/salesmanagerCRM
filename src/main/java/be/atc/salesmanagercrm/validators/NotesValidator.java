@@ -32,7 +32,6 @@ public class NotesValidator {
             errors.add("Veuillez renseigner un message dans votre note");
 
             errorMessage = JsfUtils.returnMessage(getLocale(), "userNotExist") + "\n" + JsfUtils.returnMessage(getLocale(), "notes.validator.message");
-
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
 

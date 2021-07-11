@@ -10,13 +10,6 @@ import be.atc.salesmanagercrm.validators.UsersValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.*;
-import org.apache.shiro.config.IniSecurityManagerFactory;
-import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.Factory;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -55,9 +48,6 @@ public class UsersBean implements Serializable {
     @Getter
     @Setter
     private String password2;
-    @Getter
-    @Setter
-    private List<UsersEntity> usersEntityList;
 
     private HttpServletRequest request;
 
@@ -121,6 +111,7 @@ public class UsersBean implements Serializable {
 
     }
 
+/*
 
     public void connection(UsersEntity usersEntity) {
         log.info("My First Apache Shiro Application");
@@ -191,15 +182,11 @@ public class UsersBean implements Serializable {
 
         System.exit(0);
     }
+*/
 
-    public void findAllUsers() {
-        log.info("bgin findallusers");
-        usersEntityList = findAll();
-        log.info(String.valueOf(usersEntityList));
-    }
 
-    protected List<UsersEntity> findAll() {
-        log.info("begin findall");
+    protected List<UsersEntity> findAllUsers() {
+
         EntityManager em = EMF.getEM();
         List<UsersEntity> usersEntities = dao.findAllUsers(em);
 
@@ -209,6 +196,7 @@ public class UsersBean implements Serializable {
         return usersEntities;
     }
 
+/*
 
     public void securityUtils() {
         Subject usr = SecurityUtils.getSubject();
@@ -221,6 +209,7 @@ public class UsersBean implements Serializable {
         }
         log.info("User [" + usr.getPrincipal() + "] logged in successfully.");
     }
+*/
 
     private void validateUsers(UsersEntity entity) {
         List<String> errors = UsersValidator.validate(entity);
