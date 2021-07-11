@@ -83,8 +83,8 @@ public class BranchActivitiesBean implements Serializable {
     /**
      * public method that call findAll
      */
-    public void findAllBranchActivities() {
-        branchActivitiesEntityList = findAll();
+    public List<BranchActivitiesEntity> findAllBranchActivities() {
+        return branchActivitiesEntityList = findAll();
     }
 
     /**

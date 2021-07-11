@@ -36,7 +36,7 @@ public class JobTitlesLabelValidator implements Validator {
             checkEntities.checkJobTitlesLabel(jobTitlesEntity);
         } catch (InvalidEntityException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            throw new ValidatorException(new FacesMessage(getMessageErrorLabelAlreadyExist()));
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, getMessageErrorLabelAlreadyExist(), null));
         }
 
     }
