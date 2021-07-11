@@ -137,6 +137,7 @@ public class UsersBean implements Serializable {
 
     }
 
+/*
 
     public void connection(UsersEntity usersEntity) {
         log.info("My First Apache Shiro Application");
@@ -207,6 +208,7 @@ public class UsersBean implements Serializable {
 
         System.exit(0);
     }
+*/
 
     public void findAllUsers() {
         log.info("bgin findallusers");
@@ -231,6 +233,8 @@ public class UsersBean implements Serializable {
 
     }
 
+/*
+
     public void securityUtils() {
         Subject usr = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken("mike", "abcdef");
@@ -242,6 +246,7 @@ public class UsersBean implements Serializable {
         }
         log.info("User [" + usr.getPrincipal() + "] logged in successfully.");
     }
+*/
 
     private void validateUsers(UsersEntity entity, String password2) {
         List<String> errors = UsersValidator.validate(entity, password2);

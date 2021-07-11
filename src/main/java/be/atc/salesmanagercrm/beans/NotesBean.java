@@ -44,6 +44,9 @@ public class NotesBean implements Serializable {
     @Getter
     @Setter
     private NotesDao dao = new NotesDaoImpl();
+
+    // Todo : A modifier
+
     @Getter
     @Setter
     private UsersEntity usersEntity = new UsersEntity();
@@ -55,6 +58,7 @@ public class NotesBean implements Serializable {
     private CompaniesEntity companiesEntity = new CompaniesEntity();
     @Getter
     @Setter
+
     private NotesEntity notesEntity;
     @Getter
     @Setter
@@ -91,9 +95,7 @@ public class NotesBean implements Serializable {
         contactsEntity.setId(1);
 
         notesEntities = findNotesEntityByContactsByIdContacts(contactsEntity.getId(), usersEntity.getId());
-        for (NotesEntity n : notesEntities) {
-            test.put(n.getId(), false);
-        }
+
     }
 
     /**
@@ -105,18 +107,24 @@ public class NotesBean implements Serializable {
         companiesEntity.setId(1);
 
         notesEntities = findNotesEntityByCompaniesByIdCompanies(companiesEntity.getId(), usersEntity.getId());
-        for (NotesEntity n : notesEntities) {
-            test.put(n.getId(), false);
-        }
     }
 
+    /**
+     * Create new instance for objects
+     */
     public void createNewEntity() {
         log.info("method : createNewEntity()");
         notesEntity = new NotesEntity();
         notesEntities = new ArrayList<>();
     }
 
+    /**
+     * Method for update
+     *
+     * @param event RowEditEvent<NotesEntity>
+     */
     public void onRowEdit(RowEditEvent<NotesEntity> event) {
+        // TODO : Corriger le idUser
         NotesEntity notesEntityToUpdate = findById(event.getObject().getId(), 1);
 
         notesEntityToUpdate.setMessage(event.getObject().getMessage());
@@ -129,12 +137,21 @@ public class NotesBean implements Serializable {
         listEntitiesContacts();
     }
 
+
+    /**
+     * On cancel delete
+     */
     public void onRowCancel(RowEditEvent<NotesEntity> event) {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "canceled"), null);
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
+    /**
+     * Method for delete entity
+     */
     public void deleteEntity() {
+
+        // TODO : Corriger l idUser
         delete(Integer.parseInt(getParam("idEntity")), 1);
 
 
@@ -249,7 +266,7 @@ public class NotesBean implements Serializable {
         }
         if (idUser == 0) {
             log.error("User ID is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "note.notExist"), null);
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
         }
@@ -413,6 +430,7 @@ public class NotesBean implements Serializable {
      * @param entity NoteEntity
      */
     protected void update(NotesEntity entity) {
+
 
         try {
             validateNote(entity);
