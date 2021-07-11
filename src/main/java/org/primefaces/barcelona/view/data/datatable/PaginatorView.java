@@ -15,7 +15,9 @@
  */
 package org.primefaces.barcelona.view.data.datatable;
 
+import be.atc.salesmanagercrm.beans.BranchActivitiesBean;
 import be.atc.salesmanagercrm.beans.JobTitlesBean;
+import be.atc.salesmanagercrm.entities.BranchActivitiesEntity;
 import be.atc.salesmanagercrm.entities.JobTitlesEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,11 +41,18 @@ public class PaginatorView implements Serializable {
     @Setter
     private List<JobTitlesEntity> jobTitlesEntities;
 
+    @Getter
+    @Setter
+    private List<BranchActivitiesEntity> branchActivitiesEntities;
+
     @Inject
     private CarService service;
 
     @Inject
     private JobTitlesBean jobTitlesBean;
+
+    @Inject
+    private BranchActivitiesBean branchActivitiesBean;
 
     @PostConstruct
     public void init() {
@@ -52,6 +61,10 @@ public class PaginatorView implements Serializable {
 
     public void getJobEntities() {
         jobTitlesEntities = jobTitlesBean.findAllJobTitles();
+    }
+
+    public void getBranchActivities() {
+        branchActivitiesEntities = branchActivitiesBean.findAllBranchActivities();
     }
 
     public List<Car> getCars() {
