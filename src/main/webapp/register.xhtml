@@ -59,25 +59,30 @@
                 </p:inputText>
                 <br/>
 
-
-                <h:panelGroup styleClass="form-group">
-                    <h:selectOneMenu id="citiesDisplay" styleClass="form-group"
-                                     value="#{usersBean.rolesEntity.id}">
-                        <f:selectItem itemValue="#{null}" itemLabel=" "/>
-                        <f:selectItems value="#{rolesBean.rolesEntitiesSelectItems}"/>
-                    </h:selectOneMenu>
-                    <h:message for="citiesDisplay"/>
-                </h:panelGroup>
-
+                <!--
+                                <p:selectOneMenu id="rolesByUsers"
+                                                 value="#{usersBean.usersEntity.rolesByIdRoles}"
+                                                 converter="rolesConverter">
+                                    <f:selectItems value="#{rolesBean.rolesEntitiesSelectItems}" var="roles" itemValue="#{roles}"
+                                                   itemLabel="#{roles.label}"/>
+                                </p:selectOneMenu>
+                -->
+                <p:selectOneMenu id="rolesByUsers"
+                                 value="#{usersBean.usersEntity.rolesByIdRoles}"
+                                 converter="rolesConverter"
+                >
+                    <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes" itemValue="#{companyTypes}"
+                                   itemLabel="#{companyTypes.label}"/>
+                </p:selectOneMenu>
 
                 <p:commandButton value="Valider" action="#{usersBean.register}"/>
 
-                <p:messages id="messages" showDetail="true">
-                    <p:autoUpdate/>
-                </p:messages>
 
             </h:form>
 
+            <p:messages id="messages" showDetail="true">
+                <p:autoUpdate/>
+            </p:messages>
 
         </h:body>
     </ui:define>

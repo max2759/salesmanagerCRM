@@ -8,6 +8,7 @@ import java.util.Objects;
 @Table(name = "roles", schema = "salesmanagercrm")
 @NamedQueries({
         @NamedQuery(name = "Roles.findAllRoles", query = "select r from RolesEntity r"),
+        @NamedQuery(name = "Roles.findByLabel", query = "select r from RolesEntity r where r.label = :label"),
 })
 public class RolesEntity {
     private int id;
