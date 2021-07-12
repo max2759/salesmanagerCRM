@@ -22,6 +22,7 @@ import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Maximilien Zabbara
@@ -30,7 +31,6 @@ import java.util.Locale;
 @Named(value = "jobtitlesBean")
 @ViewScoped
 public class JobTitlesBean implements Serializable {
-
 
     @Getter
     @Setter
@@ -48,11 +48,20 @@ public class JobTitlesBean implements Serializable {
     @Setter
     private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
+    @Getter
+    @Setter
+    private String sendType = "";
+
     /**
-     * public method that call addJobTitle
+     * Public method that call either addJobTitle if sendType=add or update if sendType=edit
      */
     public void saveJobTitles() {
-        addJobTitle(jobTitlesEntity);
+
+        if (sendType.equalsIgnoreCase("add")) {
+            addJobTitle(jobTitlesEntity);
+        } else if (sendType.equalsIgnoreCase("edit")) {
+            update(jobTitlesEntity);
+        }
     }
 
     /**
@@ -137,7 +146,9 @@ public class JobTitlesBean implements Serializable {
     }
 
     /**
-     * public method that call findAll
+     * Method that call findAll and return list in jobTitlesEntityList
+     *
+     * @return List JobTitlesEntity
      */
     public List<JobTitlesEntity> findAllJobTitles() {
         return jobTitlesEntityList = findAll();
@@ -159,8 +170,18 @@ public class JobTitlesBean implements Serializable {
         return jobTitlesEntities;
     }
 
-    public void updateJobTitles() {
-        update(jobTitlesEntity);
+    /**
+     * Method for checking sendType and open good modal
+     */
+    public void checkSendType() {
+        sendType = getParam("sendType");
+        log.info("type envoyé : " + sendType);
+        if (sendType.equalsIgnoreCase("edit")) {
+            jobTitlesEntity = findById(Integer.parseInt(getParam("id")));
+            log.info("jobtitles : " + jobTitlesEntity.getId());
+        } else if (sendType.equalsIgnoreCase("add")) {
+            jobTitlesEntity = new JobTitlesEntity();
+        }
     }
 
     /**
@@ -234,6 +255,19 @@ public class JobTitlesBean implements Serializable {
             throw new InvalidEntityException("L'intitulé du poste n'est pas valide", ErrorCodes.JOBTITLES_NOT_VALID, errors);
         }
     }
+
+    /**
+     * Get param
+     *
+     * @param name String
+     * @return String
+     */
+    protected String getParam(String name) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+        return params.get(name);
+    }
+
 
 
 }

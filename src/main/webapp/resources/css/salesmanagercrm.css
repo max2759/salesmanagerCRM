@@ -1,3 +1,11 @@
 .boldText {
     font-weight: bold;
 }
+
+.dataTable-margin-top {
+    margin-top: 1rem;
+}
+
+.jobtitlesFullDisplay {
+    margin-top: 2rem;
+}

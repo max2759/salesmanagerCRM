@@ -40,7 +40,7 @@ public class JobTitlesDaoImpl extends EntityFinderImpl<JobTitlesEntity> implemen
             em.createNamedQuery("JobTitles.findByLabel",
                     JobTitlesEntity.class)
                     .setParameter("label", label)
-                    .getSingleResult();
+                    .getResultList();
             return true;
         } catch (Exception ex) {
             log.info("label n'existe pas");
