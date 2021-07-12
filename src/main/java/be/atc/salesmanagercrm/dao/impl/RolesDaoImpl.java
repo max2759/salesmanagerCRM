@@ -24,5 +24,13 @@ public class RolesDaoImpl implements RolesDao {
                 .getResultList();
     }
 
+    @Override
+    public RolesEntity findByLabel(EntityManager em, String label) {
+
+        return em.createNamedQuery("Roles.findByLabel",
+                RolesEntity.class)
+                .setParameter("label", label)
+                .getSingleResult();
+    }
 
 }

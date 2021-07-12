@@ -43,15 +43,38 @@ public class UsersDaoImpl implements UsersDao {
 
     }
 
+    @Override
     public void register(EntityManager em, UsersEntity usersEntity) {
         em.persist(usersEntity);
     }
+
+    @Override
+    public void update(EntityManager em, UsersEntity usersEntity) {
+        em.merge(usersEntity);
+    }
+
 
     @Override
     public List<UsersEntity> findAllUsers(EntityManager em) {
         return em.createNamedQuery("Users.findAllUsers",
                 UsersEntity.class)
                 .getResultList();
+    }
+
+    @Override
+    public UsersEntity findPassword(EntityManager em, int id) {
+        return em.createNamedQuery("Users.findPassword",
+                UsersEntity.class)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+
+    @Override
+    public UsersEntity findUsername(EntityManager em, int id) {
+        return em.createNamedQuery("Users.findUsername",
+                UsersEntity.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
 }

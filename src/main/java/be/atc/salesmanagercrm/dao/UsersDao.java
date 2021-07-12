@@ -15,5 +15,11 @@ public interface UsersDao {
 
     void register(EntityManager em, UsersEntity usersEntity);
 
+    void update(EntityManager em, UsersEntity usersEntity);
+
     List<UsersEntity> findAllUsers(EntityManager em);
+
+    UsersEntity findPassword(EntityManager em, int id);
+
+    UsersEntity findUsername(EntityManager em, int id);
 }

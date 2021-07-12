@@ -3,18 +3,19 @@ package be.atc.salesmanagercrm.beans;
 import be.atc.salesmanagercrm.dao.RolesDao;
 import be.atc.salesmanagercrm.dao.impl.RolesDaoImpl;
 import be.atc.salesmanagercrm.entities.RolesEntity;
+import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
+import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.utils.EMF;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.SessionScoped;
-import javax.faces.model.SelectItem;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 /**
@@ -59,9 +60,24 @@ public class RolesBean implements Serializable {
         return rolesEntities;
     }
 
+    public RolesEntity findByLabel(String label) {
+        if (label == null) {
+            log.info("label null in rolebean");
+            return null;
+        }
 
-    public List<SelectItem> getRolesEntitiesSelectItems() {
-        return rolesEntityList.stream().map(c -> new SelectItem(c.getId(), c.getLabel())).collect(Collectors.toList());
+        EntityManager em = EMF.getEM();
+
+        try {
+            return dao.findByLabel(em, label);
+        } catch (Exception exception) {
+            log.info("nothing in roles bean");
+            throw new EntityNotFoundException("aucun role avec le label " + label + " n'a été trouvé en db", ErrorCodes.ROLES_NOT_FOUND);
+        } finally {
+            em.clear();
+            em.close();
+        }
+
     }
 
 

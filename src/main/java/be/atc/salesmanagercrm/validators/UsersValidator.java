@@ -61,8 +61,40 @@ public class UsersValidator {
         return errors;
     }
 
+    public static List<String> validateUpdateByAdmin(UsersEntity entity) {
+        List<String> errors = new ArrayList<>();
+
+        log.info(String.valueOf(entity));
+
+        if (entity == null) {
+            errors.add("La reception des données à échouée");
+            errors.add("Veuillez recommencer votre inscription");
+            return errors;
+        }
+        if (entity.getRolesByIdRoles() == null) {
+            errors.add("Le rôle est vide");
+        }
+        if (entity.getLastname() == null || entity.getLastname().isEmpty()) {
+            errors.add("Le nom de famille est vide");
+        }
+        if (entity.getFirstname() == null || entity.getFirstname().isEmpty()) {
+            errors.add("Le prénom est vide");
+        }
+        if (entity.getEmail() == null || entity.getEmail().isEmpty()) {
+            errors.add("L'email ne peut pas être vide'");
+        } else if (!validateEmail(entity)) {
+            errors.add("Votre email n'est pas valide");
+        }
+        if (entity.getUsername() == null || entity.getUsername().isEmpty()) {
+            errors.add("Votre pseudo ne peux pas être vide");
+        }
+
+
+        return errors;
+    }
+
     public static boolean validatePassword(String password) {
-        String regex = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})";
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?])[A-Za-z\\d@$!%*?]{8,}$";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(password);
 
@@ -71,7 +103,7 @@ public class UsersValidator {
 
 
     public static boolean validateEmail(UsersEntity entity) {
-        String regex = "#^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\\.[a-z]{2,4}$#";
+        String regex = "^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\\.[a-z]{2,4}$";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(entity.getEmail());
 
