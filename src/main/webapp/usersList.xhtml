@@ -3,7 +3,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:c="http://java.sun.com/jstl/core"
                 template="WEB-INF/templates/template.xhtml">
 
     <ui:define name="title">#{bundle['usersList.title']}</ui:define>
@@ -11,100 +11,116 @@
 
         <f:metadata>
             <f:viewAction action="#{usersBean.findAllUsers}"/>
+            <f:viewAction action="#{rolesBean.findAllRoles}"/>
         </f:metadata>
 
         <h:body>
             <h1>#{bundle['usersList.title']}</h1>
 
-            <h:dataTable value="#{usersBean.usersEntityList}" var="user">
+            <h:form>
+                <h:dataTable value="#{usersBean.usersEntityList}" var="user">
 
-                <h:column>
-                    <f:facet name="header">#{bundle['user.username']}</f:facet>
-                    <p:outputLabel value="#{user.username}"></p:outputLabel>
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">#{bundle['user.username']}</f:facet>
+                        <p:outputLabel value="#{user.username}"/>
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">#{bundle['firstname']}</f:facet>
-                    <p:outputLabel value="#{user.firstname}"></p:outputLabel>
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">#{bundle['firstname']}</f:facet>
+                        <p:outputLabel value="#{user.firstname}"/>
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">#{bundle['lastname']}</f:facet>
-                    <p:outputLabel value="#{user.lastname}"></p:outputLabel>
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">#{bundle['lastname']}</f:facet>
+                        <p:outputLabel value="#{user.lastname}"/>
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">#{bundle['role']}</f:facet>
-                    <p:outputLabel value="#{user.rolesByIdRoles.label}"></p:outputLabel>
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">#{bundle['role']}</f:facet>
+                        <p:outputLabel value="#{user.rolesByIdRoles.label}"/>
+                    </h:column>
 
-                <h:column>
-                    <h:form>
-                        <!-- bouton edit -->
-                        <f:facet name="header">#{bundle['edit']}</f:facet>
+                    <p:commandButton value="Editer" type="button" icon="ui-icon-add-box"
+                                     onclick="PF('updateUsersModal').show();" styleClass="NavyButton"
+                    />
 
-                        <!-- appel de showmodalPopup -->
-                        <h:commandLink styleClass="btn btn-outline-primary btn-sm"
-                                       action="#{usersBean.showPopupModal}">
-                            <p:outputLabel value="Valider"/>
-                            <f:param name="id" value="#{user.id}"></f:param>
-
-                            <f:ajax render="@all"/>
-                            <i class="fas fa-edit"></i>
-                        </h:commandLink>
-                    </h:form>
-                </h:column>
-
-                <!-- <h:column>
-                     <h:commandButton styleClass="btn btn-outline-dark btn-sm"
-                                      value="#{bundle['fxs.insurancesList.close']}"
-                                      action="#{usersBean.showUpdateUsersAdmin(user.id)}">
-                         <f:ajax render="@all"></f:ajax>
-                     </h:commandButton>
-                 </h:column> -->
-
-            </h:dataTable>
-
-
-            <!-- affichage du modal -->
-            <f:view>
-                <h:panelGroup id="popupEdit" layout="block" styleClass="popup-panel-overlay"
-                              rendered="#{usersBean.showPopup}">
-
-                    <h:form id="formPopup">
-                        <div class="popup-panel">
-
-                            <div class="form-group">
-                                <h:outputLabel value="ID" for="idUser"></h:outputLabel>
-                                <h:outputText id="idUser" value="#{usersBean.usersEntity.id}"
-                                              styleClass="form-control"></h:outputText>
+                    <h:column>
+                        <div class="ui-g">
+                            <div class="ui-g-4">
+                                <p:commandButton value="Modal"
+                                                 actionListener="#{usersBean.initialiseDialogUserId(user.id)}"
+                                                 update="updateUserDialogForm:updateUserDialog"
+                                                 oncomplete="PF('updateUser').show();return false;"
+                                                 styleClass="NavyButton"/>
                             </div>
-
-                            <div class="form-group">
-                                <h:outputLabel value="username" for="username"></h:outputLabel>
-                                <h:inputText value="#{usersBean.usersEntity.username}" styleClass="form-control"
-                                             required="true"
-                                             pt:placeholder="Votre user ici..."
-                                             requiredMessage="#{bundle['fxs.insurancesList.required']}"
-                                             id="username">
-                                </h:inputText>
-                                <h:message styleClass="alert alert-danger" role="alert" for="username"></h:message>
-                            </div>
-
-                            <!-- button save edit -->
-
-                            <span>
-                        <h:commandButton styleClass="btn btn-outline-dark btn-sm"
-                                         value="#{bundle['close']}"
-                                         action="#{usersBean.hidePopupModal}">
-                            <f:ajax render="@all"></f:ajax>
-                        </h:commandButton>
-                    </span>
-
                         </div>
-                    </h:form>
-                </h:panelGroup>
-            </f:view>
+                    </h:column>
+
+                </h:dataTable>
+            </h:form>
+
+            <h:form id="updateUserDialogForm">
+                <div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-lg-6">
+                        <!-- Left Side -->
+                        <div class="card">
+                            <p:dialog header="Modal Dialog" widgetVar="updateUser" modal="true" height="100"
+                                      style="height: 500px"
+                                      responsive="true" id="updateUserDialog">
+                                <!--  <h:outputText value="Id : #{usersBean.userForDialog.id}"/>
+                                  <h:outputText value="Username : #{usersBean.userForDialog.username}"/>
+                                  -->
+
+                                <p:outputLabel value="#{bundle['firstname']}"></p:outputLabel>
+                                <p:inputText value="#{usersBean.usersEntity.firstname}"
+                                             placeholder="#{usersBean.userForDialog.firstname}"/>
+                                <br/>
+
+                                <p:outputLabel value="#{bundle['lastname']}"></p:outputLabel>
+                                <p:inputText value="#{usersBean.usersEntity.lastname}"
+                                             placeholder="#{usersBean.userForDialog.lastname}"/>
+
+                                <p:outputLabel value="#{bundle['user.username']}"></p:outputLabel>
+                                <p:inputText value="#{usersBean.usersEntity.username}"
+                                             placeholder="#{usersBean.userForDialog.username}">
+                                </p:inputText>
+
+                                <p:outputLabel value="#{bundle['email']}"></p:outputLabel>
+                                <p:inputText value="#{usersBean.usersEntity.email}"
+                                             placeholder="#{usersBean.userForDialog.email}">
+                                    <f:validator validatorId="userEmailValidator"></f:validator>
+                                </p:inputText>
+
+                                <p:selectOneMenu id="userRole"
+                                                 value="#{usersBean.usersEntity.rolesByIdRoles}"
+                                                 converter="rolesConverter"
+                                >
+                                    <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
+                                                   itemValue="#{companyTypes}"
+                                                   itemLabel="#{companyTypes.label}"/>
+                                </p:selectOneMenu>
+
+                                <c:if test="#{usersBean.usersEntity.active eq false}">
+                                    <h:selectBooleanCheckbox id="inactive" value="#{usersBean.usersEntity.active}"/>
+                                </c:if>
+                                <c:if test="#{usersBean.usersEntity.active eq true}">
+                                    <h:selectBooleanCheckbox id="active" value="#{usersBean.usersEntity.active}"
+                                                             checked="checked"/>
+                                </c:if>
+
+
+                                <p:commandButton value="Confirmer Valider" action="#{usersBean.updateUsersAdmin}"
+                                                 process="@form" ajax="=false"/>
+
+                            </p:dialog>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+
+            <p:messages id="messages" showDetail="true">
+                <p:autoUpdate/>
+            </p:messages>
 
 
         </h:body>

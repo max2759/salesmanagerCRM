@@ -11,4 +11,6 @@ public interface RolesDao {
 
     List<RolesEntity> findAllRoles(EntityManager em);
 
+    RolesEntity findByLabel(EntityManager em, String label);
+
 }

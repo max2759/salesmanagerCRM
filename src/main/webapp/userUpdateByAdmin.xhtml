@@ -30,17 +30,14 @@
                 <p:outputLabel value="#{bundle['lastname']}"></p:outputLabel>
                 <h:inputText value="#{user.lastname}"></h:inputText>
 
-                <p:outputLabel value="#{bundle['role']}"></p:outputLabel>
-                <h:inputText value="#{user.lastname}"></h:inputText>
+                <p:selectOneMenu id="rolesByUsers"
+                                 value="#{usersBean.rolesEntity.id}"
+                >
+                    <f:selectItem value="role"></f:selectItem>
+                    <f:selectItems value="#{rolesBean.rolesEntitiesSelectItems}"/>
+                </p:selectOneMenu>
 
-                <h:panelGroup styleClass="form-group">
-                    <h:selectOneMenu id="citiesDisplay" styleClass="form-group"
-                                     value="#{usersBean.usersEntity.rolesByIdRoles.id}">
-                        <f:selectItem itemValue="#{null}" itemLabel=" "/>
-                        <f:selectItems value="#{rolesBean.rolesEntitiesSelectItems}"/>
-                    </h:selectOneMenu>
-                    <h:message for="citiesDisplay"/>
-                </h:panelGroup>
+                <p:commandButton value="Valider" action="#{usersBean.register}"/>
 
 
             </h:form>
