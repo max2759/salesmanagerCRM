@@ -21,6 +21,7 @@ import be.atc.salesmanagercrm.entities.BranchActivitiesEntity;
 import be.atc.salesmanagercrm.entities.JobTitlesEntity;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.primefaces.barcelona.domain.Car;
 import org.primefaces.barcelona.service.CarService;
 
@@ -31,6 +32,7 @@ import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
 
+@Slf4j
 @Named("dtPaginatorView")
 @ViewScoped
 public class PaginatorView implements Serializable {
