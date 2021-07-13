@@ -18,6 +18,6 @@ public interface JobTitlesDao {
 
     JobTitlesEntity findById(EntityManager em, int id);
 
-    boolean findByLabel(EntityManager em, String label);
+    List<JobTitlesEntity> findByLabel(EntityManager em, String label);
 
 }

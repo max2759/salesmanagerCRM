@@ -20,6 +20,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -241,6 +242,15 @@ public class JobTitlesBean implements Serializable {
             em.clear();
         }
 
+    }
+
+    /**
+     * Create new instance for objects
+     */
+    public void createNewEntity() {
+        log.info("method : createNewEntity()");
+        jobTitlesEntity = new JobTitlesEntity();
+        jobTitlesEntityList = new ArrayList<>();
     }
 
     /**

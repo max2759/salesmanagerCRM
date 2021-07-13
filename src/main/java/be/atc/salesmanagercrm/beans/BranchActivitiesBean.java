@@ -7,17 +7,22 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.validators.BranchActivitiesValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Maximilien Zabbara
@@ -37,7 +42,28 @@ public class BranchActivitiesBean implements Serializable {
 
     @Getter
     @Setter
+    private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+
+    @Getter
+    @Setter
     private List<BranchActivitiesEntity> branchActivitiesEntityList;
+
+    @Getter
+    @Setter
+    private String sendType = "";
+
+    /**
+     * Public method that call either addBranchActivities if sendType=add or updateBranchActivitiesLabel if sendType=edit
+     */
+    public void saveBranchActivities() {
+
+        if (sendType.equalsIgnoreCase("add")) {
+            addBranchActivities(branchActivitiesEntity);
+        } else if (sendType.equalsIgnoreCase("edit")) {
+            updateBranchActivitiesLabel(branchActivitiesEntity);
+        }
+    }
+
 
     /**
      * Save branch activities title
@@ -53,12 +79,15 @@ public class BranchActivitiesBean implements Serializable {
             return;
         }
 
+        FacesMessage facesMessage;
         CheckEntities checkEntities = new CheckEntities();
 
         try {
             checkEntities.checkBranchActivitiesLabel(branchActivitiesEntity);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "branchActivities.labelExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
             return;
         }
 
@@ -71,9 +100,13 @@ public class BranchActivitiesBean implements Serializable {
             branchActivitiesDao.add(em, branchActivitiesEntity);
             tx.commit();
             log.info("Persist ok");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "branchActivities.save"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         } finally {
             em.clear();
             em.clear();
@@ -107,8 +140,13 @@ public class BranchActivitiesBean implements Serializable {
      * @return BranchActivitiesEntity
      */
     protected BranchActivitiesEntity findById(int id) {
+
+        FacesMessage facesMessage;
+
         if (id == 0) {
             log.error("Branch_Activities ID is null");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "branchActivities.error"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
             return null;
         }
 
@@ -142,10 +180,14 @@ public class BranchActivitiesBean implements Serializable {
             return;
         }
 
+        FacesMessage facesMessage;
+
         try {
             findById(branchActivitiesEntity.getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "branchActivities.error"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
             return;
         }
 
@@ -155,6 +197,8 @@ public class BranchActivitiesBean implements Serializable {
             checkEntities.checkBranchActivitiesLabel(branchActivitiesEntity);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "branchActivities.labelExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
             return;
         }
 
@@ -166,12 +210,30 @@ public class BranchActivitiesBean implements Serializable {
             branchActivitiesDao.update(em, branchActivitiesEntity);
             tx.commit();
             log.info("Update ok");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "branchActivities.updated"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Update echec");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         } finally {
             em.clear();
             em.clear();
+        }
+    }
+
+    /**
+     * Method for checking sendType and open good modal
+     */
+    public void checkSendType() {
+        sendType = getParam("sendType");
+        log.info("type envoyé : " + sendType);
+        if (sendType.equalsIgnoreCase("edit")) {
+            branchActivitiesEntity = findById(Integer.parseInt(getParam("id")));
+            log.info("jobtitles : " + branchActivitiesEntity.getId());
+        } else if (sendType.equalsIgnoreCase("add")) {
+            branchActivitiesEntity = new BranchActivitiesEntity();
         }
     }
 
@@ -186,6 +248,18 @@ public class BranchActivitiesBean implements Serializable {
             log.error("BranchActivities is not valid {}", entity);
             throw new InvalidEntityException("Le secteur d'activité n'est pas valide", ErrorCodes.BRANCHACTIVITIESLABEL_NOT_VALID, errors);
         }
+    }
+
+    /**
+     * Get param
+     *
+     * @param name String
+     * @return String
+     */
+    protected String getParam(String name) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+        return params.get(name);
     }
 
 }

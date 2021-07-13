@@ -113,7 +113,7 @@ class CheckEntitiesTest {
     void checkBranchActivitiesLabel() {
         BranchActivitiesEntity branchActivitiesEntity = new BranchActivitiesEntity();
 
-        branchActivitiesEntity.setLabel("test");
+        branchActivitiesEntity.setLabel("marketing");
 
         CheckEntities checkEntities = new CheckEntities();
         log.info("Début du test");

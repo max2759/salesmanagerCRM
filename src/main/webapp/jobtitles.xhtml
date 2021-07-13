@@ -3,6 +3,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
                 template="WEB-INF/templates/template.xhtml">
 
     <ui:define name="title">#{bundle['jobTitles.title']}</ui:define>
@@ -25,57 +26,11 @@
                                 </p:commandButton>
                             </f:facet>
                         </p:toolbar>
-
-                        <p:dataTable var="jobtitles" value="#{dtPaginatorView.jobTitlesEntities}" rows="10"
-                                     id="jobtitlesDatatable"
-                                     paginator="true" styleClass="dataTable-margin-top"
-                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
-                                     rowsPerPageTemplate="5,10,{ShowAll|'All'}">
-                            <f:facet name="header">
-                                #{bundle['jobTitles.title']}
-                            </f:facet>
-                            <p:column headerText="#{bundle['jobTitles.title']}" sortBy="#{jobtitles.label}">
-                                <h:outputText value="#{jobtitles.label}"/>
-                            </p:column>
-                            <p:column headerText="#{bundle['edit']}">
-                                <p:commandButton icon="ui-icon-edit" styleClass="NavyButton" update="@(form)"
-                                                 onclick="PF('jobTitlesModal').show();"
-                                                 action="#{jobtitlesBean.checkSendType}">
-                                    <f:param name="id" value="#{jobtitles.id}"/>
-                                    <f:param name="sendType" value="edit"/>
-                                </p:commandButton>
-                            </p:column>
-                        </p:dataTable>
+                        <fxs:listJobTitles id="listJobTitles"/>
                     </div>
                 </h:form>
             </div>
-            <p:dialog
-                    header="#{jobtitlesBean.sendType eq 'add' ? bundle['jobTitles.modalHeader'] : bundle['jobTitles.modalHeaderEdit']}"
-                    modal="true"
-                    id="jobTitlesModal" widgetVar="jobTitlesModal" responsive="true">
-                <h:form>
-                    <p:outputPanel id="jobtitlesManageContent" class="ui-fluid">
-                        <h:panelGroup styleClass="md-inputfield jobtitlesFullDisplay">
-                            <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
-                            <p:inputText id="jobTitlesLabel" value="#{jobtitlesBean.jobTitlesEntity.label}"
-                                         required="true" requiredMessage="#{bundle['jobTitles.labelError']}">
-                                <f:validator validatorId="jobTitlesLabelValidator"/>
-                            </p:inputText>
-                            <label>#{bundle['jobTitles.modalLabel']}</label>
-                            <p:message for="jobTitlesLabel"/>
-                        </h:panelGroup>
-                    </p:outputPanel>
-
-                    <p:commandButton value="#{jobtitlesBean.sendType eq 'add' ? bundle['save'] : bundle['edit']}"
-                                     icon="ui-icon-check"
-                                     update="@(form) facesMessage" action="#{jobtitlesBean.saveJobTitles}"
-                                     onclick="PF('jobTitlesModal').close();"/>
-                    <p:commandButton value="Cancel" icon="ui-icon-clear" onclick="PF('jobTitlesModal').hide()"
-                                     class="ui-button-secondary"/>
-                </h:form>
-            </p:dialog>
-
+            <fxs:createJobTitles id="createJobTitles"/>
         </div>
 
     </ui:define>

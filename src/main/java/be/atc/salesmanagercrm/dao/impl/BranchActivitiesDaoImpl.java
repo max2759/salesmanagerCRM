@@ -32,17 +32,11 @@ public class BranchActivitiesDaoImpl extends EntityFinderImpl<BranchActivitiesEn
     }
 
     @Override
-    public boolean findByLabel(EntityManager em, String label) {
-        try {
-            em.createNamedQuery("BranchActivities.findByLabel",
-                    BranchActivitiesEntity.class)
-                    .setParameter("label", label)
-                    .getSingleResult();
-            return true;
-        } catch (Exception ex) {
-            log.info("label n'existe pas");
-            return false;
-        }
+    public List<BranchActivitiesEntity> findByLabel(EntityManager em, String label) {
+        return em.createNamedQuery("BranchActivities.findByLabel",
+                BranchActivitiesEntity.class)
+                .setParameter("label", label)
+                .getResultList();
     }
 
     @Override

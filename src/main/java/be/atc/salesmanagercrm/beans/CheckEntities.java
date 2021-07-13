@@ -133,7 +133,7 @@ public class CheckEntities implements Serializable {
         if (jobTitlesEntity != null) {
             EntityManager em = EMF.getEM();
 
-            if (jobTitlesDao.findByLabel(em, jobTitlesEntity.getLabel())) {
+            if (!(jobTitlesDao.findByLabel(em, jobTitlesEntity.getLabel()).isEmpty())) {
                 log.warn("Job Title label already exist");
                 throw new InvalidEntityException(
                         "L'intitulé du poste " + jobTitlesEntity.getLabel() + " existe déjà", ErrorCodes.JOBTITLES_NOT_VALID
@@ -151,7 +151,7 @@ public class CheckEntities implements Serializable {
         if (branchActivitiesEntity != null) {
             EntityManager em = EMF.getEM();
 
-            if (branchActivitiesDao.findByLabel(em, branchActivitiesEntity.getLabel())) {
+            if (!(branchActivitiesDao.findByLabel(em, branchActivitiesEntity.getLabel()).isEmpty())) {
                 log.warn("Branch activities label already exist");
                 throw new InvalidEntityException(
                         "L'intitulé du poste " + branchActivitiesEntity.getLabel() + " existe déjà", ErrorCodes.BRANCHACTIVITIESLABEL_NOT_VALID
