@@ -35,16 +35,10 @@ public class JobTitlesDaoImpl extends EntityFinderImpl<JobTitlesEntity> implemen
     }
 
     @Override
-    public boolean findByLabel(EntityManager em, String label) {
-        try {
-            em.createNamedQuery("JobTitles.findByLabel",
-                    JobTitlesEntity.class)
-                    .setParameter("label", label)
-                    .getResultList();
-            return true;
-        } catch (Exception ex) {
-            log.info("label n'existe pas");
-            return false;
-        }
+    public List<JobTitlesEntity> findByLabel(EntityManager em, String label) {
+        return em.createNamedQuery("JobTitles.findByLabel",
+                JobTitlesEntity.class)
+                .setParameter("label", label)
+                .getResultList();
     }
 }

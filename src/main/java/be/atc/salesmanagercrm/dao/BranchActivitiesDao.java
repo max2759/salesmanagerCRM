@@ -18,7 +18,7 @@ public interface BranchActivitiesDao {
 
     BranchActivitiesEntity findById(EntityManager em, int id);
 
-    boolean findByLabel(EntityManager em, String label);
+    List<BranchActivitiesEntity> findByLabel(EntityManager em, String label);
 
     BranchActivitiesEntity findByLabelEntity(EntityManager em, String label);
 }

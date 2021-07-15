@@ -12,7 +12,14 @@ import be.atc.salesmanagercrm.validators.UsersValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -77,7 +84,7 @@ public class UsersBean implements Serializable {
     /**
      * @throws NoSuchAlgorithmException
      */
-    public void register() throws NoSuchAlgorithmException {
+    public void register() {
 
         //regex password + hash + pseudo unique
         //  log.info(String.valueOf(usersEntity.getEmail()));
@@ -153,6 +160,49 @@ public class UsersBean implements Serializable {
             em.clear();
         }
 
+    }
+
+    public void connection() {
+        //Example using most common scenario of username/password pair:
+        //https://shiro.apache.org/authentication.html
+
+
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
+        SecurityManager securityManager = factory.getInstance();
+        SecurityUtils.setSecurityManager(securityManager);
+
+
+        String password = usersEntity.getPassword();
+        String hashPass = encrypt(password);
+        log.info(hashPass);
+        UsernamePasswordToken token = new UsernamePasswordToken(usersEntity.getUsername(), hashPass);
+
+        Subject currentUser = SecurityUtils.getSubject();
+        log.info(String.valueOf(currentUser));
+        Session session = currentUser.getSession();
+
+        if (!currentUser.isAuthenticated()) {
+            //  log.info('in if');
+
+            token.setRememberMe(true);
+
+            try {
+                currentUser.login(token);
+            } catch (UnknownAccountException uae) {
+                log.info("There is no user with username or wrong password of " + token.getPrincipal());
+            } catch (IncorrectCredentialsException ice) {
+                log.info("Password for account " + token.getPrincipal() + " was incorrect!");
+            } catch (LockedAccountException lae) {
+                log.info("The account for username " + token.getPrincipal() + " is locked.  " +
+                        "Please contact your administrator to unlock it.");
+            }
+            // ... catch more exceptions here (maybe custom ones specific to your application?
+            catch (AuthenticationException ae) {
+                //unexpected condition?  error?
+            }
+        }
+        log.info("user :" + currentUser.getPrincipal());
+//no problem
 
     }
 
@@ -265,13 +315,13 @@ public class UsersBean implements Serializable {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
-        UsersEntity usersEntityOld = new UsersEntity();
+
         CheckEntities checkEntities = new CheckEntities();
         int userId = Integer.valueOf(usersEntity.getId());
         log.info(String.valueOf(usersEntity.getId()));
 
         EntityManager em = EMF.getEM();
-        usersEntityOld = dao.findById(em, userId);
+        UsersEntity usersEntityOld = dao.findById(em, userId);
         log.info(usersEntityOld.getUsername());
         log.info(usersEntity.getUsername());
         if (!usersEntity.getUsername().equals(usersEntityOld.getUsername())) {
@@ -284,7 +334,6 @@ public class UsersBean implements Serializable {
             usersEntity.setUsername(usersEntity.getUsername());
         }
 
-
         try {
             checkEntities.checkRole(usersEntity.getRolesByIdRoles());
         } catch (EntityNotFoundException exception) {
@@ -292,18 +341,6 @@ public class UsersBean implements Serializable {
             return;
         }
 
-
-     /*   String oldPassword = String.valueOf(dao.findPassword(em, usersEntity.getId()));
-        log.info(oldPassword);
-
-        if(!usersEntity.getPassword().equals(oldPassword)){
-            String password = usersEntity.getPassword();
-            String hashPass = encrypt(password);
-            usersEntity.setPassword(hashPass);
-        }
-*/
-        //    usersEntity.setRolesByIdRoles(rolesBean.findById(em, idRole));
-//log.info("avant em , le role est: "+usersEntity.getRolesByIdRoles().getId());
         EntityTransaction tx = null;
         try {
             tx = em.getTransaction();
@@ -318,7 +355,6 @@ public class UsersBean implements Serializable {
             em.clear();
             em.clear();
         }
-
 
     }
 
@@ -357,9 +393,6 @@ public class UsersBean implements Serializable {
         }
     }
 
-    private void validateUpdateUserByUdmin() {
-
-    }
 
     /**
      * Ouvrir le popup d'edition ou d'ajout
