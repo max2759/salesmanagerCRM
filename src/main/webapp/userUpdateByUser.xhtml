@@ -15,12 +15,6 @@
         <h:body>
             <h:form>
 
-                <p:outputLabel value="#{bundle['firstname']}"></p:outputLabel>
-                <h:inputText value="#{user.firstname}"></h:inputText>
-
-                <p:outputLabel value="#{bundle['lastname']}"></p:outputLabel>
-                <h:inputText value="#{user.lastname}"></h:inputText>
-
                 <p:outputLabel value="#{bundle['user.username']}"></p:outputLabel>
                 <h:inputText value="#{user.lastname}"></h:inputText>
 
@@ -35,12 +29,6 @@
                     <f:validator validatorId="userEmailValidator"></f:validator>
                 </p:inputText>
 
-                <p:selectOneMenu id="rolesByUsers"
-                                 value="#{usersBean.rolesEntity.id}"
-                >
-                    <f:selectItem value="role"></f:selectItem>
-                    <f:selectItems value="#{rolesBean.rolesEntitiesSelectItems}"/>
-                </p:selectOneMenu>
 
                 <p:commandButton value="Valider" action="#{usersBean.register}"/>
 
