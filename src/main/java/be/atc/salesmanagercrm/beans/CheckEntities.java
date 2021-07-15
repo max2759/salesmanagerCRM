@@ -171,11 +171,12 @@ public class CheckEntities implements Serializable {
             if (taskTypesEntity == null) {
                 log.warn("Task type with ID {} was not found in the DB", entity.getId());
                 throw new EntityNotFoundException(
-                        "Aucun type de tâche avec l ID " + entity.getId() + " n a ete trouvee dans la BDD", ErrorCodes.TASKTYPE_NOT_FOUND
+                        "Aucun type de tâche avec l ID " + entity.getId() + " n a ete trouve dans la BDD", ErrorCodes.TASKTYPE_NOT_FOUND
                 );
             }
         }
     }
+
 
     /**
      * Check if VoucherStatus exit in DB

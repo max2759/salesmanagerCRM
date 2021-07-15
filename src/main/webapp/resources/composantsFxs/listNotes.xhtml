@@ -33,11 +33,11 @@
 
                         <h:outputText styleClass="boldText" value="#{bundle['notes.remarks']} "/>
                         <h:outputText title="#{bundle['by']} : #{note.usersByIdUsers.email}"
-                                      value="#{bundle['by']} #{note.usersByIdUsers.username}"/>
+                                      value="#{bundle['by']} #{note.usersByIdUsers.username} "/>
 
-                        <h:outputText value=" #{note.creationDate}">
+                        <h:outputText value="#{note.creationDate}">
                             <f:convertDateTime type="localDate"
-                                               pattern="dd/MM/yy ' #{bundle['at']} ' HH:mm:ss"/>
+                                               pattern="dd/MM/yy ' #{bundle['at']} ' HH:mm"/>
                         </h:outputText>
 
                         <p:cellEditor>

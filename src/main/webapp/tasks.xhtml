@@ -1,6 +1,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
                 xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
                 template="WEB-INF/templates/template.xhtml">
 
@@ -11,9 +12,14 @@
         <f:metadata>
             <f:viewAction action="#{tasksBean.createNewEntity}"/>
             <f:viewAction action="#{tasksBean.listEntitiesContacts}"/>
+            <!--            <f:viewAction action="#{tasksBean.listEntities}"/>-->
+            <f:viewAction action="#{taskTypesBean.findAllTasksEntities}"/>
         </f:metadata>
 
+        <p:growl id="msgs" life="2000"/>
 
-        <fxs:listTasks id="listTasks"/>
+        <fxs:listTasksByContact id="listTasksByContact"/>
+        <!--                <fxs:listAllTasks id="listAllTasks"/>-->
+        <!--                <fxs:createTasks id="createTasks"/>-->
     </ui:define>
 </ui:composition>

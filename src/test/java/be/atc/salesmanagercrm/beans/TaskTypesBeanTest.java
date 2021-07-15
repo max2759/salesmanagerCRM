@@ -101,4 +101,44 @@ class TaskTypesBeanTest {
         taskTypesEntity.setLabel("Test Modifié");
         taskTypesBean.update(taskTypesEntity);
     }
+
+    @Test
+    void findByLabelShouldReturnTrue() {
+
+        // Mettre un label correct
+        String label = "Email";
+        TaskTypesEntity taskTypesEntity = null;
+
+        try {
+            taskTypesEntity = taskTypesBean.findByLabel(label);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+        }
+
+        boolean test = taskTypesEntity != null;
+
+        log.info("Le test vaut : " + test);
+        assertThat(test).isEqualTo(true);
+
+    }
+
+    @Test
+    void findByLabelShouldReturnFalse() {
+
+        // Mettre un label correct
+        String label = "test";
+        TaskTypesEntity taskTypesEntity = null;
+
+        try {
+            taskTypesEntity = taskTypesBean.findByLabel(label);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+        }
+
+        boolean test = taskTypesEntity != null;
+
+        log.info("Le test vaut : " + test);
+        assertThat(test).isEqualTo(false);
+
+    }
 }
