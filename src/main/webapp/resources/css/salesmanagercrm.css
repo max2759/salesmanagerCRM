@@ -13,3 +13,10 @@
 .modalValidateBtn-margin-top {
     margin-top: 1rem;
 }
+
+.taskUpdateTitle {
+    display: block;
+    padding-bottom: 5px;
+    padding-top: 20px;
+    font-weight: bold;
+}

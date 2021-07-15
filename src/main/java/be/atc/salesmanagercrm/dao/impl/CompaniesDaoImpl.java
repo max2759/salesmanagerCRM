@@ -33,4 +33,22 @@ public class CompaniesDaoImpl extends EntityFinderImpl<CompaniesEntity> implemen
     public void delete(EntityManager em, CompaniesEntity companiesEntity) {
         em.remove(em.merge(companiesEntity));
     }
+
+    @Override
+    public CompaniesEntity findByIdCompanyAndByIdUser(EntityManager em, int id, int idUser) {
+        return em.createNamedQuery("Companies.findByIdCompanyAndByIdUser",
+                CompaniesEntity.class)
+                .setParameter("id", id)
+                .setParameter("idUser", idUser)
+                .getSingleResult();
+    }
+
+    @Override
+    public List<CompaniesEntity> findCompaniesEntityByIdUser(EntityManager em, int idUser) {
+
+        return em.createNamedQuery("Companies.findCompaniesEntityByIdUser",
+                CompaniesEntity.class)
+                .setParameter("idUser", idUser)
+                .getResultList();
+    }
 }

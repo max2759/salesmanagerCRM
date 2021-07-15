@@ -4,12 +4,16 @@ import be.atc.salesmanagercrm.dao.CompaniesDao;
 import be.atc.salesmanagercrm.dao.impl.CompaniesDaoImpl;
 import be.atc.salesmanagercrm.entities.CompaniesEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
+import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -25,7 +29,9 @@ import java.util.List;
 @Slf4j
 @Named(value = "companiesBean")
 @ViewScoped
-public class CompaniesBean implements Serializable {
+public class CompaniesBean extends ExtendBean implements Serializable {
+
+    private static final long serialVersionUID = 5861943957551000529L;
 
     @Getter
     @Setter
@@ -38,7 +44,6 @@ public class CompaniesBean implements Serializable {
     @Getter
     @Setter
     private List<CompaniesEntity> companiesEntityList;
-
 
     /**
      * public method that call save
@@ -126,4 +131,64 @@ public class CompaniesBean implements Serializable {
         return companiesEntities;
     }
 
+    /**
+     * Find Companies entities by id User
+     *
+     * @param idUser UsersEntity
+     * @return List CompaniesEntity
+     */
+    public List<CompaniesEntity> findCompaniesEntityByIdUser(int idUser) {
+
+        if (idUser == 0) {
+            log.error("User ID is null");
+            return Collections.emptyList();
+        }
+
+        EntityManager em = EMF.getEM();
+
+        List<CompaniesEntity> companiesEntities = companiesDao.findCompaniesEntityByIdUser(em, idUser);
+
+        em.clear();
+        em.close();
+
+        return companiesEntities;
+    }
+
+    /**
+     * Find Company by ID
+     *
+     * @param id CompaniesEntity
+     * @return Companies Entity
+     */
+    public CompaniesEntity findByIdCompanyAndByIdUser(int id, int idUser) {
+
+        FacesMessage msg;
+
+        if (id == 0) {
+            log.error("Company ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return null;
+        }
+        if (idUser == 0) {
+            log.error("User ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return null;
+        }
+
+        EntityManager em = EMF.getEM();
+        try {
+            return companiesDao.findByIdCompanyAndByIdUser(em, id, idUser);
+        } catch (Exception ex) {
+            log.info("Nothing");
+            throw new EntityNotFoundException(
+                    "Aucune compagny avec l ID " + id + " et l ID User " + idUser + " n a ete trouvee dans la BDD",
+                    ErrorCodes.CONTACT_NOT_FOUND
+            );
+        } finally {
+            em.clear();
+            em.close();
+        }
+    }
 }

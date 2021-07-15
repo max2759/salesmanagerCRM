@@ -37,9 +37,6 @@ public class NotesBean implements Serializable {
 
     private static final long serialVersionUID = -2338626292552177485L;
 
-    @Getter
-    @Setter
-    Map<Integer, Boolean> test = new HashMap<>();
 
     @Getter
     @Setter
@@ -58,7 +55,6 @@ public class NotesBean implements Serializable {
     private CompaniesEntity companiesEntity = new CompaniesEntity();
     @Getter
     @Setter
-
     private NotesEntity notesEntity;
     @Getter
     @Setter

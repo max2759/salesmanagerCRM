@@ -17,4 +17,6 @@ public interface TaskTypesDao {
     List<TaskTypesEntity> findAll();
 
     void update(EntityManager em, TaskTypesEntity entity);
+
+    TaskTypesEntity findByLabel(EntityManager em, String label);
 }

@@ -30,4 +30,12 @@ public class TaskTypesDaoImpl extends EntityFinderImpl<TaskTypesEntity> implemen
     public void update(EntityManager em, TaskTypesEntity entity) {
         em.merge(entity);
     }
+
+    @Override
+    public TaskTypesEntity findByLabel(EntityManager em, String label) {
+        return em.createNamedQuery("TaskTypes.findTaskTypesEntityByLabel",
+                TaskTypesEntity.class)
+                .setParameter("label", label)
+                .getSingleResult();
+    }
 }

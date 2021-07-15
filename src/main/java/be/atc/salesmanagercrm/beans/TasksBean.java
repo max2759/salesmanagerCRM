@@ -2,10 +2,7 @@ package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.dao.TasksDao;
 import be.atc.salesmanagercrm.dao.impl.TasksDaoImpl;
-import be.atc.salesmanagercrm.entities.CompaniesEntity;
-import be.atc.salesmanagercrm.entities.ContactsEntity;
-import be.atc.salesmanagercrm.entities.TasksEntity;
-import be.atc.salesmanagercrm.entities.UsersEntity;
+import be.atc.salesmanagercrm.entities.*;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
@@ -17,23 +14,27 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.primefaces.event.RowEditEvent;
 
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Younes Arifi
  */
 @Slf4j
 @Named(value = "tasksBean")
-@RequestScoped
-public class TasksBean implements Serializable {
+@ViewScoped
+public class TasksBean extends ExtendBean implements Serializable {
 
     private static final long serialVersionUID = 8865671023396118126L;
 
@@ -52,37 +53,95 @@ public class TasksBean implements Serializable {
     private CompaniesEntity companiesEntity = new CompaniesEntity();
 
     @Getter
-    @Setter
-    private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
-
+    private final LocalDateTime now = LocalDateTime.now();
     @Getter
     @Setter
     private TasksEntity tasksEntity;
-
     @Getter
     @Setter
     private List<TasksEntity> tasksEntities;
+    @Getter
+    @Setter
+    private TaskTypesEntity taskTypesEntity = new TaskTypesEntity();
+    @Inject
+    @Getter
+    @Setter
+    private ContactsBean contactsBean;
+    @Inject
+    @Getter
+    @Setter
+    private CompaniesBean companiesBean;
 
+    /**
+     * Auto Complete form creation
+     *
+     * @param query String
+     * @return List Contacts Entities
+     */
+    public List<ContactsEntity> completeContactsContains(String query) {
+        String queryLowerCase = query.toLowerCase();
 
+        // TODO : à modifier
+        List<ContactsEntity> contactsEntitiesForm = contactsBean.findContactsEntityByIdUser(1);
+
+        return contactsEntitiesForm.stream().filter(t -> (t.getFirstname().toLowerCase().contains(queryLowerCase)) || (t.getLastname().toLowerCase().contains(queryLowerCase))).collect(Collectors.toList());
+    }
+
+    /**
+     * Sort Contacts by group in form
+     *
+     * @param entityGroup
+     * @return
+     */
+
+    public char getContactsEntityGroup(ContactsEntity entityGroup) {
+        return entityGroup.getFirstname().charAt(0);
+    }
+
+    /**
+     * Auto Complete form creation
+     *
+     * @param query String
+     * @return List Contacts Entities
+     */
+    public List<CompaniesEntity> completeCompaniesContains(String query) {
+        String queryLowerCase = query.toLowerCase();
+
+        // TODO : à modifier
+        List<CompaniesEntity> companiesEntitiesForm = companiesBean.findCompaniesEntityByIdUser(1);
+
+        return companiesEntitiesForm.stream().filter(t -> t.getLabel().toLowerCase().contains(queryLowerCase)).collect(Collectors.toList());
+    }
+
+    /**
+     * Sort Contacts by group in form
+     *
+     * @param entityGroup
+     * @return
+     */
+    public char getCompaniesEntityGroup(CompaniesEntity entityGroup) {
+        return entityGroup.getLabel().charAt(0);
+    }
+
+    /**
+     * Save entity form
+     */
     public void saveEntity() {
         log.info("method : saveEntity()");
 
-
-        // TODO : A modifier !
-
-        log.info("message : " + tasksEntity.getDescription());
-
+        log.info("TaskEntity = : " + tasksEntity);
         usersEntity.setId(1);
-        contactsEntity.setId(1);
 
         tasksEntity.setUsersByIdUsers(usersEntity);
-        tasksEntity.setContactsByIdContacts(contactsEntity);
+
 
         save(tasksEntity);
 
         // TODO : Corriger ça
         createNewEntity();
-        listEntitiesContacts();
+//        listEntitiesContacts();
+        listEntities();
+
 //        listEntitiesCompanies();
     }
 
@@ -91,10 +150,22 @@ public class TasksBean implements Serializable {
      */
     public void listEntitiesContacts() {
         log.info("method : listEntitiesContacts()");
+        // TODO : A modifier par l'user
         usersEntity.setId(1);
         contactsEntity.setId(1);
 
         tasksEntities = findTasksEntityByContactsByIdContacts(contactsEntity.getId(), usersEntity.getId());
+    }
+
+    /**
+     * Find all entities for Users
+     */
+    public void listEntities() {
+        log.info("method : listEntities()");
+        // TODO : A modifier par l'user
+        usersEntity.setId(1);
+
+        tasksEntities = findAll(usersEntity.getId());
     }
 
     /**
@@ -114,8 +185,8 @@ public class TasksBean implements Serializable {
      */
     public void createNewEntity() {
         log.info("method : createNewEntity()");
-        tasksEntity = new TasksEntity();
-        tasksEntities = new ArrayList<>();
+        this.tasksEntity = new TasksEntity();
+        this.tasksEntities = new ArrayList<>();
     }
 
     /**
@@ -127,7 +198,8 @@ public class TasksBean implements Serializable {
         // TODO : Corriger le idUser
         TasksEntity tasksEntityToUpdate = findById(event.getObject().getId(), 1);
 
-//        update(tasksEntityToUpdate);
+        log.info("event : " + event);
+        update(event.getObject());
 
 
         // TODO : Corriger ça
@@ -156,19 +228,6 @@ public class TasksBean implements Serializable {
         listEntitiesContacts();
 //        listEntitiesCompanies();
     }
-
-    /**
-     * Get param
-     *
-     * @param name String
-     * @return String
-     */
-    protected String getParam(String name) {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-        return params.get(name);
-    }
-
 
     /**
      * Save Task Entity
@@ -413,10 +472,10 @@ public class TasksBean implements Serializable {
             return;
         }
 
-        TasksEntity tasksEntity;
+        TasksEntity tasksEntityToDelete;
 
         try {
-            tasksEntity = findById(id, idUser);
+            tasksEntityToDelete = findById(id, idUser);
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
@@ -431,7 +490,7 @@ public class TasksBean implements Serializable {
         try {
             tx = em.getTransaction();
             tx.begin();
-            dao.delete(em, tasksEntity);
+            dao.delete(em, tasksEntityToDelete);
             tx.commit();
             log.info("Delete ok");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "tasks.deleted"), null);
