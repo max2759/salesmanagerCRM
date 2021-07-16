@@ -21,8 +21,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author Maximilien Zabbara
@@ -30,7 +28,7 @@ import java.util.Map;
 @Slf4j
 @Named(value = "branchActivitiesBean")
 @ViewScoped
-public class BranchActivitiesBean implements Serializable {
+public class BranchActivitiesBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
@@ -39,10 +37,6 @@ public class BranchActivitiesBean implements Serializable {
     @Getter
     @Setter
     private BranchActivitiesEntity branchActivitiesEntity = new BranchActivitiesEntity();
-
-    @Getter
-    @Setter
-    private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Getter
     @Setter
@@ -62,6 +56,8 @@ public class BranchActivitiesBean implements Serializable {
         } else if (sendType.equalsIgnoreCase("edit")) {
             updateBranchActivitiesLabel(branchActivitiesEntity);
         }
+
+        findAllBranchActivities();
     }
 
 
@@ -116,8 +112,8 @@ public class BranchActivitiesBean implements Serializable {
     /**
      * public method that call findAll
      */
-    public List<BranchActivitiesEntity> findAllBranchActivities() {
-        return branchActivitiesEntityList = findAll();
+    public void findAllBranchActivities() {
+        branchActivitiesEntityList = findAll();
     }
 
     /**
@@ -134,12 +130,30 @@ public class BranchActivitiesBean implements Serializable {
     }
 
     /**
-     * Find Branch Activity by label
+     * Find BranchActivities entities
+     *
+     * @return List BranchActivitiesEntity
+     */
+    public List<BranchActivitiesEntity> findBranchActvivitiesList() {
+
+
+        EntityManager em = EMF.getEM();
+
+        List<BranchActivitiesEntity> branchActivitiesEntities = branchActivitiesDao.findAll();
+
+        em.clear();
+        em.close();
+
+        return branchActivitiesEntities;
+    }
+
+    /**
+     * Find Branch Activity by ID
      *
      * @param id BranchActivities
      * @return BranchActivitiesEntity
      */
-    protected BranchActivitiesEntity findById(int id) {
+    public BranchActivitiesEntity findById(int id) {
 
         FacesMessage facesMessage;
 
@@ -249,17 +263,4 @@ public class BranchActivitiesBean implements Serializable {
             throw new InvalidEntityException("Le secteur d'activité n'est pas valide", ErrorCodes.BRANCHACTIVITIESLABEL_NOT_VALID, errors);
         }
     }
-
-    /**
-     * Get param
-     *
-     * @param name String
-     * @return String
-     */
-    protected String getParam(String name) {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-        return params.get(name);
-    }
-
 }

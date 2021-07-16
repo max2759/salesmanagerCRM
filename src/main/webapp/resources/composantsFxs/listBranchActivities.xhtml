@@ -6,15 +6,15 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:cc="http://java.sun.com/jsf/composite">
-<cc:interface name="createBranchActivities"
-              displayName="#{bundle['branchActivities.create']}"
-              shortDescription="#{bundle['branchActivities.create']}"
+<cc:interface name="listBranchActivities"
+              displayName="#{bundle['branchActivities.listBranchActivities']}"
+              shortDescription="#{bundle['branchActivities.listBranchActivities']}"
 >
 </cc:interface>
 <cc:implementation>
     <f:view>
 
-        <p:dataTable var="branchActivities" value="#{dtPaginatorView.branchActivitiesEntities}" rows="10"
+        <p:dataTable var="branchActivities" value="#{branchActivitiesBean.branchActivitiesEntityList}" rows="10"
                      id="branchActivitiesDatatable"
                      paginator="true" styleClass="dataTable-margin-top"
                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"

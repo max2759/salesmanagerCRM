@@ -2,12 +2,16 @@ package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.dao.CompaniesDao;
 import be.atc.salesmanagercrm.dao.impl.CompaniesDaoImpl;
+import be.atc.salesmanagercrm.entities.BranchActivitiesEntity;
 import be.atc.salesmanagercrm.entities.CompaniesEntity;
+import be.atc.salesmanagercrm.entities.CompanyTypesEntity;
+import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
 import be.atc.salesmanagercrm.utils.JsfUtils;
+import be.atc.salesmanagercrm.validators.CompanyValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -22,6 +27,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Maximilien Zabbara
@@ -43,13 +49,30 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
+    private UsersEntity usersEntity = new UsersEntity();
+
+    @Getter
+    @Setter
     private List<CompaniesEntity> companiesEntityList;
+
+    @Getter
+    @Setter
+    private String sendType = "";
+
+    @Inject
+    private BranchActivitiesBean branchActivitiesBean;
+
+    @Inject
+    private CompanyTypesBean companyTypesBean;
+
 
     /**
      * public method that call save
      */
     public void saveCompany() {
         save(companiesEntity);
+
+        findAllCompanies();
     }
 
     /**
@@ -61,16 +84,30 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         companiesEntity.setRegisterDate(LocalDateTime.now());
         companiesEntity.setActive(true);
+        usersEntity.setId(1);
+        companiesEntity.setUsersByIdUsers(usersEntity);
 
+        try {
+            validateCompanies(companiesEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
+
+        FacesMessage facesMessage;
         CheckEntities checkEntities = new CheckEntities();
 
         try {
             checkEntities.checkUser(companiesEntity.getUsersByIdUsers());
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
             return;
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
             return;
         }
 
@@ -79,6 +116,8 @@ public class CompaniesBean extends ExtendBean implements Serializable {
                 checkEntities.checkBranchActivities(companiesEntity.getBranchActivitiesByIdBranchActivities());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "branchActivities.error"), null);
+                FacesContext.getCurrentInstance().addMessage(null, facesMessage);
                 return;
             }
         }
@@ -88,6 +127,8 @@ public class CompaniesBean extends ExtendBean implements Serializable {
                 checkEntities.checkCompanyTypes(companiesEntity.getCompanyTypesByIdCompanyTypes());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyTypes.error"), null);
+                FacesContext.getCurrentInstance().addMessage(null, facesMessage);
                 return;
             }
         }
@@ -100,15 +141,25 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             companiesDao.add(em, companiesEntity);
             tx.commit();
             log.info("Persist ok");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "company.saved"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         } finally {
             em.clear();
             em.clear();
         }
     }
 
+    /**
+     * Method that call findAll and fill companiesEntityList
+     */
+    public void findAllCompanies() {
+        companiesEntityList = findAll(1);
+    }
 
     /**
      * Find all Companies entities by userID
@@ -191,4 +242,72 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             em.close();
         }
     }
+
+    /**
+     * Create new instance for objects
+     */
+    public void createNewEntity() {
+        log.info("method : createNewEntity()");
+        companiesEntity = new CompaniesEntity();
+    }
+
+    /**
+     * Method for checking sendType and open good modal
+     */
+    public void checkSendType() {
+        sendType = getParam("sendType");
+        log.info("type envoyé : " + sendType);
+        if (sendType.equalsIgnoreCase("edit")) {
+            companiesEntity = null;
+            log.info("jobtitles : " + companiesEntity.getId());
+        } else if (sendType.equalsIgnoreCase("add")) {
+            companiesEntity = new CompaniesEntity();
+        }
+    }
+
+    /**
+     * Validate Companies !
+     *
+     * @param entity CompaniesEntity
+     */
+    private void validateCompanies(CompaniesEntity entity) {
+        List<String> errors = CompanyValidator.validate(entity);
+        if (!errors.isEmpty()) {
+            log.error("Company is not valid {}", entity);
+            throw new InvalidEntityException("Les données de l'entreprise ne sont pas valide", ErrorCodes.COMPANY_NOT_VALID, errors);
+        }
+    }
+
+    /**
+     * Auto complete for branchActivivites
+     *
+     * @param search String
+     * @return list of BranchActivitiesEntity
+     */
+    public List<BranchActivitiesEntity> completeBranchActivities(String search) {
+
+        String searchLowerCase = search.toLowerCase();
+
+        List<BranchActivitiesEntity> companiesEntitiesDropDown = branchActivitiesBean.findBranchActvivitiesList();
+
+        return companiesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
+
+    }
+
+    /**
+     * Auto complete for CompanyTypes
+     *
+     * @param search String
+     * @return list of CompanyTypesEntity
+     */
+    public List<CompanyTypesEntity> completeCompanyTypes(String search) {
+
+        String searchLowerCase = search.toLowerCase();
+
+        List<CompanyTypesEntity> companyTypesEntitiesDropDown = companyTypesBean.findCompanyTypesList();
+
+        return companyTypesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
+
+    }
+
 }

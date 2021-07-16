@@ -20,10 +20,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author Maximilien Zabbara
@@ -31,7 +28,7 @@ import java.util.Map;
 @Slf4j
 @Named(value = "jobtitlesBean")
 @ViewScoped
-public class JobTitlesBean implements Serializable {
+public class JobTitlesBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
@@ -47,10 +44,6 @@ public class JobTitlesBean implements Serializable {
 
     @Getter
     @Setter
-    private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
-
-    @Getter
-    @Setter
     private String sendType = "";
 
     /**
@@ -63,6 +56,8 @@ public class JobTitlesBean implements Serializable {
         } else if (sendType.equalsIgnoreCase("edit")) {
             update(jobTitlesEntity);
         }
+
+        findAllJobTitles();
     }
 
     /**
@@ -147,13 +142,12 @@ public class JobTitlesBean implements Serializable {
     }
 
     /**
-     * Method that call findAll and return list in jobTitlesEntityList
-     *
-     * @return List JobTitlesEntity
+     * Method that call findAll and fill jobTitlesEntityList
      */
-    public List<JobTitlesEntity> findAllJobTitles() {
-        return jobTitlesEntityList = findAll();
+    public void findAllJobTitles() {
+        jobTitlesEntityList = findAll();
     }
+
 
     /**
      * Find all jobtitles entities
@@ -245,15 +239,6 @@ public class JobTitlesBean implements Serializable {
     }
 
     /**
-     * Create new instance for objects
-     */
-    public void createNewEntity() {
-        log.info("method : createNewEntity()");
-        jobTitlesEntity = new JobTitlesEntity();
-        jobTitlesEntityList = new ArrayList<>();
-    }
-
-    /**
      * Validate JobTitles !
      *
      * @param entity JobTitles
@@ -265,19 +250,6 @@ public class JobTitlesBean implements Serializable {
             throw new InvalidEntityException("L'intitulé du poste n'est pas valide", ErrorCodes.JOBTITLES_NOT_VALID, errors);
         }
     }
-
-    /**
-     * Get param
-     *
-     * @param name String
-     * @return String
-     */
-    protected String getParam(String name) {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-        return params.get(name);
-    }
-
 
 
 }

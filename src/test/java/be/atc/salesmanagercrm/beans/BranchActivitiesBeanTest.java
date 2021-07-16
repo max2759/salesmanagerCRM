@@ -61,6 +61,18 @@ class BranchActivitiesBeanTest {
     }
 
     @Test
+    void findBranchActvivitiesList() {
+        List<BranchActivitiesEntity> branchActivitiesEntities = branchActivitiesBean.findBranchActvivitiesList();
+
+        boolean test = !branchActivitiesEntities.isEmpty();
+
+
+        log.info("Le test vaut : " + test + ". La liste contient : " + (long) branchActivitiesEntities.size() + " secteurs d'activité");
+
+        assertThat(test).isEqualTo(true);
+    }
+
+    @Test
     void findBranchActivitiesEntityByIdShouldReturnTrue() {
 
         //ID valide

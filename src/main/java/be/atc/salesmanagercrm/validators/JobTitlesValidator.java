@@ -21,7 +21,7 @@ public class JobTitlesValidator {
         List<String> errors = new ArrayList<>();
 
         Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
-        FacesMessage msg = null;
+        FacesMessage msg;
 
 
         if (jobTitlesEntity == null) {

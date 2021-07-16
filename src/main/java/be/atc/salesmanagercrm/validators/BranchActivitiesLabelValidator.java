@@ -20,23 +20,26 @@ import java.util.Locale;
 @Slf4j
 @FacesValidator("branchActivitiesLabelValidator")
 public class BranchActivitiesLabelValidator implements Validator {
+
+
     Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Override
     public void validate(FacesContext facesContext, UIComponent uiComponent, Object value) throws ValidatorException {
 
+        if (value != null) {
+            CheckEntities checkEntities = new CheckEntities();
 
-        CheckEntities checkEntities = new CheckEntities();
+            BranchActivitiesEntity branchActivitiesEntity = new BranchActivitiesEntity();
 
-        BranchActivitiesEntity branchActivitiesEntity = new BranchActivitiesEntity();
+            branchActivitiesEntity.setLabel((String) value);
 
-        branchActivitiesEntity.setLabel((String) value);
-
-        try {
-            checkEntities.checkBranchActivitiesLabel(branchActivitiesEntity);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            throw new ValidatorException(new FacesMessage(getMessageErrorLabelAlreadyExist()));
+            try {
+                checkEntities.checkBranchActivitiesLabel(branchActivitiesEntity);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                throw new ValidatorException(new FacesMessage(getMessageErrorLabelAlreadyExist()));
+            }
         }
     }
 
