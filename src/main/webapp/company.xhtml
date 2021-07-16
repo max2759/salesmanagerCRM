@@ -6,12 +6,17 @@
                 xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
                 template="WEB-INF/templates/template.xhtml">
 
-    <ui:define name="title">#{bundle['jobTitles.title']}</ui:define>
+    <ui:define name="title">#{bundle['company.title']}</ui:define>
     <ui:define name="content">
 
         <f:metadata>
-            <f:viewAction action="#{jobtitlesBean.findAllJobTitles}"/>
+            <f:viewAction action="#{branchActivitiesBean.findAllBranchActivities}"/>
+            <f:viewAction action="#{companyTypesBean.findAllCompanyTypes}"/>
+            <f:viewAction action="#{companiesBean.createNewEntity}"/>
+            <f:viewAction action="#{companiesBean.findAllCompanies}"/>
         </f:metadata>
+
+        <p:growl id="msgs"/>
 
         <div class="ui-g">
             <div class="ui-g-12">
@@ -20,18 +25,17 @@
                         <p:toolbar>
                             <f:facet name="left">
                                 <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
-                                                 onclick="PF('jobTitlesModal').show();" styleClass="NavyButton"
-                                                 action="#{jobtitlesBean.checkSendType}">
+                                                 onclick="PF('companyModal').show();" styleClass="NavyButton"
+                                                 action="#{companiesBean.checkSendType}">
                                     <f:param name="sendType" value="add"/>
                                 </p:commandButton>
                             </f:facet>
                         </p:toolbar>
-                        <fxs:listJobTitles id="listJobTitles"/>
+                        <fxs:listCompany id="listCompany"/>
                     </div>
                 </h:form>
             </div>
-            <fxs:createJobTitles id="createJobTitles"/>
+            <fxs:createCompany id="createCompany"/>
         </div>
-
     </ui:define>
 </ui:composition>

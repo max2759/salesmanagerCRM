@@ -3,8 +3,10 @@ package be.atc.salesmanagercrm.converters;
 import be.atc.salesmanagercrm.dao.CompanyTypesDao;
 import be.atc.salesmanagercrm.dao.impl.CompanyTypesDaoImpl;
 import be.atc.salesmanagercrm.entities.CompanyTypesEntity;
+import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.utils.EMF;
 import be.atc.salesmanagercrm.utils.JsfUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -18,6 +20,7 @@ import java.util.Locale;
 /**
  * @author Zabbara - Maximilien
  */
+@Slf4j
 @FacesConverter("companyTypesConverter")
 public class CompanyTypesConverter implements Converter {
 
@@ -26,20 +29,43 @@ public class CompanyTypesConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
+
+        log.info("Value = " + value);
+
         CompanyTypesEntity companyTypesEntity;
         EntityManager em = EMF.getEM();
 
-        if (value != null) {
-            companyTypesEntity = companyTypesDao.findByLabel(em, value);
-            return companyTypesEntity;
+        int id;
+        if (value == null) {
+            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.NotExist")));
+        }
+        try {
+            id = Integer.parseInt(value);
+        } catch (NumberFormatException nfe) {
+            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.NotExist")));
+        }
+
+        if (id != 0) {
+            try {
+                companyTypesEntity = companyTypesDao.findById(em, id);
+                return companyTypesEntity;
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.NotExist")));
+            }
         } else {
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.error")));
+            log.warn("Erreur Converter company types");
+            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.NotExist")));
         }
 
     }
 
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value) {
-        return null;
+        if (value != null) {
+            return String.valueOf(((CompanyTypesEntity) value).getId());
+        } else {
+            return null;
+        }
     }
 }

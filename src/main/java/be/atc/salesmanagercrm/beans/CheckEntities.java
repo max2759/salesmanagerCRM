@@ -79,7 +79,6 @@ public class CheckEntities implements Serializable {
      *
      * @param entity : CompaniesEntity
      */
-
     public void checkCompany(CompaniesEntity entity) {
         if (entity != null) {
             EntityManager em = EMF.getEM();
@@ -87,7 +86,7 @@ public class CheckEntities implements Serializable {
             if (companiesEntity == null) {
                 log.warn("Company with ID {} was not found in the DB", entity.getId());
                 throw new EntityNotFoundException(
-                        "Aucune compagnie avec l ID " + entity.getId() + " n a ete trouvee dans la BDD", ErrorCodes.COMPAGNY_NOT_FOUND
+                        "Aucune compagnie avec l ID " + entity.getId() + " n a ete trouvee dans la BDD", ErrorCodes.COMPANY_NOT_FOUND
                 );
             }
         }

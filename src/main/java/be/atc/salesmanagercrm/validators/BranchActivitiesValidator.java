@@ -21,7 +21,7 @@ public class BranchActivitiesValidator {
         List<String> errors = new ArrayList<>();
 
         Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
-        FacesMessage msg = null;
+        FacesMessage msg;
 
         if (branchActivitiesEntity == null) {
             errors.add("Le secteur d'activité est obligatoire !");
