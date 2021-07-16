@@ -11,7 +11,7 @@
               shortDescription="#{bundle['jobTitles.create']}"/>
 <cc:implementation>
     <f:view>
-        <p:dataTable var="jobtitles" value="#{dtPaginatorView.jobTitlesEntities}" rows="10"
+        <p:dataTable var="jobtitles" value="#{jobtitlesBean.jobTitlesEntityList}" rows="10"
                      id="jobtitlesDatatable"
                      paginator="true" styleClass="dataTable-margin-top"
                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"

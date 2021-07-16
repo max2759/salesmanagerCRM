@@ -26,17 +26,19 @@ public class JobTitlesLabelValidator implements Validator {
     @Override
     public void validate(FacesContext facesContext, UIComponent uiComponent, Object value) throws ValidatorException {
 
-        CheckEntities checkEntities = new CheckEntities();
+        if (value != null) {
+            CheckEntities checkEntities = new CheckEntities();
 
-        JobTitlesEntity jobTitlesEntity = new JobTitlesEntity();
+            JobTitlesEntity jobTitlesEntity = new JobTitlesEntity();
 
-        jobTitlesEntity.setLabel((String) value);
+            jobTitlesEntity.setLabel((String) value);
 
-        try {
-            checkEntities.checkJobTitlesLabel(jobTitlesEntity);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, getMessageErrorLabelAlreadyExist(), null));
+            try {
+                checkEntities.checkJobTitlesLabel(jobTitlesEntity);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, getMessageErrorLabelAlreadyExist(), null));
+            }
         }
 
     }
