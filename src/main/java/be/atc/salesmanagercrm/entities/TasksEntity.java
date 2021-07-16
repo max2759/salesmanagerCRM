@@ -13,7 +13,10 @@ import java.util.Objects;
         @NamedQuery(name = "Tasks.findTasksEntityByCompaniesByIdCompanies", query = "select t from TasksEntity t where (t.companiesByIdCompanies.id = :id and t.usersByIdUsers.id = :idUser)"),
         @NamedQuery(name = "Tasks.findAll", query = "SELECT t from TasksEntity t where t.usersByIdUsers.id = :idUser"),
         @NamedQuery(name = "Tasks.findById", query = "SELECT t from TasksEntity t where (t.id = :id and t.usersByIdUsers.id = :idUser)"),
-
+        @NamedQuery(name = "Tasks.findTasksToLate", query = "SELECT t from TasksEntity t where (t.endDate < :endDate and t.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Tasks.findTasksToCome", query = "SELECT t from TasksEntity t where (t.endDate > :endDate and t.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Tasks.findTasksToday", query = "SELECT t from TasksEntity t where (t.endDate < :today and t.endDate > :now and t.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Tasks.findTasksFinished", query = "SELECT t from TasksEntity t where (t.status = false and t.usersByIdUsers.id = :idUser)"),
 })
 
 public class TasksEntity {

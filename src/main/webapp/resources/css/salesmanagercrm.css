@@ -20,3 +20,11 @@
     padding-top: 20px;
     font-weight: bold;
 }
+
+.textRed {
+    color: red;
+}
+
+.lineThrough {
+    text-decoration: line-through;
+}
