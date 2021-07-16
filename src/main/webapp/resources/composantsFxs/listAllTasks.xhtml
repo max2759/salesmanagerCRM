@@ -14,35 +14,202 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
-        <h:form>
-            <div class="card">
-                <p:dataTable var="task" value="#{tasksBean.tasksEntities}">
-                    <p:column headerText="#{bundle['tasks.title']}">
-                        <h:outputText value="#{task.title}"/>
-                    </p:column>
 
-                    <p:column headerText="#{bundle['tasks.description']}">
-                        <h:outputText value="#{task.description}"/>
-                    </p:column>
+        <h:form id="form">
 
-                    <p:column headerText="#{bundle['tasks.contact']}">
-                        <h:outputText
-                                value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
-                    </p:column>
+            <p:tabView>
+                <p:ajax event="tabChange" listener="#{tasksBean.onTabChange}" update="@form msgs"/>
 
-                    <p:column headerText="#{bundle['tasks.company']}">
-                        <h:outputText value="#{task.companiesByIdCompanies.label}"/>
-                    </p:column>
 
-                    <p:column headerText="#{bundle['tasks.taskType']}">
-                        <h:outputText value="#{task.taskTypesByIdTaskTypes.label}"/>
-                    </p:column>
+                <p:tab id="displayAll" title="#{bundle['all']} (#{tasksBean.tasksEntities.size()})">
+                    <p:dataTable var="task" value="#{tasksBean.tasksEntities}"
+                                 rendered="#{tasksBean.tasksEntities.size() eq 0 ? false : true}">
+                        <p:column headerText="#{bundle['tasks.title']}">
+                            <h:outputText value="#{task.title}"/>
+                        </p:column>
 
-                    <p:column headerText="#{bundle['tasks.endDate']}">
-                        <h:outputText value="#{task.endDate}"/>
-                    </p:column>
-                </p:dataTable>
-            </div>
+                        <p:column headerText="#{bundle['tasks.description']}">
+                            <h:outputText value="#{task.description}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.contact']}">
+                            <h:outputText
+                                    value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.company']}">
+                            <h:outputText value="#{task.companiesByIdCompanies.label}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.taskType']}">
+                            <h:outputText value="#{task.taskTypesByIdTaskTypes.label}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.endDate']}">
+                            <h:outputText rendered="#{task.endDate gt tasksBean.now}" value="#{task.endDate}">
+                                <f:convertDateTime type="localDate"
+                                                   pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                            </h:outputText>
+                            <h:outputText styleClass="textRed" rendered="#{task.endDate lt tasksBean.now}"
+                                          value="#{task.endDate}">
+                                <f:convertDateTime type="localDate"
+                                                   pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                    <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
+                                     rendered="#{tasksBean.tasksEntities.size() eq 0 ? true : false}"/>
+                </p:tab>
+
+                <p:tab id="displayToday"
+                       title="#{bundle['tasks.dueToday']} #{tasksBean.tasksEntitiesDueToday.size() eq 0 ? '' : '('.concat(tasksBean.tasksEntitiesDueToday.size()).concat(')')}">
+                    <p:dataTable var="task" value="#{tasksBean.tasksEntitiesDueToday}"
+                                 rendered="#{tasksBean.tasksEntitiesDueToday.size() eq 0 ? false : true}">
+                        <p:column headerText="#{bundle['tasks.title']}">
+                            <h:outputText value="#{task.title}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.description']}">
+                            <h:outputText value="#{task.description}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.contact']}">
+                            <h:outputText
+                                    value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.company']}">
+                            <h:outputText value="#{task.companiesByIdCompanies.label}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.taskType']}">
+                            <h:outputText value="#{task.taskTypesByIdTaskTypes.label}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.endDate']}">
+                            <h:outputText value="#{task.endDate}">
+                                <f:convertDateTime type="localDate"
+                                                   pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                    <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
+                                     rendered="#{tasksBean.tasksEntitiesDueToday.size() eq 0 ? true : false}"/>
+                </p:tab>
+
+                <p:tab id="displayToLate"
+                       title="#{bundle['tasks.toLate']} #{tasksBean.tasksEntitiesToLate.size() eq 0 ? '' : '('.concat(tasksBean.tasksEntitiesToLate.size()).concat(')')}">
+                    <p:dataTable var="task" value="#{tasksBean.tasksEntitiesToLate}"
+                                 rendered="#{tasksBean.tasksEntitiesToLate.size() eq 0 ? false : true}">
+                        <p:column headerText="#{bundle['tasks.title']}">
+                            <h:outputText value="#{task.title}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.description']}">
+                            <h:outputText value="#{task.description}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.contact']}">
+                            <h:outputText
+                                    value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.company']}">
+                            <h:outputText value="#{task.companiesByIdCompanies.label}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.taskType']}">
+                            <h:outputText value="#{task.taskTypesByIdTaskTypes.label}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.endDate']}">
+                            <h:outputText rendered="#{task.endDate gt tasksBean.now}" value="#{task.endDate}">
+                                <f:convertDateTime type="localDate"
+                                                   pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                            </h:outputText>
+                            <h:outputText styleClass="textRed" rendered="#{task.endDate lt tasksBean.now}"
+                                          value="#{task.endDate}">
+                                <f:convertDateTime type="localDate"
+                                                   pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                    <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
+                                     rendered="#{tasksBean.tasksEntitiesToLate.size() eq 0 ? true : false}"/>
+                </p:tab>
+
+                <p:tab id="displayToCome"
+                       title="#{bundle['tasks.toCome']} #{tasksBean.tasksEntitiesToCome.size() eq 0 ? '' : '('.concat(tasksBean.tasksEntitiesToCome.size()).concat(')')}">
+                    <p:dataTable var="task" value="#{tasksBean.tasksEntitiesToCome}"
+                                 rendered="#{tasksBean.tasksEntitiesToCome.size() eq 0 ? false : true}">
+                        <p:column headerText="#{bundle['tasks.title']}">
+                            <h:outputText value="#{task.title}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.description']}">
+                            <h:outputText value="#{task.description}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.contact']}">
+                            <h:outputText
+                                    value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.company']}">
+                            <h:outputText value="#{task.companiesByIdCompanies.label}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.taskType']}">
+                            <h:outputText value="#{task.taskTypesByIdTaskTypes.label}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.endDate']}">
+                            <h:outputText value="#{task.endDate}">
+                                <f:convertDateTime type="localDate"
+                                                   pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                    <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
+                                     rendered="#{tasksBean.tasksEntitiesToCome.size() eq 0 ? true : false}"/>
+                </p:tab>
+
+                <p:tab id="displayFinished"
+                       title="#{bundle['tasks.finished']} #{tasksBean.tasksEntitiesFinished.size() eq 0 ? '' : '('.concat(tasksBean.tasksEntitiesFinished.size()).concat(')')}">
+                    <p:dataTable var="task" value="#{tasksBean.tasksEntitiesFinished}"
+                                 rendered="#{tasksBean.tasksEntitiesFinished.size() eq 0 ? false : true}">
+                        <p:column headerText="#{bundle['tasks.title']}">
+                            <h:outputText value="#{task.title}" styleClass="lineThrough"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.description']}">
+                            <h:outputText value="#{task.description}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.contact']}">
+                            <h:outputText
+                                    value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.company']}">
+                            <h:outputText value="#{task.companiesByIdCompanies.label}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.taskType']}">
+                            <h:outputText value="#{task.taskTypesByIdTaskTypes.label}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['tasks.endDate']}">
+                            <h:outputText value="#{task.endDate}">
+                                <f:convertDateTime type="localDate"
+                                                   pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                    <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
+                                     rendered="#{tasksBean.tasksEntitiesFinished.size() eq 0 ? true : false}"/>
+                </p:tab>
+            </p:tabView>
         </h:form>
 
     </f:view>

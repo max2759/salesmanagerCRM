@@ -191,7 +191,7 @@ public class TaskTypesBean implements Serializable {
     /**
      * Fill the list with Task Entities
      */
-    public void findAllTasksEntities() {
+    public void findAllTaskTypesEntities() {
         taskTypesEntities = findAll();
     }
 }

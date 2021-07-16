@@ -11,13 +11,13 @@
 
         <f:metadata>
             <f:viewAction action="#{tasksBean.createNewEntity}"/>
-            <f:viewAction action="#{tasksBean.listEntitiesContacts}"/>
+            <f:viewAction action="#{tasksBean.listEntities}"/>
             <f:viewAction action="#{taskTypesBean.findAllTaskTypesEntities}"/>
         </f:metadata>
 
-        <p:growl id="msgs" life="2000"/>
+        <p:growl id="msgs" skipDetailIfEqualsSummary="true"/>
 
-        <fxs:listTasksByContact id="listTasksByContact"/>
-        <fxs:createTasks id="createTasks"/>
+        <fxs:listAllTasks id="listAllTasks"/>
+        <!--                <fxs:createTasks id="createTasks"/>-->
     </ui:define>
 </ui:composition>

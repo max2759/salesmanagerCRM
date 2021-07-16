@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.TabChangeEvent;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -57,19 +58,29 @@ public class TasksBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private TasksEntity tasksEntity;
+
     @Getter
     @Setter
     private List<TasksEntity> tasksEntities;
     @Getter
     @Setter
+    private List<TasksEntity> tasksEntitiesDueToday;
+    @Getter
+    @Setter
+    private List<TasksEntity> tasksEntitiesToLate;
+    @Getter
+    @Setter
+    private List<TasksEntity> tasksEntitiesToCome;
+    @Getter
+    @Setter
+    private List<TasksEntity> tasksEntitiesFinished;
+
+    @Getter
+    @Setter
     private TaskTypesEntity taskTypesEntity = new TaskTypesEntity();
     @Inject
-    @Getter
-    @Setter
     private ContactsBean contactsBean;
     @Inject
-    @Getter
-    @Setter
     private CompaniesBean companiesBean;
 
     /**
@@ -145,17 +156,6 @@ public class TasksBean extends ExtendBean implements Serializable {
 //        listEntitiesCompanies();
     }
 
-    /**
-     * Find all entities for Contacts
-     */
-    public void listEntitiesContacts() {
-        log.info("method : listEntitiesContacts()");
-        // TODO : A modifier par l'user
-        usersEntity.setId(1);
-        contactsEntity.setId(1);
-
-        tasksEntities = findTasksEntityByContactsByIdContacts(contactsEntity.getId(), usersEntity.getId());
-    }
 
     /**
      * Find all entities for Users
@@ -169,6 +169,18 @@ public class TasksBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * Find all entities for Contacts
+     */
+    public void listEntitiesContacts() {
+        log.info("method : listEntitiesContacts()");
+        // TODO : A modifier par l'user
+        usersEntity.setId(1);
+        contactsEntity.setId(1);
+
+        tasksEntities = findTasksEntityByContactsByIdContacts(contactsEntity.getId(), usersEntity.getId());
+    }
+
+    /**
      * Find all entities for Companies
      */
     public void listEntitiesCompanies() {
@@ -179,6 +191,21 @@ public class TasksBean extends ExtendBean implements Serializable {
         tasksEntities = findTasksEntityByCompaniesByIdCompanies(companiesEntity.getId(), usersEntity.getId());
     }
 
+    public void onTabChange(TabChangeEvent event) {
+        log.info("event : " + event);
+        // TODO : Mettre l'id de USER
+        if (event.getTab().getId().equals("displayToday")) {
+            tasksEntitiesDueToday = findTasksToday(1);
+        } else if (event.getTab().getId().equals("displayToLate")) {
+            tasksEntitiesToLate = findTasksToLate(1);
+        } else if (event.getTab().getId().equals("displayToCome")) {
+            tasksEntitiesToCome = findTasksToCome(1);
+        } else if (event.getTab().getId().equals("displayFinished")) {
+            tasksEntitiesFinished = findTasksFinished(1);
+        } else if (event.getTab().getId().equals("displayAll")) {
+            listEntities();
+        }
+    }
 
     /**
      * Create new instance for objects
@@ -187,6 +214,10 @@ public class TasksBean extends ExtendBean implements Serializable {
         log.info("method : createNewEntity()");
         this.tasksEntity = new TasksEntity();
         this.tasksEntities = new ArrayList<>();
+        this.tasksEntitiesDueToday = new ArrayList<>();
+        this.tasksEntitiesToLate = new ArrayList<>();
+        this.tasksEntitiesToCome = new ArrayList<>();
+        this.tasksEntitiesFinished = new ArrayList<>();
     }
 
     /**
@@ -451,6 +482,85 @@ public class TasksBean extends ExtendBean implements Serializable {
         return tasksEntities;
     }
 
+    /**
+     * Find all tasks to late
+     */
+    protected List<TasksEntity> findTasksToLate(int idUser) {
+        FacesMessage msg;
+        if (idUser == 0) {
+            log.error("User ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return Collections.emptyList();
+        }
+        EntityManager em = EMF.getEM();
+        List<TasksEntity> tasksEntities = dao.findTasksToLate(em, idUser);
+
+        em.clear();
+        em.close();
+
+        return tasksEntities;
+    }
+
+    /**
+     * Find all tasks to come
+     */
+    protected List<TasksEntity> findTasksToCome(int idUser) {
+        FacesMessage msg;
+        if (idUser == 0) {
+            log.error("User ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return Collections.emptyList();
+        }
+        EntityManager em = EMF.getEM();
+        List<TasksEntity> tasksEntities = dao.findTasksToCome(em, idUser);
+
+        em.clear();
+        em.close();
+
+        return tasksEntities;
+    }
+
+    /**
+     * Find all tasks to come
+     */
+    protected List<TasksEntity> findTasksToday(int idUser) {
+        FacesMessage msg;
+        if (idUser == 0) {
+            log.error("User ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return Collections.emptyList();
+        }
+        EntityManager em = EMF.getEM();
+        List<TasksEntity> tasksEntities = dao.findTasksToday(em, idUser);
+
+        em.clear();
+        em.close();
+
+        return tasksEntities;
+    }
+
+    /**
+     * Find all tasks finished
+     */
+    protected List<TasksEntity> findTasksFinished(int idUser) {
+        FacesMessage msg;
+        if (idUser == 0) {
+            log.error("User ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return Collections.emptyList();
+        }
+        EntityManager em = EMF.getEM();
+        List<TasksEntity> tasksEntities = dao.findTasksFinished(em, idUser);
+
+        em.clear();
+        em.close();
+
+        return tasksEntities;
+    }
 
     /**
      * delete task by id
