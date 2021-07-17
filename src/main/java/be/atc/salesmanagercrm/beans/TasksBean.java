@@ -64,16 +64,31 @@ public class TasksBean extends ExtendBean implements Serializable {
     private List<TasksEntity> tasksEntities;
     @Getter
     @Setter
+    private List<TasksEntity> tasksEntitiesFiltered;
+    @Getter
+    @Setter
     private List<TasksEntity> tasksEntitiesDueToday;
+    @Getter
+    @Setter
+    private List<TasksEntity> tasksEntitiesDueTodayFiltered;
     @Getter
     @Setter
     private List<TasksEntity> tasksEntitiesToLate;
     @Getter
     @Setter
+    private List<TasksEntity> tasksEntitiesToLateFiltered;
+    @Getter
+    @Setter
     private List<TasksEntity> tasksEntitiesToCome;
     @Getter
     @Setter
+    private List<TasksEntity> tasksEntitiesToComeFiltered;
+    @Getter
+    @Setter
     private List<TasksEntity> tasksEntitiesFinished;
+    @Getter
+    @Setter
+    private List<TasksEntity> tasksEntitiesFinishedFiltered;
 
     @Getter
     @Setter
