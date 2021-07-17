@@ -50,7 +50,7 @@ class TasksBeanTest {
         entity.setEndDate(LocalDateTime.now().plusMonths(1));
         entity.setTitle("Task Test");
 
-        entity.setCompaniesByIdCompanies(companiesEntity);
+     //   entity.setCompaniesByIdCompanies(companiesEntity);
         entity.setContactsByIdContacts(contactsEntity);
         entity.setTaskTypesByIdTaskTypes(taskTypesEntity);
         tasksBean.save(entity);
@@ -204,5 +204,61 @@ class TasksBeanTest {
         tasksEntity.setUsersByIdUsers(usersEntity);
 
         tasksBean.update(tasksEntity);
+    }
+
+    @Test
+    void findTasksToLate() {
+        int idUser = 1;
+        List<TasksEntity> tasksEntities = tasksBean.findTasksToLate(idUser);
+
+
+        boolean test = !tasksEntities.isEmpty();
+
+        log.info("Le test vaut : " + test + ". La liste contient : " + (long) tasksEntities.size() + " taches");
+
+        assertThat(test).isEqualTo(true);
+    }
+
+    @Test
+    void findTasksToCome() {
+        int idUser = 1;
+        List<TasksEntity> tasksEntities = tasksBean.findTasksToCome(idUser);
+
+
+        boolean test = !tasksEntities.isEmpty();
+
+        log.info("Le test vaut : " + test + ". La liste contient : " + (long) tasksEntities.size() + " taches");
+
+        assertThat(test).isEqualTo(true);
+    }
+
+    @Test
+    void findTasksToday() {
+        int idUser = 1;
+
+
+        List<TasksEntity> tasksEntities = tasksBean.findTasksToday(idUser);
+
+
+        boolean test = !tasksEntities.isEmpty();
+
+        log.info("Le test vaut : " + test + ". La liste contient : " + (long) tasksEntities.size() + " taches");
+
+        assertThat(test).isEqualTo(true);
+    }
+
+    @Test
+    void findTasksFinished() {
+        int idUser = 1;
+
+
+        List<TasksEntity> tasksEntities = tasksBean.findTasksFinished(idUser);
+
+
+        boolean test = !tasksEntities.isEmpty();
+
+        log.info("Le test vaut : " + test + ". La liste contient : " + (long) tasksEntities.size() + " taches");
+
+        assertThat(test).isEqualTo(true);
     }
 }

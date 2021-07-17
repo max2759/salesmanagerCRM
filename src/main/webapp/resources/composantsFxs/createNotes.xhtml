@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite">
+
+<cc:interface name="createNotes"
+              displayName="#{bundle['notes.create']}"
+              shortDescription="#{bundle['notes.create']}"
+>
+</cc:interface>
+<cc:implementation>
+    <f:view>
+
+        <h:form>
+            <h3>#{bundle['notes.title']}</h3>
+
+            <div>
+                <p:outputLabel value="#{bundle['notes.message']}"/>
+<!--                <p:textEditor widgetVar="editor2" value="#{notesBean.notesEntity.message}" height="100"
+                              placeholder="#{bundle['notes.messageHolder']}">
+                    <f:facet name="toolbar">
+                            <span>
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                                <button class="ql-strike"></button>
+                            </span>
+                    </f:facet>
+                </p:textEditor>-->
+
+                <div class="card card-w-title">
+                    <h1>#{bundle['notes.title']}</h1>
+                    <p:inputTextarea rows="3" value="#{notesBean.notesEntity.message}"
+                                     placeholder="#{bundle['notes.messageHolder']}" autoResize="false"/>
+
+                </div>
+
+                <p:commandButton style="width:auto;margin-bottom:10px;"
+                                 value="#{bundle['notes.save']}" icon="pi pi-check"
+                                 update="@(form) msgs"
+                                 action="#{notesBean.saveEntity}"/>
+            </div>
+        </h:form>
+
+    </f:view>
+</cc:implementation>
+</html>

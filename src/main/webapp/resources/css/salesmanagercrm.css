@@ -1,0 +1,30 @@
+.boldText {
+    font-weight: bold;
+}
+
+.dataTable-margin-top {
+    margin-top: 1rem;
+}
+
+.jobtitlesFullDisplay {
+    margin-top: 2rem;
+}
+
+.modalValidateBtn-margin-top {
+    margin-top: 1rem;
+}
+
+.taskUpdateTitle {
+    display: block;
+    padding-bottom: 5px;
+    padding-top: 20px;
+    font-weight: bold;
+}
+
+.textRed {
+    color: red;
+}
+
+.lineThrough {
+    text-decoration: line-through;
+}

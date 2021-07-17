@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -25,7 +25,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Named(value = "taskTypesBean")
-@RequestScoped
+@ViewScoped
 public class TaskTypesBean implements Serializable {
 
 
@@ -38,6 +38,10 @@ public class TaskTypesBean implements Serializable {
     @Getter
     @Setter
     private TaskTypesEntity taskTypesEntity;
+
+    @Getter
+    @Setter
+    private List<TaskTypesEntity> taskTypesEntities;
 
 
     /**
@@ -92,6 +96,33 @@ public class TaskTypesBean implements Serializable {
                         "Aucun type de tâche avec l'ID " + id + " n a ete trouve dans la BDD",
                         ErrorCodes.TASKTYPE_NOT_FOUND
                 ));
+    }
+
+    /**
+     * Find Tasktype by LABEL
+     *
+     * @param label TaskTypesEntity
+     * @return TaskType Entity
+     */
+    public TaskTypesEntity findByLabel(String label) {
+        if (label == null) {
+            log.error("TaskType label is null");
+            return null;
+        }
+
+        EntityManager em = EMF.getEM();
+        try {
+            return dao.findByLabel(em, label);
+        } catch (Exception ex) {
+            log.info("Nothing");
+            throw new EntityNotFoundException(
+                    "Aucun type de tâche avec le label " + label + " n a ete trouve dans la BDD",
+                    ErrorCodes.TASKTYPE_NOT_FOUND
+            );
+        } finally {
+            em.clear();
+            em.close();
+        }
     }
 
 
@@ -155,5 +186,12 @@ public class TaskTypesBean implements Serializable {
             log.error("TaskType is not valide {}", entity);
             throw new InvalidEntityException("Le type de tache n est pas valide", ErrorCodes.TASKTYPE_NOT_VALID, errors);
         }
+    }
+
+    /**
+     * Fill the list with Task Entities
+     */
+    public void findAllTaskTypesEntities() {
+        taskTypesEntities = findAll();
     }
 }

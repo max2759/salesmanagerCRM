@@ -23,4 +23,12 @@ public interface TasksDao {
     void delete(EntityManager em, TasksEntity entity);
 
     void update(EntityManager em, TasksEntity entity);
+
+    List<TasksEntity> findTasksToLate(EntityManager em, int idUser);
+
+    List<TasksEntity> findTasksToCome(EntityManager em, int idUser);
+
+    List<TasksEntity> findTasksToday(EntityManager em, int idUser);
+
+    List<TasksEntity> findTasksFinished(EntityManager em, int idUser);
 }

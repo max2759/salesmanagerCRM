@@ -1,13 +1,41 @@
 package be.atc.salesmanagercrm.validators;
 
-import javax.faces.component.UIComponent;
+import be.atc.salesmanagercrm.entities.JobTitlesEntity;
+import be.atc.salesmanagercrm.utils.JsfUtils;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.validator.Validator;
-import javax.faces.validator.ValidatorException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
-public class JobTitlesValidator implements Validator {
-    @Override
-    public void validate(FacesContext facesContext, UIComponent uiComponent, Object o) throws ValidatorException {
+/**
+ * @author Maximilien Zabbara
+ */
+@Slf4j
+public class JobTitlesValidator {
 
+    public static List<String> validate(JobTitlesEntity jobTitlesEntity) {
+
+        List<String> errors = new ArrayList<>();
+
+        Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+        FacesMessage msg;
+
+
+        if (jobTitlesEntity == null) {
+            errors.add("L'intitulé du poste est obligatoire !");
+            msg = new FacesMessage(JsfUtils.returnMessage(locale, "jobTitles.labelError"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return errors;
+        }
+        if (jobTitlesEntity.getLabel() == null || jobTitlesEntity.getLabel().isEmpty()) {
+            errors.add("L'intitulé du poste est obligatoire !");
+            msg = new FacesMessage(JsfUtils.returnMessage(locale, "jobTitles.labelError"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+
+        return errors;
     }
 }

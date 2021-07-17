@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite">
+<cc:interface name="createCompany"
+              displayName="#{bundle['company.create']}"
+              shortDescription="#{bundle['company.create']}"/>
+<cc:implementation>
+    <f:view>
+        <p:dialog
+                header="Entreprise"
+                modal="true"
+                id="companyModal" widgetVar="companyModal" responsive="true">
+            <h:form>
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:inputText id="domainName" value="#{companiesBean.companiesEntity.domainName}">
+                            <f:validator validatorId="companyDomainValidator"/>
+                        </p:inputText>
+                        <label>#{bundle['company.domainName']}</label>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:inputText id="labelCompany" value="#{companiesBean.companiesEntity.label}" required="true"
+                                     requiredMessage="#{bundle['company.labelNotValid']}"/>
+                        <label>#{bundle['company.labelName']}</label>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:autoComplete id="branchActivitiesDisplay" dropdown="true"
+                                        value="#{companiesBean.companiesEntity.branchActivitiesByIdBranchActivities}"
+                                        completeMethod="#{companiesBean.completeBranchActivities}"
+                                        var="branchActivities"
+                                        itemLabel="#{branchActivities.label}"
+                                        itemValue="#{branchActivities}"
+                                        converter="branchActivitiesConverter"
+                                        scrollHeight="250" placeholder="#{bundle['company.chooseBranchActivity']}"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:autoComplete id="companyTypesDisplay" dropdown="true"
+                                        value="#{companiesBean.companiesEntity.companyTypesByIdCompanyTypes}"
+                                        required="true" requiredMessage="#{bundle['company.companiesTypeNotValid']}"
+                                        completeMethod="#{companiesBean.completeCompanyTypes}" var="companyTypes"
+                                        itemLabel="#{companyTypes.label}"
+                                        itemValue="#{companyTypes}"
+                                        converter="companyTypesConverter"
+                                        scrollHeight="250" placeholder="#{bundle['company.chooseCompanyType']}"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:inputNumber id="employeesNumber" value="#{companiesBean.companiesEntity.employeesNumber}"
+                                       validatorMessage="#{bundle['company.employeesNumberNotValid']}">
+                            <f:validateLongRange minimum="0"/>
+                        </p:inputNumber>
+                        <label>#{bundle['company.employessNumber']}</label>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:inputNumber id="revenue" value="#{companiesBean.companiesEntity.revenue}"
+                                       validatorMessage="#{bundle['company.employeesNumberNotValid']}">
+                            <f:validateLongRange minimum="0"/>
+                        </p:inputNumber>
+                        <label>#{bundle['company.revenue']}</label>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="linkedinPage" value="#{companiesBean.companiesEntity.linkedInPage}">
+                            <f:validator validatorId="linkedinPageValidator"/>
+                        </p:inputText>
+                        <label>#{bundle['company.linkedInPage']}</label>
+                    </h:panelGroup>
+                </p:panelGrid>
+
+                <div align="right">
+                    <p:commandButton value="valider"
+                                     action="#{companiesBean.saveCompany}"
+                                     icon="ui-icon-check"
+                                     update="@(form)" process="@this"
+                                     onclick="PF('companyModal').close();"/>
+                </div>
+            </h:form>
+        </p:dialog>
+    </f:view>
+</cc:implementation>
+</html>

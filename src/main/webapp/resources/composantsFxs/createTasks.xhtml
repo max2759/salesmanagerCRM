@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite">
+
+<cc:interface name="createTasks"
+              displayName="#{bundle['tasks.create']}"
+              shortDescription="#{bundle['tasks.create']}"
+>
+</cc:interface>
+<cc:implementation>
+    <f:view>
+
+        <h:form>
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                            <p:outputLabel value="#{bundle['title']} :" for="acTitle"/>
+                            <p:inputText id="acTitle" value="#{tasksBean.tasksEntity.title}"
+                                         required="true"
+                                         requiredMessage="#{bundle['task.validator.title']}"
+                                         style="margin-bottom:10px;"/>
+
+
+                            <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskType"/>
+                            <p:selectOneMenu id="taskType"
+                                             value="#{tasksBean.tasksEntity.taskTypesByIdTaskTypes}"
+                                             converter="taskTypeConverter">
+
+                                <f:selectItems value="#{taskTypesBean.taskTypesEntities}"
+                                               var="taskTypesEntities" itemValue="#{taskTypesEntities}"
+                                               itemLabel="#{taskTypesEntities.label}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="#{bundle['priority']}:" for="taskPriority"/>
+                            <p:selectOneMenu id="taskPriority"
+                                             value="#{tasksBean.tasksEntity.priority}">
+                                <f:selectItems value="#{enumPriorityBean.enumPriority}"
+                                               var="enumPriority" itemValue="#{enumPriority}"
+                                               itemLabel="#{enumPriority.label}"/>
+                                <f:validator validatorId="enumPriorityValidator"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
+                            <p:autoComplete id="Contact" value="#{tasksBean.tasksEntity.contactsByIdContacts}"
+                                            completeMethod="#{tasksBean.completeContactsContains}"
+                                            var="Contact"
+                                            itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
+                                            itemValue="#{Contact}"
+                                            converter="contactConverter"
+                                            groupBy="#{tasksBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
+
+                            <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
+                            <p:autoComplete id="Company" value="#{tasksBean.tasksEntity.companiesByIdCompanies}"
+                                            completeMethod="#{tasksBean.completeCompaniesContains}"
+                                            var="Company"
+                                            itemLabel="#{Company.label}"
+                                            itemValue="#{Company}"
+                                            converter="companieConverter"
+                                            groupBy="#{tasksBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
+
+                            <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"/>
+                            <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
+                                        id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
+
+                            <p:outputLabel for="description" value="#{bundle['tasks.description']}:"/>
+                            <p:inputTextarea value="#{tasksBean.tasksEntity.description}" id="description" rows="4"
+                                             placeholder="#{bundle['tasks.description']}"
+                                             autoResize="false"/>
+
+                            <p:commandButton style="width:auto;margin-bottom:10px;"
+                                             update="@(form) msgs"
+                                             value="#{bundle['save']}"
+                                             action="#{tasksBean.saveEntity}">
+                            </p:commandButton>
+                        </p:panelGrid>
+
+                    </div>
+
+                </div>
+            </div>
+        </h:form>
+
+    </f:view>
+</cc:implementation>
+</html>

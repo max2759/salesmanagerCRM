@@ -1,0 +1,91 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pa="http://primefaces.org/barcelona">
+
+    <div class="layout-sidebar #{guestPreferences.darkMenu ? 'layout-sidebar-dark': ''}">
+        <pa:tabMenu>
+            <pa:tab icon="home" title="Features">
+                <h:form id="menu-form">
+                    <pa:menu widgetVar="me">
+                        <p:menuitem id="um_dashboard" value="Dashboard" icon="&#xE871;" outcome="/dashboard"/>
+                        <p:submenu id="um_customization1" label="Menu Modes" icon="&#xE8B8;">
+                            <p:menuitem id="menu1" value="Light Menu" icon="&#xE893;"
+                                        actionListener="#{guestPreferences.setDarkMenu(false)}" ajax="false"/>
+                            <p:menuitem id="menu2" value="Dark Menu" icon="&#xE892;"
+                                        actionListener="#{guestPreferences.setDarkMenu(true)}" ajax="false"/>
+                        </p:submenu>
+                        <p:submenu id="om_orientation" label="Orientation" icon="&#xE237;">
+                            <p:menuitem id="om_ltr" value="LTR" icon="&#xE236;"
+                                        actionListener="#{guestPreferences.setOrientationRTL(false)}" ajax="false"/>
+                            <p:menuitem id="om_rtl" value="RTL" icon="&#xE237;"
+                                        actionListener="#{guestPreferences.setOrientationRTL(true)}" ajax="false"/>
+                        </p:submenu>
+                        <p:submenu id="um_themes" label="Themes" icon="&#xE40A;">
+                            <p:menuitem id="theme1" value="Blue - Amber" icon="&#xE40A;"
+                                        actionListener="#{guestPreferences.setTheme('blue')}" ajax="false"/>
+                            <p:menuitem id="theme2" value="Teal - Amber" icon="&#xE40A;"
+                                        actionListener="#{guestPreferences.setTheme('teal')}" ajax="false"/>
+                            <p:menuitem id="theme3" value="Blue Grey - Green" icon="&#xE40A;"
+                                        actionListener="#{guestPreferences.setTheme('blue-grey')}" ajax="false"/>
+                            <p:menuitem id="theme4" value="Cyan - Yellow" icon="&#xE40A;"
+                                        actionListener="#{guestPreferences.setTheme('cyan')}" ajax="false"/>
+                            <p:menuitem id="theme5" value="Dark - Blue" icon="&#xE40A;"
+                                        actionListener="#{guestPreferences.setTheme('dark-blue')}" ajax="false"/>
+                            <p:menuitem id="theme6" value="Dark - Green" icon="&#xE40A;"
+                                        actionListener="#{guestPreferences.setTheme('dark-green')}" ajax="false"/>
+                            <p:menuitem id="theme7" value="Light Blue - Green" icon="&#xE40A;"
+                                        actionListener="#{guestPreferences.setTheme('light-blue')}" ajax="false"/>
+                            <p:menuitem id="theme8" value="Indigo - Cyan" icon="&#xE40A;"
+                                        actionListener="#{guestPreferences.setTheme('indigo')}" ajax="false"/>
+                            <p:menuitem id="theme9" value="Deep Purple - Pink" icon="&#xE40A;"
+                                        actionListener="#{guestPreferences.setTheme('deep-purple')}" ajax="false"/>
+                            <p:menuitem id="theme10" value="Green - Yellow" icon="&#xE40A;"
+                                        actionListener="#{guestPreferences.setTheme('green')}" ajax="false"/>
+                        </p:submenu>
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+
+
+            <pa:tab icon="people" title="Autres pages">
+                <h:form id="menu-others">
+                    <pa:menu widgetVar="me">
+                        <p:menuitem id="um_Charts" value="Charts" icon="&#xE871;" outcome="/charts"/>
+                        <p:menuitem id="um_data" value="Data" icon="&#xE871;" outcome="/data"/>
+                        <p:menuitem id="um_docs" value="docs" icon="&#xE871;" outcome="/docs"/>
+                        <p:menuitem id="um_empty" value="empty" icon="&#xE871;" outcome="/empty"/>
+                        <p:menuitem id="um_error" value="error" icon="&#xE871;" outcome="/error"/>
+                        <p:menuitem id="um_file" value="file" icon="&#xE871;" outcome="/file"/>
+                        <p:menuitem id="um_forms" value="forms" icon="&#xE871;" outcome="/forms"/>
+                        <p:menuitem id="um_landing" value="landing" icon="&#xE871;" outcome="/landing"/>
+                        <p:menuitem id="um_messages" value="messages" icon="&#xE871;" outcome="/messages"/>
+                        <p:menuitem id="um_menu" value="menu" icon="&#xE871;" outcome="/menu"/>
+                        <p:menuitem id="um_misc" value="misc" icon="&#xE871;" outcome="/misc"/>
+                        <p:menuitem id="um_overlay" value="overlay" icon="&#xE871;" outcome="/overlay"/>
+                        <p:menuitem id="um_panel" value="panel" icon="&#xE871;" outcome="/panel"/>
+                        <p:menuitem id="um_sample" value="sample" icon="&#xE871;" outcome="/sample"/>
+                        <p:menuitem id="um_utils" value="utils" icon="&#xE871;" outcome="/utils"/>
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+
+            <pa:tab icon="event" title="Nos pages brut">
+                <h:form id="menu-ourPage">
+                    <pa:menu widgetVar="me">
+                        <p:menuitem id="um_Notes" value="Notes" icon="&#xE871;" outcome="/notes"/>
+                        <p:menuitem id="um_Tasks" value="Tasks" icon="&#xE871;" outcome="/tasks"/>
+                        <p:menuitem id="um_allTasks" value="allTasks" icon="&#xE871;" outcome="/alltasks"/>
+                        <p:menuitem id="um_JobTitles" value="JobTitles" icon="&#xE871;" outcome="/jobtitles"/>
+                        <p:menuitem id="um_BranchActivities" value="BranchActivities" icon="&#xE871;"
+                                    outcome="/branchactivities"/>
+                        <p:menuitem id="um_Company" value="Company" icon="&#xE871;" outcome="/company"/>
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+        </pa:tabMenu>
+    </div>
+
+</ui:composition>

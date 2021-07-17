@@ -14,11 +14,11 @@ public class TaskTypesValidator {
         List<String> errors = new ArrayList<>();
 
         if (entity == null) {
-            errors.add("Veuillez renseigner un label dans votre tache");
+            errors.add("Veuillez renseigner un label dans votre type tache");
             return errors;
         }
         if (entity.getLabel() == null) {
-            errors.add("Veuillez renseigner un label dans votre tache !");
+            errors.add("Veuillez renseigner un label dans votre type tache !");
         }
 
         return errors;

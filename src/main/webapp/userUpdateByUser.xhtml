@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">#{bundle['usersList.title']}</ui:define>
+    <ui:define name="content">
+
+        <f:metadata>
+            <f:viewAction action="#{rolesBean.findAllRoles}"/>
+        </f:metadata>
+
+        <h:body>
+            <h:form>
+
+                <p:outputLabel value="#{bundle['user.username']}"></p:outputLabel>
+                <h:inputText value="#{user.lastname}"></h:inputText>
+
+                <p:outputLabel value="#{bundle['user.password']}"></p:outputLabel>
+                <h:inputText value="#{user.lastname}"></h:inputText>
+
+                <p:outputLabel value="#{bundle['lastname']}"></p:outputLabel>
+                <h:inputText value="#{user.lastname}"></h:inputText>
+
+                <p:outputLabel value="#{bundle['email']}"> * </p:outputLabel>
+                <p:inputText value="#{user.email}">
+                    <f:validator validatorId="userEmailValidator"></f:validator>
+                </p:inputText>
+
+
+                <p:commandButton value="Valider" action="#{usersBean.register}"/>
+
+
+            </h:form>
+        </h:body>
+
+    </ui:define>
+</ui:composition>
