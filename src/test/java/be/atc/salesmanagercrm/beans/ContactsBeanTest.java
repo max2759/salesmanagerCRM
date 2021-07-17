@@ -1,6 +1,8 @@
 package be.atc.salesmanagercrm.beans;
 
+import be.atc.salesmanagercrm.entities.ContactTypesEntity;
 import be.atc.salesmanagercrm.entities.ContactsEntity;
+import be.atc.salesmanagercrm.entities.JobTitlesEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +42,27 @@ class ContactsBeanTest {
         log.info("Le test vaut : " + test);
 
         assertThat(test).isEqualTo(true);
+
+    }
+
+    @Test
+    void save() {
+
+        ContactsEntity contactsEntity = new ContactsEntity();
+        JobTitlesEntity jobTitlesEntity = new JobTitlesEntity();
+        ContactTypesEntity contactTypesEntity = new ContactTypesEntity();
+
+        jobTitlesEntity.setId(4);
+        contactTypesEntity.setId(1);
+
+        contactsEntity.setEmail("test@gmail.com");
+        contactsEntity.setFirstname("Max");
+        contactsEntity.setLastname("Zab");
+        contactsEntity.setJobTitlesByIdJobTitles(jobTitlesEntity);
+        contactsEntity.setContactTypesByIdContactTypes(contactTypesEntity);
+        contactsEntity.setPhoneNumber("0477777777");
+
+        contactsBean.save(contactsEntity);
 
     }
 }

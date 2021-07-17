@@ -114,7 +114,7 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
      * @param id JobTitles
      * @return JobTitlesEntity
      */
-    protected JobTitlesEntity findById(int id) {
+    public JobTitlesEntity findById(int id) {
 
         FacesMessage facesMessage;
 
