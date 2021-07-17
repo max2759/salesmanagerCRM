@@ -7,6 +7,12 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 public class ContactsDaoImpl implements ContactsDao {
+
+    @Override
+    public void add(EntityManager em, ContactsEntity contactsEntity) {
+        em.persist(contactsEntity);
+    }
+
     @Override
     public ContactsEntity findById(EntityManager em, int id) {
         return em.find(ContactsEntity.class, id);
