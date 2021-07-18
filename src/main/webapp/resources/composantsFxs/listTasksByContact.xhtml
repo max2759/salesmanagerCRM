@@ -18,7 +18,7 @@
 
             <div class="ui-g ui-fluid">
                 <div class="card card-w-title">
-                    <p:dataTable id="task1" var="task" value="#{tasksBean.tasksEntities}" editable="true"
+                    <p:dataTable id="task1" var="task" value="#{tasksBean.tasksEntitiesByContacts}" editable="true"
                                  style="margin-bottom:20px">
 
                         <p:ajax event="rowEdit" listener="#{tasksBean.onRowEdit}" update="@this msgs"/>

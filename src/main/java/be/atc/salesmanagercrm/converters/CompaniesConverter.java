@@ -18,7 +18,7 @@ import java.util.Locale;
 
 
 @Slf4j
-@FacesConverter(value = "companieConverter")
+@FacesConverter(value = "companiesConverter")
 public class CompaniesConverter implements Converter {
 
     private final CompaniesBean companiesBean = new CompaniesBean();
