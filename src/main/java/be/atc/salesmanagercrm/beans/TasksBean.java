@@ -177,7 +177,7 @@ public class TasksBean extends ExtendBean implements Serializable {
         // TODO : Corriger ça
         createNewEntity();
 
-        loadListEntities(getParam("typeEntities"));
+        loadListEntities(getParam("all"));
     }
 
 
@@ -215,7 +215,7 @@ public class TasksBean extends ExtendBean implements Serializable {
      */
     public void onTabChange(TabChangeEvent event) {
         log.info("method : onTabChange()");
-        log.info("event : " + event);
+        log.info("event : " + event.getTab().getId());
 
         loadListEntities(event.getTab().getId());
     }
