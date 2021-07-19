@@ -7,9 +7,9 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:cc="http://java.sun.com/jsf/composite">
 
-<cc:interface name="createTasks"
-              displayName="#{bundle['tasks.create']}"
-              shortDescription="#{bundle['tasks.create']}"
+<cc:interface name="updateTasks"
+              displayName="#{bundle['tasks.update']}"
+              shortDescription="#{bundle['tasks.update']}"
 >
 </cc:interface>
 <cc:implementation>
@@ -64,7 +64,6 @@
                 <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"/>
                 <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
                             id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
-
             </p:panelGrid>
             <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
                 <p:outputLabel for="description" value="#{bundle['tasks.description']}:"/>
@@ -75,8 +74,8 @@
 
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
-                                 value="#{bundle['save']}"
-                                 action="#{tasksBean.saveEntity}">
+                                 value="#{bundle['update']}"
+                                 action="#{tasksBean.updateEntity}">
                     <f:param name="typeEntities" value="all"/>
                 </p:commandButton>
             </p:panelGrid>

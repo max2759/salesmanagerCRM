@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ContactsDao {
 
+    void add(EntityManager em, ContactsEntity contactsEntity);
+
     ContactsEntity findById(EntityManager em, int id);
 
     ContactsEntity findByIdContactAndByIdUser(EntityManager em, int id, int idUser);

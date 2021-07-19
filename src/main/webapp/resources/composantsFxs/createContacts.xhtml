@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite">
+<cc:interface name="createContacts"
+              displayName="#{bundle['contacts.create']}"
+              shortDescription="#{bundle['company.create']}"/>
+<cc:implementation>
+    <f:view>
+        <p:dialog
+                header="Contacts"
+                modal="true"
+                id="companyModal" widgetVar="companyModal" responsive="true">
+            <h:form>
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}">
+                            <f:validator validatorId="userEmailValidator"/>
+                        </p:inputText>
+                        <label>#{bundle['contacts.emailLabel']}</label>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:inputText id="contactFirstName" value="#{contactsBean.contactsEntity.firstname}"
+                                     required="true" requiredMessage="#{bundle['contacts.firstnameNotValid']}"
+                        />
+                        <label>#{bundle['contacts.firstname']}</label>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:inputText id="contactLastName" value="#{contactsBean.contactsEntity.lastname}"
+                                     required="true" requiredMessage="#{bundle['contacts.lastnameNotValid']}"
+                        />
+                        <label>#{bundle['contacts.lastname']}</label>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:autoComplete id="jobTitlesDisplay" dropdown="true"
+                                        value="#{contactsBean.contactsEntity.jobTitlesByIdJobTitles}"
+                                        completeMethod="#{contactsBean.completeJobTitles}"
+                                        var="jobtitles"
+                                        itemLabel="#{jobtitles.label}"
+                                        itemValue="#{jobtitles}"
+                                        converter="jobTitlesConverter"
+                                        scrollHeight="250" placeholder="#{bundle['contacts.chooseJobTitles']}"/>
+                    </h:panelGroup>
+
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:inputMask id="phoneNumber" value="#{contactsBean.contactsEntity.phoneNumber}"
+                                     mask="+32 999999999">
+                            <f:validator validatorId="contactPhoneNumberValidator"/>
+                        </p:inputMask>
+                        <label>#{bundle['contacts.phoneNumberLabel']}</label>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:autoComplete id="contactTypeDisplay" dropdown="true"
+                                        value="#{contactsBean.contactsEntity.contactTypesByIdContactTypes}"
+                                        completeMethod="#{contactsBean.completeContactType}"
+                                        var="contactType"
+                                        itemLabel="#{contactType.label}"
+                                        itemValue="#{contactType}"
+                                        converter="contactTypesConverter"
+                                        scrollHeight="250" placeholder="#{bundle['contacts.chooseContactType']}"
+                                        required="true" requiredMessage="#{bundle['contacts.ContactTypeNotValid']}"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+
+                <div align="right">
+                    <p:commandButton value="valider"
+                                     action="#{contactsBean.addContact}"
+                                     icon="ui-icon-check"
+                                     update="@(form)" process="@this"
+                                     onclick="PF('companyModal').close();"/>
+                </div>
+            </h:form>
+        </p:dialog>
+    </f:view>
+</cc:implementation>
+</html>

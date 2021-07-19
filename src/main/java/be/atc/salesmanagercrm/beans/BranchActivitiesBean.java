@@ -130,7 +130,7 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Find BranchActivities entities
+     * Find all BranchActivities entities
      *
      * @return List BranchActivitiesEntity
      */

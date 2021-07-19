@@ -6,19 +6,16 @@
                 template="WEB-INF/templates/template.xhtml">
 
 
-    <ui:define name="title">#{bundle['tasks.title']}</ui:define>
+    <ui:define name="title">#{bundle['transactions.title']}</ui:define>
     <ui:define name="content">
 
         <f:metadata>
-            <f:viewAction action="#{tasksBean.createNewEntity}"/>
-            <f:viewAction action="#{tasksBean.listEntities}"/>
-            <f:viewAction action="#{taskTypesBean.findAllTaskTypesEntities}"/>
+            <f:viewAction action="#{transactionsBean.findAllEntitiesAndFilter}"/>
         </f:metadata>
 
         <p:growl id="msgs" skipDetailIfEqualsSummary="true"/>
 
-        <fxs:listAllTasks id="listAllTasks"/>
-
+        <fxs:listAllTransactions id="listAllTransactions"/>
 
     </ui:define>
 </ui:composition>

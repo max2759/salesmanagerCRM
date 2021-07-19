@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -23,13 +23,14 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Younes Arifi
  */
 @Slf4j
 @Named(value = "transactionsBean")
-@RequestScoped
+@ViewScoped
 public class TransactionsBean implements Serializable {
 
     private static final long serialVersionUID = -5437009720221374165L;
@@ -41,6 +42,64 @@ public class TransactionsBean implements Serializable {
     @Getter
     @Setter
     private TransactionsEntity transactionsEntity;
+    @Getter
+    @Setter
+    private TransactionsEntity selectedtransactionEntity;
+
+    @Getter
+    @Setter
+    private List<TransactionsEntity> transactionsEntities;
+    @Getter
+    @Setter
+    private List<TransactionsEntity> transactionsEntitiesProspection;
+    @Getter
+    @Setter
+    private List<TransactionsEntity> transactionsEntitiesQualification;
+    @Getter
+    @Setter
+    private List<TransactionsEntity> transactionsEntitiesProposition;
+    @Getter
+    @Setter
+    private List<TransactionsEntity> transactionsEntitiesNegociation;
+    @Getter
+    @Setter
+    private List<TransactionsEntity> transactionsEntitiesConclue;
+    @Getter
+    @Setter
+    private List<TransactionsEntity> transactionsEntitiesAnnulee;
+
+
+    /**
+     * Find All Transactions and filter
+     */
+    public void findAllEntitiesAndFilter() {
+        // TODO : Remplacer par user
+        this.transactionsEntities = transactionsEntities = findAll(1);
+
+        this.transactionsEntitiesProspection = transactionsEntities.stream()
+                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Prospection"))
+                .collect(Collectors.toList());
+
+        this.transactionsEntitiesQualification = transactionsEntities.stream()
+                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Qualification"))
+                .collect(Collectors.toList());
+
+        this.transactionsEntitiesProposition = transactionsEntities.stream()
+                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Proposition"))
+                .collect(Collectors.toList());
+
+        this.transactionsEntitiesNegociation = transactionsEntities.stream()
+                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Négociation"))
+                .collect(Collectors.toList());
+
+        this.transactionsEntitiesConclue = transactionsEntities.stream()
+                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Conclue"))
+                .collect(Collectors.toList());
+
+        this.transactionsEntitiesAnnulee = transactionsEntities.stream()
+                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Annulé"))
+                .collect(Collectors.toList());
+    }
 
 
     /**
@@ -240,6 +299,25 @@ public class TransactionsBean implements Serializable {
         em.close();
 
         return transactionsEntities;
+    }
+
+    /**
+     * Find All Transactions Entities by Phase
+     *
+     * @return List TransactionsEntity
+     */
+    protected List<TransactionsEntity> findAllByPhase(int idUser, String phaseTransaction) {
+        if (idUser == 0) {
+            log.error("User ID is null");
+            return Collections.emptyList();
+        }
+        EntityManager em = EMF.getEM();
+        List<TransactionsEntity> transactionsEntitiesToFind = dao.findAllByPhase(em, idUser, phaseTransaction);
+
+        em.clear();
+        em.close();
+
+        return transactionsEntitiesToFind;
     }
 
 

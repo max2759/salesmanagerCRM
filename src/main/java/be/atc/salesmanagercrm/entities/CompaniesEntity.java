@@ -29,7 +29,6 @@ public class CompaniesEntity {
     private LocalDateTime closingDate;
     private String phoneNumber;
     private String email;
-    private String website;
     private boolean isActive;
     private Collection<AddressesEntity> addressesById;
     private UsersEntity usersByIdUsers;
@@ -203,16 +202,6 @@ public class CompaniesEntity {
     }
 
     @Basic
-    @Column(name = "Website")
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    @Basic
     @Column(name = "IsActive", nullable = false)
     public boolean isActive() {
         return isActive;
@@ -227,12 +216,12 @@ public class CompaniesEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CompaniesEntity that = (CompaniesEntity) o;
-        return id == that.id && isActive == that.isActive && Objects.equals(label, that.label) && Objects.equals(description, that.description) && Objects.equals(vatNumber, that.vatNumber) && Objects.equals(bankAccount, that.bankAccount) && Objects.equals(domainName, that.domainName) && Objects.equals(employeesNumber, that.employeesNumber) && Objects.equals(modificationDate, that.modificationDate) && Objects.equals(registerDate, that.registerDate) && Objects.equals(annualSales, that.annualSales) && Objects.equals(revenue, that.revenue) && Objects.equals(linkedInPage, that.linkedInPage) && Objects.equals(creationDate, that.creationDate) && Objects.equals(closingDate, that.closingDate) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(email, that.email) && Objects.equals(website, that.website);
+        return id == that.id && isActive == that.isActive && Objects.equals(label, that.label) && Objects.equals(description, that.description) && Objects.equals(vatNumber, that.vatNumber) && Objects.equals(bankAccount, that.bankAccount) && Objects.equals(domainName, that.domainName) && Objects.equals(employeesNumber, that.employeesNumber) && Objects.equals(modificationDate, that.modificationDate) && Objects.equals(registerDate, that.registerDate) && Objects.equals(annualSales, that.annualSales) && Objects.equals(revenue, that.revenue) && Objects.equals(linkedInPage, that.linkedInPage) && Objects.equals(creationDate, that.creationDate) && Objects.equals(closingDate, that.closingDate) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(email, that.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, label, description, vatNumber, bankAccount, domainName, employeesNumber, modificationDate, registerDate, annualSales, revenue, linkedInPage, creationDate, closingDate, phoneNumber, email, website, isActive);
+        return Objects.hash(id, label, description, vatNumber, bankAccount, domainName, employeesNumber, modificationDate, registerDate, annualSales, revenue, linkedInPage, creationDate, closingDate, phoneNumber, email, isActive);
     }
 
     @OneToMany(mappedBy = "companiesByIdCompanies")
