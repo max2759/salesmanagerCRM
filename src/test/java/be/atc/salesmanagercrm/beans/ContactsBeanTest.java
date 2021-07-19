@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,6 +65,28 @@ class ContactsBeanTest {
         contactsEntity.setPhoneNumber("0477777777");
 
         contactsBean.save(contactsEntity);
+    }
 
+    @Test
+    void checkPhoneNumberShouldReturnTrue() {
+        String phoneNumber = "+32 584584884";
+        String regex = "^[\\+]?[(]?[0-9 ]{3}[)]?[0-9]{7,9}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(phoneNumber);
+        matcher.matches();
+        log.info(String.valueOf(matcher.matches()));
+
+        assertThat(matcher.matches());
+    }
+
+    @Test
+    void checkPhoneNumberShouldReturnFalse() {
+        String regex = "^[\\+]?[(]?[0-9 ]{3}[)]?[0-9]{7,9}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher("+32 4adbve");
+        matcher.matches();
+        log.info(String.valueOf(matcher.matches()));
+
+        assertThat(!(matcher.matches()));
     }
 }

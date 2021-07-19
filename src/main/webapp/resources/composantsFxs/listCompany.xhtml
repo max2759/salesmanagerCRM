@@ -37,12 +37,13 @@
             </p:column>
 
             <p:column headerText="#{bundle['company.phoneNumber']}" sortBy="#{companies.phoneNumber}">
-                <h:outputText value="#{companies.phoneNumber eq null ? '--' : companies.phoneNumber}"/>
+                <h:outputText value="#{empty companies.phoneNumber ? '--' : companies.phoneNumber}"/>
             </p:column>
 
             <p:column headerText="#{bundle['company.branchActivities']}"
                       sortBy="#{companies.branchActivitiesByIdBranchActivities.label}">
-                <h:outputText value="#{companies.branchActivitiesByIdBranchActivities.label}"/>
+                <h:outputText
+                        value="#{empty companies.branchActivitiesByIdBranchActivities.label ? '--' : companies.branchActivitiesByIdBranchActivities.label}"/>
             </p:column>
 
         </p:dataTable>

@@ -26,11 +26,11 @@
             </p:column>
 
             <p:column headerText="#{bundle['contacts.phonenumber']}" sortBy="#{contacts.phoneNumber}">
-                <h:outputText value="#{contacts.phoneNumber eq null ? '--' : contacts.phoneNumber}"/>
+                <h:outputText value="#{ empty contacts.phoneNumber ? '--' : contacts.phoneNumber}"/>
             </p:column>
 
             <p:column headerText="#{bundle['contacts.email']}" sortBy="#{contacts.email}">
-                <h:outputText value="#{contacts.email eq null ? '--' : contacts.email}"/>
+                <h:outputText value="#{empty contacts.email ? '--' : contacts.email}"/>
             </p:column>
 
 

@@ -11,6 +11,7 @@ import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
 import be.atc.salesmanagercrm.utils.JsfUtils;
+import be.atc.salesmanagercrm.validators.ContactValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -153,6 +154,13 @@ public class ContactsBean extends ExtendBean implements Serializable {
         usersEntity.setId(1);
         contactsEntity.setUsersByIdUsers(usersEntity);
 
+        try {
+            validateContacts(contactsEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
+
         FacesMessage facesMessage;
         CheckEntities checkEntities = new CheckEntities();
 
@@ -221,6 +229,18 @@ public class ContactsBean extends ExtendBean implements Serializable {
         List<ContactTypesEntity> contactTypesDropdown = contactTypesBean.findAll();
 
         return contactTypesDropdown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
+    }
 
+    /**
+     * Validate Contacts !
+     *
+     * @param entity ContactsEntity
+     */
+    private void validateContacts(ContactsEntity entity) {
+        List<String> errors = ContactValidator.validate(entity);
+        if (!errors.isEmpty()) {
+            log.error("Contacts is not valid {}", entity);
+            throw new InvalidEntityException("Les données du contact ne sont pas valide", ErrorCodes.CONTACT_NOT_VALID, errors);
+        }
     }
 }
