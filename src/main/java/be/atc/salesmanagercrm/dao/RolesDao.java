@@ -13,4 +13,9 @@ public interface RolesDao {
 
     RolesEntity findByLabel(EntityManager em, String label);
 
+    void register(EntityManager em, RolesEntity rolesEntity);
+
+    void update(EntityManager em, RolesEntity rolesEntity);
+
+
 }

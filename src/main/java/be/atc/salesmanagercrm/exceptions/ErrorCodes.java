@@ -52,7 +52,8 @@ public enum ErrorCodes {
     COMPANYTYPES_NOT_VALID(14001),
 
     ROLES_NOT_FOUND(15000),
-    ROLES_NOT_VALID(15000);
+    ROLES_NOT_VALID(15001),
+    ROLES_FOUND(150002);
 
 
     private final int code;

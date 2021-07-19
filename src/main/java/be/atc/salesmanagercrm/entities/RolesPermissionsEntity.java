@@ -5,6 +5,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "roles_permissions", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "RolesPermissions.findAllRolesPermissions", query = "select rp from RolesPermissionsEntity rp"),
+
+})
 public class RolesPermissionsEntity {
     private int id;
     private RolesEntity rolesByIdRoles;

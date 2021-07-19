@@ -12,6 +12,7 @@
         <f:metadata>
             <f:viewAction action="#{usersBean.findAllUsers}"/>
             <f:viewAction action="#{rolesBean.findAllRoles}"/>
+            <f:viewAction action="#{permissionsBean.findAllPermissions}"/>
         </f:metadata>
 
         <h:body>
@@ -60,62 +61,71 @@
             </h:form>
 
             <h:form id="updateUserDialogForm">
-                <div class="ui-g ui-fluid">
-                    <div class="ui-g-12 ui-lg-6">
-                        <!-- Left Side -->
-                        <div class="card">
-                            <p:dialog header="Modal Dialog" widgetVar="updateUser" modal="true" height="100"
-                                      style="height: 500px"
-                                      responsive="true" id="updateUserDialog">
-                                <!--  <h:outputText value="Id : #{usersBean.userForDialog.id}"/>
-                                  <h:outputText value="Username : #{usersBean.userForDialog.username}"/>
-                                  -->
 
-                                <p:outputLabel value="#{bundle['firstname']}"></p:outputLabel>
-                                <p:inputText value="#{usersBean.usersEntity.firstname}"
-                                             placeholder="#{usersBean.userForDialog.firstname}"/>
-                                <br/>
-
-                                <p:outputLabel value="#{bundle['lastname']}"></p:outputLabel>
-                                <p:inputText value="#{usersBean.usersEntity.lastname}"
-                                             placeholder="#{usersBean.userForDialog.lastname}"/>
-
-                                <p:outputLabel value="#{bundle['user.username']}"></p:outputLabel>
-                                <p:inputText value="#{usersBean.usersEntity.username}"
-                                             placeholder="#{usersBean.userForDialog.username}">
-                                </p:inputText>
-
-                                <p:outputLabel value="#{bundle['email']}"></p:outputLabel>
-                                <p:inputText value="#{usersBean.usersEntity.email}"
-                                             placeholder="#{usersBean.userForDialog.email}">
-                                    <f:validator validatorId="userEmailValidator"></f:validator>
-                                </p:inputText>
-
-                                <p:selectOneMenu id="userRole"
-                                                 value="#{usersBean.usersEntity.rolesByIdRoles}"
-                                                 converter="rolesConverter"
-                                >
-                                    <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
-                                                   itemValue="#{companyTypes}"
-                                                   itemLabel="#{companyTypes.label}"/>
-                                </p:selectOneMenu>
-
-                                <c:if test="#{usersBean.usersEntity.active eq false}">
-                                    <h:selectBooleanCheckbox id="inactive" value="#{usersBean.usersEntity.active}"/>
-                                </c:if>
-                                <c:if test="#{usersBean.usersEntity.active eq true}">
-                                    <h:selectBooleanCheckbox id="active" value="#{usersBean.usersEntity.active}"
-                                                             checked="checked"/>
-                                </c:if>
+                <p:dialog header="Modal Dialog" widgetVar="updateUser" modal="true"
+                          responsive="true" id="updateUserDialog">
+                    <!--  <h:outputText value="Id : #{usersBean.userForDialog.id}"/>
+                      <h:outputText value="Username : #{usersBean.userForDialog.username}"/>
+                      -->
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                            <p:inputText value="#{usersBean.usersEntity.firstname}"
+                                         placeholder="#{usersBean.userForDialog.firstname}"/>
+                            <label>#{bundle['firstname']}</label>
+                        </h:panelGroup>
 
 
-                                <p:commandButton value="Confirmer Valider" action="#{usersBean.updateUsersAdmin}"
-                                                 process="@form" ajax="=false"/>
+                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                            <p:inputText value="#{usersBean.usersEntity.lastname}"
+                                         placeholder="#{usersBean.userForDialog.lastname}"/>
+                            <label>#{bundle['lastname']}</label>
+                        </h:panelGroup>
 
-                            </p:dialog>
-                        </div>
-                    </div>
-                </div>
+                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                            <p:inputText value="#{usersBean.usersEntity.username}"
+                                         placeholder="#{usersBean.userForDialog.username}"/>
+                            <label>#{bundle['user.username']}</label>
+                        </h:panelGroup>
+
+
+                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                            <p:inputText value="#{usersBean.usersEntity.email}"
+                                         placeholder="#{usersBean.userForDialog.email}">
+                                <f:validator validatorId="userEmailValidator"></f:validator>
+                            </p:inputText>
+                            <label>#{bundle['email']}</label>
+                        </h:panelGroup>
+
+
+                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                            <p:selectOneMenu id="userRole"
+                                             value="#{usersBean.usersEntity.rolesByIdRoles}"
+                                             converter="rolesConverter"
+                            >
+                                <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
+                                               itemValue="#{companyTypes}"
+                                               itemLabel="#{companyTypes.label}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                            <c:if test="#{usersBean.usersEntity.active eq false}">
+                                <h:selectBooleanCheckbox id="inactive" value="#{usersBean.usersEntity.active}"/>
+                            </c:if>
+                            <c:if test="#{usersBean.usersEntity.active eq true}">
+                                <h:selectBooleanCheckbox id="active" value="#{usersBean.usersEntity.active}"
+                                                         checked="checked"/>
+                            </c:if>
+                            <label>#{bundle['active']}</label>
+                        </h:panelGroup>
+
+
+                        <p:commandButton value="Confirmer Valider" action="#{usersBean.updateUsersAdmin}"
+                                         update="@(form)"
+                                         process="@form" ajax="=false"/>
+                    </p:panelGrid>
+                </p:dialog>
+
             </h:form>
 
             <p:messages id="messages" showDetail="true">

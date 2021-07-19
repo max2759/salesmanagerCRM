@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.dao.RolesDao;
 import be.atc.salesmanagercrm.entities.RolesEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 /**
@@ -26,11 +27,24 @@ public class RolesDaoImpl implements RolesDao {
 
     @Override
     public RolesEntity findByLabel(EntityManager em, String label) {
-
-        return em.createNamedQuery("Roles.findByLabel",
-                RolesEntity.class)
-                .setParameter("label", label)
-                .getSingleResult();
+        try {
+            return em.createNamedQuery("Roles.findByLabel",
+                    RolesEntity.class)
+                    .setParameter("label", label)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
+
+    @Override
+    public void register(EntityManager em, RolesEntity rolesEntity) {
+        em.persist(rolesEntity);
+    }
+
+    public void update(EntityManager em, RolesEntity rolesEntity) {
+        em.merge(rolesEntity);
+    }
+
 
 }
