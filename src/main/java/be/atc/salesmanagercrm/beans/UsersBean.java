@@ -14,6 +14,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.mgt.SecurityManager;
@@ -84,7 +85,17 @@ public class UsersBean implements Serializable {
     /**
      * @throws NoSuchAlgorithmException
      */
+    @RequiresAuthentication
+    // @RequiresPermissions("addUsers")
     public void register() {
+
+        Subject currentUser = SecurityUtils.getSubject();
+        //test a typed permission (not instance-level)
+        if (currentUser.isPermitted("addUsers")) {
+            log.info("Tu as l'autorisation Test.");
+        } else {
+            log.info("Sorry, lightsaber1 rings are for schwartz masters only.");
+        }
 
         //regex password + hash + pseudo unique
         //  log.info(String.valueOf(usersEntity.getEmail()));
@@ -174,9 +185,10 @@ public class UsersBean implements Serializable {
 
         String password = usersEntity.getPassword();
         String hashPass = encrypt(password);
-        log.info(hashPass);
+        //   log.info(hashPass);
         UsernamePasswordToken token = new UsernamePasswordToken(usersEntity.getUsername(), hashPass);
-
+        // log.info(String.valueOf(new UsernamePasswordToken(usersEntity.getUsername(), hashPass)));
+        log.info(String.valueOf(token));
         Subject currentUser = SecurityUtils.getSubject();
         log.info(String.valueOf(currentUser));
         Session session = currentUser.getSession();
@@ -201,8 +213,41 @@ public class UsersBean implements Serializable {
                 //unexpected condition?  error?
             }
         }
-        log.info("user :" + currentUser.getPrincipal());
+
+        log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
+
+        log.info("test role : " + currentUser);
+        //test a role:
+        if (currentUser.hasRole("Admin")) {
+            log.info("Bravo tu es Admin");
+        } else {
+            log.info("Hello, mere mortal.");
+        }
+
+        //test a typed permission (not instance-level)
+        if (currentUser.isPermitted("addUsers")) {
+            log.info("Tu as l'autorisation Test.");
+        } else {
+            log.info("Sorry, lightsaber1 rings are for schwartz masters only.");
+        }
+        if (currentUser.isPermitted("test22")) {
+            log.info("You may use a lightsaber ring.  Use it wisely.");
+        } else {
+            log.info("Sorry, lightsaber rings are for schwartz masters only.");
+        }
+
+        if (currentUser.isPermitted("test2")) {
+            log.info("Tu as l'autorisation Test2.");
+        } else {
+            log.info("Sorry, lightsaber rings are for schwartz masters only.");
+        }
+
+        //all done - log out!
+        //     currentUser.logout();
+
+        //    System.exit(0);
 //no problem
+        //faire le truc des roles
 
     }
 
@@ -358,24 +403,11 @@ public class UsersBean implements Serializable {
 
     }
 
+
     private String encrypt(String password) {
         return new Sha256Hash(password).toString();
     }
 
-    /*
-
-    public void securityUtils() {
-        Subject usr = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken("mike", "abcdef");
-        try {
-            usr.login(token);
-        } catch (AuthenticationException ae) {
-            log.error(ae.toString());
-            return;
-        }
-        log.info("User [" + usr.getPrincipal() + "] logged in successfully.");
-    }
-*/
 
     private void validateUsers(UsersEntity entity, String password2) {
         List<String> errors = UsersValidator.validate(entity, password2);
@@ -391,6 +423,11 @@ public class UsersBean implements Serializable {
             log.error("Register is not valide {}", entity);
             throw new InvalidEntityException("L'inscription n est pas valide", ErrorCodes.USER_NOT_VALID, errors);
         }
+    }
+
+    public void logOut() {
+        Subject currentUser = SecurityUtils.getSubject();
+        currentUser.logout();
     }
 
 

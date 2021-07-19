@@ -275,6 +275,7 @@ public class CheckEntities implements Serializable {
 
     /**
      * Check if user exist in DB
+     * use in user
      *
      * @param entity : UsersEntity
      */
@@ -293,7 +294,7 @@ public class CheckEntities implements Serializable {
 
     /**
      * Check if user exist in DB
-     *
+     *use in user
      * @param entity : UsersEntity
      */
 
@@ -305,6 +306,25 @@ public class CheckEntities implements Serializable {
                 log.warn("Roles doesn't exists yet", entity.getId());
                 throw new EntityNotFoundException(
                         "Ce rôle n'existe pas: " + entity.getId(), ErrorCodes.ROLES_NOT_FOUND
+                );
+            }
+        }
+    }
+
+    /**
+     * check if role exist in DB
+     * use in role
+     *
+     * @param entity
+     */
+    public void checkRoleByLabel(RolesEntity entity) {
+        if (entity != null) {
+            EntityManager em = EMF.getEM();
+            RolesEntity rolesEntity = rolesDao.findByLabel(em, entity.getLabel());
+            if (rolesEntity != null) {
+                log.warn("Role label exists yet", entity.getLabel());
+                throw new InvalidEntityException(
+                        "Il y a déjà un role avec ce nom: " + entity.getLabel(), ErrorCodes.ROLES_FOUND
                 );
             }
         }

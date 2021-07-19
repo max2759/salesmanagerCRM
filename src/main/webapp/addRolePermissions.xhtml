@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="WEB-INF/templates/template.xhtml">
+
+    <style type="text/css">
+        .grid-checkbox td {
+            padding: .5rem;
+        }
+    </style>
+
+    <ui:define name="title">#{bundle['usersList.title']}</ui:define>
+    <ui:define name="content">
+
+        <f:metadata>
+            <f:viewAction action="#{rolesBean.findAllRoles}"/>
+            <f:viewAction action="#{permissionsBean.findAllPermissions}"/>
+        </f:metadata>
+
+        <h:body>
+            <h1>#{bundle['addRolePermissions.title']}</h1>
+
+
+            <h:form id="updateRolePermissionsDialogForm">
+
+                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                    <!-- liste déroulante des roles -->
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:selectOneMenu id="rolePermissions"
+                                         value="#{rolesPermissionsBean.rolesPermissionsEntity.rolesByIdRoles}"
+                                         converter="rolesConverter"
+                        >
+                            <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
+                                           itemValue="#{companyTypes}"
+                                           itemLabel="#{companyTypes.label}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+
+                    <!--checkbox des permissions -->
+
+                    <h5>Responsive</h5>
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:selectManyCheckbox id="grid2"
+                                              value="#{rolesPermissionsBean.permissionsEntities}"
+                                              layout="responsive"
+                                              columns="3">
+                            <f:selectItems value="#{permissionsBean.permissionsEntityList}" var="rolesPermissions"
+                                           itemLabel="#{rolePermissions}" itemValue="#{rolesPermissions.id}"/>
+                        </p:selectManyCheckbox>
+                    </h:panelGroup>
+
+
+                    <p:commandButton value="Confirmer Valider" action="#{rolesPermissionsBean.manageRolesPermissions}"
+                                     process="@form" ajax="=false"/>
+                </p:panelGrid>
+
+
+            </h:form>
+
+
+            <p:messages id="messages" showDetail="true">
+                <p:autoUpdate/>
+            </p:messages>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
