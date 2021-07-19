@@ -27,6 +27,7 @@ public class UsersEmailFrontValidator implements Validator {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+
         CheckEntities checkEntities = new CheckEntities();
 
         UsersEntity usersEntity = new UsersEntity();

@@ -27,15 +27,15 @@
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                         <p:inputText id="contactFirstName" value="#{contactsBean.contactsEntity.firstname}"
-                                     required="true"
-                                     requiredMessage="#{bundle['contacts.firstnameNotValid']}"/>
+                                     required="true" requiredMessage="#{bundle['contacts.firstnameNotValid']}"
+                        />
                         <label>#{bundle['contacts.firstname']}</label>
                     </h:panelGroup>
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                         <p:inputText id="contactLastName" value="#{contactsBean.contactsEntity.lastname}"
-                                     required="true"
-                                     requiredMessage="#{bundle['contacts.lastnameNotValid']}"/>
+                                     required="true" requiredMessage="#{bundle['contacts.lastnameNotValid']}"
+                        />
                         <label>#{bundle['contacts.lastname']}</label>
                     </h:panelGroup>
 
@@ -52,7 +52,10 @@
 
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputNumber id="phoneNumber" value="#{contactsBean.contactsEntity.phoneNumber}"/>
+                        <p:inputMask id="phoneNumber" value="#{contactsBean.contactsEntity.phoneNumber}"
+                                     mask="+32 999999999">
+                            <f:validator validatorId="contactPhoneNumberValidator"/>
+                        </p:inputMask>
                         <label>#{bundle['contacts.phoneNumberLabel']}</label>
                     </h:panelGroup>
 
@@ -64,7 +67,8 @@
                                         itemLabel="#{contactType.label}"
                                         itemValue="#{contactType}"
                                         converter="contactTypesConverter"
-                                        scrollHeight="250" placeholder="#{bundle['contacts.chooseJobTitles']}"/>
+                                        scrollHeight="250" placeholder="#{bundle['contacts.chooseContactType']}"
+                                        required="true" requiredMessage="#{bundle['contacts.ContactTypeNotValid']}"/>
                     </h:panelGroup>
                 </p:panelGrid>
 
