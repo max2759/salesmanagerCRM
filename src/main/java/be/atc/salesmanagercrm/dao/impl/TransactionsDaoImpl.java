@@ -55,6 +55,15 @@ public class TransactionsDaoImpl extends EntityFinderImpl<TransactionsEntity> im
     }
 
     @Override
+    public List<TransactionsEntity> findAllByPhase(EntityManager em, int idUser, String phaseTransaction) {
+        return em.createNamedQuery("Transactions.findAllByPhase",
+                TransactionsEntity.class)
+                .setParameter("idUser", idUser)
+                .setParameter("phaseTransaction", phaseTransaction)
+                .getResultList();
+    }
+
+    @Override
     public void update(EntityManager em, TransactionsEntity entity) {
         em.merge(entity);
     }

@@ -31,7 +31,7 @@
             <div align="right" class="modalValidateBtn-margin-top">
                <p:commandButton value="#{jobtitlesBean.sendType eq 'add' ? bundle['save'] : bundle['edit']}"
                                 icon="ui-icon-check"
-                                update="@(form) facesMessage" process="@this" action="#{jobtitlesBean.saveJobTitles}"
+                                update="@(form) facesMessage" action="#{jobtitlesBean.saveJobTitles}"
                                 onclick="PF('jobTitlesModal').close();"/>
             </div>
          </h:form>

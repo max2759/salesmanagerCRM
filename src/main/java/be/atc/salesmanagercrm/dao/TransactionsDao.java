@@ -20,5 +20,7 @@ public interface TransactionsDao {
 
     List<TransactionsEntity> findAll(EntityManager em, int idUser);
 
+    List<TransactionsEntity> findAllByPhase(EntityManager em, int idUser, String phaseTransaction);
+
     void update(EntityManager em, TransactionsEntity entity);
 }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite">
+
+<cc:interface name="listAlltransactions"
+              displayName="#{bundle['transactions.list']}"
+              shortDescription="#{bundle['transactions.list']}"
+>
+</cc:interface>
+<cc:implementation>
+    <f:view>
+
+        <h:form id="form">
+            <p:tabView>
+
+                <p:tab id="displayAll" title="#{bundle['all']} (#{transactionsBean.transactionsEntities.size()})">
+                    <p:dataTable paginator="true" rows="10"
+                                 selection="#{transactionsBean.selectedtransactionEntity}" selectionMode="single"
+                                 paginatorPosition="bottom"
+                                 rowKey="#{transaction.id}"
+                                 emptyMessage="#{bundle['transactions.notFound']}"
+                                 var="transaction"
+                                 rowsPerPageTemplate="10,20,50"
+                                 value="#{transactionsBean.transactionsEntities}"
+                                 widgetVar="displayAllEntities"
+                                 filteredValue="#{transactionsBean.transactionsEntitiesFiltered}"
+                                 rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? false : true}">
+
+
+                        <p:column colspan="5" width="500" headerText="#{bundle['transactions.title']}"
+                                  sortBy="#{transaction.title}"
+                                  filterBy="#{transaction.title}"
+                                  filterMatchMode="contains">
+                            <p:outputLabel id="titleAll" value="#{transaction.title}"/>
+                        </p:column>
+
+                        <p:column colspan="1" headerText="#{bundle['transactions.contact']}"
+                                  sortBy="#{transaction.contactsByIdContacts.lastname.concat(transaction.contactsByIdContacts.firstname)}">
+                            <h:outputText
+                                    value="#{transaction.contactsByIdContacts.lastname} #{transaction.contactsByIdContacts.firstname}"/>
+                        </p:column>
+
+                        <p:column colspan="1" headerText="#{bundle['transactions.company']}"
+                                  sortBy="#{transaction.companiesByIdCompanies.label}">
+                            <h:outputText value="#{transaction.companiesByIdCompanies.label}"/>
+                        </p:column>
+
+                        <p:column colspan="1" width="190" headerText="#{bundle['transactions.endDate']}"
+                                  sortBy="#{transaction.endDate}">
+                            <h:outputText value="#{transaction.endDate}">
+                                <f:convertDateTime type="localDate"
+                                                   pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                    <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
+                                     rendered="#{tasksBean.tasksEntities.size() eq 0 ? true : false}"/>
+                </p:tab>
+
+            </p:tabView>
+        </h:form>
+
+    </f:view>
+</cc:implementation>
+</html>

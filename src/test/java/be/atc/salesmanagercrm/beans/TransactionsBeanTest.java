@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -225,6 +226,60 @@ class TransactionsBeanTest {
 
         entity.setId(2);
         transactionsBean.delete(entity, idUser);
+
+    }
+
+    @Test
+    void findAllByPhase() {
+        int idUser = 1;
+        String phaseTransaction = "Prospection";
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findAllByPhase(idUser, phaseTransaction);
+
+
+        boolean test = !transactionsEntities.isEmpty();
+
+        log.info("Le test vaut : " + test + ". La liste contient : " + (long) transactionsEntities.size() + " transactions");
+
+        assertThat(test).isEqualTo(true);
+    }
+
+    @Test
+    void entitiesToFind() {
+
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findAll(1);
+
+        List<TransactionsEntity> transactionsEntitiesProspection = transactionsEntities.stream()
+                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Prospection"))
+                .collect(Collectors.toList());
+
+        List<TransactionsEntity> transactionsEntitiesQualification = transactionsEntities.stream()
+                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Qualification"))
+                .collect(Collectors.toList());
+
+        List<TransactionsEntity> transactionsEntitiesProposition = transactionsEntities.stream()
+                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Proposition"))
+                .collect(Collectors.toList());
+
+        List<TransactionsEntity> transactionsEntitiesNegociation = transactionsEntities.stream()
+                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Négociation"))
+                .collect(Collectors.toList());
+
+        List<TransactionsEntity> transactionsEntitiesConclue = transactionsEntities.stream()
+                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Conclue"))
+                .collect(Collectors.toList());
+
+        List<TransactionsEntity> transactionsEntitiesAnnulee = transactionsEntities.stream()
+                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Annulé"))
+                .collect(Collectors.toList());
+
+
+        log.info("La liste contient : " + (long) transactionsEntities.size() + " transactions");
+        log.info("La liste contient : " + (long) transactionsEntitiesProspection.size() + " transactions Prospection");
+        log.info("La liste contient : " + (long) transactionsEntitiesQualification.size() + " transactions Qualification");
+        log.info("La liste contient : " + (long) transactionsEntitiesProposition.size() + " transactions Proposition");
+        log.info("La liste contient : " + (long) transactionsEntitiesNegociation.size() + " transactions Négociation");
+        log.info("La liste contient : " + (long) transactionsEntitiesConclue.size() + " transactions Conclues");
+        log.info("La liste contient : " + (long) transactionsEntitiesAnnulee.size() + " transactions Annulées");
 
     }
 }
