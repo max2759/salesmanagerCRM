@@ -177,7 +177,7 @@ public class TasksBean extends ExtendBean implements Serializable {
         // TODO : Corriger ça
         createNewEntity();
 
-        loadListEntities(getParam("all"));
+        loadListEntities(getParam("typeEntities"));
     }
 
 
