@@ -11,7 +11,7 @@ public interface UsersDao {
 
     UsersEntity findNUserByUsernameAndPassword(EntityManager em, String username, String password);
 
-    UsersEntity findByUsername(String username);
+    UsersEntity findByUsername(EntityManager em, String username);
 
     void register(EntityManager em, UsersEntity usersEntity);
 

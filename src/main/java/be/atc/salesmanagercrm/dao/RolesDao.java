@@ -17,5 +17,6 @@ public interface RolesDao {
 
     void update(EntityManager em, RolesEntity rolesEntity);
 
+    List<RolesEntity> findForDeleteSafe(EntityManager em, int id);
 
 }

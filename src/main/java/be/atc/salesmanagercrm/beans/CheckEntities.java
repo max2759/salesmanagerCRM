@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.SessionScoped;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
+import java.util.Random;
 
 @Slf4j
 @SessionScoped
@@ -54,6 +55,12 @@ public class CheckEntities implements Serializable {
     @Getter
     @Setter
     private RolesDao rolesDao = new RolesDaoImpl();
+    @Getter
+    @Setter
+    private PermissionsDao permissionsDao = new PermissionsDaoImpl();
+    @Getter
+    @Setter
+    private RolesPermissionsDao rolesPermissionsDao = new RolesPermissionsDaoImpl();
 
 
     /**
@@ -282,7 +289,8 @@ public class CheckEntities implements Serializable {
 
     public void checkUserByUsername(UsersEntity entity) {
         if (entity != null) {
-            UsersEntity usersEntity = usersDao.findByUsername(entity.getUsername());
+            EntityManager em = EMF.getEM();
+            UsersEntity usersEntity = usersDao.findByUsername(em, entity.getUsername());
             if (usersEntity != null) {
                 log.warn("User exists yet", entity.getUsername());
                 throw new InvalidEntityException(
@@ -292,9 +300,35 @@ public class CheckEntities implements Serializable {
         }
     }
 
+
+    public String checkUserByUsernameAuto(String username, int number) {
+        if (!username.isEmpty()) {
+            EntityManager em = EMF.getEM();
+            log.info(username);
+            UsersEntity usersEntity1 = usersDao.findByUsername(em, username + number);
+            if (usersEntity1 != null) {
+                while (usersEntity1 != null) {
+                    Random random = new Random();
+                    number = random.nextInt(99 - 01);
+                    log.info(String.valueOf(number));
+                    if (number < 10) {
+                        number = 0 + number;
+                        log.info(String.valueOf(number));
+                    }
+                    usersEntity1 = usersDao.findByUsername(em, username + number);
+                }
+
+            }
+
+        }
+        return username + number;
+    }
+
+
     /**
      * Check if user exist in DB
-     *use in user
+     * use in user
+     *
      * @param entity : UsersEntity
      */
 
@@ -330,8 +364,57 @@ public class CheckEntities implements Serializable {
         }
     }
 
+    /**
+     * Check if permission exist in DB
+     *
+     * @param entity :PermissionsEntity
+     */
+
+    public void checkPermissions(PermissionsEntity entity) {
+        if (entity != null) {
+            EntityManager em = EMF.getEM();
+            PermissionsEntity permissionsEntity = permissionsDao.findById(em, entity.getId());
+            if (permissionsEntity == null) {
+                log.warn("permission doesn't exists yet", entity.getId());
+                throw new EntityNotFoundException(
+                        "Cette permission n'existe pas: " + entity.getId(), ErrorCodes.PERMISSION_NOT_FOUND
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if combo exist in DB
+     */
+
+    public void checkComboRolePerm(int idRole, int idPermission) {
+        if (idRole > 0 && idPermission >= 0) {
+            EntityManager em = EMF.getEM();
+            RolesPermissionsEntity rolesPermissionsEntity = rolesPermissionsDao.getComboRolePerm(em, idRole, idPermission);
+            if (rolesPermissionsEntity != null) {
+                log.warn("Combo exists yet");
+                throw new InvalidEntityException(
+                        "Il y a déjà un combo existant: " + ErrorCodes.ROLE_PERMISSION_DUPLICATE
+                );
+            }
+        }
+    }
 
 
+    public void checkForSafeDeleteRole(RolesEntity entity) {
+        if (entity != null) {
+            EntityManager em = EMF.getEM();
+            RolesEntity rolesEntity = (RolesEntity) rolesDao.findForDeleteSafe(em, entity.getId());
+            log.info(String.valueOf(rolesEntity));
+            PermissionsEntity permissionsEntity = permissionsDao.findById(em, entity.getId());
+            if (permissionsEntity == null) {
+                log.warn("permission doesn't exists yet", entity.getId());
+                throw new EntityNotFoundException(
+                        "Cette permission n'existe pas: " + entity.getId(), ErrorCodes.PERMISSION_NOT_FOUND
+                );
+            }
+        }
+    }
 
 
 }

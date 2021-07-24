@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.dao.RolesPermissionsDao;
 import be.atc.salesmanagercrm.entities.RolesPermissionsEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 /**
@@ -24,6 +25,14 @@ public class RolesPermissionsDaoImpl implements RolesPermissionsDao {
                 .getResultList();
     }
 
+    @Override
+    public List<RolesPermissionsEntity> findAllRolesPermissionsWithIdRole(EntityManager em, int idRole) {
+        return em.createNamedQuery("RolesPermissions.findAllRolesPermissionsWithIdRole",
+                RolesPermissionsEntity.class)
+                .setParameter("idRole", idRole)
+                .getResultList();
+    }
+
 
     @Override
     public void update(EntityManager em, RolesPermissionsEntity rolesPermissionsPermissionsEntity) {
@@ -31,8 +40,42 @@ public class RolesPermissionsDaoImpl implements RolesPermissionsDao {
     }
 
     @Override
-    public void addRolePermissions(EntityManager em, RolesPermissionsEntity rolesPermissionsPermissionsEntity) {
+    public void addRolePermissions(EntityManager em, RolesPermissionsEntity rolesPermissionsEntity) {
+        em.persist(rolesPermissionsEntity);
+    }
 
+    @Override
+    public void delete(EntityManager em, RolesPermissionsEntity entity) {
+        em.remove(em.merge(entity));
+    }
+
+    @Override
+    public void deleteRolesPermissions(EntityManager em, int idRole) {
+        em.createNamedQuery("RolesPermissions.deleteRolesPermissions",
+                RolesPermissionsEntity.class)
+                .setParameter("idRole", idRole)
+                .executeUpdate();
+
+    }
+
+    @Override
+    public RolesPermissionsEntity getComboRolePerm(EntityManager em, int idRole, int idPerm) {
+        try {
+            return em.createNamedQuery("RolesPermissions.findComboRolePermission",
+                    RolesPermissionsEntity.class)
+                    .setParameter("idRole", idRole)
+                    .setParameter("idPermission", idPerm)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    public List<RolesPermissionsEntity> findPermissionWithRole(EntityManager em, int idRole) {
+        return em.createNamedQuery("RolesPermissions.findPermissionWithRole",
+                RolesPermissionsEntity.class)
+                .setParameter("idRole", idRole)
+                .getResultList();
     }
 
 

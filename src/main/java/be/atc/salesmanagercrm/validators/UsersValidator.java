@@ -3,10 +3,12 @@ package be.atc.salesmanagercrm.validators;
 import be.atc.salesmanagercrm.dao.UsersDao;
 import be.atc.salesmanagercrm.dao.impl.UsersDaoImpl;
 import be.atc.salesmanagercrm.entities.UsersEntity;
+import be.atc.salesmanagercrm.utils.EMF;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -46,17 +48,11 @@ public class UsersValidator {
         } else if (!validateEmail(entity)) {
             errors.add("Votre email n'est pas valide");
         }
-        if (entity.getPassword() == null || entity.getPassword().isEmpty() || pass2 == null || pass2.isEmpty()) {
-            errors.add("Votre mot de passe ne peut pas être vide");
-        } else if (!validatePassword(entity.getPassword()) || !validatePassword(pass2)) {
-            errors.add("Votre mot de passe doit faire 6 caractéres, posséder une majuscule et un chiffre ou un caractére spécial");
-        } else if (!vaidateMatchPassword(entity.getPassword(), pass2)) {
-            errors.add("Vos mots de passe doivent être identique");
-        }
-        if (entity.getUsername() == null || entity.getUsername().isEmpty()) {
+
+       /* if (entity.getUsername() == null || entity.getUsername().isEmpty()) {
             errors.add("Votre pseudo ne peux pas être vide");
         }
-
+*/
 
         return errors;
     }
@@ -65,6 +61,7 @@ public class UsersValidator {
         List<String> errors = new ArrayList<>();
 
         log.info(String.valueOf(entity));
+        EntityManager em = EMF.getEM();
 
         if (entity == null) {
             errors.add("La reception des données à échouée");
@@ -87,6 +84,40 @@ public class UsersValidator {
         }
         if (entity.getUsername() == null || entity.getUsername().isEmpty()) {
             errors.add("Votre pseudo ne peux pas être vide");
+        } else if (dao.findByUsername(em, entity.getUsername()) != null) {
+            errors.add("Votre pseudo est déjà pris");
+        }
+
+
+        return errors;
+    }
+
+    public static List<String> validateUpdateByUser(UsersEntity entity) {
+        List<String> errors = new ArrayList<>();
+
+        log.info(String.valueOf(entity));
+        EntityManager em = EMF.getEM();
+
+        if (entity == null) {
+            errors.add("La reception des données à échouée");
+            errors.add("Veuillez recommencer votre inscription");
+            return errors;
+        }
+        if (entity.getLastname() == null || entity.getLastname().isEmpty()) {
+            errors.add("Le nom de famille est vide");
+        }
+        if (entity.getFirstname() == null || entity.getFirstname().isEmpty()) {
+            errors.add("Le prénom est vide");
+        }
+        if (entity.getEmail() == null || entity.getEmail().isEmpty()) {
+            errors.add("L'email ne peut pas être vide'");
+        } else if (!validateEmail(entity)) {
+            errors.add("Votre email n'est pas valide");
+        }
+        if (entity.getUsername() == null || entity.getUsername().isEmpty()) {
+            errors.add("Votre pseudo ne peux pas être vide");
+        } else if (dao.findByUsername(em, entity.getUsername()) != null) {
+            errors.add("Votre pseudo est déjà pris");
         }
 
 
@@ -94,7 +125,7 @@ public class UsersValidator {
     }
 
     public static boolean validatePassword(String password) {
-        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?])[A-Za-z\\d@$!%*?]{8,}$";
+        String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(password);
 
