@@ -2,6 +2,7 @@ package be.atc.salesmanagercrm.dao.impl;
 
 import be.atc.salesmanagercrm.dao.RolesDao;
 import be.atc.salesmanagercrm.entities.RolesEntity;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * @author Larché Marie-Élise
  */
+@Slf4j
 public class RolesDaoImpl implements RolesDao {
 
 
@@ -44,6 +46,14 @@ public class RolesDaoImpl implements RolesDao {
 
     public void update(EntityManager em, RolesEntity rolesEntity) {
         em.merge(rolesEntity);
+    }
+
+    public List<RolesEntity> findForDeleteSafe(EntityManager em, int id) {
+        return em.createNamedQuery("Roles.findForDeleteSafe",
+                RolesEntity.class)
+                .setParameter("id", id)
+                .getResultList();
+
     }
 
 

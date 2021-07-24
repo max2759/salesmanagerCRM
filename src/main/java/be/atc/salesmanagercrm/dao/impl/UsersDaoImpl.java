@@ -2,7 +2,6 @@ package be.atc.salesmanagercrm.dao.impl;
 
 import be.atc.salesmanagercrm.dao.UsersDao;
 import be.atc.salesmanagercrm.entities.UsersEntity;
-import be.atc.salesmanagercrm.utils.EMF;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -29,8 +28,7 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
-    public UsersEntity findByUsername(String username) {
-        EntityManager em = EMF.getEM();
+    public UsersEntity findByUsername(EntityManager em, String username) {
         try {
             return em.createNamedQuery("Users.findByUsername",
                     UsersEntity.class)

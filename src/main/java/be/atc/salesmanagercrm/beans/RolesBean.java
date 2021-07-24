@@ -7,18 +7,21 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.validators.RolesValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
-
+import java.util.Locale;
 
 
 /**
@@ -43,6 +46,9 @@ public class RolesBean implements Serializable {
     @Getter
     @Setter
     private RolesEntity roleForDialog;
+    @Getter
+    @Setter
+    private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
 
     public void initialiseDialogRoleId(Integer idRole) {
@@ -131,7 +137,12 @@ public class RolesBean implements Serializable {
 
     }
 
-    public void updateRole() {
+    public void updateEntity() {
+        updateRole(this.rolesEntity);
+        rolesEntityList = findAll();
+    }
+
+    protected void updateRole(RolesEntity rolesEntity) {
 
         try {
             validateRoles(rolesEntity);
@@ -162,6 +173,74 @@ public class RolesBean implements Serializable {
         } finally {
             em.clear();
             em.clear();
+        }
+    }
+
+    public void delete(int id) {
+        FacesMessage msg;
+        log.info(String.valueOf(id));
+
+        EntityManager em = EMF.getEM();
+        RolesEntity rolesEntity1 = dao.findById(em, id);
+
+        List<RolesEntity> rolesEntityList2 = dao.findForDeleteSafe(em, rolesEntity1.getId());
+        log.info(String.valueOf(rolesEntityList2));
+
+        if (dao.findForDeleteSafe(em, rolesEntity1.getId()) == null || dao.findForDeleteSafe(em, rolesEntity1.getId()).size() == 0) {
+            rolesEntity1.setActive(false);
+
+            EntityTransaction tx = null;
+            try {
+                tx = em.getTransaction();
+                tx.begin();
+                dao.update(em, rolesEntity1);
+                tx.commit();
+                log.info("Delete ok");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.deleted"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } catch (Exception ex) {
+                if (tx != null && tx.isActive()) tx.rollback();
+                log.error("Delete Error");
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } finally {
+                em.clear();
+                em.close();
+            }
+        } else {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "role.activeUserHaveTheRole"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+
+
+    }
+
+    public void activate(int id) {
+        FacesMessage msg;
+        log.info(String.valueOf(id));
+
+        EntityManager em = EMF.getEM();
+        RolesEntity rolesEntity1 = dao.findById(em, id);
+
+        rolesEntity1.setActive(true);
+
+        EntityTransaction tx = null;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            dao.update(em, rolesEntity1);
+            tx.commit();
+            log.info("Delete ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.activate"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } catch (Exception ex) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            log.error("Delete Error");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } finally {
+            em.clear();
+            em.close();
         }
     }
 

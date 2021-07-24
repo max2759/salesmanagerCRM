@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.dao.PermissionsDao;
 import be.atc.salesmanagercrm.entities.PermissionsEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 /**
@@ -30,5 +31,16 @@ public class PermissionsDaoImpl implements PermissionsDao {
         em.persist(permissionsEntity);
     }
 
+    @Override
+    public PermissionsEntity findByLabel(EntityManager em, String label) {
+        try {
+            return em.createNamedQuery("Permissions.findByLabel",
+                    PermissionsEntity.class)
+                    .setParameter("label", label)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 
 }

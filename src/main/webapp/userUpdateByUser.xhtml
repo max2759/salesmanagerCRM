@@ -9,28 +9,23 @@
     <ui:define name="content">
 
         <f:metadata>
-            <f:viewAction action="#{rolesBean.findAllRoles}"/>
+            <f:viewAction action="#{usersBean.findUser}"/>
         </f:metadata>
 
         <h:body>
             <h:form>
-
-                <p:outputLabel value="#{bundle['user.username']}"></p:outputLabel>
-                <h:inputText value="#{user.lastname}"></h:inputText>
+                username, password, email, recup de l'id du gus pour afficher ce formulaire
 
                 <p:outputLabel value="#{bundle['user.password']}"></p:outputLabel>
-                <h:inputText value="#{user.lastname}"></h:inputText>
-
-                <p:outputLabel value="#{bundle['lastname']}"></p:outputLabel>
-                <h:inputText value="#{user.lastname}"></h:inputText>
+                <h:inputText value="#{usersBean.usersEntity.password}"></h:inputText>
 
                 <p:outputLabel value="#{bundle['email']}"> * </p:outputLabel>
-                <p:inputText value="#{user.email}">
+                <p:inputText value="#{usersBean.usersEntity.email}">
                     <f:validator validatorId="userEmailValidator"></f:validator>
                 </p:inputText>
 
 
-                <p:commandButton value="Valider" action="#{usersBean.register}"/>
+                <p:commandButton value="Valider" action="#{usersBean.updateByUser}"/>
 
 
             </h:form>

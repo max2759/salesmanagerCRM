@@ -13,5 +13,7 @@ public interface PermissionsDao {
 
     void register(EntityManager em, PermissionsEntity permissionsEntity);
 
+    PermissionsEntity findByLabel(EntityManager em, String label);
+
 
 }

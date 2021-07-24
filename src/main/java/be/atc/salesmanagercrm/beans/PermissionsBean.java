@@ -3,6 +3,8 @@ package be.atc.salesmanagercrm.beans;
 import be.atc.salesmanagercrm.dao.PermissionsDao;
 import be.atc.salesmanagercrm.dao.impl.PermissionsDaoImpl;
 import be.atc.salesmanagercrm.entities.PermissionsEntity;
+import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
+import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.utils.EMF;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,6 +54,27 @@ public class PermissionsBean implements Serializable {
         em.close();
 
         return permissionsEntities;
+    }
+
+
+    public PermissionsEntity findByLabel(String label) {
+        if (label == null) {
+            log.info("label null in permbean");
+            return null;
+        }
+
+        EntityManager em = EMF.getEM();
+
+        try {
+            return dao.findByLabel(em, label);
+        } catch (Exception exception) {
+            log.info("nothing in roles bean");
+            throw new EntityNotFoundException("aucune permission avec le label " + label + " n'a été trouvé en db", ErrorCodes.ROLES_NOT_FOUND);
+        } finally {
+            em.clear();
+            em.close();
+        }
+
     }
 
 

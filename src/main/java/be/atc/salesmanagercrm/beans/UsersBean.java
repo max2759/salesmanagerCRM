@@ -8,13 +8,13 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.validators.UsersValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.mgt.SecurityManager;
@@ -23,15 +23,18 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Factory;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.Serializable;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 
 /**
@@ -66,12 +69,14 @@ public class UsersBean implements Serializable {
     @Getter
     @Setter
     private boolean showPopup;
+    @Getter
+    @Setter
+    private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Getter
     @Setter
     private UsersEntity userForDialog;
 
-    private HttpServletRequest request;
 
     public void initialiseDialogUserId(Integer idUser) {
         if (idUser == null || idUser < 1) {
@@ -82,12 +87,10 @@ public class UsersBean implements Serializable {
     }
 
 
-    /**
-     * @throws NoSuchAlgorithmException
-     */
-    @RequiresAuthentication
-    // @RequiresPermissions("addUsers")
     public void register() {
+
+        FacesMessage msg;
+        FacesMessage msg1;
 
         Subject currentUser = SecurityUtils.getSubject();
         //test a typed permission (not instance-level)
@@ -116,8 +119,38 @@ public class UsersBean implements Serializable {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
+        String firstName3Cara;
+        String lastName3Cara;
+
+        if (usersEntity.getFirstname().length() >= 3) {
+            firstName3Cara = usersEntity.getFirstname().substring(0, 3);
+            log.info(firstName3Cara);
+        } else {
+            char randomLetter = (char) (Math.random() * ('z' - 'a' + 1));
+            firstName3Cara = usersEntity.getFirstname().substring(0, 3) + randomLetter;
+            log.info(firstName3Cara);
+        }
+
+        if (usersEntity.getLastname().length() >= 3) {
+            lastName3Cara = usersEntity.getLastname().substring(0, 3);
+            log.info(lastName3Cara);
+        } else {
+            char randomLetter = (char) (Math.random() * ('z' - 'a' + 1));
+            lastName3Cara = usersEntity.getLastname().substring(0, 3) + randomLetter;
+            log.info(lastName3Cara);
+        }
+
+
+        String usernameWithoutNumber = firstName3Cara + lastName3Cara;
+
+        Random random = new Random();
+        int number = random.nextInt(99 - 1);
 
         CheckEntities checkEntities = new CheckEntities();
+
+        String username = checkEntities.checkUserByUsernameAuto(usernameWithoutNumber, number);
+        usersEntity.setUsername(username);
+
         try {
             checkEntities.checkUserByUsername(usersEntity);
         } catch (InvalidEntityException exception) {
@@ -133,8 +166,13 @@ public class UsersBean implements Serializable {
         }
 
 
-        String password = usersEntity.getPassword();
-        String hashPass = encrypt(password);
+        char[] passwordUncrypted = aleaPassword();
+
+
+        String passwordUncrypt = new String(passwordUncrypted);
+
+        //      String password = usersEntity.getPassword();
+        String hashPass = encrypt(passwordUncrypt);
         log.info(hashPass);
 
         //ici, remplacer par un converter pour le hashage du mdp
@@ -150,6 +188,7 @@ public class UsersBean implements Serializable {
 
 
         usersEntity.setPassword(hashPass);
+
         usersEntity.setActive(true);
         usersEntity.setRegisterDate(LocalDateTime.now());
 
@@ -163,9 +202,15 @@ public class UsersBean implements Serializable {
             dao.register(em, usersEntity);
             tx.commit();
             log.info("Persist ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.registerUsername"), username);
+            msg1 = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.registerPassword"), passwordUncrypt);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            FacesContext.getCurrentInstance().addMessage(null, msg1);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorRegister"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();
@@ -173,7 +218,7 @@ public class UsersBean implements Serializable {
 
     }
 
-    public void connection() {
+    public void connection() throws IOException {
         //Example using most common scenario of username/password pair:
         //https://shiro.apache.org/authentication.html
 
@@ -248,81 +293,66 @@ public class UsersBean implements Serializable {
         //    System.exit(0);
 //no problem
         //faire le truc des roles
-
+        FacesContext ctx = FacesContext.getCurrentInstance();
+        ctx.getExternalContext().redirect("userUpdateByUser.xhtml");
     }
 
-/*
+    public void delete(int id) {
+        FacesMessage msg;
+        log.info(String.valueOf(id));
 
-    public void connection(UsersEntity usersEntity) {
-        log.info("My First Apache Shiro Application");
+        EntityManager em = EMF.getEM();
+        UsersEntity usersEntity1 = dao.findById(em, id);
 
-        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
-        SecurityManager securityManager = factory.getInstance();
-        SecurityUtils.setSecurityManager(securityManager);
+        usersEntity1.setActive(false);
 
-        // get the currently executing user:
-        Subject currentUser = SecurityUtils.getSubject();
-
-        // Do some stuff with a Session (no need for a web or EJB container!!!)
-        Session session = currentUser.getSession();
-        session.setAttribute("someKey", "aValue");
-        String value = (String) session.getAttribute("someKey");
-        if (value.equals("aValue")) {
-            log.info("Retrieved the correct value! [" + value + "]");
+        EntityTransaction tx = null;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            dao.update(em, usersEntity1);
+            tx.commit();
+            log.info("Delete ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.deleted"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } catch (Exception ex) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            log.error("Delete Error");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } finally {
+            em.clear();
+            em.close();
         }
-
-        // let's login the current user so we can check against roles and permissions:
-        if (!currentUser.isAuthenticated()) {
-            UsernamePasswordToken token = new UsernamePasswordToken("lonestarr", "vespa");
-            token.setRememberMe(true);
-            try {
-                currentUser.login(token);
-            } catch (UnknownAccountException uae) {
-                log.info("There is no user with username of " + token.getPrincipal());
-            } catch (IncorrectCredentialsException ice) {
-                log.info("Password for account " + token.getPrincipal() + " was incorrect!");
-            } catch (LockedAccountException lae) {
-                log.info("The account for username " + token.getPrincipal() + " is locked.  " +
-                        "Please contact your administrator to unlock it.");
-            }
-            // ... catch more exceptions here (maybe custom ones specific to your application?
-            catch (AuthenticationException ae) {
-                //unexpected condition?  error?
-            }
-        }
-
-        //say who they are:
-        //print their identifying principal (in this case, a username):
-        log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
-
-        //test a role:
-        if (currentUser.hasRole("schwartz")) {
-            log.info("May the Schwartz be with you!");
-        } else {
-            log.info("Hello, mere mortal.");
-        }
-
-        //test a typed permission (not instance-level)
-        if (currentUser.isPermitted("lightsaber:wield")) {
-            log.info("You may use a lightsaber ring.  Use it wisely.");
-        } else {
-            log.info("Sorry, lightsaber rings are for schwartz masters only.");
-        }
-
-        //a (very powerful) Instance Level permission:
-        if (currentUser.isPermitted("winnebago:drive:eagle5")) {
-            log.info("You are permitted to 'drive' the winnebago with license plate (id) 'eagle5'.  " +
-                    "Here are the keys - have fun!");
-        } else {
-            log.info("Sorry, you aren't allowed to drive the 'eagle5' winnebago!");
-        }
-
-        //all done - log out!
-        currentUser.logout();
-
-        System.exit(0);
     }
-*/
+
+    public void activate(int id) {
+        FacesMessage msg;
+
+        EntityManager em = EMF.getEM();
+        UsersEntity usersEntity1 = dao.findById(em, id);
+
+        usersEntity1.setActive(true);
+
+        EntityTransaction tx = null;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            dao.update(em, usersEntity1);
+            tx.commit();
+            log.info("Delete ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.deleted"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } catch (Exception ex) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            log.error("Delete Error");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } finally {
+            em.clear();
+            em.close();
+        }
+    }
 
 
     public void findAllUsers() {
@@ -347,7 +377,12 @@ public class UsersBean implements Serializable {
     }
 
 
-    public void updateUsersAdmin() {
+    public void updateByAdmin() {
+        updateUsersAdmin(this.usersEntity);
+        usersEntityList = findAll();
+    }
+
+    private void updateUsersAdmin(UsersEntity usersEntity) {
         log.info("begin updateUsrAdmin" + usersEntity.getUsername());
         log.info(String.valueOf(usersEntity.getEmail()));
 
@@ -403,9 +438,97 @@ public class UsersBean implements Serializable {
 
     }
 
+    public void updateByUser() {
+        userUpdateByUser(this.usersEntity);
+        EntityManager em = EMF.getEM();
+        findById(em, usersEntity.getId());
+    }
+
+    private void userUpdateByUser(UsersEntity usersEntity) {
+        log.info("begin updateUsrByUser" + usersEntity.getUsername());
+
+//pour les mdp, comparer en db AVANT hashage si il correspondent. Si ils corresepondent pas, on le hash et on le modifie
+        // !!! verifier avant d'"hasher le mdp si la regex est ok et si ce n'est pas un mdp deja hashé
+
+        try {
+            validateUsersUpdateByUser(usersEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
+
+        CheckEntities checkEntities = new CheckEntities();
+        int userId = Integer.valueOf(usersEntity.getId());
+        log.info(String.valueOf(usersEntity.getId()));
+
+        EntityManager em = EMF.getEM();
+        UsersEntity usersEntityOld = dao.findById(em, userId);
+        log.info(usersEntityOld.getUsername());
+        log.info(usersEntity.getUsername());
+        if (!usersEntity.getUsername().equals(usersEntityOld.getUsername())) {
+            try {
+                checkEntities.checkUserByUsername(usersEntity);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                return;
+            }
+            usersEntity.setUsername(usersEntity.getUsername());
+        }
+
+        try {
+            checkEntities.checkRole(usersEntity.getRolesByIdRoles());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            return;
+        }
+
+        EntityTransaction tx = null;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            dao.update(em, usersEntity);
+            tx.commit();
+            log.info("Persist ok");
+        } catch (Exception ex) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            log.info("Persist echec");
+        } finally {
+            em.clear();
+            em.clear();
+        }
+    }
+
 
     private String encrypt(String password) {
         return new Sha256Hash(password).toString();
+    }
+
+
+    private char[] aleaPassword() {
+        int length = 8;
+        String symbol = "-/.^&*_!@%=+>)";
+        String cap_letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String small_letter = "abcdefghijklmnopqrstuvwxyz";
+        String numbers = "0123456789";
+        String finalString = cap_letter + small_letter +
+                numbers + symbol;
+        Random random = new Random();
+        char[] password = new char[length];
+        for (int i = 0; i < length; i++) {
+            password[i] =
+                    finalString.charAt(random.nextInt(finalString.length()));
+        }
+        System.out.println(password);
+
+        return password;
+    }
+
+    public void findUser() {
+        log.info(String.valueOf(usersEntity));
+        //rechercher par pseudo
+        EntityManager em = EMF.getEM();
+        usersEntity = dao.findByUsername(em, usersEntity.getUsername());
+        usersEntity = findById(em, usersEntity.getId());
     }
 
 
@@ -425,26 +548,17 @@ public class UsersBean implements Serializable {
         }
     }
 
+    private void validateUsersUpdateByUser(UsersEntity entity) {
+        List<String> errors = UsersValidator.validateUpdateByAdmin(entity);
+        if (!errors.isEmpty()) {
+            log.error("Register is not valide {}", entity);
+            throw new InvalidEntityException("L'inscription n est pas valide", ErrorCodes.USER_NOT_VALID, errors);
+        }
+    }
+
     public void logOut() {
         Subject currentUser = SecurityUtils.getSubject();
         currentUser.logout();
-    }
-
-
-    /**
-     * Ouvrir le popup d'edition ou d'ajout
-     */
-    public void showPopupModal() {
-        log.info("Show PopupModal");
-        showPopup = true;
-    }
-
-    /**
-     * Ouvrir le popup d'edition ou d'ajout
-     */
-    public void hidePopupModal() {
-        log.info("Show PopupModal");
-        showPopup = false;
     }
 
 
