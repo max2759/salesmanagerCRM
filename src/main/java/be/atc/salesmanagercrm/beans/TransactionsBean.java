@@ -10,12 +10,16 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.validators.TransactionsValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -23,7 +27,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Younes Arifi
@@ -31,7 +34,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Named(value = "transactionsBean")
 @ViewScoped
-public class TransactionsBean implements Serializable {
+public class TransactionsBean extends ExtendBean implements Serializable {
 
     private static final long serialVersionUID = -5437009720221374165L;
 
@@ -50,55 +53,75 @@ public class TransactionsBean implements Serializable {
     @Setter
     private List<TransactionsEntity> transactionsEntities;
     @Getter
-    @Setter
-    private List<TransactionsEntity> transactionsEntitiesProspection;
+    private final LocalDateTime now = LocalDateTime.now().plusSeconds(10);
     @Getter
     @Setter
-    private List<TransactionsEntity> transactionsEntitiesQualification;
-    @Getter
-    @Setter
-    private List<TransactionsEntity> transactionsEntitiesProposition;
-    @Getter
-    @Setter
-    private List<TransactionsEntity> transactionsEntitiesNegociation;
-    @Getter
-    @Setter
-    private List<TransactionsEntity> transactionsEntitiesConclue;
-    @Getter
-    @Setter
-    private List<TransactionsEntity> transactionsEntitiesAnnulee;
+    private List<TransactionsEntity> transactionsEntitiesFiltered;
+    @Inject
+    private UsersBean usersBean;
 
+    /**
+     * Save entity form
+     */
+    public void saveEntity() {
+        log.info("method : saveEntity()");
+
+        log.info("TransactionsEntity = : " + transactionsEntity);
+        usersBean.getUsersEntity().setId(1);
+
+        transactionsEntity.setUsersByIdUsers(usersBean.getUsersEntity());
+
+        save(transactionsEntity);
+
+    }
+
+    /**
+     * Update Entity form
+     */
+    public void updateEntity() {
+        log.info("method : updateEntity()");
+        log.info("transactionsEntity = : " + this.transactionsEntity);
+
+        update(this.transactionsEntity);
+
+        findAllEntitiesAndFilter();
+    }
+
+    /**
+     * Method for delete entity
+     */
+    public void deleteEntity() {
+        log.info("method : deleteEntity()");
+        // TODO : Corriger l idUser
+        delete(Integer.parseInt(getParam("idEntity")), 1);
+
+        findAllEntitiesAndFilter();
+
+    }
+
+    /**
+     * Update entity form
+     */
+    public void showModalUpdate() {
+        log.info("method : showModalUpdate()");
+        log.info("param : " + getParam("idEntity"));
+        transactionsEntity = findById(Integer.parseInt(getParam("idEntity")), 1);
+    }
+
+    /**
+     * Create New instance
+     */
+    public void createNewEntity() {
+        log.info("method : createNewEntity()");
+        transactionsEntity = new TransactionsEntity();
+    }
 
     /**
      * Find All Transactions and filter
      */
     public void findAllEntitiesAndFilter() {
         // TODO : Remplacer par user
-        this.transactionsEntities = transactionsEntities = findAll(1);
-
-        this.transactionsEntitiesProspection = transactionsEntities.stream()
-                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Prospection"))
-                .collect(Collectors.toList());
-
-        this.transactionsEntitiesQualification = transactionsEntities.stream()
-                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Qualification"))
-                .collect(Collectors.toList());
-
-        this.transactionsEntitiesProposition = transactionsEntities.stream()
-                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Proposition"))
-                .collect(Collectors.toList());
-
-        this.transactionsEntitiesNegociation = transactionsEntities.stream()
-                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Négociation"))
-                .collect(Collectors.toList());
-
-        this.transactionsEntitiesConclue = transactionsEntities.stream()
-                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Conclue"))
-                .collect(Collectors.toList());
-
-        this.transactionsEntitiesAnnulee = transactionsEntities.stream()
-                .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Annulé"))
-                .collect(Collectors.toList());
+        this.transactionsEntities = findAll(1);
     }
 
 
@@ -118,11 +141,15 @@ public class TransactionsBean implements Serializable {
 
         entity.setCreationDate(LocalDateTime.now());
 
+        FacesMessage msg;
+
         if (entity.getEndDate() != null) {
             try {
                 validateTransactionDateEnd(entity);
             } catch (InvalidEntityException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactions.validator.dateEnd"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
         }
@@ -133,9 +160,13 @@ public class TransactionsBean implements Serializable {
             checkEntities.checkUser(entity.getUsersByIdUsers());
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
 
@@ -144,6 +175,8 @@ public class TransactionsBean implements Serializable {
                 checkEntities.checkTransactionTypes(entity.getTransactionTypesByIdTransactionTypes());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactionTypeNotExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
         }
@@ -153,6 +186,8 @@ public class TransactionsBean implements Serializable {
                 checkEntities.checkTransactionPhases(entity.getTransactionPhasesByIdTransactionPhases());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactionPhaseNotExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
         }
@@ -162,6 +197,8 @@ public class TransactionsBean implements Serializable {
                 checkEntities.checkContact(entity.getContactsByIdContacts());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
         }
@@ -171,6 +208,8 @@ public class TransactionsBean implements Serializable {
                 checkEntities.checkCompany(entity.getCompaniesByIdCompanies());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
         }
@@ -189,9 +228,13 @@ public class TransactionsBean implements Serializable {
             transactionHistoriesDao.save(em, transactionHistoriesEntity);
             tx.commit();
             log.info("Persist ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "transactions.saved"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();
@@ -207,12 +250,19 @@ public class TransactionsBean implements Serializable {
      * @return TransactionsEntity
      */
     protected TransactionsEntity findById(int id, int idUser) {
+
+        FacesMessage msg;
+
         if (id == 0) {
             log.error("Transaction ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
         }
         if (idUser == 0) {
             log.error("User ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
         }
 
@@ -238,12 +288,17 @@ public class TransactionsBean implements Serializable {
      * @return List TransactionsEntities
      */
     protected List<TransactionsEntity> findTransactionsEntityByContactsByIdContacts(int id, int idUser) {
+        FacesMessage msg;
         if (id == 0) {
             log.error("Contact ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
         if (idUser == 0) {
             log.error("User ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
@@ -264,12 +319,17 @@ public class TransactionsBean implements Serializable {
      * @return List TransactionsEntities
      */
     protected List<TransactionsEntity> findTransactionsEntityByCompaniesByIdCompanies(int id, int idUser) {
+        FacesMessage msg;
         if (id == 0) {
             log.error("Company ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
         if (idUser == 0) {
             log.error("User ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
 
@@ -288,8 +348,11 @@ public class TransactionsBean implements Serializable {
      * @return List TransactionsEntity
      */
     protected List<TransactionsEntity> findAll(int idUser) {
+        FacesMessage msg;
         if (idUser == 0) {
             log.error("User ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
@@ -307,8 +370,11 @@ public class TransactionsBean implements Serializable {
      * @return List TransactionsEntity
      */
     protected List<TransactionsEntity> findAllByPhase(int idUser, String phaseTransaction) {
+        FacesMessage msg;
         if (idUser == 0) {
             log.error("User ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
@@ -335,11 +401,14 @@ public class TransactionsBean implements Serializable {
             return;
         }
 
+        FacesMessage msg;
         try {
             TransactionsEntity transactionsEntityToFind = findById(entity.getId(), entity.getUsersByIdUsers().getId());
             entity.setCreationDate(transactionsEntityToFind.getCreationDate());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
 
@@ -348,6 +417,8 @@ public class TransactionsBean implements Serializable {
                 validateTransactionDateEnd(entity);
             } catch (InvalidEntityException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactions.validator.dateEnd"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
         }
@@ -358,9 +429,13 @@ public class TransactionsBean implements Serializable {
             checkEntities.checkUser(entity.getUsersByIdUsers());
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
 
@@ -369,6 +444,8 @@ public class TransactionsBean implements Serializable {
                 checkEntities.checkTransactionTypes(entity.getTransactionTypesByIdTransactionTypes());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactionTypeNotExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
         }
@@ -378,6 +455,8 @@ public class TransactionsBean implements Serializable {
                 checkEntities.checkTransactionPhases(entity.getTransactionPhasesByIdTransactionPhases());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactionPhaseNotExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
         }
@@ -387,6 +466,8 @@ public class TransactionsBean implements Serializable {
                 checkEntities.checkContact(entity.getContactsByIdContacts());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
         }
@@ -396,6 +477,8 @@ public class TransactionsBean implements Serializable {
                 checkEntities.checkCompany(entity.getCompaniesByIdCompanies());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
         }
@@ -412,9 +495,13 @@ public class TransactionsBean implements Serializable {
             transactionHistoriesDao.save(em, transactionHistoriesEntity);
             tx.commit();
             log.info("Update ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "transactions.updated"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Update echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();
@@ -426,18 +513,31 @@ public class TransactionsBean implements Serializable {
     /**
      * Logical Delete transaction
      *
-     * @param transactionsEntityToDelete TransactionsEntity
+     * @param id     int
+     * @param idUser int
      */
-    protected void delete(TransactionsEntity transactionsEntityToDelete, int idUser) {
-        if (transactionsEntityToDelete == null) {
+    protected void delete(int id, int idUser) {
+        FacesMessage msg;
+        if (id == 0) {
             log.error("Transaction ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-
+        if (idUser == 0) {
+            log.error("User ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+        TransactionsEntity transactionsEntityToDelete;
         try {
-            transactionsEntityToDelete = findById(transactionsEntityToDelete.getId(), idUser);
+            transactionsEntityToDelete = findById(id, idUser);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
         }
 
         transactionsEntityToDelete.setActive(false);
@@ -450,9 +550,13 @@ public class TransactionsBean implements Serializable {
             dao.update(em, transactionsEntityToDelete);
             tx.commit();
             log.info("Logical delete ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "transactions.deleted"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Logical delete echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();

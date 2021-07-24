@@ -9,7 +9,6 @@ import java.util.Objects;
 @NamedQueries({
         @NamedQuery(name = "TaskTypes.findAll", query = "SELECT tT from TaskTypesEntity tT"),
         @NamedQuery(name = "TaskTypes.findTaskTypesEntityByLabel", query = "SELECT tT from TaskTypesEntity tT where tt.label = :label"),
-
 })
 public class TaskTypesEntity {
     private int id;

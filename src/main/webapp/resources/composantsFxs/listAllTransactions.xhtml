@@ -5,6 +5,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
       xmlns:cc="http://java.sun.com/jsf/composite">
 
 <cc:interface name="listAlltransactions"
@@ -14,55 +15,85 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
+        <p:dialog header="#{bundle['transactions.update']}" id="dlg2" widgetVar="dlg2" modal="true" responsive="true"
+                  showEffect="fade">
+            <fxs:updateTransactions id="updateTransactions"/>
+        </p:dialog>
 
         <h:form id="form">
-            <p:tabView>
+            <p:dataTable paginator="true" rows="10"
+                         selection="#{transactionsBean.selectedtransactionEntity}" selectionMode="single"
+                         paginatorPosition="bottom"
+                         rowKey="#{transaction.id}"
+                         emptyMessage="#{bundle['transactions.notFound']}"
+                         var="transaction"
+                         rowsPerPageTemplate="10,20,50"
+                         value="#{transactionsBean.transactionsEntities}"
+                         widgetVar="displayAllEntities"
+                         filteredValue="#{transactionsBean.transactionsEntitiesFiltered}"
+                         rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? false : true}">
 
-                <p:tab id="displayAll" title="#{bundle['all']} (#{transactionsBean.transactionsEntities.size()})">
-                    <p:dataTable paginator="true" rows="10"
-                                 selection="#{transactionsBean.selectedtransactionEntity}" selectionMode="single"
-                                 paginatorPosition="bottom"
-                                 rowKey="#{transaction.id}"
-                                 emptyMessage="#{bundle['transactions.notFound']}"
-                                 var="transaction"
-                                 rowsPerPageTemplate="10,20,50"
-                                 value="#{transactionsBean.transactionsEntities}"
-                                 widgetVar="displayAllEntities"
-                                 filteredValue="#{transactionsBean.transactionsEntitiesFiltered}"
-                                 rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? false : true}">
+                <p:column width="500" headerText="#{bundle['transactions.name']}"
+                          sortBy="#{transaction.title}"
+                          filterBy="#{transaction.title}"
+                          filterMatchMode="contains">
+                    <p:commandLink id="titleAll" value="#{transaction.title}"
+                                   onclick="PF('dlg2').show();"
+                                   update="@(form) msgs"
+                                   action="#{transactionsBean.showModalUpdate}"
+                    >
+                        <f:param name="idEntity" value="#{transaction.id}"/>
+                        <i class="fa fa-search"></i>
+                    </p:commandLink>
+                </p:column>
 
+                <p:column headerText="#{bundle['transactions.phase']}"
+                          sortBy="#{transaction.transactionPhasesByIdTransactionPhases.label}">
+                    <h:outputText
+                            value="#{transaction.transactionPhasesByIdTransactionPhases.label}"/>
+                </p:column>
 
-                        <p:column colspan="5" width="500" headerText="#{bundle['transactions.title']}"
-                                  sortBy="#{transaction.title}"
-                                  filterBy="#{transaction.title}"
-                                  filterMatchMode="contains">
-                            <p:outputLabel id="titleAll" value="#{transaction.title}"/>
-                        </p:column>
+                <p:column headerText="#{bundle['transactions.endDate']}"
+                          sortBy="#{transaction.endDate}">
+                    <h:outputText value="#{transaction.endDate}">
+                        <f:convertDateTime type="localDate"
+                                           pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                    </h:outputText>
+                </p:column>
 
-                        <p:column colspan="1" headerText="#{bundle['transactions.contact']}"
-                                  sortBy="#{transaction.contactsByIdContacts.lastname.concat(transaction.contactsByIdContacts.firstname)}">
-                            <h:outputText
-                                    value="#{transaction.contactsByIdContacts.lastname} #{transaction.contactsByIdContacts.firstname}"/>
-                        </p:column>
+                <p:column headerText="#{bundle['amount']}"
+                          sortBy="#{transaction.amount}">
+                    <h:outputText value="#{transaction.amount eq null ? ' / ' : transaction.amount}">
+                        <f:convertNumber currencySymbol="€" type="currency"/>
+                    </h:outputText>
+                </p:column>
 
-                        <p:column colspan="1" headerText="#{bundle['transactions.company']}"
-                                  sortBy="#{transaction.companiesByIdCompanies.label}">
-                            <h:outputText value="#{transaction.companiesByIdCompanies.label}"/>
-                        </p:column>
+                <p:column headerText="#{bundle['transactions.contact']}"
+                          sortBy="#{transaction.contactsByIdContacts.lastname.concat(transaction.contactsByIdContacts.firstname)}"
+                          filterBy="#{transaction.contactsByIdContacts.lastname.concat(transaction.contactsByIdContacts.firstname)}"
+                          filterMatchMode="contains">
+                    <h:outputText
+                            value="#{transaction.contactsByIdContacts.lastname} #{transaction.contactsByIdContacts.firstname}"/>
+                </p:column>
 
-                        <p:column colspan="1" width="190" headerText="#{bundle['transactions.endDate']}"
-                                  sortBy="#{transaction.endDate}">
-                            <h:outputText value="#{transaction.endDate}">
-                                <f:convertDateTime type="localDate"
-                                                   pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
-                            </h:outputText>
-                        </p:column>
-                    </p:dataTable>
-                    <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
-                                     rendered="#{tasksBean.tasksEntities.size() eq 0 ? true : false}"/>
-                </p:tab>
+                <p:column headerText="#{bundle['transactions.company']}"
+                          sortBy="#{transaction.companiesByIdCompanies.label}"
+                          filterBy="#{transaction.companiesByIdCompanies.label}"
+                          filterMatchMode="contains">
+                    <h:outputText value="#{transaction.companiesByIdCompanies.label}"/>
+                </p:column>
 
-            </p:tabView>
+                <p:column headerText="#{bundle['transactions.creationDate']}"
+                          sortBy="#{transaction.endDate}">
+                    <h:outputText value="#{transaction.creationDate}">
+                        <f:convertDateTime type="localDate"
+                                           pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                    </h:outputText>
+                </p:column>
+
+            </p:dataTable>
+            <p:staticMessage severity="info" detail="#{bundle['transactions.notFound']}"
+                             rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? true : false}"/>
         </h:form>
 
     </f:view>

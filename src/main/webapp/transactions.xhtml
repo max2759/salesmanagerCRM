@@ -11,11 +11,17 @@
 
         <f:metadata>
             <f:viewAction action="#{transactionsBean.findAllEntitiesAndFilter}"/>
+            <f:viewAction action="#{transactionsBean.createNewEntity}"/>
+            <f:viewAction action="#{transactionPhasesBean.findAllTransactionPhasesEntities}"/>
+            <f:viewAction action="#{transactionTypesBean.findAllTransactionTypesEntities}"/>
         </f:metadata>
 
         <p:growl id="msgs" skipDetailIfEqualsSummary="true"/>
 
         <fxs:listAllTransactions id="listAllTransactions"/>
+
+        <!--                <fxs:createTransactions id="createTransactions"/>-->
+
 
     </ui:define>
 </ui:composition>

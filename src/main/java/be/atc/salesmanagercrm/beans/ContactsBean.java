@@ -143,6 +143,32 @@ public class ContactsBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * Auto Complete form creation
+     *
+     * @param query String
+     * @return List Contacts Entities
+     */
+    public List<ContactsEntity> completeContactsContains(String query) {
+        String queryLowerCase = query.toLowerCase();
+
+        // TODO : à modifier
+        List<ContactsEntity> contactsEntitiesForm = findContactsEntityByIdUser(1);
+
+        return contactsEntitiesForm.stream().filter(t -> (t.getFirstname().toLowerCase().contains(queryLowerCase)) || (t.getLastname().toLowerCase().contains(queryLowerCase))).collect(Collectors.toList());
+    }
+
+    /**
+     * Sort Contacts by group in form
+     *
+     * @param entityGroup
+     * @return
+     */
+
+    public char getContactsEntityGroup(ContactsEntity entityGroup) {
+        return entityGroup.getFirstname().charAt(0);
+    }
+
+    /**
      * Save contact entity
      *
      * @param contactsEntity ContactsEntity

@@ -45,6 +45,14 @@ public class TaskTypesBean implements Serializable {
 
 
     /**
+     * Fill the list with Task Entities
+     */
+    public void findAllTaskTypesEntities() {
+        taskTypesEntities = findAll();
+    }
+
+
+    /**
      * Save TaskType Entity
      *
      * @param entity TaskTypesEntity
@@ -186,12 +194,5 @@ public class TaskTypesBean implements Serializable {
             log.error("TaskType is not valide {}", entity);
             throw new InvalidEntityException("Le type de tache n est pas valide", ErrorCodes.TASKTYPE_NOT_VALID, errors);
         }
-    }
-
-    /**
-     * Fill the list with Task Entities
-     */
-    public void findAllTaskTypesEntities() {
-        taskTypesEntities = findAll();
     }
 }

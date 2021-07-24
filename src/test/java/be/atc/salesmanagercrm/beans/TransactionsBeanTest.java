@@ -225,7 +225,7 @@ class TransactionsBeanTest {
         TransactionsEntity entity = new TransactionsEntity();
 
         entity.setId(2);
-        transactionsBean.delete(entity, idUser);
+        transactionsBean.delete(entity.getId(), idUser);
 
     }
 

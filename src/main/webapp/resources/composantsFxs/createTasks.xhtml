@@ -45,21 +45,21 @@
 
                 <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
                 <p:autoComplete id="Contact" value="#{tasksBean.tasksEntity.contactsByIdContacts}"
-                                completeMethod="#{tasksBean.completeContactsContains}"
+                                completeMethod="#{contactsBean.completeContactsContains}"
                                 var="Contact"
                                 itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
                                 itemValue="#{Contact}"
                                 converter="contactConverter"
-                                groupBy="#{tasksBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
+                                groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
 
                 <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
                 <p:autoComplete id="Company" value="#{tasksBean.tasksEntity.companiesByIdCompanies}"
-                                completeMethod="#{tasksBean.completeCompaniesContains}"
+                                completeMethod="#{companiesBean.completeCompaniesContains}"
                                 var="Company"
                                 itemLabel="#{Company.label}"
                                 itemValue="#{Company}"
                                 converter="companiesConverter"
-                                groupBy="#{tasksBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
+                                groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
 
                 <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"/>
                 <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
