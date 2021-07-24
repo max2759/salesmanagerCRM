@@ -6,6 +6,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "transaction_phases", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "TransactionPhases.findAll", query = "SELECT tP from TransactionPhasesEntity tP"),
+        @NamedQuery(name = "TransactionPhases.findTransactionPhasesEntityByLabel", query = "SELECT tP from TransactionPhasesEntity tP where tP.label = :label"),
+})
 public class TransactionPhasesEntity {
     private int id;
     private String label;

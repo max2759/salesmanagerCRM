@@ -162,6 +162,32 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * Auto Complete form creation
+     *
+     * @param query String
+     * @return List Contacts Entities
+     */
+    public List<CompaniesEntity> completeCompaniesContains(String query) {
+        String queryLowerCase = query.toLowerCase();
+
+        // TODO : à modifier
+        List<CompaniesEntity> companiesEntitiesForm = findCompaniesEntityByIdUser(1);
+
+        return companiesEntitiesForm.stream().filter(t -> t.getLabel().toLowerCase().contains(queryLowerCase)).collect(Collectors.toList());
+    }
+
+    /**
+     * Sort Contacts by group in form
+     *
+     * @param entityGroup
+     * @return
+     */
+    public char getCompaniesEntityGroup(CompaniesEntity entityGroup) {
+        return entityGroup.getLabel().charAt(0);
+    }
+
+
+    /**
      * Find all Companies entities by userID
      *
      * @param idUser idUser

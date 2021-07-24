@@ -28,7 +28,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Younes Arifi
@@ -107,57 +106,6 @@ public class TasksBean extends ExtendBean implements Serializable {
     private ContactsBean contactsBean;
     @Inject
     private CompaniesBean companiesBean;
-
-    /**
-     * Auto Complete form creation
-     *
-     * @param query String
-     * @return List Contacts Entities
-     */
-    public List<ContactsEntity> completeContactsContains(String query) {
-        String queryLowerCase = query.toLowerCase();
-
-        // TODO : à modifier
-        List<ContactsEntity> contactsEntitiesForm = contactsBean.findContactsEntityByIdUser(1);
-
-        return contactsEntitiesForm.stream().filter(t -> (t.getFirstname().toLowerCase().contains(queryLowerCase)) || (t.getLastname().toLowerCase().contains(queryLowerCase))).collect(Collectors.toList());
-    }
-
-    /**
-     * Sort Contacts by group in form
-     *
-     * @param entityGroup
-     * @return
-     */
-
-    public char getContactsEntityGroup(ContactsEntity entityGroup) {
-        return entityGroup.getFirstname().charAt(0);
-    }
-
-    /**
-     * Auto Complete form creation
-     *
-     * @param query String
-     * @return List Contacts Entities
-     */
-    public List<CompaniesEntity> completeCompaniesContains(String query) {
-        String queryLowerCase = query.toLowerCase();
-
-        // TODO : à modifier
-        List<CompaniesEntity> companiesEntitiesForm = companiesBean.findCompaniesEntityByIdUser(1);
-
-        return companiesEntitiesForm.stream().filter(t -> t.getLabel().toLowerCase().contains(queryLowerCase)).collect(Collectors.toList());
-    }
-
-    /**
-     * Sort Contacts by group in form
-     *
-     * @param entityGroup
-     * @return
-     */
-    public char getCompaniesEntityGroup(CompaniesEntity entityGroup) {
-        return entityGroup.getLabel().charAt(0);
-    }
 
     /**
      * Save entity form
@@ -294,6 +242,9 @@ public class TasksBean extends ExtendBean implements Serializable {
 
     }
 
+    /**
+     * Update Entity form
+     */
     public void updateEntity() {
         log.info("method : updateEntity()");
         log.info("Param value : " + getParam("typeEntities"));
@@ -303,7 +254,6 @@ public class TasksBean extends ExtendBean implements Serializable {
 
         // TODO : Modifier avec l id User
         loadListEntities(getParam("typeEntities"));
-
     }
 
     /**
@@ -806,6 +756,8 @@ public class TasksBean extends ExtendBean implements Serializable {
                 checkEntities.checkTaskType(entity.getTaskTypesByIdTaskTypes());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "taskTypeNotExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
         }
@@ -818,7 +770,7 @@ public class TasksBean extends ExtendBean implements Serializable {
             dao.update(em, entity);
             tx.commit();
             log.info("Update ok");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "notes.updated"), null);
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "tasks.updated"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();

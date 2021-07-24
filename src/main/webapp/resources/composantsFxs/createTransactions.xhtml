@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite">
+
+<cc:interface name="createTransactions"
+              displayName="#{bundle['transactions.create']}"
+              shortDescription="#{bundle['transactions.create']}"
+>
+</cc:interface>
+<cc:implementation>
+    <f:view>
+
+        <h:form id="createTransactionForm">
+            <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+
+                <p:outputLabel value="#{bundle['title']} :" for="title"/>
+                <p:inputText id="title" value="#{transactionsBean.transactionsEntity.title}"
+                             placeholder="#{bundle['title']}"
+                             required="true"
+                             requiredMessage="#{bundle['transactions.validator.title']}">
+                    <p:ajax update="msgTitle" event="keyup"/>
+                </p:inputText>
+                <p:message for="title" id="msgTitle" display="message"/>
+
+                <p:outputLabel value="#{bundle['transactions.phase']}:" for="phase"/>
+                <p:selectOneMenu id="phase"
+                                 value="#{transactionsBean.transactionsEntity.transactionPhasesByIdTransactionPhases}"
+                                 converter="transactionPhasesConverter">
+
+                    <f:selectItems value="#{transactionPhasesBean.transactionPhasesEntities}"
+                                   var="transactionPhasesEntities" itemValue="#{transactionPhasesEntities}"
+                                   itemLabel="#{transactionPhasesEntities.label}"/>
+                </p:selectOneMenu>
+
+                <p:outputLabel value="#{bundle['amount']} :" for="amount"/>
+                <p:inputNumber id="amount" value="#{transactionsBean.transactionsEntity.amount}" symbol=" €"
+                               symbolPosition="s" placeholder="9.999,99 €"
+                               decimalSeparator="," thousandSeparator=".">
+                    <p:ajax update="amount"/>
+                </p:inputNumber>
+
+                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"/>
+                <p:calendar placeholder="#{bundle['dueDate']}:" value="#{transactionsBean.transactionsEntity.endDate}"
+                            id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{transactionsBean.now}"/>
+
+                <p:outputLabel value="#{bundle['transactions.type']}:" for="type"/>
+                <p:selectOneMenu id="type"
+                                 value="#{transactionsBean.transactionsEntity.transactionTypesByIdTransactionTypes}"
+                                 converter="transactionTypesConverter">
+
+                    <f:selectItems value="#{transactionTypesBean.transactionTypesEntities}"
+                                   var="transactionTypesEntities" itemValue="#{transactionTypesEntities}"
+                                   itemLabel="#{transactionTypesEntities.label}"/>
+                </p:selectOneMenu>
+
+                <h3>#{bundle['associateWith']}</h3>
+
+                <p:outputLabel value="#{bundle['contact']}:" for="Contact"/>
+                <p:autoComplete id="Contact" value="#{transactionsBean.transactionsEntity.contactsByIdContacts}"
+                                placeholder="#{bundle['contact']}"
+                                completeMethod="#{contactsBean.completeContactsContains}"
+                                var="Contact"
+                                itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
+                                itemValue="#{Contact}"
+                                converter="contactConverter"
+                                groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
+
+                <p:outputLabel value="#{bundle['company']}:" for="Company"/>
+                <p:autoComplete id="Company" value="#{transactionsBean.transactionsEntity.companiesByIdCompanies}"
+                                placeholder="#{bundle['company']}"
+                                completeMethod="#{companiesBean.completeCompaniesContains}"
+                                var="Company"
+                                itemLabel="#{Company.label}"
+                                itemValue="#{Company}"
+                                converter="companiesConverter"
+                                groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
+
+
+                <p:commandButton style="width:auto;margin-bottom:10px;"
+                                 update="@(form) msgs"
+                                 value="#{bundle['save']}"
+                                 action="#{transactionsBean.saveEntity}"
+                >
+                </p:commandButton>
+            </p:panelGrid>
+
+        </h:form>
+
+    </f:view>
+</cc:implementation>
+</html>

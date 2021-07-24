@@ -4,7 +4,6 @@ import be.atc.salesmanagercrm.entities.TasksEntity;
 import be.atc.salesmanagercrm.enums.EnumPriority;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -19,8 +18,7 @@ import java.util.stream.Collectors;
  */
 public class TasksValidator {
     @Getter
-    @Setter
-    private static Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+    private static final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     public static List<String> validate(TasksEntity entity) {
 
