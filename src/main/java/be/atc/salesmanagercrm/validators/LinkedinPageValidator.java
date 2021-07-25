@@ -61,7 +61,7 @@ public class LinkedinPageValidator implements Validator {
     public void checkLinkedinPage(CompaniesEntity companiesEntity) {
 
         if (companiesEntity != null) {
-            Pattern pattern = Pattern.compile("^https?://((www|\\w\\w)\\.)?linkedin.com/");
+            Pattern pattern = Pattern.compile("^https?://((www|\\w\\w)\\.)?linkedin.com\\/.*$");
             Matcher matcher = pattern.matcher(companiesEntity.getLinkedInPage());
             boolean matcherResult = matcher.matches();
 

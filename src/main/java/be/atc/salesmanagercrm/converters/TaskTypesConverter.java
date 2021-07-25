@@ -5,7 +5,6 @@ import be.atc.salesmanagercrm.entities.TaskTypesEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
@@ -24,7 +23,6 @@ import java.util.Locale;
 public class TaskTypesConverter implements Converter {
 
     @Getter
-    @Setter
     private final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
     private final TaskTypesBean taskTypesBean = new TaskTypesBean();
 

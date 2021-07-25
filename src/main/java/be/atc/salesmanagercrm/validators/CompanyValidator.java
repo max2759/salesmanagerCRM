@@ -64,7 +64,6 @@ public class CompanyValidator {
             }
         }
 
-
         if (companiesEntity.getRevenue() != null) {
             if (revenueIsPositive(companiesEntity)) {
                 errors.add("Le nombre entré doit être supérieur à 0");
@@ -73,12 +72,29 @@ public class CompanyValidator {
             }
         }
 
-
         if (!(companiesEntity.getLinkedInPage().equals(""))) {
             if (!(validateLinkedinPage(companiesEntity))) {
                 errors.add("La page LinkedIn doit être valide !");
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "company.LinkedinPageNotValid"), null);
                 FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
+        }
+
+        if (companiesEntity.getBankAccount() != null && !(companiesEntity.getBankAccount().isEmpty())) {
+            if (validateBankAccount(companiesEntity)) {
+                errors.add("Le numéro de compte doit être valide !");
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "company.BankAccountNotValid"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
+        }
+
+        if (companiesEntity.getVatNumber() != null && !(companiesEntity.getVatNumber().isEmpty())) {
+            if (!(validateVATNumber(companiesEntity))) {
+                if (!(checkVATValidity(companiesEntity))) {
+                    errors.add("Le numéro de tva doit être valide !");
+                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "company.VATFormatNotValid"), null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                }
             }
         }
 
@@ -93,7 +109,9 @@ public class CompanyValidator {
     }
 
     public static boolean validateLinkedinPage(CompaniesEntity companiesEntity) {
-        Pattern pattern = Pattern.compile("^https?://((www|\\w\\w)\\.)?linkedin.com/");
+
+        String regex = "^https?://((www|\\w\\w)\\.)?linkedin.com\\/.*$";
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(companiesEntity.getLinkedInPage());
 
         return matcher.find();
@@ -107,5 +125,53 @@ public class CompanyValidator {
     public static boolean revenueIsPositive(CompaniesEntity companiesEntity) {
 
         return companiesEntity.getRevenue() <= 0;
+    }
+
+    public static boolean validateBankAccount(CompaniesEntity companiesEntity) {
+
+        String regex = "BE-[a-zA-Z0-9]{2}\\s?([0-9]{4}\\s?){3}\\s?";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(companiesEntity.getBankAccount());
+
+        log.info("Résultat : " + matcher.find());
+
+        return matcher.find();
+    }
+
+    public static boolean validateVATNumber(CompaniesEntity companiesEntity) {
+
+        String regex = "^[A-Za-z]{2,4}(?=.{2,12}$)[-_\\s0-9]*(?:[a-zA-Z][-_\\s0-9]*){0,2}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(companiesEntity.getVatNumber());
+
+        return matcher.find();
+    }
+
+    public static boolean checkVATValidity(CompaniesEntity companiesEntity) {
+        log.info("Start of CheckVATVAlidity function");
+
+        String response = companiesEntity.getVatNumber();
+
+        String newResponse = response.substring(3);
+
+        log.info("Numéro sans le BE : " + newResponse);
+
+        double newResponseDouble = Double.parseDouble(newResponse);
+
+        double modulo = 97.00;
+
+        double verif = Math.floor(newResponseDouble / 100);
+
+        log.info("Résultat vérif : " + verif);
+
+        Double digit = newResponseDouble % 100;
+
+        log.info("Résultat digit : " + digit);
+
+        Double check = modulo - (verif % modulo);
+
+        log.info("Résultat check : " + check);
+
+        return check.equals(digit);
     }
 }

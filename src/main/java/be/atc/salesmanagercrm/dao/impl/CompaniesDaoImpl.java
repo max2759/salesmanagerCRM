@@ -51,4 +51,12 @@ public class CompaniesDaoImpl extends EntityFinderImpl<CompaniesEntity> implemen
                 .setParameter("idUser", idUser)
                 .getResultList();
     }
+
+    @Override
+    public List<CompaniesEntity> findActiveCompany(EntityManager em, int idUser) {
+        return em.createNamedQuery("Companies.findActiveCompany",
+                CompaniesEntity.class)
+                .setParameter("idUser", idUser)
+                .getResultList();
+    }
 }

@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 @Slf4j
 @FacesValidator("userEmailValidator")
 public class UsersEmailFrontValidator implements Validator {
+
     Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Override
@@ -32,7 +33,6 @@ public class UsersEmailFrontValidator implements Validator {
 
         UsersEntity usersEntity = new UsersEntity();
         usersEntity.setEmail((String) value);
-
 
         try {
             checkEmailRegexe(usersEntity);
@@ -56,8 +56,8 @@ public class UsersEmailFrontValidator implements Validator {
      *
      * @param entity : UsersEntity
      */
-
     public void checkEmailRegexe(UsersEntity entity) {
+
         if (entity != null) {
             Pattern pattern = Pattern.compile("^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\\.[a-z]{2,4}$");
             Matcher matcher = pattern.matcher(entity.getEmail());

@@ -64,9 +64,9 @@ public class ContactPhoneNumberValidator implements Validator {
         if (contactsEntity != null) {
             String regex = "^[\\+]?[(]?[0-9 ]{3}[)]?[0-9]{7,9}$";
             Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(contactsEntity.getPhoneNumber().trim());
+            Matcher matcher = pattern.matcher(contactsEntity.getPhoneNumber());
 
-            log.info(contactsEntity.getPhoneNumber().trim());
+            log.info(contactsEntity.getPhoneNumber());
 
             boolean matcherResult = matcher.matches();
 
