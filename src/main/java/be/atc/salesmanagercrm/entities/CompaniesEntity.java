@@ -26,8 +26,8 @@ public class CompaniesEntity {
     private Double annualSales;
     private Double revenue;
     private String linkedInPage;
-    private LocalDateTime creationDate;
-    private LocalDateTime closingDate;
+    private int creationDate;
+    private int closingDate;
     private String phoneNumber;
     private String email;
     private boolean isActive;
@@ -164,21 +164,21 @@ public class CompaniesEntity {
 
     @Basic
     @Column(name = "Creation_Date")
-    public LocalDateTime getCreationDate() {
+    public int getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(int creationDate) {
         this.creationDate = creationDate;
     }
 
     @Basic
     @Column(name = "Closing_Date")
-    public LocalDateTime getClosingDate() {
+    public int getClosingDate() {
         return closingDate;
     }
 
-    public void setClosingDate(LocalDateTime closingDate) {
+    public void setClosingDate(int closingDate) {
         this.closingDate = closingDate;
     }
 

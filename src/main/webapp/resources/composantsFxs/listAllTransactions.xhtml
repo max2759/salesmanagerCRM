@@ -20,82 +20,83 @@
             <fxs:updateTransactions id="updateTransactions"/>
         </p:dialog>
 
-        <h:form id="form">
-            <p:dataTable paginator="true" rows="10"
-                         selection="#{transactionsBean.selectedtransactionEntity}" selectionMode="single"
-                         paginatorPosition="bottom"
-                         rowKey="#{transaction.id}"
-                         emptyMessage="#{bundle['transactions.notFound']}"
-                         var="transaction"
-                         rowsPerPageTemplate="10,20,50"
-                         value="#{transactionsBean.transactionsEntities}"
-                         widgetVar="displayAllEntities"
-                         filteredValue="#{transactionsBean.transactionsEntitiesFiltered}"
-                         rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? false : true}">
+        <div class="card card-w-title">
+            <h1>#{bundle['transactions.title']}</h1>
+            <h:form id="form">
+                <p:dataTable paginator="true" rows="10"
+                             selection="#{transactionsBean.selectedtransactionEntity}" selectionMode="single"
+                             paginatorPosition="bottom"
+                             rowKey="#{transaction.id}"
+                             emptyMessage="#{bundle['transactions.notFound']}"
+                             var="transaction"
+                             rowsPerPageTemplate="10,20,50"
+                             value="#{transactionsBean.transactionsEntities}"
+                             widgetVar="displayAllEntities"
+                             filteredValue="#{transactionsBean.transactionsEntitiesFiltered}"
+                             rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? false : true}">
 
-                <p:column width="500" headerText="#{bundle['transactions.name']}"
-                          sortBy="#{transaction.title}"
-                          filterBy="#{transaction.title}"
-                          filterMatchMode="contains">
-                    <p:commandLink id="titleAll" value="#{transaction.title}"
-                                   onclick="PF('dlg2').show();"
-                                   update="@(form) msgs"
-                                   action="#{transactionsBean.showModalUpdate}"
-                    >
-                        <f:param name="idEntity" value="#{transaction.id}"/>
-                        <i class="fa fa-search"></i>
-                    </p:commandLink>
-                </p:column>
+                    <p:column width="500" headerText="#{bundle['transactions.name']}"
+                              sortBy="#{transaction.title}"
+                              filterBy="#{transaction.title}"
+                              filterMatchMode="contains">
+                        <p:commandLink id="titleAll" value="#{transaction.title}"
+                                       onclick="PF('dlg2').show();"
+                                       update="@(form) msgs"
+                                       action="#{transactionsBean.showModalUpdate}"
+                        >
+                            <f:param name="idEntity" value="#{transaction.id}"/>
+                        </p:commandLink>
+                    </p:column>
 
-                <p:column headerText="#{bundle['transactions.phase']}"
-                          sortBy="#{transaction.transactionPhasesByIdTransactionPhases.label}">
-                    <h:outputText
-                            value="#{transaction.transactionPhasesByIdTransactionPhases.label}"/>
-                </p:column>
+                    <p:column headerText="#{bundle['transactions.phase']}"
+                              sortBy="#{transaction.transactionPhasesByIdTransactionPhases.label}">
+                        <h:outputText
+                                value="#{transaction.transactionPhasesByIdTransactionPhases.label}"/>
+                    </p:column>
 
-                <p:column headerText="#{bundle['transactions.endDate']}"
-                          sortBy="#{transaction.endDate}">
-                    <h:outputText value="#{transaction.endDate}">
-                        <f:convertDateTime type="localDate"
-                                           pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
-                    </h:outputText>
-                </p:column>
+                    <p:column headerText="#{bundle['transactions.endDate']}"
+                              sortBy="#{transaction.endDate}">
+                        <h:outputText value="#{transaction.endDate}">
+                            <f:convertDateTime type="localDate"
+                                               pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                        </h:outputText>
+                    </p:column>
 
-                <p:column headerText="#{bundle['amount']}"
-                          sortBy="#{transaction.amount}">
-                    <h:outputText value="#{transaction.amount eq null ? ' / ' : transaction.amount}">
-                        <f:convertNumber currencySymbol="€" type="currency"/>
-                    </h:outputText>
-                </p:column>
+                    <p:column headerText="#{bundle['amount']}"
+                              sortBy="#{transaction.amount}">
+                        <h:outputText value="#{transaction.amount eq null ? ' / ' : transaction.amount}">
+                            <f:convertNumber currencySymbol="€" type="currency"/>
+                        </h:outputText>
+                    </p:column>
 
-                <p:column headerText="#{bundle['transactions.contact']}"
-                          sortBy="#{transaction.contactsByIdContacts.lastname.concat(transaction.contactsByIdContacts.firstname)}"
-                          filterBy="#{transaction.contactsByIdContacts.lastname.concat(transaction.contactsByIdContacts.firstname)}"
-                          filterMatchMode="contains">
-                    <h:outputText
-                            value="#{transaction.contactsByIdContacts.lastname} #{transaction.contactsByIdContacts.firstname}"/>
-                </p:column>
+                    <p:column headerText="#{bundle['transactions.contact']}"
+                              sortBy="#{transaction.contactsByIdContacts.lastname.concat(transaction.contactsByIdContacts.firstname)}"
+                              filterBy="#{transaction.contactsByIdContacts.lastname.concat(transaction.contactsByIdContacts.firstname)}"
+                              filterMatchMode="contains">
+                        <h:outputText
+                                value="#{transaction.contactsByIdContacts.lastname} #{transaction.contactsByIdContacts.firstname}"/>
+                    </p:column>
 
-                <p:column headerText="#{bundle['transactions.company']}"
-                          sortBy="#{transaction.companiesByIdCompanies.label}"
-                          filterBy="#{transaction.companiesByIdCompanies.label}"
-                          filterMatchMode="contains">
-                    <h:outputText value="#{transaction.companiesByIdCompanies.label}"/>
-                </p:column>
+                    <p:column headerText="#{bundle['transactions.company']}"
+                              sortBy="#{transaction.companiesByIdCompanies.label}"
+                              filterBy="#{transaction.companiesByIdCompanies.label}"
+                              filterMatchMode="contains">
+                        <h:outputText value="#{transaction.companiesByIdCompanies.label}"/>
+                    </p:column>
 
-                <p:column headerText="#{bundle['transactions.creationDate']}"
-                          sortBy="#{transaction.endDate}">
-                    <h:outputText value="#{transaction.creationDate}">
-                        <f:convertDateTime type="localDate"
-                                           pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
-                    </h:outputText>
-                </p:column>
+                    <p:column headerText="#{bundle['transactions.creationDate']}"
+                              sortBy="#{transaction.endDate}">
+                        <h:outputText value="#{transaction.creationDate}">
+                            <f:convertDateTime type="localDate"
+                                               pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                        </h:outputText>
+                    </p:column>
 
-            </p:dataTable>
-            <p:staticMessage severity="info" detail="#{bundle['transactions.notFound']}"
-                             rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? true : false}"/>
-        </h:form>
-
+                </p:dataTable>
+                <p:staticMessage severity="info" detail="#{bundle['transactions.notFound']}"
+                                 rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? true : false}"/>
+            </h:form>
+        </div>
     </f:view>
 </cc:implementation>
 </html>
