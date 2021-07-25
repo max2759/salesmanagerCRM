@@ -20,4 +20,6 @@ public interface CompaniesDao {
     CompaniesEntity findByIdCompanyAndByIdUser(EntityManager em, int id, int idUser);
 
     List<CompaniesEntity> findCompaniesEntityByIdUser(EntityManager em, int idUser);
+
+    List<CompaniesEntity> findActiveCompany(EntityManager em, int idUser);
 }
