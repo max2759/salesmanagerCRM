@@ -629,6 +629,7 @@ public class TasksBean extends ExtendBean implements Serializable {
      */
     protected void delete(int id, int idUser) {
         FacesMessage msg;
+
         if (id == 0) {
             log.error("Task ID is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);

@@ -5,7 +5,6 @@ import be.atc.salesmanagercrm.entities.ContactsEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
@@ -24,7 +23,6 @@ public class ContactsConverter implements Converter {
     private final ContactsBean contactsBean = new ContactsBean();
 
     @Getter
-    @Setter
     private final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Override

@@ -20,7 +20,7 @@
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                         <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}">
-                            <f:validator validatorId="userEmailValidator"/>
+                            <f:validator validatorId="contactEmailValidator"/>
                         </p:inputText>
                         <label>#{bundle['contacts.emailLabel']}</label>
                     </h:panelGroup>
