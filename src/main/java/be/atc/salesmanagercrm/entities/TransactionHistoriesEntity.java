@@ -6,6 +6,9 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "transaction_histories", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "TransactionHistories.findAllByIdUserAndByIdTransaction", query = "select tH from TransactionHistoriesEntity tH where (tH.transactionsByIdTransactions.id = :idTransaction and tH.transactionsByIdTransactions.usersByIdUsers.id = :idUser and tH.transactionsByIdTransactions.active = true)"),
+})
 public class TransactionHistoriesEntity {
     private int id;
     private LocalDateTime saveDate;

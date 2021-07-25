@@ -60,6 +60,9 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     @Inject
     private UsersBean usersBean;
 
+    @Inject
+    private TransactionHistoriesBean transactionHistoriesBean;
+
     /**
      * Save entity form
      */
@@ -124,6 +127,34 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         this.transactionsEntities = findAll(1);
     }
 
+    public void displayOneTransaction() {
+        log.info("TransactionsBean : displayOneTransaction");
+        log.info("Param : " + getParam("idTransaction"));
+        int idTransaction;
+        FacesMessage msg;
+        try {
+            idTransaction = Integer.parseInt(getParam("idTransaction"));
+        } catch (NumberFormatException exception) {
+            log.info(exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
+        // TODO : Modifier USER
+        usersBean.getUsersEntity().setId(1);
+
+        try {
+            transactionsEntity = findById(idTransaction, usersBean.getUsersEntity().getId());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+        transactionHistoriesBean.findAllEntities(idTransaction, usersBean.getUsersEntity().getId());
+
+    }
 
     /**
      * Save Transaction Entity
