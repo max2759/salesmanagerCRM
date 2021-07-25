@@ -75,7 +75,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     public void saveCompany() {
         save(companiesEntity);
 
-        findAllCompanies();
+        findAllActiveCompanies();
     }
 
     /**
@@ -155,8 +155,11 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     /**
      * Method that call findAll and fill companiesEntityList
      */
-    public void findAllCompanies() {
-        companiesEntityList = findAll(1);
+    public void findAllActiveCompanies() {
+
+        //TODO: à modifier plus tard
+        usersEntity.setId(1);
+        companiesEntityList = findActiveCompanies(usersEntity.getId());
     }
 
     /**
@@ -192,6 +195,9 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @return List CompaniesEntities
      */
     protected List<CompaniesEntity> findAll(int idUser) {
+
+        log.info("Start method findAll");
+
         if (idUser == 0) {
             log.error("User ID is null");
             return Collections.emptyList();
@@ -199,6 +205,35 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
         List<CompaniesEntity> companiesEntities = companiesDao.findAll(em, idUser);
+
+        em.clear();
+        em.close();
+
+        return companiesEntities;
+    }
+
+    /**
+     * Find all active companies
+     *
+     * @param idUser idUser
+     * @return List Active CompaniesEntity
+     */
+    protected List<CompaniesEntity> findActiveCompanies(int idUser) {
+
+        log.info("Start method findActiveCompanies");
+
+        FacesMessage facesMessage;
+
+        if (idUser == 0) {
+            log.error("User ID is null");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return Collections.emptyList();
+        }
+
+        EntityManager em = EMF.getEM();
+
+        List<CompaniesEntity> companiesEntities = companiesDao.findActiveCompany(em, idUser);
 
         em.clear();
         em.close();
@@ -439,7 +474,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Delete compnay by id
+     * Delete company by id
      *
      * @param id id
      */
@@ -468,10 +503,12 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             return;
         }
 
+        companiesEntityToDelete.setActive(false);
+
         try {
             tx = em.getTransaction();
             tx.begin();
-            companiesDao.delete(em, companiesEntityToDelete);
+            companiesDao.update(em, companiesEntityToDelete);
             tx.commit();
             log.info("Delete ok");
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "company.deleted"), null);
@@ -495,7 +532,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         delete(Integer.parseInt(getParam("companiesID")));
 
-        findAllCompanies();
+        findAllActiveCompanies();
     }
 
 }
