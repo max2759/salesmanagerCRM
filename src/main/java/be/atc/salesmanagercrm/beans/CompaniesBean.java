@@ -59,6 +59,9 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     @Setter
     private String sendType = "";
 
+    @Getter
+    private final LocalDateTime now = LocalDateTime.now();
+
     @Inject
     private BranchActivitiesBean branchActivitiesBean;
 
@@ -99,11 +102,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         try {
             checkEntities.checkUser(companiesEntity.getUsersByIdUsers());
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            return;
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
@@ -179,8 +177,8 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     /**
      * Sort Contacts by group in form
      *
-     * @param entityGroup
-     * @return
+     * @param entityGroup CompaniesEntity
+     * @return entity label
      */
     public char getCompaniesEntityGroup(CompaniesEntity entityGroup) {
         return entityGroup.getLabel().charAt(0);
@@ -334,6 +332,170 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         return companyTypesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
 
+    }
+
+
+    /**
+     * Get company by it's ID
+     */
+    public void displayOneCompany() {
+
+        FacesMessage facesMessage;
+
+        log.info("Début méthode displayOneCompany");
+
+        int idCompany = Integer.parseInt(getParam("companyID"));
+
+        log.info("Id de la société : " + idCompany);
+
+        if (idCompany == 0) {
+            log.error("Company ID is null");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "company.error"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            throw new InvalidEntityException("L'Id de l'entreprise n'existe pas", ErrorCodes.COMPANY_NOT_VALID);
+        }
+
+        EntityManager em = EMF.getEM();
+
+        companiesEntity = companiesDao.findById(em, idCompany);
+
+    }
+
+
+    public void updateCompanies() {
+        update(companiesEntity);
+    }
+
+    /**
+     * Update companies
+     *
+     * @param companiesEntity CompaniesEntity
+     */
+    protected void update(CompaniesEntity companiesEntity) {
+
+        FacesMessage facesMessage;
+
+        companiesEntity.setModificationDate(LocalDateTime.now());
+        CheckEntities checkEntities = new CheckEntities();
+
+
+        try {
+            validateCompanies(companiesEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
+
+        try {
+            checkEntities.checkUser(companiesEntity.getUsersByIdUsers());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return;
+        }
+
+        if (companiesEntity.getBranchActivitiesByIdBranchActivities() != null) {
+            try {
+                checkEntities.checkBranchActivities(companiesEntity.getBranchActivitiesByIdBranchActivities());
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "branchActivities.error"), null);
+                FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+                return;
+            }
+        }
+
+        if (companiesEntity.getCompanyTypesByIdCompanyTypes() != null) {
+            try {
+                checkEntities.checkCompanyTypes(companiesEntity.getCompanyTypesByIdCompanyTypes());
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyTypes.error"), null);
+                FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+                return;
+            }
+        }
+
+        EntityManager em = EMF.getEM();
+        EntityTransaction tx = null;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            companiesDao.update(em, companiesEntity);
+            tx.commit();
+            log.info("Update ok");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "company.updated"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        } catch (Exception ex) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            log.info("Update échec");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        } finally {
+            em.clear();
+            em.clear();
+        }
+    }
+
+    /**
+     * Delete compnay by id
+     *
+     * @param id id
+     */
+    protected void delete(int id) {
+
+        FacesMessage facesMessage;
+
+        if (id == 0) {
+            log.error("Task ID is null");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return;
+        }
+
+        CompaniesEntity companiesEntityToDelete;
+        EntityManager em = EMF.getEM();
+        em.getTransaction();
+        EntityTransaction tx = null;
+
+        try {
+            companiesEntityToDelete = companiesDao.findById(em, id);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return;
+        }
+
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            companiesDao.delete(em, companiesEntityToDelete);
+            tx.commit();
+            log.info("Delete ok");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "company.deleted"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        } catch (Exception ex) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            log.info("Delete échec");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        } finally {
+            em.clear();
+            em.clear();
+        }
+    }
+
+    /**
+     * Method for delete
+     */
+    public void deleteCompany() {
+        log.info("method : deleteCompany()");
+
+        delete(Integer.parseInt(getParam("companiesID")));
+
+        findAllCompanies();
     }
 
 }

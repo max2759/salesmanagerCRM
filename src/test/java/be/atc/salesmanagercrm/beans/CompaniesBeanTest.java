@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CompaniesBeanTest {
 
     private CompaniesBean companiesBean;
+    private DateTimeFormatter dateFormatter;
 
     @BeforeEach
     public void init() {
@@ -84,4 +86,60 @@ class CompaniesBeanTest {
         assertThat(test).isEqualTo(true);
 
     }
+
+    @Test
+    void checkVATValidity() {
+
+        String response = "BE 0696668549";
+
+        String newResponse = response.substring(3);
+
+        double newResponseDouble = Double.parseDouble(newResponse);
+
+        double modulo = 97.00;
+
+        double verif = Math.floor(newResponseDouble / 100);
+
+        log.info("Résultat vérif : " + verif);
+
+        Double digit = newResponseDouble % 100;
+
+        log.info("Résultat digit : " + digit);
+
+        Double check = modulo - (verif % modulo);
+
+        log.info("Résultat check : " + check);
+
+        assertThat(check.equals(digit)).isEqualTo(true);
+
+    }
+
+
+    @Test
+    void checkVATValidityShoudlReturnFalse() {
+
+        String response = "BE 06966685";
+
+        String newResponse = response.substring(3);
+
+        double newResponseDouble = Double.parseDouble(newResponse);
+
+        double modulo = 97.00;
+
+        double verif = Math.floor(newResponseDouble / 100);
+
+        log.info("Résultat vérif : " + verif);
+
+        Double digit = newResponseDouble % 100;
+
+        log.info("Résultat digit : " + digit);
+
+        Double check = modulo - (verif % modulo);
+
+        log.info("Résultat check : " + check);
+
+        assertThat(check.equals(digit)).isEqualTo(false);
+
+    }
+
 }

@@ -22,7 +22,10 @@
                 #{bundle['company.title']}
             </f:facet>
             <p:column headerText="#{bundle['company.label']}" sortBy="#{companies.label}">
-                <h:outputText value="#{companies.label}"/>
+                <p:link outcome="companydetails">
+                    <h:outputText value="#{companies.label}"/>
+                    <f:param name="companyID" value="#{companies.id}"/>
+                </p:link>
             </p:column>
 
             <p:column headerText="#{bundle['company.ownership']}" sortBy="#{companies.usersByIdUsers.firstname}">
@@ -44,6 +47,14 @@
                       sortBy="#{companies.branchActivitiesByIdBranchActivities.label}">
                 <h:outputText
                         value="#{empty companies.branchActivitiesByIdBranchActivities.label ? '--' : companies.branchActivitiesByIdBranchActivities.label}"/>
+            </p:column>
+
+            <p:column>
+                <p:commandLink update="@form msgs"
+                               action="#{companiesBean.deleteCompany}">
+                    <i class="ui-icon ui-icon-delete-forever"></i>
+                    <f:param name="companiesID" value="#{companies.id}"/>
+                </p:commandLink>
             </p:column>
 
         </p:dataTable>
