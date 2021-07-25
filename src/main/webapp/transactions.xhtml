@@ -16,7 +16,7 @@
             <f:viewAction action="#{transactionTypesBean.findAllTransactionTypesEntities}"/>
         </f:metadata>
 
-        <p:growl id="msgs" skipDetailIfEqualsSummary="true"/>
+        <p:growl id="msgs" skipDetailIfEqualsSummary="true" life="10000"/>
 
         <fxs:listAllTransactions id="listAllTransactions"/>
 

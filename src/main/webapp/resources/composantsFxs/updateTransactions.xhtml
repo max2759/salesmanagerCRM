@@ -121,7 +121,11 @@
                         <p:confirm header="Confirmation" message="#{bundle['areYouSure']}" icon="fa fa-warning"/>
                         <f:param name="idEntity" value="#{transactionsBean.transactionsEntity.id}"/>
                     </p:menuitem>
-                    <p:menuitem value="#{bundle['viewHistory']}" icon="ui-icon-update"/>
+                    <p:menuitem icon="ui-icon-update"
+                                outcome="transactionDetails"
+                                value="#{bundle['viewHistory']}">
+                        <f:param name="idTransaction" value="#{transactionsBean.transactionsEntity.id}"/>
+                    </p:menuitem>
                 </p:menuButton>
             </div>
             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
