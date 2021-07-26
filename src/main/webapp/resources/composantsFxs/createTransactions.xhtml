@@ -16,16 +16,15 @@
     <f:view>
 
         <h:form id="createTransactionForm">
-            <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+            <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
                 <p:outputLabel value="#{bundle['title']} :" for="title"/>
                 <p:inputText id="title" value="#{transactionsBean.transactionsEntity.title}"
                              placeholder="#{bundle['title']}"
                              required="true"
                              requiredMessage="#{bundle['transactions.validator.title']}">
-                    <p:ajax update="msgTitle" event="keyup"/>
+                    <p:ajax update="msg" event="keyup"/>
                 </p:inputText>
-                <p:message for="title" id="msgTitle" display="message"/>
 
                 <p:outputLabel value="#{bundle['transactions.phase']}:" for="phase"/>
                 <p:selectOneMenu id="phase"
@@ -57,8 +56,9 @@
                                    var="transactionTypesEntities" itemValue="#{transactionTypesEntities}"
                                    itemLabel="#{transactionTypesEntities.label}"/>
                 </p:selectOneMenu>
-
-                <h3>#{bundle['associateWith']}</h3>
+            </p:panelGrid>
+            <h3>#{bundle['associateWith']}</h3>
+            <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
                 <p:outputLabel value="#{bundle['contact']}:" for="Contact"/>
                 <p:autoComplete id="Contact" value="#{transactionsBean.transactionsEntity.contactsByIdContacts}"
@@ -79,8 +79,9 @@
                                 itemValue="#{Company}"
                                 converter="companiesConverter"
                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
-
-
+            </p:panelGrid>
+            <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
                                  value="#{bundle['save']}"

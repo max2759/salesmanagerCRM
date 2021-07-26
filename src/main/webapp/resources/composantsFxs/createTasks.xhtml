@@ -21,7 +21,9 @@
                 <p:inputText id="acTitle" value="#{tasksBean.tasksEntity.title}"
                              required="true"
                              requiredMessage="#{bundle['task.validator.title']}"
-                             style="margin-bottom:10px;"/>
+                             style="margin-bottom:10px;">
+                    <p:ajax update="msg" event="keyup"/>
+                </p:inputText>
 
 
                 <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskType"/>
@@ -73,6 +75,7 @@
                                  placeholder="#{bundle['tasks.description']}"
                                  autoResize="false"/>
 
+                <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
                                  value="#{bundle['save']}"

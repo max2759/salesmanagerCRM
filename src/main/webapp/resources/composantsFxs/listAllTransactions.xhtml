@@ -20,8 +20,20 @@
             <fxs:updateTransactions id="updateTransactions"/>
         </p:dialog>
 
+        <p:dialog header="#{bundle['transactions.create']}" widgetVar="createDialog" modal="true" responsive="true"
+                  showEffect="fade">
+            <fxs:createTransactions id="createTransactions"/>
+        </p:dialog>
+
         <div class="card card-w-title">
             <h1>#{bundle['transactions.title']}</h1>
+            <h:form>
+                <p:commandButton value="#{bundle['transactions.create']}"
+                                 update="@(form) msgs"
+                                 onclick="PF('createDialog').show();" styleClass="NavyButton marginBottom15"
+                                 action="#{transactionsBean.showModalCreate}"
+                />
+            </h:form>
             <h:form id="form">
                 <p:dataTable paginator="true" rows="10"
                              selection="#{transactionsBean.selectedtransactionEntity}" selectionMode="single"
@@ -63,7 +75,9 @@
                     </p:column>
 
                     <p:column headerText="#{bundle['amount']}"
-                              sortBy="#{transaction.amount}">
+                              sortBy="#{transaction.amount}"
+                              filterBy="#{transaction.amount}" filterable="false"
+                    >
                         <h:outputText value="#{transaction.amount eq null ? ' / ' : transaction.amount}">
                             <f:convertNumber currencySymbol="€" type="currency"/>
                         </h:outputText>
@@ -93,8 +107,6 @@
                     </p:column>
 
                 </p:dataTable>
-                <p:staticMessage severity="info" detail="#{bundle['transactions.notFound']}"
-                                 rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? true : false}"/>
             </h:form>
         </div>
     </f:view>

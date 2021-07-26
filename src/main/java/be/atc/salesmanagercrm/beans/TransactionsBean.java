@@ -75,6 +75,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         transactionsEntity.setUsersByIdUsers(usersBean.getUsersEntity());
 
         save(transactionsEntity);
+        findAllEntitiesAndFilter();
 
     }
 
@@ -153,6 +154,17 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             return;
         }
         transactionHistoriesBean.findAllEntities(idTransaction, usersBean.getUsersEntity().getId());
+
+    }
+
+    /**
+     * Method to show modal in create task
+     *
+     * @param
+     */
+    public void showModalCreate() {
+        log.info("method : showModalCreate()");
+        transactionsEntity = new TransactionsEntity();
 
     }
 
