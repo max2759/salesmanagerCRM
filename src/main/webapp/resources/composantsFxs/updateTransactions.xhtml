@@ -21,9 +21,8 @@
                 <p:inputText id="titleUpdate" value="#{transactionsBean.transactionsEntity.title}"
                              required="true"
                              requiredMessage="#{bundle['transactions.validator.title']}">
-                    <p:ajax update="msgTitleUpdate" event="keyup"/>
+                    <p:ajax update="msg" event="keyup"/>
                 </p:inputText>
-                <p:message for="titleUpdate" id="msgTitleUpdate" display="message"/>
             </p:inplace>
 
             <h4 class="p-mt-0">#{bundle['transactions.phase']}:</h4>
@@ -106,10 +105,9 @@
                                 converter="companiesConverter"
                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
             </p:inplace>
-            <br/>
-            <br/>
 
-            <div align="right" class="modalValidateBtn-margin-top">
+            <p:messages id="msg" closable="true" display="message"/>
+            <div align="right" style="padding-top: 10px" class="modalValidateBtn-margin-top">
                 <p:menuButton value="#{bundle['actions']}">
                     <p:menuitem icon="ui-icon-check"
                                 value="#{bundle['save']}"

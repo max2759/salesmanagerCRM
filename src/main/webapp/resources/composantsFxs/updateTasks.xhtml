@@ -21,7 +21,9 @@
                 <p:inputText id="acTitle" value="#{tasksBean.tasksEntity.title}"
                              required="true"
                              requiredMessage="#{bundle['task.validator.title']}"
-                             style="margin-bottom:10px;"/>
+                             style="margin-bottom:10px;">
+                    <p:ajax update="msg" event="keyup"/>
+                </p:inputText>
 
 
                 <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskType"/>
@@ -68,10 +70,11 @@
             <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
                 <p:outputLabel for="description" value="#{bundle['tasks.description']}:"/>
                 <p:inputTextarea value="#{tasksBean.tasksEntity.description}" id="description"
-                                 rows="4" cols="100"
+                                 rows="6" cols="100"
                                  placeholder="#{bundle['tasks.description']}"
                                  autoResize="false"/>
 
+                <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
                                  value="#{bundle['update']}"

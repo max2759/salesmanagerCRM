@@ -31,7 +31,7 @@
             <h:form>
                 <p:commandButton value="#{bundle['tasks.create']}"
                                  update="@(form) msgs"
-                                 onclick="PF('dlg3').show();" styleClass="NavyButton" style="margin-bottom: 10px"
+                                 onclick="PF('dlg3').show();" styleClass="NavyButton marginBottom10"
                                  action="#{tasksBean.showModalCreate}"
                 />
             </h:form>
@@ -74,13 +74,17 @@
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
-                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}">
+                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterMatchMode="contains">
                                 <h:outputText
                                         value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
-                                      sortBy="#{task.companiesByIdCompanies.label}">
+                                      sortBy="#{task.companiesByIdCompanies.label}"
+                                      filterBy="#{task.companiesByIdCompanies.label}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{task.companiesByIdCompanies.label}"/>
                             </p:column>
 
@@ -146,8 +150,6 @@
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
-                                         rendered="#{tasksBean.tasksEntities.size() eq 0 ? true : false}"/>
                     </p:tab>
 
                     <p:tab id="displayToday"
@@ -186,13 +188,17 @@
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
-                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}">
+                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterMatchMode="contains">
                                 <h:outputText
                                         value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
-                                      sortBy="#{task.companiesByIdCompanies.label}">
+                                      sortBy="#{task.companiesByIdCompanies.label}"
+                                      filterBy="#{task.companiesByIdCompanies.label}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{task.companiesByIdCompanies.label}"/>
                             </p:column>
 
@@ -258,8 +264,6 @@
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
-                                         rendered="#{tasksBean.tasksEntitiesDueToday.size() eq 0 ? true : false}"/>
                     </p:tab>
 
                     <p:tab id="displayToLate"
@@ -298,13 +302,17 @@
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
-                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}">
+                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterMatchMode="contains">
                                 <h:outputText
                                         value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
-                                      sortBy="#{task.companiesByIdCompanies.label}">
+                                      sortBy="#{task.companiesByIdCompanies.label}"
+                                      filterBy="#{task.companiesByIdCompanies.label}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{task.companiesByIdCompanies.label}"/>
                             </p:column>
 
@@ -370,8 +378,6 @@
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
-                                         rendered="#{tasksBean.tasksEntitiesToLate.size() eq 0 ? true : false}"/>
                     </p:tab>
 
                     <p:tab id="displayToCome"
@@ -410,13 +416,17 @@
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
-                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}">
+                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterMatchMode="contains">
                                 <h:outputText
                                         value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
-                                      sortBy="#{task.companiesByIdCompanies.label}">
+                                      sortBy="#{task.companiesByIdCompanies.label}"
+                                      filterBy="#{task.companiesByIdCompanies.label}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{task.companiesByIdCompanies.label}"/>
                             </p:column>
 
@@ -482,8 +492,6 @@
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
-                                         rendered="#{tasksBean.tasksEntitiesToCome.size() eq 0 ? true : false}"/>
                     </p:tab>
 
                     <p:tab id="displayFinished"
@@ -522,13 +530,17 @@
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
-                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}">
+                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterMatchMode="contains">
                                 <h:outputText
                                         value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
-                                      sortBy="#{task.companiesByIdCompanies.label}">
+                                      sortBy="#{task.companiesByIdCompanies.label}"
+                                      filterBy="#{task.companiesByIdCompanies.label}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{task.companiesByIdCompanies.label}"/>
                             </p:column>
 
@@ -589,8 +601,6 @@
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
-                                         rendered="#{tasksBean.tasksEntitiesFinished.size() eq 0 ? true : false}"/>
                     </p:tab>
 
                 </p:tabView>
