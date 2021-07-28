@@ -17,7 +17,7 @@
 
         <h:form>
             <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                <p:outputLabel value="#{bundle['title']} :" for="acTitle"/>
+                <p:outputLabel value="#{bundle['title']} :" for="acTitle" styleClass="boldText"/>
                 <p:inputText id="acTitle" value="#{tasksBean.tasksEntity.title}"
                              required="true"
                              requiredMessage="#{bundle['task.validator.title']}"
@@ -26,7 +26,7 @@
                 </p:inputText>
 
 
-                <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskType"/>
+                <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskType" styleClass="boldText"/>
                 <p:selectOneMenu id="taskType"
                                  value="#{tasksBean.tasksEntity.taskTypesByIdTaskTypes}"
                                  converter="taskTypeConverter">
@@ -36,7 +36,7 @@
                                    itemLabel="#{taskTypesEntities.label}"/>
                 </p:selectOneMenu>
 
-                <p:outputLabel value="#{bundle['priority']}:" for="taskPriority"/>
+                <p:outputLabel value="#{bundle['priority']}:" for="taskPriority" styleClass="boldText"/>
                 <p:selectOneMenu id="taskPriority"
                                  value="#{tasksBean.tasksEntity.priority}">
                     <f:selectItems value="#{enumPriorityBean.enumPriority}"
@@ -45,30 +45,31 @@
                     <f:validator validatorId="enumPriorityValidator"/>
                 </p:selectOneMenu>
 
-                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
+                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:" styleClass="boldText"/>
+                <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
+                            id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.tasksEntity.creationDate}"/>
+
+                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact" styleClass="boldText"/>
                 <p:autoComplete id="Contact" value="#{tasksBean.tasksEntity.contactsByIdContacts}"
-                                completeMethod="#{tasksBean.completeContactsContains}"
+                                completeMethod="#{contactsBean.completeContactsContains}"
                                 var="Contact"
                                 itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
                                 itemValue="#{Contact}"
                                 converter="contactConverter"
-                                groupBy="#{tasksBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
+                                groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
 
-                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
+                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company" styleClass="boldText"/>
                 <p:autoComplete id="Company" value="#{tasksBean.tasksEntity.companiesByIdCompanies}"
-                                completeMethod="#{tasksBean.completeCompaniesContains}"
+                                completeMethod="#{companiesBean.completeCompaniesContains}"
                                 var="Company"
                                 itemLabel="#{Company.label}"
                                 itemValue="#{Company}"
                                 converter="companiesConverter"
-                                groupBy="#{tasksBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
+                                groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
 
-                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"/>
-                <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
-                            id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
             </p:panelGrid>
             <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                <p:outputLabel for="description" value="#{bundle['tasks.description']}:"/>
+                <p:outputLabel for="description" value="#{bundle['tasks.description']}:" styleClass="boldText"/>
                 <p:inputTextarea value="#{tasksBean.tasksEntity.description}" id="description"
                                  rows="6" cols="100"
                                  placeholder="#{bundle['tasks.description']}"
@@ -77,6 +78,7 @@
                 <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
+                                 oncomplete="PF('dlg2').hide()"
                                  value="#{bundle['update']}"
                                  action="#{tasksBean.updateEntity}">
                     <f:param name="typeEntities" value="all"/>

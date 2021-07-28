@@ -6,6 +6,9 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "voucher_histories", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "VoucherHistories.findAllByIdUserAndByIdVoucher", query = "select v from VoucherHistoriesEntity v where (v.vouchersByIdVouchers.id = :idVoucher and v.vouchersByIdVouchers.usersByIdUsers.id = :idUser) ORDER BY v.saveDate desc "),
+})
 public class VoucherHistoriesEntity {
     private int id;
     private LocalDateTime saveDate;

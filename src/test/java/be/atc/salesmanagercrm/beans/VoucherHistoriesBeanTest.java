@@ -1,6 +1,6 @@
 package be.atc.salesmanagercrm.beans;
 
-import be.atc.salesmanagercrm.entities.TransactionHistoriesEntity;
+import be.atc.salesmanagercrm.entities.VoucherHistoriesEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -13,35 +13,35 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-class TransactionHistoriesBeanTest {
+class VoucherHistoriesBeanTest {
 
     @Getter
     @Setter
-    private TransactionHistoriesBean transactionHistoriesBean;
+    private VoucherHistoriesBean voucherHistoriesBean;
 
     @BeforeEach
     public void init() {
         log.info("Appel avant chaque test");
-        transactionHistoriesBean = new TransactionHistoriesBean();
+        voucherHistoriesBean = new VoucherHistoriesBean();
     }
 
     @AfterEach
     public void after() {
         log.info("Appel après chaque test");
-        transactionHistoriesBean = null;
+        voucherHistoriesBean = null;
     }
 
     @Test
     void findAllByIdUserAndByIdTransactionShouldReturnTrue() {
 
-        // Mettre un id correct
-        int idTransaction = 1;
+        // Mettre un id incorrect
+        int idVoucher = 3;
         int idUser = 1;
 
-        List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(idTransaction, idUser);
+        List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(idVoucher, idUser);
 
 
-        boolean test = !transactionHistoriesEntities.isEmpty();
+        boolean test = !voucherHistoriesEntities.isEmpty();
 
         log.info("Le test vaut : " + test);
 
@@ -51,14 +51,14 @@ class TransactionHistoriesBeanTest {
     @Test
     void findAllByIdUserAndByIdTransactionShouldReturnFalse() {
 
-        // Mettre un id incorrect
-        int idTransaction = 1540;
+        // Mettre un id correct
+        int idVoucher = 1540;
         int idUser = 1;
 
-        List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(idTransaction, idUser);
+        List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(idVoucher, idUser);
 
 
-        boolean test = !transactionHistoriesEntities.isEmpty();
+        boolean test = !voucherHistoriesEntities.isEmpty();
 
         log.info("Le test vaut : " + test);
 

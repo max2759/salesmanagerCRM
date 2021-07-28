@@ -7,9 +7,9 @@ import java.util.Objects;
 @Entity
 @Table(name = "notes", schema = "salesmanagercrm")
 @NamedQueries({
-        @NamedQuery(name = "Notes.findNotesEntityByContactsByIdContacts", query = "select n from NotesEntity n where (n.contactsByIdContacts.id = :id and n.usersByIdUsers.id = :idUser)"),
-        @NamedQuery(name = "Notes.findNotesEntityByCompaniesByIdCompanies", query = "select n from NotesEntity n where (n.companiesByIdCompanies.id = :id and n.usersByIdUsers.id = :idUser)"),
-        @NamedQuery(name = "Notes.findAll", query = "SELECT n from NotesEntity n where n.usersByIdUsers.id = :idUser"),
+        @NamedQuery(name = "Notes.findNotesEntityByContactsByIdContacts", query = "select n from NotesEntity n where (n.contactsByIdContacts.id = :id and n.usersByIdUsers.id = :idUser) ORDER BY n.creationDate desc "),
+        @NamedQuery(name = "Notes.findNotesEntityByCompaniesByIdCompanies", query = "select n from NotesEntity n where (n.companiesByIdCompanies.id = :id and n.usersByIdUsers.id = :idUser) ORDER BY n.creationDate desc "),
+        @NamedQuery(name = "Notes.findAll", query = "SELECT n from NotesEntity n where n.usersByIdUsers.id = :idUser ORDER BY n.creationDate desc "),
         @NamedQuery(name = "Notes.findById", query = "SELECT n from NotesEntity n where (n.id = :id and n.usersByIdUsers.id = :idUser)"),
 
 

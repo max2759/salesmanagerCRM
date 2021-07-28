@@ -49,8 +49,7 @@
                                      rowsPerPageTemplate="10,20,50"
                                      value="#{tasksBean.tasksEntities}"
                                      widgetVar="displayAllEntities"
-                                     filteredValue="#{tasksBean.tasksEntitiesFiltered}"
-                                     rendered="#{tasksBean.tasksEntities.size() eq 0 ? false : true}">
+                                     filteredValue="#{tasksBean.tasksEntitiesFiltered}">
 
                             <p:column colspan="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusAll" value="#{task.status}">
@@ -123,7 +122,18 @@
                             </p:column>
 
                             <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
-                                      sortBy="#{task.endDate}">
+                                      filterBy="#{task.endDate}"
+                                      sortBy="#{task.endDate}"
+                                      filterable="true"
+                                      filterMatchMode="contains"
+                            >
+                                <f:facet name="filter">
+                                    <p:inputText placeholder="31/01/2021"
+                                                 onchange="PF('displayAllEntities').filter()">
+                                        <f:convertDateTime type="localDate"
+                                                           pattern="dd/MM/yyyy"/>
+                                    </p:inputText>
+                                </f:facet>
                                 <h:outputText rendered="#{task.endDate gt tasksBean.now}" value="#{task.endDate}">
                                     <f:convertDateTime type="localDate"
                                                        pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
@@ -351,7 +361,18 @@
                             </p:column>
 
                             <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
-                                      sortBy="#{task.endDate}">
+                                      filterBy="#{task.endDate}"
+                                      sortBy="#{task.endDate}"
+                                      filterable="true"
+                                      filterMatchMode="contains"
+                            >
+                                <f:facet name="filter">
+                                    <p:inputText placeholder="31/01/2021"
+                                                 onchange="PF('displayEntitiesToLate').filter()">
+                                        <f:convertDateTime type="localDate"
+                                                           pattern="dd/MM/yyyy"/>
+                                    </p:inputText>
+                                </f:facet>
                                 <h:outputText rendered="#{task.endDate gt tasksBean.now}" value="#{task.endDate}">
                                     <f:convertDateTime type="localDate"
                                                        pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
@@ -465,7 +486,18 @@
                             </p:column>
 
                             <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
-                                      sortBy="#{task.endDate}">
+                                      filterBy="#{task.endDate}"
+                                      sortBy="#{task.endDate}"
+                                      filterable="true"
+                                      filterMatchMode="contains"
+                            >
+                                <f:facet name="filter">
+                                    <p:inputText placeholder="31/01/2021"
+                                                 onchange="PF('displayEntitiesToCome').filter()">
+                                        <f:convertDateTime type="localDate"
+                                                           pattern="dd/MM/yyyy"/>
+                                    </p:inputText>
+                                </f:facet>
                                 <h:outputText rendered="#{task.endDate gt tasksBean.now}" value="#{task.endDate}">
                                     <f:convertDateTime type="localDate"
                                                        pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
@@ -579,7 +611,18 @@
                             </p:column>
 
                             <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
-                                      sortBy="#{task.endDate}">
+                                      filterBy="#{task.endDate}"
+                                      sortBy="#{task.endDate}"
+                                      filterable="true"
+                                      filterMatchMode="contains"
+                            >
+                                <f:facet name="filter">
+                                    <p:inputText placeholder="31/01/2021"
+                                                 onchange="PF('displayEntitiesFinished').filter()">
+                                        <f:convertDateTime type="localDate"
+                                                           pattern="dd/MM/yyyy"/>
+                                    </p:inputText>
+                                </f:facet>
                                 <h:outputText value="#{task.endDate}">
                                     <f:convertDateTime type="localDate"
                                                        pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
