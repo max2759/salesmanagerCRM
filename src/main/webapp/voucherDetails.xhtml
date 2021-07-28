@@ -6,47 +6,47 @@
                 template="WEB-INF/templates/template.xhtml">
 
 
-    <ui:define name="title">#{bundle['transactions.title']}</ui:define>
+    <ui:define name="title">#{bundle['vouchers.title']}</ui:define>
     <ui:define name="content">
 
         <f:metadata>
-            <f:viewAction action="#{transactionsBean.displayOneTransaction}"/>
+            <f:viewAction action="#{vouchersBean.displayOneVoucher}"/>
         </f:metadata>
 
         <p:growl id="msgs" skipDetailIfEqualsSummary="true"/>
 
 
         <div class="card card-w-title">
-            <h1>#{bundle['transaction']}</h1>
-            <h3>#{transactionsBean.transactionsEntity.title}</h3>
+            <h1>#{bundle['vouchers.title']}</h1>
+            <h3>#{vouchersBean.vouchersEntity.title}</h3>
             <h:form id="form">
                 <p:dataTable paginator="true" rows="10"
                              paginatorPosition="bottom"
-                             emptyMessage="#{bundle['transactions.notFound']}"
-                             var="transactionHistories"
+                             emptyMessage="#{bundle['vouchers.notFound']}"
+                             var="voucherHistories"
                              rowsPerPageTemplate="10,20,50"
-                             value="#{transactionHistoriesBean.transactionHistoriesEntities}"
+                             value="#{voucherHistoriesBean.voucherHistoriesEntities}"
                              widgetVar="displayAllEntities"
-                             filteredValue="#{transactionHistoriesBean.transactionHistoriesEntitiesFiltered}"
-                             rendered="#{transactionHistoriesBean.transactionHistoriesEntities.size() eq 0 ? false : true}">
+                             filteredValue="#{voucherHistoriesBean.voucherHistoriesEntitiesFiltered}"
+                             rendered="#{voucherHistoriesBean.voucherHistoriesEntities.size() eq 0 ? false : true}">
 
-                    <p:column headerText="#{bundle['transactions.phase']}"
-                              filterBy="#{transactionHistories.transactionPhasesByIdTransactionPhases.label}"
+                    <p:column headerText="#{bundle['vouchers.status']}"
+                              filterBy="#{voucherHistories.voucherStatusByIdVoucherStatus.label}"
                               filterable="true" filterMatchMode="contains"
-                              sortBy="#{transactionHistories.transactionPhasesByIdTransactionPhases.label}">
-                        <h:outputText value="#{transactionHistories.transactionPhasesByIdTransactionPhases.label}"/>
+                              sortBy="#{voucherHistories.voucherStatusByIdVoucherStatus.label}">
+                        <h:outputText value="#{voucherHistories.voucherStatusByIdVoucherStatus.label}"/>
                     </p:column>
 
-                    <p:column headerText="#{bundle['transactionsHistories.doneOn']}"
-                              filterBy="#{transactionHistories.saveDate}" filterable="true" filterMatchMode="contains"
-                              sortBy="#{transactionHistories.saveDate}">
+                    <p:column headerText="#{bundle['voucherHistories.doneOn']}"
+                              filterBy="#{voucherHistories.saveDate}" filterable="true" filterMatchMode="contains"
+                              sortBy="#{voucherHistories.saveDate}">
                         <f:facet name="filter">
                             <p:inputText placeholder="31/01/2021" onchange="PF('displayAllEntities').filter()">
                                 <f:convertDateTime type="localDate"
                                                    pattern="dd/MM/yyyy"/>
                             </p:inputText>
                         </f:facet>
-                        <h:outputText value="#{transactionHistories.saveDate}">
+                        <h:outputText value="#{voucherHistories.saveDate}">
                             <f:convertDateTime type="localDate"
                                                pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
                         </h:outputText>

@@ -36,7 +36,7 @@
             </h:form>
             <h:form id="form">
                 <p:dataTable paginator="true" rows="10"
-                             selection="#{transactionsBean.selectedtransactionEntity}" selectionMode="single"
+                             selection="#{transactionsBean.selectedTransactionEntity}" selectionMode="single"
                              paginatorPosition="bottom"
                              rowKey="#{transaction.id}"
                              emptyMessage="#{bundle['transactions.notFound']}"
@@ -44,10 +44,9 @@
                              rowsPerPageTemplate="10,20,50"
                              value="#{transactionsBean.transactionsEntities}"
                              widgetVar="displayAllEntities"
-                             filteredValue="#{transactionsBean.transactionsEntitiesFiltered}"
-                             rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? false : true}">
+                             filteredValue="#{transactionsBean.transactionsEntitiesFiltered}">
 
-                    <p:column width="500" headerText="#{bundle['transactions.name']}"
+                    <p:column headerText="#{bundle['transactions.name']}"
                               sortBy="#{transaction.title}"
                               filterBy="#{transaction.title}"
                               filterMatchMode="contains">
@@ -61,13 +60,35 @@
                     </p:column>
 
                     <p:column headerText="#{bundle['transactions.phase']}"
-                              sortBy="#{transaction.transactionPhasesByIdTransactionPhases.label}">
-                        <h:outputText
-                                value="#{transaction.transactionPhasesByIdTransactionPhases.label}"/>
+                              sortBy="#{transaction.transactionPhasesByIdTransactionPhases.label}"
+                              filterBy="#{transaction.transactionPhasesByIdTransactionPhases.label}"
+                              filterMatchMode="exact">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('displayAllEntities').filter()"
+                                             style="width:100%; box-sizing: border-box;">
+                                <f:selectItem itemLabel="#{bundle['selectChoice']}"
+                                              itemValue="#{null}"
+                                              noSelectionOption="true"/>
+                                <f:selectItems value="#{transactionPhasesBean.transactionPhasesEntities}"
+                                               var="transactionPhasesEntities"
+                                               itemValue="#{transactionPhasesEntities.label}"
+                                               itemLabel="#{transactionPhasesEntities.label}"/>
+                            </p:selectOneMenu>
+                        </f:facet><h:outputText
+                            value="#{transaction.transactionPhasesByIdTransactionPhases.label}"/>
                     </p:column>
 
                     <p:column headerText="#{bundle['transactions.endDate']}"
-                              sortBy="#{transaction.endDate}">
+                              filterBy="#{transaction.endDate}"
+                              sortBy="#{transaction.endDate}"
+                              filterable="true"
+                              filterMatchMode="contains">
+                        <f:facet name="filter">
+                            <p:inputText placeholder="31/01/2021" onchange="PF('displayAllEntities').filter()">
+                                <f:convertDateTime type="localDate"
+                                                   pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+                        </f:facet>
                         <h:outputText value="#{transaction.endDate}">
                             <f:convertDateTime type="localDate"
                                                pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
@@ -76,7 +97,8 @@
 
                     <p:column headerText="#{bundle['amount']}"
                               sortBy="#{transaction.amount}"
-                              filterBy="#{transaction.amount}" filterable="false"
+                              filterBy="#{transaction.amount}" filterable="true"
+                              filterMatchMode="contains"
                     >
                         <h:outputText value="#{transaction.amount eq null ? ' / ' : transaction.amount}">
                             <f:convertNumber currencySymbol="€" type="currency"/>
@@ -99,7 +121,16 @@
                     </p:column>
 
                     <p:column headerText="#{bundle['transactions.creationDate']}"
-                              sortBy="#{transaction.endDate}">
+                              filterBy="#{transaction.creationDate}"
+                              sortBy="#{transaction.creationDate}"
+                              filterable="true"
+                              filterMatchMode="contains">
+                        <f:facet name="filter">
+                            <p:inputText placeholder="01/01/2021" onchange="PF('displayAllEntities').filter()">
+                                <f:convertDateTime type="localDate"
+                                                   pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+                        </f:facet>
                         <h:outputText value="#{transaction.creationDate}">
                             <f:convertDateTime type="localDate"
                                                pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>

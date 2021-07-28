@@ -18,7 +18,7 @@
         <h:form id="createTransactionForm">
             <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
-                <p:outputLabel value="#{bundle['title']} :" for="title"/>
+                <p:outputLabel value="#{bundle['title']} :" for="title" styleClass="boldText"/>
                 <p:inputText id="title" value="#{transactionsBean.transactionsEntity.title}"
                              placeholder="#{bundle['title']}"
                              required="true"
@@ -26,7 +26,7 @@
                     <p:ajax update="msg" event="keyup"/>
                 </p:inputText>
 
-                <p:outputLabel value="#{bundle['transactions.phase']}:" for="phase"/>
+                <p:outputLabel value="#{bundle['transactions.phase']}:" for="phase" styleClass="boldText"/>
                 <p:selectOneMenu id="phase"
                                  value="#{transactionsBean.transactionsEntity.transactionPhasesByIdTransactionPhases}"
                                  converter="transactionPhasesConverter">
@@ -36,18 +36,18 @@
                                    itemLabel="#{transactionPhasesEntities.label}"/>
                 </p:selectOneMenu>
 
-                <p:outputLabel value="#{bundle['amount']} :" for="amount"/>
+                <p:outputLabel value="#{bundle['amount']} :" for="amount" styleClass="boldText"/>
                 <p:inputNumber id="amount" value="#{transactionsBean.transactionsEntity.amount}" symbol=" €"
                                symbolPosition="s" placeholder="9.999,99 €"
                                decimalSeparator="," thousandSeparator=".">
                     <p:ajax update="amount"/>
                 </p:inputNumber>
 
-                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"/>
+                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:" styleClass="boldText"/>
                 <p:calendar placeholder="#{bundle['dueDate']}:" value="#{transactionsBean.transactionsEntity.endDate}"
                             id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{transactionsBean.now}"/>
 
-                <p:outputLabel value="#{bundle['transactions.type']}:" for="type"/>
+                <p:outputLabel value="#{bundle['transactions.type']}:" for="type" styleClass="boldText"/>
                 <p:selectOneMenu id="type"
                                  value="#{transactionsBean.transactionsEntity.transactionTypesByIdTransactionTypes}"
                                  converter="transactionTypesConverter">
@@ -60,7 +60,7 @@
             <h3>#{bundle['associateWith']}</h3>
             <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
-                <p:outputLabel value="#{bundle['contact']}:" for="Contact"/>
+                <p:outputLabel value="#{bundle['contact']}:" for="Contact" styleClass="boldText"/>
                 <p:autoComplete id="Contact" value="#{transactionsBean.transactionsEntity.contactsByIdContacts}"
                                 placeholder="#{bundle['contact']}"
                                 completeMethod="#{contactsBean.completeContactsContains}"
@@ -70,7 +70,7 @@
                                 converter="contactConverter"
                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
 
-                <p:outputLabel value="#{bundle['company']}:" for="Company"/>
+                <p:outputLabel value="#{bundle['company']}:" for="Company" styleClass="boldText"/>
                 <p:autoComplete id="Company" value="#{transactionsBean.transactionsEntity.companiesByIdCompanies}"
                                 placeholder="#{bundle['company']}"
                                 completeMethod="#{companiesBean.completeCompaniesContains}"
@@ -84,6 +84,7 @@
                 <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
+                                 oncomplete="PF('createDialog').hide()"
                                  value="#{bundle['save']}"
                                  action="#{transactionsBean.saveEntity}"
                 >

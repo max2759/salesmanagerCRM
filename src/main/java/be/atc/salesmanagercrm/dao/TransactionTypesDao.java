@@ -12,7 +12,6 @@ public interface TransactionTypesDao {
 
     TransactionTypesEntity findById(EntityManager em, int id);
 
-
     List<TransactionTypesEntity> findAll();
 
     TransactionTypesEntity findByLabel(EntityManager em, String label);
