@@ -178,7 +178,6 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     public void showModalCreate() {
         log.info("method : showModalCreate()");
         transactionsEntity = new TransactionsEntity();
-
     }
 
     /**

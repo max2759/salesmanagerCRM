@@ -26,7 +26,7 @@ import java.util.Optional;
 @Slf4j
 @Named(value = "taskTypesBean")
 @ViewScoped
-public class TaskTypesBean implements Serializable {
+public class TaskTypesBean extends ExtendBean implements Serializable {
 
 
     private static final long serialVersionUID = 6295899008521191899L;
@@ -38,11 +38,35 @@ public class TaskTypesBean implements Serializable {
     @Getter
     @Setter
     private TaskTypesEntity taskTypesEntity;
+    @Getter
+    @Setter
+    private TaskTypesEntity selectedTaskTypeEntity;
 
     @Getter
     @Setter
     private List<TaskTypesEntity> taskTypesEntities;
+    @Getter
+    @Setter
+    private List<TaskTypesEntity> taskTypesEntitiesFiltered;
 
+    /**
+     * Method to show modal in create TaskTypes
+     *
+     * @param
+     */
+    public void showModalCreate() {
+        log.info("method : showModalCreate()");
+        taskTypesEntity = new TaskTypesEntity();
+    }
+
+    /**
+     * Update entity form
+     */
+    public void showModalUpdate() {
+        log.info("method : showModalUpdate()");
+        log.info("param : " + getParam("idEntity"));
+        taskTypesEntity = findById(Integer.parseInt(getParam("idEntity")));
+    }
 
     /**
      * Fill the list with Task Entities
@@ -51,6 +75,40 @@ public class TaskTypesBean implements Serializable {
         taskTypesEntities = findAll();
     }
 
+
+    /**
+     * Save entity form
+     */
+    public void saveEntity() {
+        log.info("method : saveEntity()");
+
+        log.info("TaskTypesEntity = : " + taskTypesEntity);
+
+
+        save(taskTypesEntity);
+        findAllEntities();
+
+    }
+
+    /**
+     * Update Entity form
+     */
+    public void updateEntity() {
+        log.info("method : updateEntity()");
+        log.info("taskTypesEntity = : " + this.taskTypesEntity);
+
+        update(this.taskTypesEntity);
+
+        findAllEntities();
+    }
+
+    /**
+     * Find All TaskTypess and filter
+     */
+    public void findAllEntities() {
+        // TODO : Remplacer par user
+        this.taskTypesEntities = findAll();
+    }
 
     /**
      * Save TaskType Entity

@@ -153,7 +153,8 @@
                                     <f:param name="idEntity" value="#{task.id}"/>
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
-                                               action="#{tasksBean.deleteEntity}">
+                                               action="#{tasksBean.deleteEntity}"
+                                               onclick="return confirmer();">
                                     <i class="ui-icon ui-icon-delete-forever"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                     <f:param name="typeEntities" value="all"/>

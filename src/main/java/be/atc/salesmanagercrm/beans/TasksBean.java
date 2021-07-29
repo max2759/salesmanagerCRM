@@ -214,6 +214,7 @@ public class TasksBean extends ExtendBean implements Serializable {
     public void deleteEntity() {
         log.info("method : deleteEntity()");
         log.info("Param value : " + getParam("typeEntities"));
+        log.info("Param value idEntity : " + getParam("idEntity"));
         // TODO : Corriger l idUser
         delete(Integer.parseInt(getParam("idEntity")), 1);
 
