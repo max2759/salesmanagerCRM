@@ -59,4 +59,12 @@ public class CompaniesDaoImpl extends EntityFinderImpl<CompaniesEntity> implemen
                 .setParameter("idUser", idUser)
                 .getResultList();
     }
+
+    @Override
+    public List<CompaniesEntity> findDisableCompany(EntityManager em, int idUser) {
+        return em.createNamedQuery("Companies.findDisableCompany",
+                CompaniesEntity.class)
+                .setParameter("idUser", idUser)
+                .getResultList();
+    }
 }

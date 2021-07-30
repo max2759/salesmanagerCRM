@@ -9,7 +9,8 @@
     <ui:define name="content">
 
         <f:metadata>
-            <f:viewAction action="#{companiesBean.displayOneCompany}"/>
+            <f:viewAction action="#{companiesBean.displayCompanyAndAddressById}"/>
+            <f:viewAction action="#{addressesBean.getAddressByIdCompany}"/>
         </f:metadata>
 
         <div class="ui-g">
@@ -24,132 +25,226 @@
                                      columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
                                      contentStyleClass="ui-fluid" styleClass="ui-panelgrid-blank form-group">
 
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:inputText id="domainName" value="#{companiesBean.companiesEntity.domainName}">
-                                    <f:validator validatorId="companyDomainValidator"/>
-                                </p:inputText>
-                                <label>#{bundle['company.domainName']}</label>
-                            </h:panelGroup>
+                            <p:accordionPanel multiple="true">
+                                <p:tab title="Informations concernant l'entreprise">
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:15px; margin-bottom: 30px">
+                                        <p:inputText id="domainName"
+                                                     value="#{companiesBean.companiesEntity.domainName}">
+                                            <f:validator validatorId="companyDomainValidator"/>
+                                        </p:inputText>
+                                        <label>#{bundle['company.domainName']}</label>
+                                    </h:panelGroup>
 
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:inputText id="labelCompany" value="#{companiesBean.companiesEntity.label}"
-                                             required="true"
-                                             requiredMessage="#{bundle['company.labelNotValid']}"/>
-                                <label>#{bundle['company.labelName']}</label>
-                            </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield" style=" margin-bottom:10px;">
+                                        <p:inputText id="labelCompany" value="#{companiesBean.companiesEntity.label}"
+                                                     required="true"
+                                                     requiredMessage="#{bundle['company.labelNotValid']}"/>
+                                        <label>#{bundle['company.labelName']}</label>
+                                    </h:panelGroup>
 
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:inputTextarea id="companyDescription"
-                                                 value="#{companiesBean.companiesEntity.description}"/>
-                                <label>#{bundle['company.description']}</label>
-                            </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputTextarea id="companyDescription"
+                                                         value="#{companiesBean.companiesEntity.description}"/>
+                                        <label>#{bundle['company.description']}</label>
+                                    </h:panelGroup>
 
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:inputMask id="companyVAT" value="#{companiesBean.companiesEntity.vatNumber}"
-                                             mask="BE-9999999999">
-                                    <f:validator validatorId="companyVATValidator"/>
-                                </p:inputMask>
-                                <label>#{bundle['company.vatNumber']}</label>
-                            </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:autoComplete id="branchActivitiesDisplay" dropdown="true"
+                                                        value="#{companiesBean.companiesEntity.branchActivitiesByIdBranchActivities}"
+                                                        completeMethod="#{companiesBean.completeBranchActivities}"
+                                                        var="branchActivities"
+                                                        itemLabel="#{branchActivities.label}"
+                                                        itemValue="#{branchActivities}"
+                                                        converter="branchActivitiesConverter"
+                                                        scrollHeight="250"
+                                                        groupBy="#{companiesBean.getBranchActivitiesEntityGroup(branchActivities)}"
+                                                        placeholder="#{bundle['company.chooseBranchActivity']}"/>
+                                    </h:panelGroup>
 
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:inputMask id="companyBankAccount"
-                                             value="#{companiesBean.companiesEntity.bankAccount}"
-                                             mask="BE-99999999999999">
-                                    <f:validator validatorId="companyBankAccountValidator"/>
-                                </p:inputMask>
-                                <label>#{bundle['company.bankAccount']}</label>
-                            </h:panelGroup>
-
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:autoComplete id="branchActivitiesDisplay" dropdown="true"
-                                                value="#{companiesBean.companiesEntity.branchActivitiesByIdBranchActivities}"
-                                                completeMethod="#{companiesBean.completeBranchActivities}"
-                                                var="branchActivities"
-                                                itemLabel="#{branchActivities.label}"
-                                                itemValue="#{branchActivities}"
-                                                converter="branchActivitiesConverter"
-                                                scrollHeight="250"
-                                                placeholder="#{bundle['company.chooseBranchActivity']}"/>
-                            </h:panelGroup>
-
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:autoComplete id="companyTypesDisplay" dropdown="true"
-                                                value="#{companiesBean.companiesEntity.companyTypesByIdCompanyTypes}"
-                                                required="true"
-                                                requiredMessage="#{bundle['company.companiesTypeNotValid']}"
-                                                completeMethod="#{companiesBean.completeCompanyTypes}"
-                                                var="companyTypes"
-                                                itemLabel="#{companyTypes.label}"
-                                                itemValue="#{companyTypes}"
-                                                converter="companyTypesConverter"
-                                                scrollHeight="250"
-                                                placeholder="#{bundle['company.chooseCompanyType']}"/>
-                            </h:panelGroup>
-
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:inputNumber id="employeesNumber"
-                                               value="#{companiesBean.companiesEntity.employeesNumber}"
-                                               validatorMessage="#{bundle['company.employeesNumberNotValid']}">
-                                    <f:validateLongRange minimum="0"/>
-                                </p:inputNumber>
-                                <label>#{bundle['company.employessNumber']}</label>
-                            </h:panelGroup>
-
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:inputNumber id="revenue" value="#{companiesBean.companiesEntity.revenue}"
-                                               validatorMessage="#{bundle['company.employeesNumberNotValid']}">
-                                    <f:validateLongRange minimum="0"/>
-                                </p:inputNumber>
-                                <label>#{bundle['company.revenue']}</label>
-                            </h:panelGroup>
-
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:inputNumber id="companyAnnualSales"
-                                               value="#{companiesBean.companiesEntity.annualSales}"
-                                               validatorMessage="#{bundle['company.employeesNumberNotValid']}">
-                                    <f:validateLongRange minimum="0"/>
-                                </p:inputNumber>
-                                <label>#{bundle['company.annualSales']}</label>
-                            </h:panelGroup>
-
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:inputMask id="companyPhoneNumber"
-                                             value="#{companiesBean.companiesEntity.phoneNumber}"
-                                             mask="+32 99999999">
-                                    <f:validator validatorId="contactPhoneNumberValidator"/>
-                                </p:inputMask>
-                                <label>#{bundle['contacts.phoneNumberLabel']}</label>
-                            </h:panelGroup>
-
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:inputText id="companyEmail" value="#{companiesBean.companiesEntity.email}">
-                                    <f:validator validatorId="companyEmailValidator"/>
-                                </p:inputText>
-                                <label>#{bundle['contacts.emailLabel']}</label>
-                            </h:panelGroup>
-
-                            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                                <p:inputText id="linkedinPage" value="#{companiesBean.companiesEntity.linkedInPage}">
-                                    <f:validator validatorId="linkedinPageValidator"/>
-                                </p:inputText>
-                                <label>#{bundle['company.linkedInPage']}</label>
-                            </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:autoComplete id="companyTypesDisplay" dropdown="true"
+                                                        value="#{companiesBean.companiesEntity.companyTypesByIdCompanyTypes}"
+                                                        required="true"
+                                                        requiredMessage="#{bundle['company.companiesTypeNotValid']}"
+                                                        completeMethod="#{companiesBean.completeCompanyTypes}"
+                                                        var="companyTypes"
+                                                        itemLabel="#{companyTypes.label}"
+                                                        itemValue="#{companyTypes}"
+                                                        converter="companyTypesConverter"
+                                                        scrollHeight="250"
+                                                        groupBy="#{companiesBean.getCompanyTypesEntityGroup(companyTypes)}"
+                                                        placeholder="#{bundle['company.chooseCompanyType']}"/>
+                                    </h:panelGroup>
 
 
-                            <p:calendar id="creationDate" value="#{companiesBean.companiesEntity.creationDate}"
-                                        pattern="dd/MM/yyyy" maxdate="#{companiesBean.now}"
-                                        placeholder="#{bundle['company.creationDate']}" style="margin-bottom:10px;">
-                                <!--                                <f:validator validatorId="dateValidator"/>-->
-                                <f:converter converterId="localDateTimeConverter"/>
-                            </p:calendar>
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputNumber id="employeesNumber"
+                                                       value="#{companiesBean.companiesEntity.employeesNumber}"
+                                                       validatorMessage="#{bundle['company.employeesNumberNotValid']}">
+                                            <f:validateLongRange minimum="0"/>
+                                        </p:inputNumber>
+                                        <label>#{bundle['company.employessNumber']}</label>
+                                    </h:panelGroup>
 
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputNumber id="revenue" value="#{companiesBean.companiesEntity.revenue}"
+                                                       validatorMessage="#{bundle['company.employeesNumberNotValid']}">
+                                            <f:validateLongRange minimum="0"/>
+                                        </p:inputNumber>
+                                        <label>#{bundle['company.revenue']}</label>
+                                    </h:panelGroup>
 
-                            <p:calendar id="closingDate" value="#{companiesBean.companiesEntity.closingDate}"
-                                        pattern="dd/MM/yyyy" maxdate="#{companiesBean.now}"
-                                        placeholder="#{bundle['company.closingDate']}" style="margin-bottom:10px;">
-                                <f:converter converterId="localDateTimeConverter"/>
-                            </p:calendar>
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputNumber id="companyAnnualSales"
+                                                       value="#{companiesBean.companiesEntity.annualSales}"
+                                                       validatorMessage="#{bundle['company.employeesNumberNotValid']}">
+                                            <f:validateLongRange minimum="0"/>
+                                        </p:inputNumber>
+                                        <label>#{bundle['company.annualSales']}</label>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px;margin-bottom:10px;">
+                                        <p:inputMask id="companyCreationDate"
+                                                     value="#{companiesBean.companiesEntity.creationDate}"
+                                                     mask="9999"
+                                        >
+                                            <f:validator validatorId="companyDateValidator"/>
+                                        </p:inputMask>
+                                        <label>#{bundle['company.creationDate']}</label>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputMask id="companyClosingDate"
+                                                     value="#{companiesBean.companiesEntity.closingDate}"
+                                                     mask="9999"
+                                        >
+                                            <f:validator validatorId="companyClosingDateValidator"/>
+                                        </p:inputMask>
+                                        <label>#{bundle['company.closingDate']}</label>
+                                    </h:panelGroup>
+
+                                </p:tab>
+
+                                <p:tab title="Coordonées de l'entreprise">
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputText id="companyAddressStreet"
+                                                     value="#{addressesBean.addressesEntity.street}">
+                                        </p:inputText>
+                                        <label>Rue</label>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputText id="companyNumber"
+                                                     value="#{addressesBean.addressesEntity.number}">
+                                        </p:inputText>
+                                        <label>Numéro</label>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputText id="companyBox"
+                                                     value="#{addressesBean.addressesEntity.box}">
+                                        </p:inputText>
+                                        <label>Boite</label>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:autoComplete id="addressCity" dropdown="true"
+                                                        value="#{addressesBean.addressesEntity.citiesByIdCities}"
+                                                        completeMethod="#{addressesBean.completeCitiesEntityContains}"
+                                                        var="cities"
+                                                        itemLabel="#{cities.label}"
+                                                        itemValue="#{cities}"
+                                                        scrollHeight="250"
+                                                        converter="citiesConverter"
+                                                        placeholder="#{bundle['contacts.chooseContacts']}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputMask id="companyPhoneNumber"
+                                                     value="#{companiesBean.companiesEntity.phoneNumber}"
+                                                     mask="+32 99999999">
+                                            <f:validator validatorId="contactPhoneNumberValidator"/>
+                                        </p:inputMask>
+                                        <label>#{bundle['contacts.phoneNumberLabel']}</label>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputText id="companyEmail" value="#{companiesBean.companiesEntity.email}">
+                                            <f:validator validatorId="companyEmailValidator"/>
+                                        </p:inputText>
+                                        <label>#{bundle['contacts.emailLabel']}</label>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputMask id="companyVAT" value="#{companiesBean.companiesEntity.vatNumber}"
+                                                     mask="BE-9999999999">
+                                            <f:validator validatorId="companyVATValidator"/>
+                                        </p:inputMask>
+                                        <label>#{bundle['company.vatNumber']}</label>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputMask id="companyBankAccount"
+                                                     value="#{companiesBean.companiesEntity.bankAccount}"
+                                                     mask="BE-99999999999999">
+                                            <f:validator validatorId="companyBankAccountValidator"/>
+                                        </p:inputMask>
+                                        <label>#{bundle['company.bankAccount']}</label>
+                                    </h:panelGroup>
+                                </p:tab>
+
+                                <p:tab title="Propriétés commerciales">
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:inputText id="linkedinPage"
+                                                     value="#{companiesBean.companiesEntity.linkedInPage}">
+                                            <f:validator validatorId="linkedinPageValidator"/>
+                                        </p:inputText>
+                                        <label>#{bundle['company.linkedInPage']}</label>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <span style="margin-right: 15px"
+                                              class="labelLike">#{bundle['company.registerDateLabel']}</span>
+                                        <h:outputText id="registerDate"
+                                                      value="#{companiesBean.companiesEntity.registerDate eq null ? '--' : companiesBean.companiesEntity.registerDate}">
+                                            <f:convertDateTime type="localDate"
+                                                               pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                                        </h:outputText>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <span style="margin-right: 15px"
+                                              class="labelLike">#{bundle['company.modificationDateLabel']}</span>
+                                        <h:outputText id="modficationDate"
+                                                      value="#{companiesBean.companiesEntity.modificationDate eq null ? '--' : companiesBean.companiesEntity.modificationDate}">
+                                            <f:convertDateTime type="localDate"
+                                                               pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                                        </h:outputText>
+                                    </h:panelGroup>
+                                </p:tab>
+                            </p:accordionPanel>
 
                         </p:panelGrid>
 
