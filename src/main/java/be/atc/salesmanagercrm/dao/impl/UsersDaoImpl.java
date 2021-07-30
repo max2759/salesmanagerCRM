@@ -37,8 +37,6 @@ public class UsersDaoImpl implements UsersDao {
         } catch (NoResultException e) {
             return null;
         }
-
-
     }
 
     @Override
