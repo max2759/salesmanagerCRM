@@ -22,7 +22,7 @@ public class CompaniesContactsDaoImpl extends EntityFinderImpl<CompaniesContacts
     @Override
     public List<CompaniesContactsEntity> findAll(EntityManager em) {
         return em.createNamedQuery("CompaniesContacts.findAll",
-                CompaniesContactsEntity.class)
+                        CompaniesContactsEntity.class)
                 .getResultList();
     }
 }

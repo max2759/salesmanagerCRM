@@ -2,15 +2,13 @@ package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.dao.ContactsDao;
 import be.atc.salesmanagercrm.dao.impl.ContactsDaoImpl;
-import be.atc.salesmanagercrm.entities.ContactTypesEntity;
-import be.atc.salesmanagercrm.entities.ContactsEntity;
-import be.atc.salesmanagercrm.entities.JobTitlesEntity;
-import be.atc.salesmanagercrm.entities.UsersEntity;
+import be.atc.salesmanagercrm.entities.*;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
 import be.atc.salesmanagercrm.utils.JsfUtils;
+import be.atc.salesmanagercrm.utils.ObjectActivity;
 import be.atc.salesmanagercrm.validators.ContactValidator;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +25,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -60,6 +60,57 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
     @Inject
     private ContactTypesBean contactTypesBean;
+
+    @Getter
+    @Setter
+    private Map<LocalDateTime, Object> listActivity = new TreeMap<>(Collections.reverseOrder());
+
+    /**
+     * this method is used in activity page
+     */
+    public void activityThread() {
+        log.info("ContactsBean : activityThread");
+        // TODO : Modifier ça par le contact !
+        contactsEntity = findByIdContactAndByIdUser(1, 1);
+
+        for (NotesEntity n : contactsEntity.getNotesById()) {
+            ObjectActivity objectActivity = new ObjectActivity(n.getClass().getName(), n);
+            listActivity.put(n.getCreationDate(), objectActivity);
+        }
+        for (TasksEntity t : contactsEntity.getTasksById()) {
+            ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
+            listActivity.put(t.getCreationDate(), objectActivity);
+        }
+        for (TransactionsEntity t : contactsEntity.getTransactionsById()) {
+            if (t.isActive()) {
+                ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
+                listActivity.put(t.getCreationDate(), objectActivity);
+
+                TransactionsBean transactionsBean = new TransactionsBean();
+                // TODO Modifier USER
+                TransactionsEntity transactionsEntity = transactionsBean.findById(t.getId(), 1);
+                for (TransactionHistoriesEntity tH : transactionsEntity.getTransactionHistoriesById()) {
+                    ObjectActivity objectActivity1 = new ObjectActivity(tH.getClass().getName(), tH);
+                    listActivity.put(tH.getSaveDate(), objectActivity1);
+                }
+            }
+        }
+        for (VouchersEntity v : contactsEntity.getVouchersById()) {
+            ObjectActivity objectActivity = new ObjectActivity(v.getClass().getName(), v);
+            listActivity.put(v.getCreationDate(), objectActivity);
+
+            VouchersBean vouchersBean = new VouchersBean();
+            // TODO Modifier USER
+            VouchersEntity vouchersEntity = vouchersBean.findById(v.getId(), 1);
+            for (VoucherHistoriesEntity vH : vouchersEntity.getVoucherHistoriesById()) {
+                ObjectActivity objectActivity1 = new ObjectActivity(vH.getClass().getName(), vH);
+                listActivity.put(vH.getSaveDate(), objectActivity1);
+            }
+        }
+
+        log.info("Liste : " + listActivity);
+    }
+
 
     public void findAllContacts() {
         contactsEntityList = findContactsEntityByIdUser(1);

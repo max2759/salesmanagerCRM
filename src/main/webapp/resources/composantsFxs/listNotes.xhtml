@@ -5,6 +5,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
       xmlns:cc="http://java.sun.com/jsf/composite">
 
 <cc:interface name="createNotes"
@@ -15,19 +16,26 @@
 <cc:implementation>
     <f:view>
 
+        <p:dialog header="#{bundle['notes.create']}" widgetVar="createDialog" modal="true" responsive="true"
+                  showEffect="fade">
+            <fxs:createNotes id="createNotes"/>
+        </p:dialog>
 
-        <h3>#{bundle['notes.list']}</h3>
+        <div class="card card-w-title">
+            <h1>#{bundle['transactions.title']}</h1>
+            <h:form>
+                <p:commandButton value="#{bundle['transactions.create']}"
+                                 update="@(form) msgs"
+                                 onclick="PF('createDialog').show();" styleClass="NavyButton marginBottom15"
+                                 action="#{transactionsBean.showModalCreate}"
+                />
+            </h:form>
 
-
-        <h:form id="form">
-
-            <div class="card">
-                <p:dataTable id="note1" var="note" value="#{notesBean.notesEntities}" editable="true"
-                             style="margin-bottom:20px">
+            <h:form id="form">
+                <p:dataTable id="note1" var="note" value="#{notesBean.notesEntities}" editable="true">
 
                     <p:ajax event="rowEdit" listener="#{notesBean.onRowEdit}" update="@this msgs"/>
                     <p:ajax event="rowEditCancel" listener="#{notesBean.onRowCancel}" update="@this msgs"/>
-
 
                     <p:column>
 
@@ -68,9 +76,8 @@
 
 
                 </p:dataTable>
-            </div>
-
-        </h:form>
+            </h:form>
+        </div>
 
     </f:view>
 </cc:implementation>

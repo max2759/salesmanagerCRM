@@ -16,34 +16,23 @@
     <f:view>
 
         <h:form>
-            <h3>#{bundle['notes.title']}</h3>
+            <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
-            <div>
-                <p:outputLabel value="#{bundle['notes.message']}"/>
-<!--                <p:textEditor widgetVar="editor2" value="#{notesBean.notesEntity.message}" height="100"
-                              placeholder="#{bundle['notes.messageHolder']}">
-                    <f:facet name="toolbar">
-                            <span>
-                                <button class="ql-bold"></button>
-                                <button class="ql-italic"></button>
-                                <button class="ql-underline"></button>
-                                <button class="ql-strike"></button>
-                            </span>
-                    </f:facet>
-                </p:textEditor>-->
-
-                <div class="card card-w-title">
-                    <h1>#{bundle['notes.title']}</h1>
-                    <p:inputTextarea rows="3" value="#{notesBean.notesEntity.message}"
-                                     placeholder="#{bundle['notes.messageHolder']}" autoResize="false"/>
-
-                </div>
-
+                <p:outputLabel value="#{bundle['notes.title']} :" for="title" styleClass="boldText"/>
+                <p:inputTextarea id="title" value="#{notesBean.notesEntity.message}"
+                                 rows="4" cols="100"
+                                 required="true"
+                                 requiredMessage="#{bundle['notes.validator.message']}"
+                                 placeholder="#{bundle['notes.messageHolder']}"
+                                 autoResize="false">
+                    <p:ajax update="msg" event="keyup"/>
+                </p:inputTextarea>
+                <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
-                                 value="#{bundle['notes.save']}" icon="pi pi-check"
+                                 value="#{bundle['notes.save']}"
                                  update="@(form) msgs"
                                  action="#{notesBean.saveEntity}"/>
-            </div>
+            </p:panelGrid>
         </h:form>
 
     </f:view>

@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.TabChangeEvent;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -24,10 +23,12 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Younes Arifi
@@ -154,18 +155,6 @@ public class TasksBean extends ExtendBean implements Serializable {
         companiesEntity.setId(1);
 
         loadListEntities("displayByCompany");
-    }
-
-    /**
-     * Load TasksEntities when Tab Change !
-     *
-     * @param event TabChangeEvent
-     */
-    public void onTabChange(TabChangeEvent event) {
-        log.info("method : onTabChange()");
-        log.info("event : " + event.getTab().getId());
-
-        loadListEntities(event.getTab().getId());
     }
 
     /**
@@ -297,25 +286,20 @@ public class TasksBean extends ExtendBean implements Serializable {
         contactsEntity.setId(1);
         companiesEntity.setId(1);
 
-        if (typeLoad.equalsIgnoreCase("displayAll")) {
-            tasksEntities = findAll(usersEntity.getId());
-        } else if (typeLoad.equalsIgnoreCase("displayToCome")) {
-            tasksEntitiesToCome = findTasksToCome(usersEntity.getId());
-        } else if (typeLoad.equalsIgnoreCase("displayToday")) {
-            tasksEntitiesDueToday = findTasksToday(usersEntity.getId());
-        } else if (typeLoad.equalsIgnoreCase("displayToLate")) {
-            tasksEntitiesToLate = findTasksToLate(usersEntity.getId());
-        } else if (typeLoad.equalsIgnoreCase("displayFinished")) {
-            tasksEntitiesFinished = findTasksFinished(usersEntity.getId());
-        } else if (typeLoad.equalsIgnoreCase("displayByCompany")) {
+        if (typeLoad.equalsIgnoreCase("displayByCompany")) {
             tasksEntitiesByCompanies = findTasksEntityByCompaniesByIdCompanies(companiesEntity.getId(), usersEntity.getId());
         } else if (typeLoad.equalsIgnoreCase("displayByContact")) {
             tasksEntitiesByContacts = findTasksEntityByContactsByIdContacts(contactsEntity.getId(), usersEntity.getId());
         } else if (typeLoad.equalsIgnoreCase("all")) {
+
+            LocalDateTime dateTime = LocalDate.now().atTime(0, 0, 0, 0).plusDays(1);
+
             tasksEntities = findAll(usersEntity.getId());
-            tasksEntitiesToCome = findTasksToCome(usersEntity.getId());
-            tasksEntitiesDueToday = findTasksToday(usersEntity.getId());
-            tasksEntitiesToLate = findTasksToLate(usersEntity.getId());
+
+            this.tasksEntitiesToCome = tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isAfter(LocalDateTime.now())).collect(Collectors.toList());
+            this.tasksEntitiesDueToday = tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isBefore(dateTime) && t.getEndDate().isAfter(LocalDateTime.now())).collect(Collectors.toList());
+            this.tasksEntitiesToLate = tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isBefore(LocalDateTime.now())).collect(Collectors.toList());
+
             tasksEntitiesFinished = findTasksFinished(usersEntity.getId());
         }
     }
@@ -544,66 +528,6 @@ public class TasksBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Find all tasks to late
-     */
-    protected List<TasksEntity> findTasksToLate(int idUser) {
-        FacesMessage msg;
-        if (idUser == 0) {
-            log.error("User ID is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return Collections.emptyList();
-        }
-        EntityManager em = EMF.getEM();
-        List<TasksEntity> tasksEntities = dao.findTasksToLate(em, idUser);
-
-        em.clear();
-        em.close();
-
-        return tasksEntities;
-    }
-
-    /**
-     * Find all tasks to come
-     */
-    protected List<TasksEntity> findTasksToCome(int idUser) {
-        FacesMessage msg;
-        if (idUser == 0) {
-            log.error("User ID is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return Collections.emptyList();
-        }
-        EntityManager em = EMF.getEM();
-        List<TasksEntity> tasksEntities = dao.findTasksToCome(em, idUser);
-
-        em.clear();
-        em.close();
-
-        return tasksEntities;
-    }
-
-    /**
-     * Find all tasks to come
-     */
-    protected List<TasksEntity> findTasksToday(int idUser) {
-        FacesMessage msg;
-        if (idUser == 0) {
-            log.error("User ID is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return Collections.emptyList();
-        }
-        EntityManager em = EMF.getEM();
-        List<TasksEntity> tasksEntities = dao.findTasksToday(em, idUser);
-
-        em.clear();
-        em.close();
-
-        return tasksEntities;
-    }
-
-    /**
      * Find all tasks finished
      */
     protected List<TasksEntity> findTasksFinished(int idUser) {
@@ -799,6 +723,11 @@ public class TasksBean extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * Valide Task date End
+     *
+     * @param entity TasksEntity
+     */
     private void validateTaskDateEnd(TasksEntity entity) {
         if (entity.getEndDate() != null) {
             if (entity.getEndDate().isBefore(entity.getCreationDate())) {
@@ -807,5 +736,4 @@ public class TasksBean extends ExtendBean implements Serializable {
             }
         }
     }
-
 }

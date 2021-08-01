@@ -1,0 +1,145 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">#{bundle['activity.title']}</ui:define>
+    <ui:define name="content">
+
+
+        <f:metadata>
+            <f:viewAction action="#{contactsBean.activityThread}"/>
+        </f:metadata>
+
+        <div class="card card-w-title">
+            <h:form id="form">
+                <p:dataScroller chunkSize="10"
+                                emptyMessage="#{bundle['activity.notFound.notFound']}"
+                                var="activity"
+                                value="#{contactsBean.listActivity}">
+                    <f:facet name="header">
+                    </f:facet>
+
+                    <h2 style="padding-top: 20px">
+                        <h:outputText value="#{activity.key}">
+                            <f:convertDateTime type="localDate"
+                                               pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                        </h:outputText>
+                    </h2>
+
+                    <h:panelGroup rendered="#{activity.value.objectType.contains('NotesEntity')}">
+                        <p:panel header="#{bundle['notes.title']} " toggleable="true">
+
+                            <h:outputText styleClass="boldText" value="#{bundle['notes.remarks']} "/>
+                            <h:outputText title="#{bundle['by']} : #{activity.value.object.usersByIdUsers.email}"
+                                          value="#{bundle['by']} #{activity.value.object.usersByIdUsers.username} "/>
+                            <h:outputText value="#{activity.value.object.message}" styleClass="outputTextNotes"/>
+                        </p:panel>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{activity.value.objectType.contains('TasksEntity')}">
+                        <p:panel header="#{bundle['tasks.title']} " toggleable="true">
+
+                            <p:outputLabel id="endDateExpired" style="padding-right: 5px;"
+                                           rendered="#{activity.value.object.endDate lt tasksBean.now ? true : false}">
+                                <i class="ui-icon ui-icon-info-outline" style="color: red"></i>
+                            </p:outputLabel>
+                            <p:tooltip for="endDateExpired" value="#{bundle['tasks.endDateExpired']}"
+                                       showEffect="clip"
+                                       hideEffect="fold" position="bottom"/>
+                            <h:outputText styleClass="boldText" value="#{bundle['tasks.title']} "/>
+                            <h:outputText title="#{bundle['by']} : #{activity.value.object.usersByIdUsers.email}"
+                                          value="#{bundle['by']} #{activity.value.object.usersByIdUsers.username} "/>
+
+                            <p:outputLabel id="task"
+                                           styleClass="outputTextNotes">#{activity.value.object.title}</p:outputLabel>
+                            <p:overlayPanel id="taskPanel" for="task" hideEffect="fade">
+                                <h:outputLabel
+                                        rendered="#{empty activity.value.object.taskTypesByIdTaskTypes.label ? false : true}"
+                                        styleClass="outputTextNotes">#{bundle['title']} : #{activity.value.object.taskTypesByIdTaskTypes.label}
+                                </h:outputLabel>
+                                <h:outputLabel rendered="#{empty activity.value.object.priority.label ? false : true}"
+                                               styleClass="outputTextNotes">#{bundle['priority']} : #{activity.value.object.priority.label}
+                                </h:outputLabel>
+                                <h:outputText rendered="#{empty activity.value.object.endDate ? false : true}"
+                                              styleClass="outputTextDueDatePanel" value="#{bundle['tasks.endDate']} : ">
+                                </h:outputText>
+                                <h:outputText rendered="#{empty activity.value.object.endDate ? false : true}"
+                                              value="#{activity.value.object.endDate}">
+                                    <f:convertDateTime type="localDate"
+                                                       pattern="dd/MM/yy ' #{bundle['at']} ' HH:mm"/>
+                                </h:outputText>
+                                <h:outputLabel rendered="#{empty activity.value.object.description ? false : true}"
+                                               styleClass="outputTextNotes">#{bundle['tasks.description']} : #{activity.value.object.description}
+                                </h:outputLabel>
+                            </p:overlayPanel>
+                        </p:panel>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{activity.value.objectType.contains('VouchersEntity')}">
+                        <p:panel header="#{bundle['vouchers.title']} " toggleable="true">
+
+                            <h:outputText styleClass="boldText" value="#{bundle['vouchers.title']} "/>
+                            <h:outputText title="#{bundle['by']} : #{activity.value.object.usersByIdUsers.email}"
+                                          value="#{bundle['by']} #{activity.value.object.usersByIdUsers.username} "/>
+                            <h:link styleClass="outputTextNotes" value=" #{activity.value.object.title} "
+                                    outcome="voucherDetails">
+                                <f:param name="idVoucher" value="#{activity.value.object.id}"/>
+                            </h:link>
+
+                        </p:panel>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{activity.value.objectType.contains('VoucherHistoriesEntity')}">
+                        <p:panel header="#{bundle['activity.voucher']} " toggleable="true">
+
+                            <h:outputText styleClass="boldText"
+                                          value="#{activity.value.object.vouchersByIdVouchers.usersByIdUsers.username} "/>
+                            <h:outputText value="#{bundle['activity.voucherStatus1']}"/>
+                            <h:link value=" #{activity.value.object.vouchersByIdVouchers.title} "
+                                    outcome="voucherDetails">
+                                <f:param name="idVoucher" value="#{activity.value.object.vouchersByIdVouchers.id}"/>
+                            </h:link>
+                            <h:outputText
+                                    value="#{bundle['activity.voucherStatus2']} #{activity.value.object.voucherStatusByIdVoucherStatus.label}"/>
+                        </p:panel>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{activity.value.objectType.contains('TransactionsEntity')}">
+                        <p:panel header="#{bundle['transactions.title']} " toggleable="true">
+
+                            <h:outputText styleClass="boldText" value="#{bundle['transactions.title']} "/>
+                            <h:outputText title="#{bundle['by']} : #{activity.value.object.usersByIdUsers.email}"
+                                          value="#{bundle['by']} #{activity.value.object.usersByIdUsers.username} "/>
+                            <h:link styleClass="outputTextNotes" value=" #{activity.value.object.title} "
+                                    outcome="transactionDetails">
+                                <f:param name="idTransaction" value="#{activity.value.object.id}"/>
+                            </h:link>
+                        </p:panel>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{activity.value.objectType.contains('TransactionHistoriesEntity')}">
+                        <p:panel header="#{bundle['activity.transaction']} " toggleable="true">
+
+                            <h:outputText styleClass="boldText"
+                                          value="#{activity.value.object.transactionsByIdTransactions.usersByIdUsers.username} "/>
+                            <h:outputText value="#{bundle['activity.transactionPhase1']}"/>
+                            <h:link value=" #{activity.value.object.transactionsByIdTransactions.title} "
+                                    outcome="transactionDetails">
+                                <f:param name="idTransaction"
+                                         value="#{activity.value.object.transactionsByIdTransactions.id}"/>
+                            </h:link>
+                            <h:outputText
+                                    value="#{bundle['activity.transactionPhase2']} #{activity.value.object.transactionPhasesByIdTransactionPhases.label}"/>
+                        </p:panel>
+                    </h:panelGroup>
+
+                </p:dataScroller>
+            </h:form>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

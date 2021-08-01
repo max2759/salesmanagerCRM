@@ -207,47 +207,6 @@ class TasksBeanTest {
     }
 
     @Test
-    void findTasksToLate() {
-        int idUser = 1;
-        List<TasksEntity> tasksEntities = tasksBean.findTasksToLate(idUser);
-
-
-        boolean test = !tasksEntities.isEmpty();
-
-        log.info("Le test vaut : " + test + ". La liste contient : " + (long) tasksEntities.size() + " taches");
-
-        assertThat(test).isEqualTo(true);
-    }
-
-    @Test
-    void findTasksToCome() {
-        int idUser = 1;
-        List<TasksEntity> tasksEntities = tasksBean.findTasksToCome(idUser);
-
-
-        boolean test = !tasksEntities.isEmpty();
-
-        log.info("Le test vaut : " + test + ". La liste contient : " + (long) tasksEntities.size() + " taches");
-
-        assertThat(test).isEqualTo(true);
-    }
-
-    @Test
-    void findTasksToday() {
-        int idUser = 1;
-
-
-        List<TasksEntity> tasksEntities = tasksBean.findTasksToday(idUser);
-
-
-        boolean test = !tasksEntities.isEmpty();
-
-        log.info("Le test vaut : " + test + ". La liste contient : " + (long) tasksEntities.size() + " taches");
-
-        assertThat(test).isEqualTo(true);
-    }
-
-    @Test
     void findTasksFinished() {
         int idUser = 1;
 

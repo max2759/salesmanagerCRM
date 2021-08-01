@@ -32,7 +32,7 @@ public class ContactsDaoImpl extends EntityFinderImpl<ContactsEntity> implements
     public List<ContactsEntity> findContactsEntityByIdUser(EntityManager em, int idUser) {
 
         return em.createNamedQuery("Contacts.findContactsEntityByIdUser",
-                ContactsEntity.class)
+                        ContactsEntity.class)
                 .setParameter("idUser", idUser)
                 .getResultList();
     }
