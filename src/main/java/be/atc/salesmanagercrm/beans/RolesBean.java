@@ -16,12 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -30,7 +30,7 @@ import java.util.Locale;
 @Slf4j
 @Named(value = "rolesBean")
 @SessionScoped
-public class RolesBean implements Serializable {
+public class RolesBean extends ExtendBean implements Serializable {
 
     private static final long serialVersionUID = -2338626292552177485L;
 
@@ -46,9 +46,7 @@ public class RolesBean implements Serializable {
     @Getter
     @Setter
     private RolesEntity roleForDialog;
-    @Getter
-    @Setter
-    private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+
     @Getter
     @Setter
     private RolesEntity selectedRoleEntity;
@@ -59,6 +57,8 @@ public class RolesBean implements Serializable {
     @Getter
     @Setter
     private List<RolesEntity> rolesEntities;
+    @Inject
+    private UsersBean usersBean;
 
     public void initialiseDialogRoleId(Integer idRole) {
         if (idRole == null || idRole < 1) {
@@ -73,10 +73,35 @@ public class RolesBean implements Serializable {
         return dao.findById(em, id);
     }
 
+    public void findAllActiveRoles() {
+        rolesEntityList = findAllActive();
+        log.info(String.valueOf(rolesEntityList));
+    }
+
+    protected List<RolesEntity> findAllActive() {
+        log.info("begin findallactive");
+        EntityManager em = EMF.getEM();
+        List<RolesEntity> rolesEntities = dao.findAllRolesActive(em);
+
+        em.clear();
+        em.close();
+
+        return rolesEntities;
+    }
+
     public void findAllRoles() {
-        log.info("bgin findallrole");
+        log.info("bgin findallrole " + usersBean.getUsersEntity().getId());
+
+        //test a typed permission (not instance-level)
+        //   if (getCurrentUser().isPermitted("addRoles")) {
         rolesEntityList = findAll();
         log.info(String.valueOf(rolesEntityList));
+        log.info("Tu as l'autorisation Test.");
+    /*    } else {
+            log.info("Sorry, lightsaber1 rings are for schwartz masters only.");
+        }
+*/
+
     }
 
     protected List<RolesEntity> findAll() {

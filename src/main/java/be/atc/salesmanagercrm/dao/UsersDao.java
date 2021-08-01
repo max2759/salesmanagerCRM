@@ -22,4 +22,6 @@ public interface UsersDao {
     UsersEntity findPassword(EntityManager em, int id);
 
     UsersEntity findUsername(EntityManager em, int id);
+
+    List<UsersEntity> findActiveUsers(EntityManager em);
 }
