@@ -27,6 +27,7 @@ import java.util.List;
 @ViewScoped
 public class CitiesBean extends ExtendBean implements Serializable {
 
+    private static final long serialVersionUID = 2558862204507586311L;
     @Getter
     @Setter
     private CitiesDao citiesDao = new CitiesDaoImpl();

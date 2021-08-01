@@ -24,6 +24,7 @@ import java.io.Serializable;
 @ViewScoped
 public class CompaniesContactsBean extends ExtendBean implements Serializable {
 
+    private static final long serialVersionUID = -1631508572484407774L;
     @Getter
     @Setter
     private CompaniesContactsEntity companiesContactsEntity = new CompaniesContactsEntity();

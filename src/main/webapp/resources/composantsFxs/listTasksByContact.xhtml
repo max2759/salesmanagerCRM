@@ -5,6 +5,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
       xmlns:cc="http://java.sun.com/jsf/composite">
 
 <cc:interface name="listTasksByContact"
@@ -14,117 +15,129 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
-        <h:form id="formTasks">
 
-            <div class="ui-g ui-fluid">
-                <div class="card card-w-title">
-                    <p:dataTable id="task1" var="task" value="#{tasksBean.tasksEntitiesByContacts}" editable="true"
-                                 style="margin-bottom:20px">
+        <p:dialog header="#{bundle['tasks.create']}" widgetVar="createDialog" modal="true" responsive="true"
+                  showEffect="fade">
+            <fxs:createTasks id="createTasks"/>
+        </p:dialog>
 
-                        <p:ajax event="rowEdit" listener="#{tasksBean.onRowEdit}" update="@this msgs"/>
-                        <p:ajax event="rowEditCancel" listener="#{tasksBean.onRowCancel}"
-                                update="@this msgs"/>
+        <div class="card card-w-title">
+            <h1>#{bundle['tasks.title']}</h1>
+            <h:form>
+                <p:commandButton value="#{bundle['tasks.create']}"
+                                 update="@(form) msgs"
+                                 onclick="PF('createDialog').show();" styleClass="NavyButton marginBottom15"
+                                 action="#{tasksBean.showModalCreate}"
+                />
+            </h:form>
 
-                        <p:column>
+            <h:form id="formTasks">
+                <p:dataTable id="task1" var="task" value="#{tasksBean.tasksEntitiesByContacts}" editable="true">
 
-                            <h:outputText styleClass="boldText" value="#{bundle['task']} "/>
-                            <h:outputText title="#{bundle['by']} : #{task.usersByIdUsers.email}"
-                                          value="#{bundle['by']} #{task.usersByIdUsers.username}"/>
+                    <p:ajax event="rowEdit" listener="#{tasksBean.onRowEdit}" update="@this msgs"/>
+                    <p:ajax event="rowEditCancel" listener="#{tasksBean.onRowCancel}"
+                            update="@this msgs"/>
 
-                            <h:outputText
-                                    value=" #{task.endDate > tasksBean.now ? bundle['deadline'] : bundle['late']} "/>
-                            <h:outputText value="#{task.endDate}">
-                                <f:convertDateTime type="localDate"
-                                                   pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
-                            </h:outputText>
+                    <p:column>
 
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText value="#{task.title}"/>
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:outputLabel value="#{bundle['title']} :" for="acTitle"
-                                                   styleClass="taskUpdateTitle"/>
-                                    <p:inputText id="acTitle" value="#{task.title}" required="true"
-                                                 label="#{bundle['title']}"/>
-                                </f:facet>
-                            </p:cellEditor>
+                        <h:outputText styleClass="boldText" value="#{bundle['task']} "/>
+                        <h:outputText title="#{bundle['by']} : #{task.usersByIdUsers.email}"
+                                      value="#{bundle['by']} #{task.usersByIdUsers.username}"/>
 
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText/>
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskType"
-                                                   styleClass="taskUpdateTitle"/>
-                                    <p:selectOneMenu id="taskType"
-                                                     value="#{task.taskTypesByIdTaskTypes}"
-                                                     converter="taskTypeConverter">
+                        <h:outputText
+                                value=" #{task.endDate > tasksBean.now ? bundle['deadline'] : bundle['late']} "/>
+                        <h:outputText value="#{task.endDate}">
+                            <f:convertDateTime type="localDate"
+                                               pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                        </h:outputText>
 
-                                        <f:selectItems value="#{taskTypesBean.taskTypesEntities}"
-                                                       var="taskTypesEntities" itemValue="#{taskTypesEntities}"
-                                                       itemLabel="#{taskTypesEntities.label}"/>
-                                    </p:selectOneMenu>
-                                </f:facet>
-                            </p:cellEditor>
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{task.title}"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:outputLabel value="#{bundle['title']} :" for="acTitle"
+                                               styleClass="taskUpdateTitle"/>
+                                <p:inputText id="acTitle" value="#{task.title}" required="true"
+                                             label="#{bundle['title']}"/>
+                            </f:facet>
+                        </p:cellEditor>
 
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText/>
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:outputLabel value="#{bundle['priority']}:" for="taskPriority"/>
-                                    <p:selectOneMenu id="taskPriority"
-                                                     value="#{task.priority}">
-                                        <f:selectItems value="#{enumPriorityBean.enumPriority}"
-                                                       var="enumPriority" itemValue="#{enumPriority}"
-                                                       itemLabel="#{enumPriority.label}"/>
-                                        <f:validator validatorId="enumPriorityValidator"/>
-                                    </p:selectOneMenu>
-                                </f:facet>
-                            </p:cellEditor>
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskType"
+                                               styleClass="taskUpdateTitle"/>
+                                <p:selectOneMenu id="taskType"
+                                                 value="#{task.taskTypesByIdTaskTypes}"
+                                                 converter="taskTypeConverter">
 
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText/>
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"
-                                                   styleClass="taskUpdateTitle"/>
-                                    <p:calendar placeholder="#{bundle['dueDate']}:"
-                                                value="#{task.endDate}"
-                                                id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
-                                </f:facet>
-                            </p:cellEditor>
+                                    <f:selectItems value="#{taskTypesBean.taskTypesEntities}"
+                                                   var="taskTypesEntities" itemValue="#{taskTypesEntities}"
+                                                   itemLabel="#{taskTypesEntities.label}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
 
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText value="#{task.description}"/>
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:outputLabel for="description" value="#{bundle['tasks.description']}:"
-                                                   styleClass="taskUpdateTitle"/>
-                                    <p:inputTextarea autoResize="false" rows="4" id="description"
-                                                     value="#{task.description}"
-                                                     label="#{bundle['tasks.description']}"/>
-                                </f:facet>
-                            </p:cellEditor>
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:outputLabel value="#{bundle['priority']}:" for="taskPriority"/>
+                                <p:selectOneMenu id="taskPriority"
+                                                 value="#{task.priority}">
+                                    <f:selectItems value="#{enumPriorityBean.enumPriority}"
+                                                   var="enumPriority" itemValue="#{enumPriority}"
+                                                   itemLabel="#{enumPriority.label}"/>
+                                    <f:validator validatorId="enumPriorityValidator"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
 
-                            <p:rowEditor editTitle="#{bundle['edit']}"
-                                         cancelTitle="#{bundle['cancel']}"
-                                         saveTitle="#{bundle['save']}"/>
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"
+                                               styleClass="taskUpdateTitle"/>
+                                <p:calendar placeholder="#{bundle['dueDate']}:"
+                                            value="#{task.endDate}"
+                                            id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
+                            </f:facet>
+                        </p:cellEditor>
 
-                            <p:commandLink update="@form msgs"
-                                           action="#{tasksBean.deleteEntity}">
-                                <i class="ui-icon ui-icon-delete-forever"></i>
-                                <f:param name="idEntity" value="#{task.id}"/>
-                            </p:commandLink>
-                        </p:column>
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{task.description}"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:outputLabel for="description" value="#{bundle['tasks.description']}:"
+                                               styleClass="taskUpdateTitle"/>
+                                <p:inputTextarea autoResize="false" rows="4" id="description"
+                                                 value="#{task.description}"
+                                                 label="#{bundle['tasks.description']}"/>
+                            </f:facet>
+                        </p:cellEditor>
 
-                    </p:dataTable>
-                </div>
-            </div>
-        </h:form>
+                        <p:rowEditor editTitle="#{bundle['edit']}"
+                                     cancelTitle="#{bundle['cancel']}"
+                                     saveTitle="#{bundle['save']}"/>
+
+                        <p:commandLink update="@form msgs"
+                                       action="#{tasksBean.deleteEntity}">
+                            <i class="ui-icon ui-icon-delete-forever"></i>
+                            <f:param name="idEntity" value="#{task.id}"/>
+                        </p:commandLink>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+        </div>
+
 
     </f:view>
 </cc:implementation>

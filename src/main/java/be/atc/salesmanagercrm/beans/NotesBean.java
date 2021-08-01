@@ -5,7 +5,6 @@ import be.atc.salesmanagercrm.dao.impl.NotesDaoImpl;
 import be.atc.salesmanagercrm.entities.CompaniesEntity;
 import be.atc.salesmanagercrm.entities.ContactsEntity;
 import be.atc.salesmanagercrm.entities.NotesEntity;
-import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
@@ -21,13 +20,15 @@ import org.primefaces.event.RowEditEvent;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Younes Arifi
@@ -35,7 +36,7 @@ import java.util.*;
 @Slf4j
 @Named(value = "notesBean")
 @ViewScoped
-public class NotesBean implements Serializable {
+public class NotesBean extends ExtendBean implements Serializable {
 
     private static final long serialVersionUID = -2338626292552177485L;
 
@@ -44,11 +45,6 @@ public class NotesBean implements Serializable {
     @Setter
     private NotesDao dao = new NotesDaoImpl();
 
-    // Todo : A modifier
-
-    @Getter
-    @Setter
-    private UsersEntity usersEntity = new UsersEntity();
     @Getter
     @Setter
     private ContactsEntity contactsEntity = new ContactsEntity();
@@ -65,9 +61,6 @@ public class NotesBean implements Serializable {
     @Setter
     private List<NotesEntity> notesEntities;
 
-    @Inject
-    private UsersBean usersBean;
-
     /**
      * Use this method for save entity note
      */
@@ -76,10 +69,10 @@ public class NotesBean implements Serializable {
 
         log.info("message : " + notesEntity.getMessage());
 
-        usersEntity.setId(1);
+        getUsersBean().getUsersEntity().setId(1);
         contactsEntity.setId(1);
 
-        notesEntity.setUsersByIdUsers(usersEntity);
+        notesEntity.setUsersByIdUsers(getUsersBean().getUsersEntity());
         notesEntity.setContactsByIdContacts(contactsEntity);
 
         save(notesEntity);
@@ -95,10 +88,11 @@ public class NotesBean implements Serializable {
      */
     public void listEntitiesContacts() {
         log.info("method : listEntitiesContacts()");
-        usersEntity.setId(1);
+        // TODO : Modifier avec User !!
+        getUsersBean().getUsersEntity().setId(1);
         contactsEntity.setId(1);
 
-        notesEntities = findNotesEntityByContactsByIdContacts(contactsEntity.getId(), usersEntity.getId());
+        notesEntities = findNotesEntityByContactsByIdContacts(contactsEntity.getId(), getUsersBean().getUsersEntity().getId());
 
     }
 
@@ -107,10 +101,19 @@ public class NotesBean implements Serializable {
      */
     public void listEntitiesCompanies() {
         log.info("method : listEntitiesCompanies()");
-        usersEntity.setId(1);
+        // TODO : Modifier avec User
+        getUsersBean().getUsersEntity().setId(1);
         companiesEntity.setId(1);
 
-        notesEntities = findNotesEntityByCompaniesByIdCompanies(companiesEntity.getId(), usersEntity.getId());
+        notesEntities = findNotesEntityByCompaniesByIdCompanies(companiesEntity.getId(), getUsersBean().getUsersEntity().getId());
+    }
+
+    /**
+     * Method to show modal in create note
+     */
+    public void showModalCreate() {
+        log.info("NotesBean => method : showModalCreate()");
+        notesEntity = new NotesEntity();
     }
 
     /**
@@ -141,12 +144,12 @@ public class NotesBean implements Serializable {
         }
 
         // TODO : Modifier USER
-        usersBean.getUsersEntity().setId(1);
+        getUsersBean().getUsersEntity().setId(1);
 
         NotesEntity notesEntityToUpdate;
 
         try {
-            notesEntityToUpdate = findById(idNote, usersBean.getUsersEntity().getId());
+            notesEntityToUpdate = findById(idNote, getUsersBean().getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "notes.notExist"), null);
@@ -193,19 +196,6 @@ public class NotesBean implements Serializable {
         listEntitiesContacts();
 //        listEntitiesCompanies();
     }
-
-    /**
-     * Get param
-     *
-     * @param name String
-     * @return String
-     */
-    protected String getParam(String name) {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-        return params.get(name);
-    }
-
 
     /**
      * Save Note Entity !

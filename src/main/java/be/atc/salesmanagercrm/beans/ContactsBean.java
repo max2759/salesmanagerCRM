@@ -60,6 +60,19 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
     @Inject
     private ContactTypesBean contactTypesBean;
+    @Inject
+    private NotesBean notesBean;
+    @Inject
+    private TasksBean tasksBean;
+    @Inject
+    private VouchersBean vouchersBean;
+    @Inject
+    private TransactionsBean transactionsBean;
+    @Inject
+    private TransactionHistoriesBean transactionHistoriesBean;
+    @Inject
+    private VoucherHistoriesBean voucherHistoriesBean;
+
 
     @Getter
     @Setter
@@ -71,38 +84,42 @@ public class ContactsBean extends ExtendBean implements Serializable {
     public void activityThread() {
         log.info("ContactsBean : activityThread");
         // TODO : Modifier ça par le contact !
-        contactsEntity = findByIdContactAndByIdUser(1, 1);
+        contactsEntity = findByIdContactAndByIdUser(1, getUsersBean().getUsersEntity().getId());
 
-        for (NotesEntity n : contactsEntity.getNotesById()) {
+        List<NotesEntity> notesEntities = notesBean.findNotesEntityByContactsByIdContacts(contactsEntity.getId(), getUsersBean().getUsersEntity().getId());
+        for (NotesEntity n : notesEntities) {
             ObjectActivity objectActivity = new ObjectActivity(n.getClass().getName(), n);
             listActivity.put(n.getCreationDate(), objectActivity);
         }
-        for (TasksEntity t : contactsEntity.getTasksById()) {
+
+        // TODO : modifier avec contact
+        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByContactsByIdContacts(contactsEntity.getId(), getUsersBean().getUsersEntity().getId());
+        for (TasksEntity t : tasksEntities) {
             ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
             listActivity.put(t.getCreationDate(), objectActivity);
         }
-        for (TransactionsEntity t : contactsEntity.getTransactionsById()) {
-            if (t.isActive()) {
-                ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
-                listActivity.put(t.getCreationDate(), objectActivity);
 
-                TransactionsBean transactionsBean = new TransactionsBean();
-                // TODO Modifier USER
-                TransactionsEntity transactionsEntity = transactionsBean.findById(t.getId(), 1);
-                for (TransactionHistoriesEntity tH : transactionsEntity.getTransactionHistoriesById()) {
-                    ObjectActivity objectActivity1 = new ObjectActivity(tH.getClass().getName(), tH);
-                    listActivity.put(tH.getSaveDate(), objectActivity1);
-                }
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByContactsByIdContacts(contactsEntity.getId(), getUsersBean().getUsersEntity().getId());
+        for (TransactionsEntity t : transactionsEntities) {
+            ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
+            listActivity.put(t.getCreationDate(), objectActivity);
+
+            // TODO Modifier USER
+            List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(t.getId(), getUsersBean().getUsersEntity().getId());
+            for (TransactionHistoriesEntity tH : transactionHistoriesEntities) {
+                ObjectActivity objectActivity1 = new ObjectActivity(tH.getClass().getName(), tH);
+                listActivity.put(tH.getSaveDate(), objectActivity1);
             }
         }
-        for (VouchersEntity v : contactsEntity.getVouchersById()) {
+
+        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByContactsByIdContacts(contactsEntity.getId(), getUsersBean().getUsersEntity().getId());
+        for (VouchersEntity v : vouchersEntities) {
             ObjectActivity objectActivity = new ObjectActivity(v.getClass().getName(), v);
             listActivity.put(v.getCreationDate(), objectActivity);
 
-            VouchersBean vouchersBean = new VouchersBean();
             // TODO Modifier USER
-            VouchersEntity vouchersEntity = vouchersBean.findById(v.getId(), 1);
-            for (VoucherHistoriesEntity vH : vouchersEntity.getVoucherHistoriesById()) {
+            List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(v.getId(), getUsersBean().getUsersEntity().getId());
+            for (VoucherHistoriesEntity vH : voucherHistoriesEntities) {
                 ObjectActivity objectActivity1 = new ObjectActivity(vH.getClass().getName(), vH);
                 listActivity.put(vH.getSaveDate(), objectActivity1);
             }

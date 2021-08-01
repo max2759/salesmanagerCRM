@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 @ViewScoped
 public class AddressesBean extends ExtendBean implements Serializable {
 
+    private static final long serialVersionUID = 5671519499945929696L;
     @Getter
     @Setter
     private AddressesDao addressesDao = new AddressesDaoImpl();

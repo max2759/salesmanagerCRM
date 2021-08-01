@@ -30,6 +30,7 @@ import java.util.List;
 @ViewScoped
 public class JobTitlesBean extends ExtendBean implements Serializable {
 
+    private static final long serialVersionUID = 7299153922194330761L;
     @Getter
     @Setter
     private JobTitlesDao jobTitlesDao = new JobTitlesDaoImpl();

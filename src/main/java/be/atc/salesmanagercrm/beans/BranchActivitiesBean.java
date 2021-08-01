@@ -30,6 +30,7 @@ import java.util.List;
 @ViewScoped
 public class BranchActivitiesBean extends ExtendBean implements Serializable {
 
+    private static final long serialVersionUID = 8716685401909061214L;
     @Getter
     @Setter
     private BranchActivitiesDao branchActivitiesDao = new BranchActivitiesDaoImpl();
