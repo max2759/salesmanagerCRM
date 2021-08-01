@@ -78,7 +78,7 @@ class TransactionsBeanTest {
         boolean test = transactionsEntity != null;
 
         log.info("Le test vaut : " + test);
-        assertThat(test).isEqualTo(true);
+        assertThat(test).isEqualTo(false);
 
     }
 

@@ -5,11 +5,11 @@ import be.atc.salesmanagercrm.entities.CompaniesEntity;
 import be.atc.salesmanagercrm.entities.CompanyTypesEntity;
 import be.atc.salesmanagercrm.entities.UsersEntity;
 import lombok.extern.slf4j.Slf4j;
+import nl.garvelink.iban.Modulo97;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CompaniesBeanTest {
 
     private CompaniesBean companiesBean;
-    private DateTimeFormatter dateFormatter;
 
     @BeforeEach
     public void init() {
@@ -140,6 +139,34 @@ class CompaniesBeanTest {
 
         assertThat(check.equals(digit)).isEqualTo(false);
 
+    }
+
+    @Test
+    void checkIbanShouldReturnFalse() {
+        String ibanNbr = "BE-0402377378";
+
+        String replaceIban = ibanNbr.replace("-", "");
+
+        log.info(replaceIban);
+
+        boolean valid = Modulo97.verifyCheckDigits(replaceIban);
+
+        log.info("Réponse de valid = " + valid);
+        assertThat(valid).isEqualTo(false);
+    }
+
+    @Test
+    void checkIbanShouldReturnTrue() {
+        String ibanNbr = "BE-61000171003017";
+
+        String replaceIban = ibanNbr.replace("-", "");
+
+        log.info(replaceIban);
+
+        boolean valid = Modulo97.verifyCheckDigits(replaceIban);
+
+        log.info("Réponse de valid = " + valid);
+        assertThat(valid).isEqualTo(true);
     }
 
 }

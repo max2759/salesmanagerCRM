@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
  * @author Zabbara Maximilien
  */
 @Slf4j
-@FacesValidator("companyDateValidator")
-public class CompanyDateValidator implements Validator {
+@FacesValidator("companyClosingDateValidator")
+public class CompanyClosingDateValidator implements Validator {
 
     Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
@@ -30,7 +30,7 @@ public class CompanyDateValidator implements Validator {
 
         if (value != null) {
             CompaniesEntity companiesEntity = new CompaniesEntity();
-            companiesEntity.setCreationDate((Integer) value);
+            companiesEntity.setClosingDate((Integer) value);
 
             try {
                 checkDate(companiesEntity);
@@ -62,7 +62,7 @@ public class CompanyDateValidator implements Validator {
 
             Pattern pattern = Pattern.compile("^[0-9]{4}$");
 
-            Matcher matcher = pattern.matcher(String.valueOf(companiesEntity.getCreationDate()));
+            Matcher matcher = pattern.matcher(String.valueOf(companiesEntity.getClosingDate()));
 
             boolean bool = matcher.matches();
 

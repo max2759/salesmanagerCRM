@@ -140,6 +140,23 @@ public class ContactsBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * Find all ContactTypes entities
+     *
+     * @return List of Contact Types
+     */
+    public List<ContactsEntity> findAll() {
+
+        EntityManager em = EMF.getEM();
+
+        List<ContactsEntity> contactsEntityList1 = contactsDao.findAll();
+
+        em.clear();
+        em.close();
+
+        return contactsEntityList1;
+    }
+
+    /**
      * Find Contact by ID
      *
      * @param id ContactsEntity
