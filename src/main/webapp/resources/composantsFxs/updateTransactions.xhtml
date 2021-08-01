@@ -16,110 +16,114 @@
     <f:view>
         <h:form>
 
-            <h4 class="p-mt-0">#{bundle['title']} :</h4>
-            <p:inplace>
-                <p:inputText id="titleUpdate" value="#{transactionsBean.transactionsEntity.title}"
-                             required="true"
-                             requiredMessage="#{bundle['transactions.validator.title']}">
-                    <p:ajax update="msgTitleUpdate" event="keyup"/>
-                </p:inputText>
-                <p:message for="titleUpdate" id="msgTitleUpdate" display="message"/>
-            </p:inplace>
+            <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                <p:outputLabel value="#{bundle['title']} :" for="titleUpdate" styleClass="boldText"/>
+                <p:inplace>
+                    <p:inputText id="titleUpdate" value="#{transactionsBean.transactionsEntity.title}"
+                                 required="true"
+                                 requiredMessage="#{bundle['transactions.validator.title']}">
+                        <p:ajax update="msg" event="keyup"/>
+                    </p:inputText>
+                </p:inplace>
 
-            <h4 class="p-mt-0">#{bundle['transactions.phase']}:</h4>
-            <p:inplace emptyLabel="..."
-                       label="#{transactionsBean.transactionsEntity.transactionPhasesByIdTransactionPhases.label}"
-                       effectSpeed="fast" event="click">
-                <p:selectOneMenu id="phase"
-                                 value="#{transactionsBean.transactionsEntity.transactionPhasesByIdTransactionPhases}"
-                                 converter="transactionPhasesConverter">
+                <p:outputLabel value="#{bundle['transactions.phase']}:" for="phase" styleClass="boldText"/>
+                <p:inplace emptyLabel="..."
+                           label="#{transactionsBean.transactionsEntity.transactionPhasesByIdTransactionPhases.label}"
+                           effectSpeed="fast" event="click">
+                    <p:selectOneMenu id="phase"
+                                     value="#{transactionsBean.transactionsEntity.transactionPhasesByIdTransactionPhases}"
+                                     converter="transactionPhasesConverter">
 
-                    <f:selectItems value="#{transactionPhasesBean.transactionPhasesEntities}"
-                                   var="transactionPhasesEntities" itemValue="#{transactionPhasesEntities}"
-                                   itemLabel="#{transactionPhasesEntities.label}"/>
-                </p:selectOneMenu>
-            </p:inplace>
+                        <f:selectItems value="#{transactionPhasesBean.transactionPhasesEntities}"
+                                       var="transactionPhasesEntities" itemValue="#{transactionPhasesEntities}"
+                                       itemLabel="#{transactionPhasesEntities.label}"/>
+                    </p:selectOneMenu>
+                </p:inplace>
 
-            <h4 class="p-mt-0">#{bundle['amount']}:</h4>
-            <p:inplace emptyLabel="...">
-                <p:inputNumber id="amount" value="#{transactionsBean.transactionsEntity.amount}" symbol=" €"
-                               symbolPosition="s" placeholder="9.999,99 €"
-                               decimalSeparator="," thousandSeparator=".">
-                    <p:ajax update="amount"/>
-                </p:inputNumber>
-            </p:inplace>
+                <p:outputLabel value="#{bundle['amount']} :" for="amount" styleClass="boldText"/>
+                <p:inplace emptyLabel="..." label="#{transactionsBean.transactionsEntity.amount}">
+                    <p:inputNumber id="amount" value="#{transactionsBean.transactionsEntity.amount}" symbol=" €"
+                                   symbolPosition="s" placeholder="9.999,99 €"
+                                   decimalSeparator="," thousandSeparator=".">
+                        <p:ajax update="amount"/>
+                    </p:inputNumber>
+                </p:inplace>
 
-            <h4 class="p-mt-0">#{bundle['transactions.creationDate']}:</h4>
-            <h:outputText value="#{transactionsBean.transactionsEntity.creationDate}">
-                <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
-            </h:outputText>
-
-
-            <h4 class="p-mt-0">#{bundle['dueDate']}:</h4>
-            <p:inplace emptyLabel="...">
-                <p:calendar placeholder="#{bundle['dueDate']}:"
-                            value="#{transactionsBean.transactionsEntity.endDate}"
-                            id="datetime" pattern="dd/MM/yyyy HH:mm"
-                            mindate="#{transactionsBean.transactionsEntity.creationDate}">
-                </p:calendar>
-            </p:inplace>
-
-            <h4 class="p-mt-0">#{bundle['transactions.type']}:</h4>
-            <p:inplace emptyLabel="..."
-                       label="#{transactionsBean.transactionsEntity.transactionTypesByIdTransactionTypes.label}"
-                       effectSpeed="fast" event="click">
-                <p:selectOneMenu id="type"
-                                 value="#{transactionsBean.transactionsEntity.transactionTypesByIdTransactionTypes}"
-                                 converter="transactionTypesConverter">
-
-                    <f:selectItems value="#{transactionTypesBean.transactionTypesEntities}"
-                                   var="transactionTypesEntities" itemValue="#{transactionTypesEntities}"
-                                   itemLabel="#{transactionTypesEntities.label}"/>
-                </p:selectOneMenu>
-            </p:inplace>
+                <p:outputLabel for="datetimeCreation" value="#{bundle['transactions.creationDate']}:"
+                               styleClass="boldText"/>
+                <h:outputText id="datetimeCreation" value="#{transactionsBean.transactionsEntity.creationDate}">
+                    <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
+                </h:outputText>
 
 
-            <h2>#{bundle['associateWith']}</h2>
+                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:" styleClass="boldText"/>
+                <p:inplace emptyLabel="..."
+                           label="#{transactionsBean.transactionsEntity.endDate.dayOfMonth}/#{transactionsBean.transactionsEntity.endDate.monthValue}/#{transactionsBean.transactionsEntity.endDate.year}">
+                    <p:calendar placeholder="#{bundle['dueDate']}:"
+                                value="#{transactionsBean.transactionsEntity.endDate}"
+                                id="datetime" pattern="dd/MM/yyyy HH:mm"
+                                mindate="#{transactionsBean.transactionsEntity.creationDate}">
+                    </p:calendar>
+                </p:inplace>
 
-            <h4 class="p-mt-0">#{bundle['contact']}:</h4>
-            <p:inplace emptyLabel="..."
-                       label="#{transactionsBean.transactionsEntity.contactsByIdContacts.lastname.concat(' '.concat(transactionsBean.transactionsEntity.contactsByIdContacts.firstname))}">
-                <p:autoComplete id="Contact" value="#{transactionsBean.transactionsEntity.contactsByIdContacts}"
-                                placeholder="#{bundle['contact']}"
-                                completeMethod="#{contactsBean.completeContactsContains}"
-                                var="Contact"
-                                itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
-                                itemValue="#{Contact}"
-                                converter="contactConverter"
-                                groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
-            </p:inplace>
+                <p:outputLabel value="#{bundle['transactions.type']}:" for="type" styleClass="boldText"/>
+                <p:inplace emptyLabel="..."
+                           label="#{transactionsBean.transactionsEntity.transactionTypesByIdTransactionTypes.label}"
+                           effectSpeed="fast" event="click">
+                    <p:selectOneMenu id="type"
+                                     value="#{transactionsBean.transactionsEntity.transactionTypesByIdTransactionTypes}"
+                                     converter="transactionTypesConverter">
+
+                        <f:selectItems value="#{transactionTypesBean.transactionTypesEntities}"
+                                       var="transactionTypesEntities" itemValue="#{transactionTypesEntities}"
+                                       itemLabel="#{transactionTypesEntities.label}"/>
+                    </p:selectOneMenu>
+                </p:inplace>
+
+            </p:panelGrid>
+
+            <h3>#{bundle['associateWith']}</h3>
+
+            <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                <p:outputLabel value="#{bundle['contact']}:" for="Contact" styleClass="boldText"/>
+                <p:inplace emptyLabel="..."
+                           label="#{transactionsBean.transactionsEntity.contactsByIdContacts.lastname.concat(' '.concat(transactionsBean.transactionsEntity.contactsByIdContacts.firstname))}">
+                    <p:autoComplete id="Contact" value="#{transactionsBean.transactionsEntity.contactsByIdContacts}"
+                                    placeholder="#{bundle['contact']}"
+                                    completeMethod="#{contactsBean.completeContactsContains}"
+                                    var="Contact"
+                                    itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
+                                    itemValue="#{Contact}"
+                                    converter="contactConverter"
+                                    groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
+                </p:inplace>
 
 
-            <h4 class="p-mt-0">#{bundle['company']}:</h4>
-            <p:inplace emptyLabel="..." label="#{transactionsBean.transactionsEntity.companiesByIdCompanies.label}">
-                <p:autoComplete id="Company" value="#{transactionsBean.transactionsEntity.companiesByIdCompanies}"
-                                placeholder="#{bundle['company']}"
-                                completeMethod="#{companiesBean.completeCompaniesContains}"
-                                var="Company"
-                                itemLabel="#{Company.label}"
-                                itemValue="#{Company}"
-                                converter="companiesConverter"
-                                groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
-            </p:inplace>
-            <br/>
-            <br/>
+                <p:outputLabel value="#{bundle['company']}:" for="Company" styleClass="boldText"/>
+                <p:inplace emptyLabel="..." label="#{transactionsBean.transactionsEntity.companiesByIdCompanies.label}">
+                    <p:autoComplete id="Company" value="#{transactionsBean.transactionsEntity.companiesByIdCompanies}"
+                                    placeholder="#{bundle['company']}"
+                                    completeMethod="#{companiesBean.completeCompaniesContains}"
+                                    var="Company"
+                                    itemLabel="#{Company.label}"
+                                    itemValue="#{Company}"
+                                    converter="companiesConverter"
+                                    groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
+                </p:inplace>
 
-            <div align="right" class="modalValidateBtn-margin-top">
+            </p:panelGrid>
+            <p:messages id="msg" closable="true" display="message"/>
+            <div align="right" style="padding-top: 10px" class="modalValidateBtn-margin-top">
                 <p:menuButton value="#{bundle['actions']}">
                     <p:menuitem icon="ui-icon-check"
                                 value="#{bundle['save']}"
                                 update="@(form) msgs"
+                                oncomplete="PF('dlg2').hide()"
                                 action="#{transactionsBean.updateEntity}"/>
                     <p:menuitem icon="ui-icon-delete"
                                 value="#{bundle['delete']}"
                     >
                         <p:confirm header="Confirmation" message="#{bundle['areYouSure']}" icon="fa fa-warning"/>
-                        <f:param name="idEntity" value="#{transactionsBean.transactionsEntity.id}"/>
                     </p:menuitem>
                     <p:menuitem icon="ui-icon-update"
                                 outcome="transactionDetails"
@@ -134,11 +138,12 @@
                                  action="#{transactionsBean.deleteEntity}"
                                  oncomplete="PF('dlg2').hide()"
                                  styleClass="ui-confirmdialog-yes GreenButton"
-                                 icon="ui-icon-check"/>
+                                 icon="ui-icon-check">
+                    <f:param name="idTransaction" value="#{transactionsBean.transactionsEntity.id}"/>
+                </p:commandButton>
                 <p:commandButton value="#{bundle['no']}" type="button" styleClass="ui-confirmdialog-no RedButton"
                                  icon="ui-icon-close"/>
             </p:confirmDialog>
-
 
         </h:form>
 

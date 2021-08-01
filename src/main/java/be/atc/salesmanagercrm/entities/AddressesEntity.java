@@ -5,6 +5,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "addresses", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "Addresses.findByIdCompanies", query = "SELECT a from AddressesEntity a where a.companiesByIdCompanies.id = :id"),
+        @NamedQuery(name = "Addresses.deleteByIdCompanies", query = "DELETE from AddressesEntity a where a.companiesByIdCompanies.id= :id"),
+})
 public class AddressesEntity {
     private int id;
     private String street;

@@ -22,16 +22,26 @@
             <div class="ui-g-12">
                 <h:form>
                     <div class="card card-w-title">
-                        <p:toolbar>
-                            <f:facet name="left">
-                                <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
-                                                 onclick="PF('companyModal').show();" styleClass="NavyButton"
-                                                 action="#{companiesBean.checkSendType}">
-                                    <f:param name="sendType" value="add"/>
-                                </p:commandButton>
-                            </f:facet>
-                        </p:toolbar>
-                        <fxs:listCompany id="listCompany"/>
+                        <h1>#{bundle['company.title']}</h1>
+                        <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
+                                         onclick="PF('companyModal').show();" styleClass="NavyButton"
+                                         action="#{companiesBean.checkSendType}">
+                            <f:param name="sendType" value="add"/>
+                        </p:commandButton>
+
+                        <p:tabView>
+
+                            <p:ajax event="tabChange" listener="#{companiesBean.onTabChange}" update="@form msgs"/>
+
+                            <p:tab id="displayActiveCompany" title="#{bundle['company.companyActive']}">
+                                <fxs:listCompany id="listCompany"/>
+                            </p:tab>
+
+                            <p:tab id="displayDisableCompany" title="#{bundle['company.companyDisable']}">
+                                <fxs:listDisableCompany id="listDisableCompany"/>
+                            </p:tab>
+
+                        </p:tabView>
                     </div>
                 </h:form>
             </div>

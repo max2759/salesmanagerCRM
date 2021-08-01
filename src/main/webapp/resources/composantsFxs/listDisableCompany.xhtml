@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite">
+<cc:interface name="listDisableCompany"
+              displayName="#{bundle['company.companyDisable']}"
+              shortDescription="#{bundle['company.companyDisable']}"/>
+<cc:implementation>
+    <f:view>
+        <p:dataTable var="companies" value="#{companiesBean.companiesEntityList}" rows="10"
+                     selectionMode="single" reflow="true"
+                     paginatorPosition="bottom"
+                     emptyMessage="#{bundle['company.companyNotFound']}"
+                     id="companiesDatatable" rowKey="#{companies.id}"
+                     paginator="true" styleClass="dataTable-margin-top"
+                     rowsPerPageTemplate="10,20,50">
+
+            <p:column headerText="#{bundle['company.label']}" filterBy="#{companies.label}"
+                      filterMatchMode="contains">
+                <p:link outcome="companydetails">
+                    <h:outputText value="#{companies.label}"/>
+                    <f:param name="companyID" value="#{companies.id}"/>
+                </p:link>
+            </p:column>
+
+            <p:column headerText="#{bundle['company.ownership']}" sortBy="#{companies.usersByIdUsers.firstname}">
+                <h:outputText value="#{companies.usersByIdUsers.firstname} #{companies.usersByIdUsers.lastname}"/>
+            </p:column>
+
+            <p:column headerText="#{bundle['company.registerDate']}" sortBy="#{companies.registerDate}">
+                <h:outputText value="#{companies.registerDate}">
+                    <f:convertDateTime type="localDate"
+                                       pattern="dd/MM/yy ' #{bundle['at']} ' HH:mm"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="#{bundle['company.phoneNumber']}" sortBy="#{companies.phoneNumber}">
+                <h:outputText value="#{empty companies.phoneNumber ? '--' : companies.phoneNumber}"/>
+            </p:column>
+
+            <p:column headerText="#{bundle['company.branchActivities']}"
+                      filterBy="#{companies.branchActivitiesByIdBranchActivities.label}" filterMatchMode="exact">
+                <f:facet name="filter">
+                    <p:selectOneMenu onchange="PF('displayAllCompanies').filter()"
+                                     style="width:100%; box-sizing: border-box;">
+                        <f:selectItem itemLabel="#{bundle['selectChoice']}"
+                                      itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{branchActivitiesBean.branchActivitiesEntityList}"
+                                       var="branch"
+                                       itemValue="#{branch.label}"
+                                       itemLabel="#{branch.label}"/>
+                    </p:selectOneMenu>
+                </f:facet>
+                <h:outputText
+                        value="#{empty companies.branchActivitiesByIdBranchActivities.label ? '--' : companies.branchActivitiesByIdBranchActivities.label}"/>
+            </p:column>
+
+        </p:dataTable>
+    </f:view>
+</cc:implementation>
+</html>

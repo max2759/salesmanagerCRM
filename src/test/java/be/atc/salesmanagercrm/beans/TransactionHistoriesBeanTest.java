@@ -34,8 +34,8 @@ class TransactionHistoriesBeanTest {
     @Test
     void findAllByIdUserAndByIdTransactionShouldReturnTrue() {
 
-        // Mettre un id incorrect
-        int idTransaction = 13;
+        // Mettre un id correct
+        int idTransaction = 1;
         int idUser = 1;
 
         List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(idTransaction, idUser);
@@ -51,7 +51,7 @@ class TransactionHistoriesBeanTest {
     @Test
     void findAllByIdUserAndByIdTransactionShouldReturnFalse() {
 
-        // Mettre un id correct
+        // Mettre un id incorrect
         int idTransaction = 1540;
         int idUser = 1;
 

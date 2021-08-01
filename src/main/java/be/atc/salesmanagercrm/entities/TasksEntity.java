@@ -9,14 +9,14 @@ import java.util.Objects;
 @Entity
 @Table(name = "tasks", schema = "salesmanagercrm")
 @NamedQueries({
-        @NamedQuery(name = "Tasks.findTasksEntityByContactsByIdContacts", query = "select t from TasksEntity t where (t.contactsByIdContacts.id = :id and t.usersByIdUsers.id = :idUser)"),
-        @NamedQuery(name = "Tasks.findTasksEntityByCompaniesByIdCompanies", query = "select t from TasksEntity t where (t.companiesByIdCompanies.id = :id and t.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Tasks.findTasksEntityByContactsByIdContacts", query = "select t from TasksEntity t where (t.contactsByIdContacts.id = :id and t.usersByIdUsers.id = :idUser) ORDER BY t.creationDate desc "),
+        @NamedQuery(name = "Tasks.findTasksEntityByCompaniesByIdCompanies", query = "select t from TasksEntity t where (t.companiesByIdCompanies.id = :id and t.usersByIdUsers.id = :idUser) ORDER BY t.creationDate desc "),
         @NamedQuery(name = "Tasks.findById", query = "SELECT t from TasksEntity t where (t.id = :id and t.usersByIdUsers.id = :idUser)"),
-        @NamedQuery(name = "Tasks.findAll", query = "SELECT t from TasksEntity t where t.usersByIdUsers.id = :idUser and t.status = false"),
-        @NamedQuery(name = "Tasks.findTasksToLate", query = "SELECT t from TasksEntity t where (t.endDate < :endDate and t.usersByIdUsers.id = :idUser and t.status = false)"),
-        @NamedQuery(name = "Tasks.findTasksToCome", query = "SELECT t from TasksEntity t where (t.endDate > :endDate and t.usersByIdUsers.id = :idUser and t.status = false)"),
-        @NamedQuery(name = "Tasks.findTasksToday", query = "SELECT t from TasksEntity t where (t.endDate < :today and t.endDate > :now and t.usersByIdUsers.id = :idUser and t.status = false)"),
-        @NamedQuery(name = "Tasks.findTasksFinished", query = "SELECT t from TasksEntity t where (t.status = true and t.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Tasks.findAll", query = "SELECT t from TasksEntity t where t.usersByIdUsers.id = :idUser and t.status = false ORDER BY t.creationDate desc "),
+        @NamedQuery(name = "Tasks.findTasksToLate", query = "SELECT t from TasksEntity t where (t.endDate < :endDate and t.usersByIdUsers.id = :idUser and t.status = false) ORDER BY t.creationDate desc "),
+        @NamedQuery(name = "Tasks.findTasksToCome", query = "SELECT t from TasksEntity t where (t.endDate > :endDate and t.usersByIdUsers.id = :idUser and t.status = false) ORDER BY t.creationDate desc "),
+        @NamedQuery(name = "Tasks.findTasksToday", query = "SELECT t from TasksEntity t where (t.endDate < :today and t.endDate > :now and t.usersByIdUsers.id = :idUser and t.status = false) ORDER BY t.creationDate desc "),
+        @NamedQuery(name = "Tasks.findTasksFinished", query = "SELECT t from TasksEntity t where (t.status = true and t.usersByIdUsers.id = :idUser) ORDER BY t.creationDate desc "),
 })
 
 public class TasksEntity {

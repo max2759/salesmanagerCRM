@@ -6,6 +6,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "voucher_status", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "VoucherStatus.findAll", query = "SELECT vS from VoucherStatusEntity vS"),
+        @NamedQuery(name = "VoucherStatus.findVoucherStatusEntityByLabel", query = "SELECT vS from VoucherStatusEntity vS where vS.label = :label"),
+})
 public class VoucherStatusEntity {
     private int id;
     private String label;

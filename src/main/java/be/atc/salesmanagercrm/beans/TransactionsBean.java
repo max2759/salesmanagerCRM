@@ -47,7 +47,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     private TransactionsEntity transactionsEntity;
     @Getter
     @Setter
-    private TransactionsEntity selectedtransactionEntity;
+    private TransactionsEntity selectedTransactionEntity;
 
     @Getter
     @Setter
@@ -75,6 +75,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         transactionsEntity.setUsersByIdUsers(usersBean.getUsersEntity());
 
         save(transactionsEntity);
+        findAllEntitiesAndFilter();
 
     }
 
@@ -96,7 +97,18 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     public void deleteEntity() {
         log.info("method : deleteEntity()");
         // TODO : Corriger l idUser
-        delete(Integer.parseInt(getParam("idEntity")), 1);
+        log.info("Param : " + getParam("idTransaction"));
+        int idTransaction;
+        FacesMessage msg;
+        try {
+            idTransaction = Integer.parseInt(getParam("idTransaction"));
+        } catch (NumberFormatException exception) {
+            log.info(exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+        delete(idTransaction, 1);
 
         findAllEntitiesAndFilter();
 
@@ -127,6 +139,9 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         this.transactionsEntities = findAll(1);
     }
 
+    /**
+     * Call this method in transactionDetails
+     */
     public void displayOneTransaction() {
         log.info("TransactionsBean : displayOneTransaction");
         log.info("Param : " + getParam("idTransaction"));
@@ -154,6 +169,16 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         }
         transactionHistoriesBean.findAllEntities(idTransaction, usersBean.getUsersEntity().getId());
 
+    }
+
+    /**
+     * Method to show modal in create transaction
+     *
+     * @param
+     */
+    public void showModalCreate() {
+        log.info("method : showModalCreate()");
+        transactionsEntity = new TransactionsEntity();
     }
 
     /**

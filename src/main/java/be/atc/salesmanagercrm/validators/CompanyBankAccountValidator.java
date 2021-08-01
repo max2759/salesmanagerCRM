@@ -5,6 +5,7 @@ import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidOperationException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.extern.slf4j.Slf4j;
+import nl.garvelink.iban.Modulo97;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -38,6 +39,13 @@ public class CompanyBankAccountValidator implements Validator {
                 log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, getMessageBankAccountError(), null));
             }
+
+            try {
+                checkBankAccountValidity(companiesEntity);
+            } catch (InvalidOperationException exception) {
+                log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, getMessageBankAccountError(), null));
+            }
         }
     }
 
@@ -51,6 +59,11 @@ public class CompanyBankAccountValidator implements Validator {
     }
 
 
+    /**
+     * Check format of bank account is correct
+     *
+     * @param companiesEntity
+     */
     public void checkBankAccountFormat(CompaniesEntity companiesEntity) {
 
         log.info("Start of the checkBankAccountFormat function");
@@ -69,6 +82,31 @@ public class CompanyBankAccountValidator implements Validator {
                         "Le numéro de compte bancaire n'est pas valide " + companiesEntity.getBankAccount(), ErrorCodes.COMPANY_BANKACCOUNT_NOT_VALID
                 );
             }
+        }
+    }
+
+    /**
+     * Check if bank account is valid
+     *
+     * @param companiesEntity CompaniesEntity
+     */
+    public void checkBankAccountValidity(CompaniesEntity companiesEntity) {
+
+        log.info("Start of checkBankAccountValidity function");
+
+        String companyIban = companiesEntity.getBankAccount();
+
+        String companyIbanReplaced = companyIban.replace("-", "");
+
+        log.info("Iban replaced : " + companyIbanReplaced);
+
+        boolean validIban = Modulo97.verifyCheckDigits(companyIbanReplaced);
+
+        if (!(validIban)) {
+            log.warn("Iban number : " + companiesEntity.getVatNumber() + " is not valid");
+            throw new InvalidOperationException(
+                    "Le numéro de banque n'est pas valide " + companiesEntity.getVatNumber(), ErrorCodes.COMPANY_BANKACCOUNT_NOT_VALID
+            );
         }
     }
 }

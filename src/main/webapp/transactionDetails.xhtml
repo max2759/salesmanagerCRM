@@ -15,33 +15,44 @@
 
         <p:growl id="msgs" skipDetailIfEqualsSummary="true"/>
 
-        <h3>#{bundle['transactions.title']} : #{transactionsBean.transactionsEntity.id}</h3>
-        <h3>#{transactionsBean.transactionsEntity.title}</h3>
-        <p:dataTable paginator="true" rows="10"
-                     paginatorPosition="bottom"
-                     emptyMessage="#{bundle['transactions.notFound']}"
-                     var="transactionHistories"
-                     rowsPerPageTemplate="10,20,50"
-                     value="#{transactionHistoriesBean.transactionHistoriesEntities}"
-                     widgetVar="displayAllEntities"
-                     filteredValue="#{transactionHistoriesBean.transactionHistoriesEntitiesFiltered}"
-                     rendered="#{transactionHistoriesBean.transactionHistoriesEntities.size() eq 0 ? false : true}">
 
-            <p:column headerText="#{bundle['transactions.phase']}"
-                      sortBy="#{transactionHistories.transactionPhasesByIdTransactionPhases.label}">
-                <h:outputText value="#{transactionHistories.transactionPhasesByIdTransactionPhases.label}"/>
-            </p:column>
+        <div class="card card-w-title">
+            <h1>#{bundle['transaction']}</h1>
+            <h3>#{transactionsBean.transactionsEntity.title}</h3>
+            <h:form id="form">
+                <p:dataTable paginator="true" rows="10"
+                             paginatorPosition="bottom"
+                             emptyMessage="#{bundle['transactions.notFound']}"
+                             var="transactionHistories"
+                             rowsPerPageTemplate="10,20,50"
+                             value="#{transactionHistoriesBean.transactionHistoriesEntities}"
+                             widgetVar="displayAllEntities"
+                             filteredValue="#{transactionHistoriesBean.transactionHistoriesEntitiesFiltered}"
+                             rendered="#{transactionHistoriesBean.transactionHistoriesEntities.size() eq 0 ? false : true}">
 
-            <p:column headerText="#{bundle['transactionsHistories.doneOn']}"
-                      sortBy="#{transactionHistories.saveDate}">
-                <h:outputText value="#{transactionHistories.saveDate}">
-                    <f:convertDateTime type="localDate"
-                                       pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
-                </h:outputText>
-            </p:column>
-        </p:dataTable>
-        <p:staticMessage severity="info" detail="#{bundle['transactions.notFound']}"
-                         rendered="#{transactionHistoriesBean.transactionHistoriesEntities.size() eq 0 ? true : false}"/>
+                    <p:column headerText="#{bundle['transactions.phase']}"
+                              filterBy="#{transactionHistories.transactionPhasesByIdTransactionPhases.label}"
+                              filterable="true" filterMatchMode="contains"
+                              sortBy="#{transactionHistories.transactionPhasesByIdTransactionPhases.label}">
+                        <h:outputText value="#{transactionHistories.transactionPhasesByIdTransactionPhases.label}"/>
+                    </p:column>
 
+                    <p:column headerText="#{bundle['transactionsHistories.doneOn']}"
+                              filterBy="#{transactionHistories.saveDate}" filterable="true" filterMatchMode="contains"
+                              sortBy="#{transactionHistories.saveDate}">
+                        <f:facet name="filter">
+                            <p:inputText placeholder="31/01/2021" onchange="PF('displayAllEntities').filter()">
+                                <f:convertDateTime type="localDate"
+                                                   pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+                        </f:facet>
+                        <h:outputText value="#{transactionHistories.saveDate}">
+                            <f:convertDateTime type="localDate"
+                                               pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
     </ui:define>
 </ui:composition>

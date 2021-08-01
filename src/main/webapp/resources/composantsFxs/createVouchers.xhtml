@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite">
+
+<cc:interface name="createVouchers"
+              displayName="#{bundle['vouchers.create']}"
+              shortDescription="#{bundle['vouchers.create']}"
+>
+</cc:interface>
+<cc:implementation>
+    <f:view>
+
+        <h:form id="createVoucherForm">
+
+            <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+
+                <p:outputLabel value="#{bundle['title']} :" for="title" styleClass="boldText"/>
+                <p:inputText id="title" value="#{vouchersBean.vouchersEntity.title}"
+                             placeholder="#{bundle['title']}"
+                             required="true"
+                             requiredMessage="#{bundle['vouchers.validator.title']}">
+                    <p:ajax update="msg" event="keyup"/>
+                </p:inputText>
+
+                <p:outputLabel value="#{bundle['vouchers.status']}:" for="voucherStatus" styleClass="boldText"/>
+                <p:selectOneMenu id="voucherStatus"
+                                 value="#{vouchersBean.vouchersEntity.voucherStatusByIdVoucherStatus}"
+                                 converter="voucherStatusConverter">
+
+                    <f:selectItems value="#{voucherStatusBean.voucherStatusEntities}"
+                                   var="voucherStatusEntities" itemValue="#{voucherStatusEntities}"
+                                   itemLabel="#{voucherStatusEntities.label}"/>
+                </p:selectOneMenu>
+
+                <p:outputLabel value="#{bundle['priority']}:" for="voucherPriority" styleClass="boldText"/>
+                <p:selectOneMenu id="voucherPriority"
+                                 value="#{vouchersBean.vouchersEntity.priority}">
+                    <f:selectItems value="#{enumPriorityBean.enumPriority}"
+                                   var="enumPriority" itemValue="#{enumPriority}"
+                                   itemLabel="#{enumPriority.label}"/>
+                    <f:validator validatorId="enumPriorityValidator"/>
+                </p:selectOneMenu>
+
+            </p:panelGrid>
+
+            <p:panelGrid columns="4" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact" styleClass="boldText"/>
+                <p:autoComplete id="Contact" value="#{vouchersBean.vouchersEntity.contactsByIdContacts}"
+                                completeMethod="#{contactsBean.completeContactsContains}"
+                                var="Contact"
+                                itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
+                                itemValue="#{Contact}"
+                                converter="contactConverter"
+                                groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
+
+                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company" styleClass="boldText"/>
+                <p:autoComplete id="Company" value="#{vouchersBean.vouchersEntity.companiesByIdCompanies}"
+                                completeMethod="#{companiesBean.completeCompaniesContains}"
+                                var="Company"
+                                itemLabel="#{Company.label}"
+                                itemValue="#{Company}"
+                                converter="companiesConverter"
+                                groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
+
+
+            </p:panelGrid>
+
+            <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                <p:outputLabel value="#{bundle['vouchers.description']} :" for="description" styleClass="boldText"/>
+                <p:inputTextarea id="description" value="#{vouchersBean.vouchersEntity.description}"
+                                 rows="4" cols="100"
+                                 autoResize="false"
+                                 placeholder="#{bundle['vouchers.description']}"/>
+
+            </p:panelGrid>
+            <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                <p:messages id="msg" closable="true" display="message"/>
+                <p:commandButton style="width:auto;margin-bottom:10px;"
+                                 update="@(form) msgs"
+                                 oncomplete="PF('createDialog').hide()"
+                                 value="#{bundle['save']}"
+                                 action="#{vouchersBean.saveEntity}"
+                >
+                </p:commandButton>
+            </p:panelGrid>
+        </h:form>
+
+    </f:view>
+</cc:implementation>
+</html>

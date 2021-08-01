@@ -31,7 +31,7 @@
             <h:form>
                 <p:commandButton value="#{bundle['tasks.create']}"
                                  update="@(form) msgs"
-                                 onclick="PF('dlg3').show();" styleClass="NavyButton" style="margin-bottom: 10px"
+                                 onclick="PF('dlg3').show();" styleClass="NavyButton marginBottom10"
                                  action="#{tasksBean.showModalCreate}"
                 />
             </h:form>
@@ -49,8 +49,7 @@
                                      rowsPerPageTemplate="10,20,50"
                                      value="#{tasksBean.tasksEntities}"
                                      widgetVar="displayAllEntities"
-                                     filteredValue="#{tasksBean.tasksEntitiesFiltered}"
-                                     rendered="#{tasksBean.tasksEntities.size() eq 0 ? false : true}">
+                                     filteredValue="#{tasksBean.tasksEntitiesFiltered}">
 
                             <p:column colspan="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusAll" value="#{task.status}">
@@ -74,13 +73,17 @@
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
-                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}">
+                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterMatchMode="contains">
                                 <h:outputText
                                         value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
-                                      sortBy="#{task.companiesByIdCompanies.label}">
+                                      sortBy="#{task.companiesByIdCompanies.label}"
+                                      filterBy="#{task.companiesByIdCompanies.label}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{task.companiesByIdCompanies.label}"/>
                             </p:column>
 
@@ -119,7 +122,18 @@
                             </p:column>
 
                             <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
-                                      sortBy="#{task.endDate}">
+                                      filterBy="#{task.endDate}"
+                                      sortBy="#{task.endDate}"
+                                      filterable="true"
+                                      filterMatchMode="contains"
+                            >
+                                <f:facet name="filter">
+                                    <p:inputText placeholder="31/01/2021"
+                                                 onchange="PF('displayAllEntities').filter()">
+                                        <f:convertDateTime type="localDate"
+                                                           pattern="dd/MM/yyyy"/>
+                                    </p:inputText>
+                                </f:facet>
                                 <h:outputText rendered="#{task.endDate gt tasksBean.now}" value="#{task.endDate}">
                                     <f:convertDateTime type="localDate"
                                                        pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
@@ -139,15 +153,14 @@
                                     <f:param name="idEntity" value="#{task.id}"/>
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
-                                               action="#{tasksBean.deleteEntity}">
+                                               action="#{tasksBean.deleteEntity}"
+                                               onclick="return confirmer();">
                                     <i class="ui-icon ui-icon-delete-forever"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                     <f:param name="typeEntities" value="all"/>
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
-                                         rendered="#{tasksBean.tasksEntities.size() eq 0 ? true : false}"/>
                     </p:tab>
 
                     <p:tab id="displayToday"
@@ -186,13 +199,17 @@
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
-                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}">
+                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterMatchMode="contains">
                                 <h:outputText
                                         value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
-                                      sortBy="#{task.companiesByIdCompanies.label}">
+                                      sortBy="#{task.companiesByIdCompanies.label}"
+                                      filterBy="#{task.companiesByIdCompanies.label}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{task.companiesByIdCompanies.label}"/>
                             </p:column>
 
@@ -258,8 +275,6 @@
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
-                                         rendered="#{tasksBean.tasksEntitiesDueToday.size() eq 0 ? true : false}"/>
                     </p:tab>
 
                     <p:tab id="displayToLate"
@@ -298,13 +313,17 @@
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
-                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}">
+                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterMatchMode="contains">
                                 <h:outputText
                                         value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
-                                      sortBy="#{task.companiesByIdCompanies.label}">
+                                      sortBy="#{task.companiesByIdCompanies.label}"
+                                      filterBy="#{task.companiesByIdCompanies.label}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{task.companiesByIdCompanies.label}"/>
                             </p:column>
 
@@ -343,7 +362,18 @@
                             </p:column>
 
                             <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
-                                      sortBy="#{task.endDate}">
+                                      filterBy="#{task.endDate}"
+                                      sortBy="#{task.endDate}"
+                                      filterable="true"
+                                      filterMatchMode="contains"
+                            >
+                                <f:facet name="filter">
+                                    <p:inputText placeholder="31/01/2021"
+                                                 onchange="PF('displayEntitiesToLate').filter()">
+                                        <f:convertDateTime type="localDate"
+                                                           pattern="dd/MM/yyyy"/>
+                                    </p:inputText>
+                                </f:facet>
                                 <h:outputText rendered="#{task.endDate gt tasksBean.now}" value="#{task.endDate}">
                                     <f:convertDateTime type="localDate"
                                                        pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
@@ -370,8 +400,6 @@
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
-                                         rendered="#{tasksBean.tasksEntitiesToLate.size() eq 0 ? true : false}"/>
                     </p:tab>
 
                     <p:tab id="displayToCome"
@@ -410,13 +438,17 @@
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
-                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}">
+                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterMatchMode="contains">
                                 <h:outputText
                                         value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
-                                      sortBy="#{task.companiesByIdCompanies.label}">
+                                      sortBy="#{task.companiesByIdCompanies.label}"
+                                      filterBy="#{task.companiesByIdCompanies.label}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{task.companiesByIdCompanies.label}"/>
                             </p:column>
 
@@ -455,7 +487,18 @@
                             </p:column>
 
                             <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
-                                      sortBy="#{task.endDate}">
+                                      filterBy="#{task.endDate}"
+                                      sortBy="#{task.endDate}"
+                                      filterable="true"
+                                      filterMatchMode="contains"
+                            >
+                                <f:facet name="filter">
+                                    <p:inputText placeholder="31/01/2021"
+                                                 onchange="PF('displayEntitiesToCome').filter()">
+                                        <f:convertDateTime type="localDate"
+                                                           pattern="dd/MM/yyyy"/>
+                                    </p:inputText>
+                                </f:facet>
                                 <h:outputText rendered="#{task.endDate gt tasksBean.now}" value="#{task.endDate}">
                                     <f:convertDateTime type="localDate"
                                                        pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
@@ -482,8 +525,6 @@
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
-                                         rendered="#{tasksBean.tasksEntitiesToCome.size() eq 0 ? true : false}"/>
                     </p:tab>
 
                     <p:tab id="displayFinished"
@@ -522,13 +563,17 @@
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
-                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}">
+                                      sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
+                                      filterMatchMode="contains">
                                 <h:outputText
                                         value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
-                                      sortBy="#{task.companiesByIdCompanies.label}">
+                                      sortBy="#{task.companiesByIdCompanies.label}"
+                                      filterBy="#{task.companiesByIdCompanies.label}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{task.companiesByIdCompanies.label}"/>
                             </p:column>
 
@@ -567,7 +612,18 @@
                             </p:column>
 
                             <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
-                                      sortBy="#{task.endDate}">
+                                      filterBy="#{task.endDate}"
+                                      sortBy="#{task.endDate}"
+                                      filterable="true"
+                                      filterMatchMode="contains"
+                            >
+                                <f:facet name="filter">
+                                    <p:inputText placeholder="31/01/2021"
+                                                 onchange="PF('displayEntitiesFinished').filter()">
+                                        <f:convertDateTime type="localDate"
+                                                           pattern="dd/MM/yyyy"/>
+                                    </p:inputText>
+                                </f:facet>
                                 <h:outputText value="#{task.endDate}">
                                     <f:convertDateTime type="localDate"
                                                        pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
@@ -589,8 +645,6 @@
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:staticMessage severity="info" detail="#{bundle['tasks.notFound']}"
-                                         rendered="#{tasksBean.tasksEntitiesFinished.size() eq 0 ? true : false}"/>
                     </p:tab>
 
                 </p:tabView>

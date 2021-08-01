@@ -17,15 +17,14 @@
             <div class="ui-g-12">
                 <h:form>
                     <div class="card card-w-title">
-                        <p:toolbar>
-                            <f:facet name="left">
-                                <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
-                                                 onclick="PF('jobTitlesModal').show();" styleClass="NavyButton"
-                                                 action="#{jobtitlesBean.checkSendType}">
-                                    <f:param name="sendType" value="add"/>
-                                </p:commandButton>
-                            </f:facet>
-                        </p:toolbar>
+                        <h1>#{bundle['jobTitles.title']}</h1>
+
+                        <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
+                                         onclick="PF('jobTitlesModal').show();" styleClass="NavyButton"
+                                         action="#{jobtitlesBean.checkSendType}">
+                            <f:param name="sendType" value="add"/>
+                        </p:commandButton>
+
                         <fxs:listJobTitles id="listJobTitles"/>
                     </div>
                 </h:form>

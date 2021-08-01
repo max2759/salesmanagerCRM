@@ -14,21 +14,37 @@
         <p:dataTable var="companies" value="#{companiesBean.companiesEntityList}" rows="10"
                      selectionMode="single" reflow="true"
                      id="companiesDatatable" rowKey="#{companies.id}"
+                     selection="#{companiesBean.selectedCompaniesEntity}"
+                     filteredValue="#{companiesBean.companiesEntitiesFiltred}"
+                     widgetVar="displayAllCompanies"
+                     paginatorPosition="bottom"
+                     emptyMessage="#{bundle['company.companyNotFound']}"
                      paginator="true" styleClass="dataTable-margin-top"
-                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
-                     rowsPerPageTemplate="5,10,{ShowAll|'All'}">
-            <f:facet name="header">
-                #{bundle['company.title']}
-            </f:facet>
-            <p:column headerText="#{bundle['company.label']}" sortBy="#{companies.label}">
+                     rowsPerPageTemplate="10,20,50">
+
+            <p:column headerText="#{bundle['company.label']}" filterBy="#{companies.label}"
+                      filterMatchMode="contains">
                 <p:link outcome="companydetails">
                     <h:outputText value="#{companies.label}"/>
                     <f:param name="companyID" value="#{companies.id}"/>
                 </p:link>
             </p:column>
 
-            <p:column headerText="#{bundle['company.ownership']}" sortBy="#{companies.usersByIdUsers.firstname}">
+            <p:column headerText="#{bundle['company.ownership']}" sortBy="#{companies.usersByIdUsers.firstname}"
+                      filterBy="#{companies.usersByIdUsers.firstname} #{companies.usersByIdUsers.lastname}"
+                      filterMatchMode="exact">
+                <f:facet name="filter">
+                    <p:selectOneMenu onchange="PF('displayAllCompanies').filter()"
+                                     style="width:100%; box-sizing: border-box;">
+                        <f:selectItem itemLabel="#{bundle['selectChoice']}"
+                                      itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{usersBean.usersEntityList}"
+                                       var="userEntities"
+                                       itemValue="#{userEntities.lastname}"
+                                       itemLabel="#{userEntities.lastname}"/>
+                    </p:selectOneMenu>
+                </f:facet>
                 <h:outputText value="#{companies.usersByIdUsers.firstname} #{companies.usersByIdUsers.lastname}"/>
             </p:column>
 
@@ -44,20 +60,48 @@
             </p:column>
 
             <p:column headerText="#{bundle['company.branchActivities']}"
+                      filterBy="#{companies.branchActivitiesByIdBranchActivities.label}" filterMatchMode="exact"
                       sortBy="#{companies.branchActivitiesByIdBranchActivities.label}">
+                <f:facet name="filter">
+                    <p:selectOneMenu onchange="PF('displayAllCompanies').filter()"
+                                     style="width:100%; box-sizing: border-box;">
+                        <f:selectItem itemLabel="#{bundle['selectChoice']}"
+                                      itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{branchActivitiesBean.branchActivitiesEntityList}"
+                                       var="branch"
+                                       itemValue="#{branch.label}"
+                                       itemLabel="#{branch.label}"/>
+                    </p:selectOneMenu>
+                </f:facet>
                 <h:outputText
                         value="#{empty companies.branchActivitiesByIdBranchActivities.label ? '--' : companies.branchActivitiesByIdBranchActivities.label}"/>
             </p:column>
 
             <p:column>
-                <p:commandLink update="@form msgs"
-                               action="#{companiesBean.deleteCompany}">
+                <p:commandLink action="#{companiesBean.getCompanyIDFromCommandLink}" update="@(form)">
                     <i class="ui-icon ui-icon-delete-forever"></i>
-                    <f:param name="companiesID" value="#{companies.id}"/>
+                    <p:confirm header="Confirmation" message="#{bundle['areYouSure']}" icon="fa fa-warning"/>
                 </p:commandLink>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                    <h:outputText value="#{companies.id}"/>
+                    <p:commandButton value="#{bundle['yes']}"
+                                     update="@(form) msgs"
+                                     action="#{companiesBean.deleteCompany}"
+                                     oncomplete="PF('dlg2').hide()"
+                                     styleClass="ui-confirmdialog-yes GreenButton"
+                                     icon="ui-icon-check">
+                        <f:param name="companiesID" value="#{companies.id}"/>
+                    </p:commandButton>
+                    <p:commandButton value="#{bundle['no']}" styleClass="ui-confirmdialog-no RedButton"
+                                     icon="ui-icon-close"/>
+                </p:confirmDialog>
+
             </p:column>
 
+
         </p:dataTable>
+
     </f:view>
 </cc:implementation>
 </html>
