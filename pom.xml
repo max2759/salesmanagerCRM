@@ -165,11 +165,6 @@
             <version>20200713.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>nl.garvelink.oss</groupId>
-            <artifactId>iban</artifactId>
-            <version>1.9.0</version>
-        </dependency>
 
         <!-- Shiro dependencies: -->
         <dependency>

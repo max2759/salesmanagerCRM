@@ -47,7 +47,8 @@
 
                 <p:outputLabel for="datetime" value="#{bundle['dueDate']}:" styleClass="boldText"/>
                 <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
-                            id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.tasksEntity.creationDate}"/>
+                            id="datetime" pattern="dd/MM/yyyy HH:mm"
+                            mindate="#{tasksBean.tasksEntity.creationDate.plusMinutes(1)}"/>
 
                 <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact" styleClass="boldText"/>
                 <p:autoComplete id="Contact" value="#{tasksBean.tasksEntity.contactsByIdContacts}"

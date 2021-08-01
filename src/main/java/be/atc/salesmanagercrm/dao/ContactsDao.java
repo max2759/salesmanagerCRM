@@ -14,6 +14,4 @@ public interface ContactsDao {
     ContactsEntity findByIdContactAndByIdUser(EntityManager em, int id, int idUser);
 
     List<ContactsEntity> findContactsEntityByIdUser(EntityManager em, int idUser);
-
-    List<ContactsEntity> findAll();
 }

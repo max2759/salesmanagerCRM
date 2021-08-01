@@ -75,11 +75,6 @@ public class CompanyVATValidator implements Validator {
 
     }
 
-    /**
-     * Check VAT is valid
-     *
-     * @param companiesEntity CompaniesEntity
-     */
     public void checkVATValidity(CompaniesEntity companiesEntity) {
 
         log.info("Start of CheckVATVAlidity function");

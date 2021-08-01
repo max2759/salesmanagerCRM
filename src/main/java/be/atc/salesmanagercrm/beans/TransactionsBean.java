@@ -168,7 +168,6 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             return;
         }
         transactionHistoriesBean.findAllEntities(idTransaction, usersBean.getUsersEntity().getId());
-
     }
 
     /**
