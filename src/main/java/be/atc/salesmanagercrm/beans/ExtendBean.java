@@ -8,6 +8,7 @@ import org.apache.shiro.subject.Subject;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import java.util.Locale;
 import java.util.Map;
 
@@ -21,6 +22,10 @@ public abstract class ExtendBean {
     @Setter
     private Subject currentUser = SecurityUtils.getSubject();
 
+    @Inject
+    @Getter
+    @Setter
+    private UsersBean usersBean;
 
     @PostConstruct
     public void init() {

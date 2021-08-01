@@ -27,6 +27,7 @@ import java.util.List;
 @ViewScoped
 public class ContactTypesBean extends ExtendBean implements Serializable {
 
+    private static final long serialVersionUID = 6138026438225503423L;
     @Getter
     @Setter
     private ContactTypesDao contactTypesDao = new ContactTypesDaoImpl();

@@ -22,13 +22,14 @@
         </p:dialog>
 
         <div class="card card-w-title">
-            <h1>#{bundle['transactions.title']}</h1>
+            <h1>#{bundle['notes.title']}</h1>
             <h:form>
-                <p:commandButton value="#{bundle['transactions.create']}"
+                <p:commandButton value="#{bundle['notes.create']}"
                                  update="@(form) msgs"
                                  onclick="PF('createDialog').show();" styleClass="NavyButton marginBottom15"
-                                 action="#{transactionsBean.showModalCreate}"
-                />
+                                 action="#{notesBean.showModalCreate}">
+                    <f:param name="type" value="contact"/>
+                </p:commandButton>
             </h:form>
 
             <h:form id="form">
@@ -57,15 +58,12 @@
                                                  rows="6"
                                                  cols="100"
                                                  autoResize="false" label="Name"/>
-
                             </f:facet>
-
                         </p:cellEditor>
 
                         <p:rowEditor editTitle="#{bundle['edit']}"
                                      cancelTitle="#{bundle['cancel']}"
                                      saveTitle="#{bundle['save']}"/>
-
 
                         <p:commandLink update="@form msgs"
                                        action="#{notesBean.deleteEntity}">

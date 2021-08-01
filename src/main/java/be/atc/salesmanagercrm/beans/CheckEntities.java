@@ -18,7 +18,7 @@ import java.util.Random;
 
 @Slf4j
 @SessionScoped
-public class CheckEntities implements Serializable {
+public class CheckEntities extends ExtendBean implements Serializable {
 
     private static final long serialVersionUID = -6795998607327751632L;
 

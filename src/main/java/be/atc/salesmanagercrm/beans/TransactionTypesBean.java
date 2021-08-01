@@ -23,7 +23,7 @@ import java.util.Optional;
 @Slf4j
 @Named(value = "transactionTypesBean")
 @ViewScoped
-public class TransactionTypesBean implements Serializable {
+public class TransactionTypesBean extends ExtendBean implements Serializable {
 
     private static final long serialVersionUID = 4484460693560207026L;
 

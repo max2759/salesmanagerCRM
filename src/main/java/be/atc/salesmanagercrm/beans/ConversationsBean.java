@@ -15,7 +15,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -30,8 +29,9 @@ import java.util.List;
 @Slf4j
 @Named(value = "conversationsBean")
 @SessionScoped
-public class ConversationsBean implements Serializable {
+public class ConversationsBean extends ExtendBean implements Serializable {
 
+    private static final long serialVersionUID = 829261844584069844L;
     @Getter
     @Setter
     private ConversationsEntity conversationsEntity = new ConversationsEntity();
@@ -42,8 +42,6 @@ public class ConversationsBean implements Serializable {
     @Getter
     @Setter
     private UsersDao userDao = new UsersDaoImpl();
-    @Inject
-    private UsersBean usersBean;
     @Getter
     @Setter
     private List<ConversationsEntity> conversationsEntityList;
@@ -61,8 +59,8 @@ public class ConversationsBean implements Serializable {
 
 
     public void add() {
-        log.info(String.valueOf(usersBean.getUsersEntity().getId()));
-        log.info("user entity: " + usersBean.getUsersEntity().getUsername());
+        log.info(String.valueOf(getUsersBean().getUsersEntity().getId()));
+        log.info("user entity: " + getUsersBean().getUsersEntity().getUsername());
         try {
             validateConversations(conversationsEntity);
         } catch (InvalidEntityException exception) {
@@ -77,13 +75,13 @@ public class ConversationsBean implements Serializable {
 
         CheckEntities checkEntities = new CheckEntities();
 //finir les verifs ici
-        //   usersBean.findUser();
+        //   getUsersBean().findUser();
 
         conversationsEntity.setMessage(message);
         conversationsEntity.setCreationDate(LocalDateTime.now());
         conversationsEntity.setActive(true);
-        log.info(String.valueOf(usersBean.getUsersEntity()));
-        conversationsEntity.setUsersByIdUsers(usersBean.getUsersEntity());
+        log.info(String.valueOf(getUsersBean().getUsersEntity()));
+        conversationsEntity.setUsersByIdUsers(getUsersBean().getUsersEntity());
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -190,7 +188,7 @@ public class ConversationsBean implements Serializable {
 */
 
     //  public void findUser() {
-    //    usersBean.findUser();
+    //    getUsersBean().findUser();
     // }
 
 

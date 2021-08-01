@@ -16,13 +16,13 @@
         <div class="card card-w-title">
             <h:form id="form">
                 <p:dataScroller chunkSize="10"
-                                emptyMessage="#{bundle['activity.notFound.notFound']}"
+                                emptyMessage="#{bundle['activity.notFound']}"
                                 var="activity"
                                 value="#{contactsBean.listActivity}">
                     <f:facet name="header">
                     </f:facet>
 
-                    <h2 style="padding-top: 20px">
+                    <h2>
                         <h:outputText value="#{activity.key}">
                             <f:convertDateTime type="localDate"
                                                pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
@@ -44,7 +44,7 @@
 
                             <p:outputLabel id="endDateExpired" style="padding-right: 5px;"
                                            rendered="#{activity.value.object.endDate lt tasksBean.now ? true : false}">
-                                <i class="ui-icon ui-icon-info-outline" style="color: red"></i>
+                                <i class="ui-icon ui-icon-info-outline" style="color: red"/>
                             </p:outputLabel>
                             <p:tooltip for="endDateExpired" value="#{bundle['tasks.endDateExpired']}"
                                        showEffect="clip"

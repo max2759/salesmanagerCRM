@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 @Named(value = "permissionsBean")
 @SessionScoped
-public class PermissionsBean implements Serializable {
+public class PermissionsBean extends ExtendBean implements Serializable {
     private static final long serialVersionUID = -2338626292552177485L;
 
     @Getter

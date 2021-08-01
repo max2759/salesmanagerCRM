@@ -57,8 +57,6 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private List<TransactionsEntity> transactionsEntitiesFiltered;
-    @Inject
-    private UsersBean usersBean;
 
     @Inject
     private TransactionHistoriesBean transactionHistoriesBean;
@@ -70,9 +68,9 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         log.info("method : saveEntity()");
 
         log.info("TransactionsEntity = : " + transactionsEntity);
-        usersBean.getUsersEntity().setId(1);
+        getUsersBean().getUsersEntity().setId(1);
 
-        transactionsEntity.setUsersByIdUsers(usersBean.getUsersEntity());
+        transactionsEntity.setUsersByIdUsers(getUsersBean().getUsersEntity());
 
         save(transactionsEntity);
         findAllEntitiesAndFilter();
@@ -132,10 +130,10 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         }
 
         // TODO : Modifier USER
-        usersBean.getUsersEntity().setId(1);
+        getUsersBean().getUsersEntity().setId(1);
 
         try {
-            transactionsEntity = findById(idTransaction, usersBean.getUsersEntity().getId());
+            transactionsEntity = findById(idTransaction, getUsersBean().getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
@@ -178,17 +176,17 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         }
 
         // TODO : Modifier USER
-        usersBean.getUsersEntity().setId(1);
+        getUsersBean().getUsersEntity().setId(1);
 
         try {
-            transactionsEntity = findById(idTransaction, usersBean.getUsersEntity().getId());
+            transactionsEntity = findById(idTransaction, getUsersBean().getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-        transactionHistoriesBean.findAllEntities(idTransaction, usersBean.getUsersEntity().getId());
+        transactionHistoriesBean.findAllEntities(idTransaction, getUsersBean().getUsersEntity().getId());
     }
 
     /**

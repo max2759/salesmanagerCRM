@@ -44,7 +44,7 @@ import java.util.Random;
 @Slf4j
 @Named(value = "usersBean")
 @SessionScoped
-public class UsersBean implements Serializable {
+public class UsersBean extends ExtendBean implements Serializable {
 
     private static final long serialVersionUID = -2338626292552177485L;
 

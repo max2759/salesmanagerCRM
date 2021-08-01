@@ -2,7 +2,10 @@ package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.dao.TasksDao;
 import be.atc.salesmanagercrm.dao.impl.TasksDaoImpl;
-import be.atc.salesmanagercrm.entities.*;
+import be.atc.salesmanagercrm.entities.CompaniesEntity;
+import be.atc.salesmanagercrm.entities.ContactsEntity;
+import be.atc.salesmanagercrm.entities.TaskTypesEntity;
+import be.atc.salesmanagercrm.entities.TasksEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
@@ -43,10 +46,6 @@ public class TasksBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private TasksDao dao = new TasksDaoImpl();
-    // Todo : A modifier
-    @Getter
-    @Setter
-    private UsersEntity usersEntity = new UsersEntity();
     @Getter
     @Setter
     private ContactsEntity contactsEntity = new ContactsEntity();
@@ -116,9 +115,9 @@ public class TasksBean extends ExtendBean implements Serializable {
         log.info("Param : " + getParam("typeEntities"));
 
         log.info("TaskEntity = : " + tasksEntity);
-        usersEntity.setId(1);
+        getUsersBean().getUsersEntity().setId(1);
 
-        tasksEntity.setUsersByIdUsers(usersEntity);
+        tasksEntity.setUsersByIdUsers(getUsersBean().getUsersEntity());
 
 
         save(tasksEntity);
@@ -151,7 +150,7 @@ public class TasksBean extends ExtendBean implements Serializable {
      */
     public void listEntitiesCompanies() {
         log.info("method : listEntitiesCompanies()");
-        usersEntity.setId(1);
+        getUsersBean().getUsersEntity().setId(1);
         companiesEntity.setId(1);
 
         loadListEntities("displayByCompany");
@@ -229,7 +228,6 @@ public class TasksBean extends ExtendBean implements Serializable {
     public void showModalCreate() {
         log.info("method : showModalCreate()");
         tasksEntity = new TasksEntity();
-
     }
 
     /**
@@ -282,25 +280,25 @@ public class TasksBean extends ExtendBean implements Serializable {
     public void loadListEntities(String typeLoad) {
 
         // Todo : Modifier avec user
-        usersEntity.setId(1);
+        getUsersBean().getUsersEntity().setId(1);
         contactsEntity.setId(1);
         companiesEntity.setId(1);
 
         if (typeLoad.equalsIgnoreCase("displayByCompany")) {
-            tasksEntitiesByCompanies = findTasksEntityByCompaniesByIdCompanies(companiesEntity.getId(), usersEntity.getId());
+            tasksEntitiesByCompanies = findTasksEntityByCompaniesByIdCompanies(companiesEntity.getId(), getUsersBean().getUsersEntity().getId());
         } else if (typeLoad.equalsIgnoreCase("displayByContact")) {
-            tasksEntitiesByContacts = findTasksEntityByContactsByIdContacts(contactsEntity.getId(), usersEntity.getId());
+            tasksEntitiesByContacts = findTasksEntityByContactsByIdContacts(contactsEntity.getId(), getUsersBean().getUsersEntity().getId());
         } else if (typeLoad.equalsIgnoreCase("all")) {
 
             LocalDateTime dateTime = LocalDate.now().atTime(0, 0, 0, 0).plusDays(1);
 
-            tasksEntities = findAll(usersEntity.getId());
+            tasksEntities = findAll(getUsersBean().getUsersEntity().getId());
 
             this.tasksEntitiesToCome = tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isAfter(LocalDateTime.now())).collect(Collectors.toList());
             this.tasksEntitiesDueToday = tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isBefore(dateTime) && t.getEndDate().isAfter(LocalDateTime.now())).collect(Collectors.toList());
             this.tasksEntitiesToLate = tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isBefore(LocalDateTime.now())).collect(Collectors.toList());
 
-            tasksEntitiesFinished = findTasksFinished(usersEntity.getId());
+            tasksEntitiesFinished = findTasksFinished(getUsersBean().getUsersEntity().getId());
         }
     }
 

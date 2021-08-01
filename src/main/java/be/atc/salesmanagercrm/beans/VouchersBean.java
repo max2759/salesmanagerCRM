@@ -56,9 +56,6 @@ public class VouchersBean extends ExtendBean implements Serializable {
     @Setter
     private List<VouchersEntity> vouchersEntitiesFiltered;
 
-
-    @Inject
-    private UsersBean usersBean;
     @Inject
     private VoucherHistoriesBean voucherHistoriesBean;
 
@@ -70,9 +67,9 @@ public class VouchersBean extends ExtendBean implements Serializable {
         log.info("VouchersBean => method : saveEntity()");
 
         log.info("VouchersEntity = : " + this.vouchersEntity);
-        usersBean.getUsersEntity().setId(1);
+        getUsersBean().getUsersEntity().setId(1);
 
-        this.vouchersEntity.setUsersByIdUsers(usersBean.getUsersEntity());
+        this.vouchersEntity.setUsersByIdUsers(getUsersBean().getUsersEntity());
 
         save(this.vouchersEntity);
         findAllEntitiesAndFilter();
@@ -110,15 +107,14 @@ public class VouchersBean extends ExtendBean implements Serializable {
         }
 
         // TODO : Modifier USER
-        usersBean.getUsersEntity().setId(1);
+        getUsersBean().getUsersEntity().setId(1);
 
         try {
-            this.vouchersEntity = findById(idVoucher, usersBean.getUsersEntity().getId());
+            this.vouchersEntity = findById(idVoucher, getUsersBean().getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return;
         }
     }
 
@@ -158,23 +154,21 @@ public class VouchersBean extends ExtendBean implements Serializable {
         }
 
         // TODO : Modifier USER
-        usersBean.getUsersEntity().setId(1);
+        getUsersBean().getUsersEntity().setId(1);
 
         try {
-            this.vouchersEntity = findById(idVoucher, usersBean.getUsersEntity().getId());
+            this.vouchersEntity = findById(idVoucher, getUsersBean().getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "vouchers.notExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-        voucherHistoriesBean.findAllEntities(idVoucher, usersBean.getUsersEntity().getId());
+        voucherHistoriesBean.findAllEntities(idVoucher, getUsersBean().getUsersEntity().getId());
     }
 
     /**
      * Method to show modal in create voucher
-     *
-     * @param
      */
     public void showModalCreate() {
         log.info("VouchersBean => method : showModalCreate()");

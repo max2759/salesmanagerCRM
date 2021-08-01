@@ -40,7 +40,7 @@ import java.util.Locale;
 @Slf4j
 @Named(value = "rolesPermissionsBean")
 @SessionScoped
-public class RolePermissionsBean implements Serializable {
+public class RolePermissionsBean extends ExtendBean implements Serializable {
 
     private static final long serialVersionUID = -2338626292552177485L;
 
