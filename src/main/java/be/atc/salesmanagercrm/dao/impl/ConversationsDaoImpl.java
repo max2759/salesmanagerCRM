@@ -29,4 +29,18 @@ public class ConversationsDaoImpl implements ConversationsDao {
                 .getResultList();
     }
 
+    @Override
+    public List<ConversationsEntity> find10Last(EntityManager em) {
+        return em.createNamedQuery("Conversations.findAll",
+                ConversationsEntity.class)
+                .setMaxResults(10)
+                .getResultList();
+    }
+
+    @Override
+    public void update(EntityManager em, ConversationsEntity entity) {
+        em.merge(entity);
+    }
+
+
 }

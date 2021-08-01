@@ -49,7 +49,16 @@ public class RolesBean implements Serializable {
     @Getter
     @Setter
     private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+    @Getter
+    @Setter
+    private RolesEntity selectedRoleEntity;
 
+    @Getter
+    @Setter
+    private List<RolesEntity> rolesEntitiesFiltered;
+    @Getter
+    @Setter
+    private List<RolesEntity> rolesEntities;
 
     public void initialiseDialogRoleId(Integer idRole) {
         if (idRole == null || idRole < 1) {

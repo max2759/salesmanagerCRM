@@ -39,6 +39,16 @@ public class PermissionsBean implements Serializable {
     @Setter
     private List<PermissionsEntity> permissionsEntities = new ArrayList<>();
 
+    @Getter
+    @Setter
+    private PermissionsEntity selectedPermissionsEntity;
+    @Getter
+    @Setter
+    private List<PermissionsEntity> permissionsEntitiesFiltered;
+    @Getter
+    @Setter
+    private List<PermissionsEntity> permissionsEntitiesList;
+
     public void findAllPermissions() {
         log.info("bgin findallpermissions");
         permissionsEntityList = findAll();
@@ -68,8 +78,8 @@ public class PermissionsBean implements Serializable {
         try {
             return dao.findByLabel(em, label);
         } catch (Exception exception) {
-            log.info("nothing in roles bean");
-            throw new EntityNotFoundException("aucune permission avec le label " + label + " n'a été trouvé en db", ErrorCodes.ROLES_NOT_FOUND);
+            log.info("nothing in permissio bean");
+            throw new EntityNotFoundException("aucune permission avec le perml " + label + " n'a été trouvé en db", ErrorCodes.ROLES_NOT_FOUND);
         } finally {
             em.clear();
             em.close();
