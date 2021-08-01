@@ -416,5 +416,19 @@ public class CheckEntities implements Serializable {
         }
     }
 
+    public void checkUserByUsernameAndPassword(UsersEntity entity) {
+        if (entity != null) {
+            EntityManager em = EMF.getEM();
+            UsersEntity usersEntity = usersDao.findNUserByUsernameAndPassword(em, entity.getUsername(), entity.getPassword());
+            log.info(String.valueOf(usersEntity));
+            if (usersEntity == null) {
+                log.warn("Wrong username or password", entity.getId());
+                throw new EntityNotFoundException(
+                        "Votre identifiant ou mot de passe sont inccorects: " + entity.getId(), ErrorCodes.USER_NOT_FOUND
+                );
+            }
+        }
+    }
+
 
 }

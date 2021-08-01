@@ -66,7 +66,9 @@ public enum ErrorCodes {
 
     CITIES_NOT_FOUND(18000),
 
-    ADDRESSES_NOT_FOUND(19000);
+    ADDRESSES_NOT_FOUND(19000),
+
+    CONVERSATION_NOT_VALID(20000);
 
 
     private final int code;

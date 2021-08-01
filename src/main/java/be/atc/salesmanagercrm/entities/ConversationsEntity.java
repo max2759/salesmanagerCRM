@@ -8,6 +8,7 @@ import java.util.Objects;
 @Table(name = "conversations", schema = "salesmanagercrm")
 @NamedQueries({
         @NamedQuery(name = "Conversations.findAll", query = "select c from ConversationsEntity c"),
+
 })
 public class ConversationsEntity {
     private int id;

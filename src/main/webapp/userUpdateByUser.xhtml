@@ -16,8 +16,23 @@
             <h:form>
                 username, password, email, recup de l'id du gus pour afficher ce formulaire
 
-                <p:outputLabel value="#{bundle['user.password']}"></p:outputLabel>
-                <h:inputText value="#{usersBean.usersEntity.password}"></h:inputText>
+                <div class="p-field p-grid">
+                    <p:outputLabel value="#{bundle['user.password']}">*</p:outputLabel>
+                    <div class="p-col">
+                        <p:password value="#{usersBean.usersEntity.password}" match="password2" required="true">
+                            <f:validator validatorId="userPasswordValidator"></f:validator>
+                        </p:password>
+                    </div>
+                </div>
+                <br/>
+                <div class="p-field p-grid">
+                    <p:outputLabel for="password2" styleClass="p-col-fixed" style="width:100px"
+                                   value="#{bundle['user.password2']}"/>
+                    <div class="p-col">
+                        <p:password id="password2" value="#{usersBean.password2}" label="password2" required="true"/>
+                    </div>
+                </div>
+
 
                 <p:outputLabel value="#{bundle['email']}"> * </p:outputLabel>
                 <p:inputText value="#{usersBean.usersEntity.email}">

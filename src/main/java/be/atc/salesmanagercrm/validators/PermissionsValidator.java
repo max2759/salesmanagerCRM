@@ -1,5 +1,6 @@
 package be.atc.salesmanagercrm.validators;
 
+import be.atc.salesmanagercrm.entities.PermissionsEntity;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 @Slf4j
 public class PermissionsValidator {
 
-    public static List<String> validate(List<Integer> entity) {
+    public static List<String> validate(List<PermissionsEntity> entity) {
         List<String> errors = new ArrayList<>();
 
         log.info(String.valueOf(entity));
