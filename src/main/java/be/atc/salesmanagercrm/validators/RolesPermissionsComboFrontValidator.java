@@ -26,8 +26,7 @@ public class RolesPermissionsComboFrontValidator implements Validator {
     PermissionsDao pdao = new PermissionsDaoImpl();
 
     Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
-
-    // recup les roles pour comparer
+// recup les roles pour comparer
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         CheckEntities checkEntities = new CheckEntities();

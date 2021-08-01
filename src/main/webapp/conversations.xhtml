@@ -2,17 +2,41 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 template="WEB-INF/templates/template.xhtml">
 
     <ui:define name="title">#{bundle['conversation.title']}</ui:define>
     <ui:define name="content">
 
+        <f:metadata>
+            <f:viewAction action="#{conversationsBean.get10convers}"/>
+        </f:metadata>
+
+
         <div class="card">
             <h:form>
+                <h:dataTable value="#{conversationsBean.conversationsEntityList}" var="convers">
+
+                    <h:column>
+                        <f:facet name="header">#{bundle['conversation.message']}</f:facet>
+                        <p:outputLabel value="#{convers.message}"/>
+                    </h:column>
+
+                </h:dataTable>
+
+
                 <h5 class="p-mt-0">Basic</h5>
                 <p:textEditor secure="false" widgetVar="message"
                               value="#{conversationsBean.conversationsEntity.message}" height="300"/>
+
+                <p:commandButton value="Confirmer Valider" action="#{conversationsBean.add}"
+                                 update="@(form)"/>
             </h:form>
+
+            <p:messages id="messages" showDetail="true">
+                <p:autoUpdate/>
+            </p:messages>
+
         </div>
     </ui:define>
 </ui:composition>

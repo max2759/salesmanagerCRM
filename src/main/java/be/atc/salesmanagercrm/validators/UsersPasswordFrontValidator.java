@@ -55,7 +55,7 @@ public class UsersPasswordFrontValidator implements Validator {
 
     public void checkPasswordRegexe(UsersEntity entity) {
         if (entity != null) {
-            Pattern pattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$");
+            Pattern pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?])[A-Za-z\\d@$!%*?/.^&*_=+>)]{8,}$");
             Matcher matcher = pattern.matcher(entity.getPassword());
             boolean bool = matcher.matches();
             if (bool == false) {

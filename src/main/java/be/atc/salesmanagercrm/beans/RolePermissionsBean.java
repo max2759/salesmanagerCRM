@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -55,11 +56,9 @@ public class RolePermissionsBean implements Serializable {
     @Getter
     @Setter
     private RolesPermissionsEntity rolePermissionsForDialog;
-    @Getter
-    @Setter
+    @Inject
     private RolesBean rolesBean;
-    @Getter
-    @Setter
+    @Inject
     private PermissionsBean permissionsBean;
     @Getter
     @Setter
@@ -79,6 +78,9 @@ public class RolePermissionsBean implements Serializable {
     @Getter
     @Setter
     private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+    @Getter
+    @Setter
+    private List<PermissionsEntity> permissionsEntitiesRole = new ArrayList<>();
 
 
     public void initialiseDialogRolePermissionsId(Integer idRolePermission) {
@@ -116,6 +118,29 @@ public class RolePermissionsBean implements Serializable {
         return rolesPermissionsEntities;
     }
 
+    public void findPermissionWhithIdRole() {
+
+        findAllPermissionsIWithdRole(1);
+        for (RolesPermissionsEntity rp : rolesPermissionsEntityList) {
+            permissionsEntitiesRole.add(rp.getPermissionsByIdPermissions());
+        }
+
+    }
+
+
+    public void findPermissionWhithIdRoleList() {
+        List<RolesPermissionsEntity> rp1 = findAll();
+        for (RolesPermissionsEntity rp2 : rp1) {
+            permissionsEntitiesRole.remove(rp2.getPermissionsByIdPermissions());
+        }
+
+        findAllPermissionsIWithdRole(rolesPermissionsEntity.getRolesByIdRoles().getId());
+        for (RolesPermissionsEntity rp : rolesPermissionsEntityList) {
+            permissionsEntitiesRole.add(rp.getPermissionsByIdPermissions());
+        }
+
+    }
+
     //findallwithrole
     public void findAllPermissionsIWithdRole(int idRole) {
         log.info("bgin findallrole");
@@ -140,7 +165,7 @@ public class RolePermissionsBean implements Serializable {
      */
     public void manageRolesPermissions() {
         //verifier si un combo existe
-
+        FacesMessage msg;
 
         //ne pas séparer les methodes, mais faire un if else car je sais pas comment ca va se passer avec la boucle
         //possiblement, en cas d'update, vider tous les combos et reinserer dedans a nouveau . Ou alors, verifier en db les combos et verifier par rapport a ce qu'on a recu si ils existent ou non
@@ -168,7 +193,7 @@ public class RolePermissionsBean implements Serializable {
         }
 
         try {
-            validatePermissions(permissionsEntities);
+            validatePermissions(permissionsEntitiesRole);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
@@ -204,7 +229,18 @@ log.info(String.valueOf(permissionsEntities.size()));
         log.info(String.valueOf(listIdExist));
 
 */
-//condition si un role perm existe déjà
+
+        try {
+            for (PermissionsEntity p : permissionsEntitiesRole) {
+                permissionsBean.findByLabel(p.getLabel());
+            }
+        } catch (EntityNotFoundException exception) {
+            log.warn("code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            //msg ici
+            return;
+        }
+
+//condition si un role perm existe
         log.info(String.valueOf(dao.findPermissionWithRole(em, rolesPermissionsEntity.getRolesByIdRoles().getId())));
         List<RolesPermissionsEntity> list = dao.findPermissionWithRole(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
 
@@ -213,16 +249,16 @@ log.info(String.valueOf(permissionsEntities.size()));
         }
 
 
-        for (Integer permissionsEntity : permissionsEntities) {
+        for (PermissionsEntity permissionsEntity : permissionsEntitiesRole) {
             String idRoles = String.valueOf(rolesPermissionsEntity.getRolesByIdRoles().getId());
             int idRole = Integer.parseInt(idRoles);
 
             RolesPermissionsEntity rolesPermissionsEntity = new RolesPermissionsEntity();
 
-            PermissionsEntity permissionsEntityId = pdao.findById(em, permissionsEntity);
-            log.info(String.valueOf(dao.getComboRolePerm(em, idRole, permissionsEntity)));
+            PermissionsEntity permissionsEntityId = pdao.findById(em, permissionsEntity.getId());
+            log.info(String.valueOf(dao.getComboRolePerm(em, idRole, permissionsEntity.getId())));
 
-            if (dao.getComboRolePerm(em, idRole, permissionsEntity) == null) {
+            if (dao.getComboRolePerm(em, idRole, permissionsEntity.getId()) == null) {
 
                 rolesPermissionsEntity.setPermissionsByIdPermissions(permissionsEntityId);
                 rolesPermissionsEntity.setRolesByIdRoles(roleEntityId);
@@ -315,73 +351,6 @@ log.info(String.valueOf(permissionsEntities.size()));
 
     }
 
-    public void update() {
-        log.info(String.valueOf(rolesPermissionsEntity.getId()));
-
-//pour les mdp, comparer en db AVANT hashage si il correspondent. Si ils corresepondent pas, on le hash et on le modifie
-        // !!! verifier avant d'"hasher le mdp si la regex est ok et si ce n'est pas un mdp deja hashé
-
-        try {
-            validateRolesPermissions(rolesPermissionsEntity);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
-
-        try {
-            validateRoles(rolesPermissionsEntity.getRolesByIdRoles());
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
-
-        try {
-            validatePermissions(permissionsEntities);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
-
-        CheckEntities checkEntities = new CheckEntities();
-
-        try {
-            checkEntities.checkRole(rolesPermissionsEntity.getRolesByIdRoles());
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            return;
-        }
-
-        try {
-            checkEntities.checkPermissions(rolesPermissionsEntity.getPermissionsByIdPermissions());
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            return;
-        }
-
-        try {
-            checkEntities.checkComboRolePerm(rolesPermissionsEntity.getRolesByIdRoles().getId(), rolesPermissionsEntity.getPermissionsByIdPermissions().getId());
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            return;
-        }
-
-        EntityManager em = EMF.getEM();
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            dao.update(em, rolesPermissionsEntity);
-            tx.commit();
-            log.info("Persist ok");
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.info("Persist echec");
-        } finally {
-            em.clear();
-            em.clear();
-        }
-    }
-
 
     private void validateRolesPermissions(RolesPermissionsEntity entity) {
         List<String> errors = RolesPermissionsValidator.validate(entity);
@@ -399,7 +368,7 @@ log.info(String.valueOf(permissionsEntities.size()));
         }
     }
 
-    private void validatePermissions(List<Integer> entities) {
+    private void validatePermissions(List<PermissionsEntity> entities) {
         List<String> errors = PermissionsValidator.validate(entities);
         if (!errors.isEmpty()) {
             log.error("Register role is not valide {}", entities);

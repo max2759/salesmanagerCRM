@@ -14,45 +14,64 @@
 
         <h:body>
             <h1>#{bundle['roleList.title']}</h1>
+            <div class="card card-w-title">
 
-            <h:form>
-                <h:dataTable value="#{rolesBean.rolesEntityList}" var="role">
+                <h:form id="form">
+                    <p:tab id="displayAll" title="#{bundle['all']} (#{rolesBean.rolesEntities.size()})">
+                        <p:dataTable paginator="true" rows="10"
+                                     selection="#{rolesBean.selectedRoleEntity}" selectionMode="single"
+                                     paginatorPosition="bottom"
+                                     var="role"
+                                     rowKey="#{role.id}"
+                                     emptyMessage="#{bundle['roles.notFound']}"
+                                     rowsPerPageTemplate="10,20,50"
+                                     widgetVar="displayAllEntities"
+                                     filteredValue="#{rolesBean.rolesEntitiesFiltered}"
+                                     rendered="#{rolesBean.rolesEntities.size eq 0 ? false : true}"
+                                     value="#{rolesBean.rolesEntityList}">
 
-                    <h:column>
-                        <f:facet name="header">#{bundle['role.label']}</f:facet>
-                        <p:outputLabel value="#{role.label}"/>
-                    </h:column>
+                            <p:column width="500" headerText="#{bundle['role.label']}"
+                                      sortBy="#{role.label}"
+                                      filterBy="#{role.label}"
+                                      filterMatchMode="contains">
+                                <p:commandLink id="titleAll" value="#{role.label}"
+                                               onclick="PF('dlg2').show();"
+                                               update="@(form)"
+                                >
+                                    <f:param name="idEntity" value="#{role.id}"/>
+                                </p:commandLink>
+                            </p:column>
 
 
-                    <p:commandButton value="Editer" type="button" icon="ui-icon-add-box"
-                                     onclick="PF('updateRolesModal').show();" styleClass="NavyButton"
-                    />
+                            <p:column colspan="1" width="70">
+                                <p:commandLink
+                                        actionListener="#{rolesBean.initialiseDialogRoleId(role.id)}"
+                                        update="updateRoleDialogForm:updateRoleDialog"
+                                        oncomplete="PF('updateRole').show();return false;"
+                                        styleClass="NavyButton">
+                                    <i class="ui-icon ui-icon-create"></i>
+                                </p:commandLink>
+                                <p:commandLink update="@form"
+                                               action="#{rolesBean.delete(role.id)}">
+                                    <i class="ui-icon ui-icon-delete-forever"></i>
+                                    <f:param name="idEntity" value="#{role.id}"/>
+                                    <f:param name="typeEntities" value="all"/>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column>
 
+                                <p:commandButton value="#{bundle['activate']}" action="#{rolesBean.activate(role.id)}"
+                                                 update="@(form)"/>
+                            </p:column>
 
-                    <h:column>
-                        <p:commandButton value="#{bundle['delete']}" action="#{rolesBean.delete(role.id)}"
-                                         update="@(form)"/>
-                    </h:column>
+                        </p:dataTable>
+                    </p:tab>
+                    <p:staticMessage severity="info" detail="#{bundle['users.notFound']}"
+                                     rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? true : false}"/>
+                </h:form>
+            </div>
 
-                    <h:column>
-                        <p:commandButton value="#{bundle['activate']}" action="#{rolesBean.activate(role.id)}"
-                                         update="@(form)"/>
-                    </h:column>
-
-                    <h:column>
-                        <div class="ui-g">
-                            <div class="ui-g-4">
-                                <p:commandButton value="#{bundle['edit']}"
-                                                 actionListener="#{rolesBean.initialiseDialogRoleId(role.id)}"
-                                                 update="updateRoleDialogForm:updateRoleDialog"
-                                                 oncomplete="PF('updateRole').show();return false;"
-                                                 styleClass="NavyButton"/>
-                            </div>
-                        </div>
-                    </h:column>
-
-                </h:dataTable>
-            </h:form>
+            <!-- e**************************************e- -->
 
             <h:form id="updateRoleDialogForm">
 

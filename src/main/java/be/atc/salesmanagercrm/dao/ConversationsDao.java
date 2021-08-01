@@ -9,7 +9,13 @@ public interface ConversationsDao {
 
     ConversationsEntity findById(EntityManager em, int id);
 
-    void add(EntityManager em, ConversationsEntity usersEntity);
+    void add(EntityManager em, ConversationsEntity conversationsEntity);
 
     List<ConversationsEntity> findAll(EntityManager em);
+
+    List<ConversationsEntity> find10Last(EntityManager em);
+
+    void update(EntityManager em, ConversationsEntity entity);
+
+
 }

@@ -66,9 +66,7 @@ public class UsersBean implements Serializable {
     @Getter
     @Setter
     private List<UsersEntity> usersEntityList;
-    @Getter
-    @Setter
-    private boolean showPopup;
+
     @Getter
     @Setter
     private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
@@ -76,6 +74,16 @@ public class UsersBean implements Serializable {
     @Getter
     @Setter
     private UsersEntity userForDialog;
+
+    @Getter
+    @Setter
+    private List<UsersEntity> usersEntitiesFiltered;
+    @Getter
+    @Setter
+    private List<UsersEntity> usersEntities;
+    @Getter
+    @Setter
+    private UsersEntity selectedUserEntity;
 
 
     public void initialiseDialogUserId(Integer idUser) {
@@ -114,7 +122,7 @@ public class UsersBean implements Serializable {
         //mettre dans un try catch + fermer l'em
         //rolesEntity = rolesBean.findById(em, idRole);
         try {
-            validateUsers(usersEntity, password2);
+            validateUsers(usersEntity);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
@@ -222,6 +230,14 @@ public class UsersBean implements Serializable {
         //Example using most common scenario of username/password pair:
         //https://shiro.apache.org/authentication.html
 
+        CheckEntities checkEntities = new CheckEntities();
+        try {
+            checkEntities.checkUserByUsernameAndPassword(usersEntity);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            return;
+        }
+
 
         Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
         SecurityManager securityManager = factory.getInstance();
@@ -293,8 +309,14 @@ public class UsersBean implements Serializable {
         //    System.exit(0);
 //no problem
         //faire le truc des roles
+        session.setAttribute("idUser", usersEntity.getId());
+
         FacesContext ctx = FacesContext.getCurrentInstance();
         ctx.getExternalContext().redirect("userUpdateByUser.xhtml");
+    }
+
+    public void manageUserActif(UsersEntity entity) {
+        log.info("édedans");
     }
 
     public void delete(int id) {
@@ -388,23 +410,26 @@ public class UsersBean implements Serializable {
 
 //pour les mdp, comparer en db AVANT hashage si il correspondent. Si ils corresepondent pas, on le hash et on le modifie
         // !!! verifier avant d'"hasher le mdp si la regex est ok et si ce n'est pas un mdp deja hashé
-
-        try {
-            validateUsersUpdateByAdmin(usersEntity);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
-
-        CheckEntities checkEntities = new CheckEntities();
-        int userId = Integer.valueOf(usersEntity.getId());
-        log.info(String.valueOf(usersEntity.getId()));
-
         EntityManager em = EMF.getEM();
-        UsersEntity usersEntityOld = dao.findById(em, userId);
-        log.info(usersEntityOld.getUsername());
-        log.info(usersEntity.getUsername());
-        if (!usersEntity.getUsername().equals(usersEntityOld.getUsername())) {
+        CheckEntities checkEntities = new CheckEntities();
+
+        UsersEntity usersEntityOld = dao.findById(em, usersEntity.getId());
+        String usernameOld = usersEntityOld.getUsername();
+        if (usernameOld.equals(usersEntity.getUsername())) {
+            try {
+                validateUsersUpdateByAdminNoChange(usersEntity);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                return;
+            }
+        } else {
+            try {
+                validateUsersUpdateByAdmin(usersEntity);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                return;
+            }
+
             try {
                 checkEntities.checkUserByUsername(usersEntity);
             } catch (InvalidEntityException exception) {
@@ -413,6 +438,7 @@ public class UsersBean implements Serializable {
             }
             usersEntity.setUsername(usersEntity.getUsername());
         }
+
 
         try {
             checkEntities.checkRole(usersEntity.getRolesByIdRoles());
@@ -444,43 +470,28 @@ public class UsersBean implements Serializable {
         findById(em, usersEntity.getId());
     }
 
+    /**
+     * @param usersEntity
+     */
     private void userUpdateByUser(UsersEntity usersEntity) {
+
         log.info("begin updateUsrByUser" + usersEntity.getUsername());
 
 //pour les mdp, comparer en db AVANT hashage si il correspondent. Si ils corresepondent pas, on le hash et on le modifie
         // !!! verifier avant d'"hasher le mdp si la regex est ok et si ce n'est pas un mdp deja hashé
-
+        log.info(password2);
         try {
-            validateUsersUpdateByUser(usersEntity);
+            validateUsersUpdateByUser(usersEntity, password2);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
 
-        CheckEntities checkEntities = new CheckEntities();
-        int userId = Integer.valueOf(usersEntity.getId());
-        log.info(String.valueOf(usersEntity.getId()));
+        String password = encrypt(usersEntity.getPassword());
+
+        usersEntity.setPassword(password);
 
         EntityManager em = EMF.getEM();
-        UsersEntity usersEntityOld = dao.findById(em, userId);
-        log.info(usersEntityOld.getUsername());
-        log.info(usersEntity.getUsername());
-        if (!usersEntity.getUsername().equals(usersEntityOld.getUsername())) {
-            try {
-                checkEntities.checkUserByUsername(usersEntity);
-            } catch (InvalidEntityException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-                return;
-            }
-            usersEntity.setUsername(usersEntity.getUsername());
-        }
-
-        try {
-            checkEntities.checkRole(usersEntity.getRolesByIdRoles());
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            return;
-        }
 
         EntityTransaction tx = null;
         try {
@@ -524,22 +535,38 @@ public class UsersBean implements Serializable {
     }
 
     public void findUser() {
-        log.info(String.valueOf(usersEntity));
+
+        log.info(String.valueOf(usersEntity.getUsername()));
+        String username = usersEntity.getUsername();
         //rechercher par pseudo
         EntityManager em = EMF.getEM();
-        usersEntity = dao.findByUsername(em, usersEntity.getUsername());
+        usersEntity = dao.findByUsername(em, username);
+        log.info(String.valueOf(usersEntity));
         usersEntity = findById(em, usersEntity.getId());
+        log.info(String.valueOf(usersEntity));
     }
 
+    private void findByUsernameAndPass(UsersEntity entity) {
+        List<String> errors = UsersValidator.connection(entity);
+        if (!errors.isEmpty()) {
+            log.error("Connexion is not valide {}", entity);
+            throw new InvalidEntityException("Le mot de passe ou le pseudo ne sont pas valide", ErrorCodes.USER_NOT_VALID, errors);
+        }
+    }
 
-    private void validateUsers(UsersEntity entity, String password2) {
-        List<String> errors = UsersValidator.validate(entity, password2);
+    private void validateUsers(UsersEntity entity) {
+        List<String> errors = UsersValidator.validate(entity);
         if (!errors.isEmpty()) {
             log.error("Register is not valide {}", entity);
             throw new InvalidEntityException("L'inscription n est pas valide", ErrorCodes.USER_NOT_VALID, errors);
         }
     }
 
+    /**
+     * for the case when username is different
+     *
+     * @param entity
+     */
     private void validateUsersUpdateByAdmin(UsersEntity entity) {
         List<String> errors = UsersValidator.validateUpdateByAdmin(entity);
         if (!errors.isEmpty()) {
@@ -548,8 +575,21 @@ public class UsersBean implements Serializable {
         }
     }
 
-    private void validateUsersUpdateByUser(UsersEntity entity) {
-        List<String> errors = UsersValidator.validateUpdateByAdmin(entity);
+    /**
+     * for the case when username haven't change
+     *
+     * @param entity
+     */
+    private void validateUsersUpdateByAdminNoChange(UsersEntity entity) {
+        List<String> errors = UsersValidator.validateUpdateByAdminNoChange(entity);
+        if (!errors.isEmpty()) {
+            log.error("Register is not valide {}", entity);
+            throw new InvalidEntityException("L'inscription n est pas valide", ErrorCodes.USER_NOT_VALID, errors);
+        }
+    }
+
+    private void validateUsersUpdateByUser(UsersEntity entity, String password2) {
+        List<String> errors = UsersValidator.validateUpdateByUser(entity, password2);
         if (!errors.isEmpty()) {
             log.error("Register is not valide {}", entity);
             throw new InvalidEntityException("L'inscription n est pas valide", ErrorCodes.USER_NOT_VALID, errors);

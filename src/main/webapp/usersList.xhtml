@@ -14,62 +14,99 @@
             <f:viewAction action="#{permissionsBean.findAllPermissions}"/>
         </f:metadata>
 
+
         <h:body>
             <h1>#{bundle['usersList.title']}</h1>
 
-            <h:form>
-                <h:dataTable value="#{usersBean.usersEntityList}" var="user">
+            <div class="card card-w-title">
+                <h1>#{bundle['transactions.title']}</h1>
+                <h:form id="form">
+                    <p:tab id="displayAll" title="#{bundle['all']} (#{usersBean.usersEntities.size()})">
+                        <p:dataTable paginator="true" rows="10"
+                                     selection="#{usersBean.selectedUserEntity}" selectionMode="single"
+                                     paginatorPosition="bottom"
+                                     var="user"
+                                     rowKey="#{user.id}"
+                                     emptyMessage="#{bundle['users.notFound']}"
+                                     rowsPerPageTemplate="10,20,50"
+                                     widgetVar="displayAllEntities"
+                                     filteredValue="#{usersBean.usersEntitiesFiltered}"
+                                     rendered="#{usersBean.usersEntities.size() eq 0 ? false : true}"
+                                     value="#{usersBean.usersEntityList}">
 
-                    <h:column>
-                        <f:facet name="header">#{bundle['user.username']}</f:facet>
-                        <p:outputLabel value="#{user.username}"/>
-                    </h:column>
+                            <p:column width="500" headerText="#{bundle['user.username']}"
+                                      sortBy="#{user.username}"
+                                      filterBy="#{user.username}"
+                                      filterMatchMode="contains">
+                                <p:commandLink id="titleAll" value="#{user.username}"
+                                               onclick="PF('dlg2').show();"
+                                               update="@(form) "
+                                >
+                                    <f:param name="idEntity" value="#{user.id}"/>
+                                </p:commandLink>
+                            </p:column>
 
-                    <h:column>
-                        <f:facet name="header">#{bundle['firstname']}</f:facet>
-                        <p:outputLabel value="#{user.firstname}"/>
-                    </h:column>
+                            <p:column headerText="#{bundle['firstname']}"
+                                      sortBy="#{user.username}">
+                                <h:outputText value="#{user.username}"/>
+                            </p:column>
 
-                    <h:column>
-                        <f:facet name="header">#{bundle['lastname']}</f:facet>
-                        <p:outputLabel value="#{user.lastname}"/>
-                    </h:column>
+                            <p:column headerText="#{bundle['lastname']}"
+                                      sortBy="#{user.lastname}">
+                                <h:outputText value="#{user.lastname}">
 
-                    <h:column>
-                        <f:facet name="header">#{bundle['role']}</f:facet>
-                        <p:outputLabel value="#{user.rolesByIdRoles.label}"/>
-                    </h:column>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="#{bundle['email']}"
+                                      sortBy="#{user.email}">
+                                <h:outputText value="#{user.email}">
+
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="#{bundle['roles']}"
+                                      sortBy="#{user.rolesByIdRoles.label}">
+                                <h:outputText value="#{user.rolesByIdRoles.label}">
+                                    <f:convertNumber currencySymbol="€" type="currency"/>
+                                </h:outputText>
+                            </p:column>
 
 
-                    <p:commandButton value="Editer" type="button" icon="ui-icon-add-box"
-                                     onclick="PF('updateUsersModal').show();" styleClass="NavyButton"
-                    />
+                            <p:column colspan="1" width="70">
+                                <p:commandLink
+                                        actionListener="#{usersBean.initialiseDialogUserId(user.id)}"
+                                        update="updateUserDialogForm:updateUserDialog"
+                                        oncomplete="PF('updateUser').show();return false;"
+                                        styleClass="NavyButton">
+                                    <i class="ui-icon ui-icon-create"></i>
+                                </p:commandLink>
+                                <p:commandLink update="@form"
+                                               action="#{usersBean.delete(user.id)}">
+                                    <i class="ui-icon ui-icon-delete-forever"></i>
+                                    <f:param name="idEntity" value="#{user.id}"/>
+                                    <f:param name="typeEntities" value="all"/>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column>
+                                <p:toggleSwitch value="#{usersBean.manageUserActif(user)}"/>
+                            </p:column>
+                            <p:column>
+
+                                <p:commandButton value="#{bundle['activate']}" action="#{usersBean.activate(user.id)}"
+                                                 update="@(form)"/>
+                            </p:column>
+
+                        </p:dataTable>
+                    </p:tab>
+                    <p:staticMessage severity="info" detail="#{bundle['users.notFound']}"
+                                     rendered="#{usersBean.usersEntities.size() eq 0 ? true : false}"/>
+                </h:form>
+            </div>
 
 
-                    <h:column>
-                        <p:commandButton value="#{bundle['delete']}" action="#{usersBean.delete(user.id)}"
-                                         update="@(form)"/>
-                    </h:column>
+            <!-- *****************************************************************- -->
 
-                    <h:column>
-                        <p:commandButton value="#{bundle['activate']}" action="#{usersBean.activate(user.id)}"
-                                         update="@(form)"/>
-                    </h:column>
-
-                    <h:column>
-                        <div class="ui-g">
-                            <div class="ui-g-4">
-                                <p:commandButton value="#{bundle['edit']}"
-                                                 actionListener="#{usersBean.initialiseDialogUserId(user.id)}"
-                                                 update="updateUserDialogForm:updateUserDialog"
-                                                 oncomplete="PF('updateUser').show();return false;"
-                                                 styleClass="NavyButton"/>
-                            </div>
-                        </div>
-                    </h:column>
-
-                </h:dataTable>
-            </h:form>
 
             <h:form id="updateUserDialogForm">
 
