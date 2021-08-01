@@ -15,8 +15,6 @@ public interface CompaniesDao {
 
     void update(EntityManager em, CompaniesEntity companiesEntity);
 
-    void delete(EntityManager em, CompaniesEntity companiesEntity);
-
     CompaniesEntity findByIdCompanyAndByIdUser(EntityManager em, int id, int idUser);
 
     List<CompaniesEntity> findCompaniesEntityByIdUser(EntityManager em, int idUser);
