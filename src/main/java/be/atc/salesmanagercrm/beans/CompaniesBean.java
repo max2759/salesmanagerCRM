@@ -81,9 +81,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     @Inject
     private ContactsBean contactsBean;
 
-//    @Inject
-//    private CompaniesContactsBean companiesContactsBean;
-
     @Inject
     private AddressesBean addressesBean;
 
@@ -466,6 +463,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         FacesMessage facesMessage;
 
         log.info("Début méthode displayOneCompany");
+        log.info("Param : " + getParam("companyID"));
 
         int idCompany;
 
@@ -570,12 +568,8 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             tx = em.getTransaction();
             tx.begin();
             companiesDao.update(em, companiesEntity);
-            addressesBean.updateOrCreateAddress();
-//            addressesBean.deleteAddressByIdCompany();
-//            addressesBean.createAddresseByCompanies();
-//            companiesContactsBean.createCompaniesContacts();
-//            CompaniesContactsDao companiesContactsDao = new CompaniesContactsDaoImpl();
-//            companiesContactsDao.add(em, companiesContactsEntity);
+            addressesBean.getAddressesEntity().setCompaniesByIdCompanies(companiesEntity);
+            addressesBean.updateEntity();
             tx.commit();
             log.info("Update ok");
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "company.updated"), null);
@@ -648,23 +642,13 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      */
     public void deleteCompany() {
         log.info("method : deleteCompany()");
-
         log.info("Id de companies = " + getParam("companiesID"));
-        //delete();
+
+        delete(Integer.parseInt(getParam("companiesID")));
 
         loadListEntities("displayActiveCompany");
     }
 
-
-    public void getCompanyIDFromCommandLink() {
-
-        log.info("Salut méthode qui marche pas");
-
-        this.idCompanyDel = Integer.parseInt(getParam("companiesID"));
-
-        log.info("ID = " + idCompanyDel);
-
-    }
 
     /**
      * Sort CompanyTypes by group in form

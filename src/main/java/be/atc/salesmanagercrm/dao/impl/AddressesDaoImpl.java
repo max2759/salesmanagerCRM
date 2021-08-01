@@ -11,21 +11,11 @@ import javax.persistence.EntityManager;
 public class AddressesDaoImpl extends EntityFinderImpl<AddressesEntity> implements AddressesDao {
 
     @Override
-    public void add(EntityManager em, AddressesEntity addressesEntity) {
-        em.persist(addressesEntity);
-    }
-
-    @Override
     public AddressesEntity findByIdCompanies(EntityManager em, int id) {
         return em.createNamedQuery("Addresses.findByIdCompanies",
                 AddressesEntity.class)
                 .setParameter("id", id)
                 .getSingleResult();
-    }
-
-    @Override
-    public void deleteByIdCompanies(EntityManager em, AddressesEntity addressesEntity) {
-        em.remove(em.merge(addressesEntity));
     }
 
     @Override

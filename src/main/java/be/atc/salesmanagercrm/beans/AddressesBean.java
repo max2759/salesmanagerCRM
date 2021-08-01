@@ -47,33 +47,6 @@ public class AddressesBean extends ExtendBean implements Serializable {
 
 
     /**
-     * Create Adresse entity
-     */
-    public void createAddresseByCompanies() {
-
-        log.info("Start of createAddresse");
-
-        addressesEntity.setCompaniesByIdCompanies(companiesBean.getCompaniesEntity());
-
-        EntityManager em = EMF.getEM();
-        EntityTransaction tx = null;
-
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            addressesDao.add(em, addressesEntity);
-            tx.commit();
-            log.info("Persist ok");
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.info("Persist echec");
-        } finally {
-            em.clear();
-            em.clear();
-        }
-    }
-
-    /**
      * Auto Complete form creation
      *
      * @param query String
@@ -90,15 +63,19 @@ public class AddressesBean extends ExtendBean implements Serializable {
     }
 
 
-    public AddressesEntity getAddressByIdCompany() {
+    /**
+     * Return addressEntity by id companies if exist else return new AddressesEntity
+     */
+    public void getAddressByIdCompany() {
 
-        addressesEntity = findByIdCompanies(companiesBean.getCompaniesEntity().getId());
+        checkIfIdCompanyExist();
 
-        if (addressesEntity != null) {
-            return addressesEntity;
+        try {
+            addressesEntity = findByIdCompanies(companiesBean.getCompaniesEntity().getId());
+        } catch (EntityNotFoundException exception) {
+            addressesEntity = new AddressesEntity();
         }
 
-        return null;
     }
 
 
@@ -110,6 +87,7 @@ public class AddressesBean extends ExtendBean implements Serializable {
      */
     protected AddressesEntity findByIdCompanies(int id) {
 
+        log.info("Start of findByIdCompanies");
         FacesMessage facesMessage;
 
         if (id == 0) {
@@ -129,85 +107,35 @@ public class AddressesBean extends ExtendBean implements Serializable {
                     "Aucune adresse avec l'ID " + id + " n'a été trouve dans la DB",
                     ErrorCodes.ADDRESSES_NOT_FOUND
             );
+
         } finally {
             em.clear();
             em.close();
         }
     }
 
-    public void deleteAddressByIdCompany() {
-        deleteByIdCompanies(companiesBean.getCompaniesEntity().getId());
+
+    /**
+     * Method that call updateAddress
+     */
+    public void updateEntity() {
+        updateAddress(this.addressesEntity);
     }
 
     /**
-     * Delete address by ID company
+     * Update Address entity
      *
-     * @param id id
+     * @param addressesEntity AddressesEntity
      */
-    protected void deleteByIdCompanies(int id) {
-
+    protected void updateAddress(AddressesEntity addressesEntity) {
         FacesMessage facesMessage;
-
-        if (id == 0) {
-            log.error("Task ID is null");
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "addressesNotFound"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            return;
-        }
-
-        AddressesEntity addressesEntityToDelete;
-
-        try {
-            addressesEntityToDelete = findByIdCompanies(id);
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "addressesNotFound"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            return;
-        }
-
-
-        EntityManager em = EMF.getEM();
-        em.getTransaction();
-
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            addressesDao.deleteByIdCompanies(em, addressesEntityToDelete);
-            tx.commit();
-            log.info("Delete ok");
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.error("Delete Error");
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-        } finally {
-            em.clear();
-            em.close();
-        }
-    }
-
-    protected void updateAddress() {
-        FacesMessage facesMessage;
-
-        AddressesEntity addressesEntityToUpdate;
-
-        try {
-            addressesEntityToUpdate = findByIdCompanies(companiesBean.getCompaniesEntity().getId());
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            return;
-        }
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
         try {
             tx = em.getTransaction();
             tx.begin();
-            addressesDao.update(em, addressesEntityToUpdate);
+            addressesDao.update(em, addressesEntity);
             tx.commit();
             log.info("Update ok");
         } catch (Exception ex) {
@@ -221,17 +149,21 @@ public class AddressesBean extends ExtendBean implements Serializable {
         }
     }
 
+    protected void checkIfIdCompanyExist() {
+        FacesMessage facesMessage;
 
-    protected void updateOrCreateAddress() {
+        log.info("Start of checkIfIdCompanyExist");
+        log.info("Param : " + getParam("companyID"));
 
-        AddressesEntity addressesEntityChoice = findByIdCompanies(companiesBean.getCompaniesEntity().getId());
+        int idTest;
 
-        if (addressesEntityChoice == null) {
-            createAddresseByCompanies();
-        } else {
-            updateAddress();
+        try {
+            idTest = Integer.parseInt(getParam("companyID"));
+        } catch (NumberFormatException exception) {
+            log.info(exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "company.error"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         }
     }
-
 
 }
