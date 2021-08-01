@@ -7,9 +7,10 @@ import java.util.Objects;
 @Entity
 @Table(name = "roles", schema = "salesmanagercrm")
 @NamedQueries({
-        @NamedQuery(name = "Roles.findAllRoles", query = "select r from RolesEntity r"),
+        @NamedQuery(name = "Roles.findAllRoles", query = "select r from RolesEntity r order by r.active desc"),
         @NamedQuery(name = "Roles.findByLabel", query = "select r from RolesEntity r where r.label = :label"),
         @NamedQuery(name = "Roles.findForDeleteSafe", query = "select r from RolesEntity r join UsersEntity u on u.rolesByIdRoles.id = r.id where r.id = :id and u.active = true"),
+        @NamedQuery(name = "Roles.findAllActiveRoles", query = "select r from RolesEntity r where r.active = true"),
 })
 public class RolesEntity {
     private int id;

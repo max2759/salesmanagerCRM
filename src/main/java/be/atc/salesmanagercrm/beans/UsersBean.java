@@ -32,6 +32,7 @@ import javax.persistence.EntityTransaction;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -84,6 +85,10 @@ public class UsersBean implements Serializable {
     @Getter
     @Setter
     private UsersEntity selectedUserEntity;
+
+    @Getter
+    @Setter
+    private List<UsersEntity> usersEntitiesRole = new ArrayList<>();
 
 
     public void initialiseDialogUserId(Integer idUser) {
@@ -230,23 +235,29 @@ public class UsersBean implements Serializable {
         //Example using most common scenario of username/password pair:
         //https://shiro.apache.org/authentication.html
 
-        CheckEntities checkEntities = new CheckEntities();
         try {
-            checkEntities.checkUserByUsernameAndPassword(usersEntity);
+            validateConnection(usersEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
+
+        String password = usersEntity.getPassword();
+        String hashPass = encrypt(password);
+
+        //CheckEntities checkEntities = new CheckEntities();
+ /*       try {
+            checkEntities.checkUserByUsernameAndPassword(usersEntity, hashPass);
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
         }
-
+*/
 
         Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
         SecurityManager securityManager = factory.getInstance();
         SecurityUtils.setSecurityManager(securityManager);
 
-
-        String password = usersEntity.getPassword();
-        String hashPass = encrypt(password);
-        //   log.info(hashPass);
         UsernamePasswordToken token = new UsernamePasswordToken(usersEntity.getUsername(), hashPass);
         // log.info(String.valueOf(new UsernamePasswordToken(usersEntity.getUsername(), hashPass)));
         log.info(String.valueOf(token));
@@ -255,7 +266,6 @@ public class UsersBean implements Serializable {
         Session session = currentUser.getSession();
 
         if (!currentUser.isAuthenticated()) {
-            //  log.info('in if');
 
             token.setRememberMe(true);
 
@@ -263,17 +273,21 @@ public class UsersBean implements Serializable {
                 currentUser.login(token);
             } catch (UnknownAccountException uae) {
                 log.info("There is no user with username or wrong password of " + token.getPrincipal());
+                return;
             } catch (IncorrectCredentialsException ice) {
                 log.info("Password for account " + token.getPrincipal() + " was incorrect!");
+                return;
             } catch (LockedAccountException lae) {
                 log.info("The account for username " + token.getPrincipal() + " is locked.  " +
                         "Please contact your administrator to unlock it.");
+                return;
             }
             // ... catch more exceptions here (maybe custom ones specific to your application?
             catch (AuthenticationException ae) {
                 //unexpected condition?  error?
             }
         }
+
 
         log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
 
@@ -315,9 +329,6 @@ public class UsersBean implements Serializable {
         ctx.getExternalContext().redirect("userUpdateByUser.xhtml");
     }
 
-    public void manageUserActif(UsersEntity entity) {
-        log.info("édedans");
-    }
 
     public void delete(int id) {
         FacesMessage msg;
@@ -335,6 +346,7 @@ public class UsersBean implements Serializable {
             dao.update(em, usersEntity1);
             tx.commit();
             log.info("Delete ok");
+            findAllUsers();
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.deleted"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
@@ -363,6 +375,7 @@ public class UsersBean implements Serializable {
             dao.update(em, usersEntity1);
             tx.commit();
             log.info("Delete ok");
+            findAllUsers();
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.deleted"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
@@ -593,6 +606,14 @@ public class UsersBean implements Serializable {
         if (!errors.isEmpty()) {
             log.error("Register is not valide {}", entity);
             throw new InvalidEntityException("L'inscription n est pas valide", ErrorCodes.USER_NOT_VALID, errors);
+        }
+    }
+
+    private void validateConnection(UsersEntity entity) {
+        List<String> errors = UsersValidator.connection(entity);
+        if (!errors.isEmpty()) {
+            log.error("Connexion is not valide {}", entity);
+            throw new InvalidEntityException("La connexion n est pas valide", ErrorCodes.USER_NOT_VALID, errors);
         }
     }
 

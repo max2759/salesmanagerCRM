@@ -416,10 +416,11 @@ public class CheckEntities implements Serializable {
         }
     }
 
-    public void checkUserByUsernameAndPassword(UsersEntity entity) {
+    public void checkUserByUsernameAndPassword(UsersEntity entity, String password) {
         if (entity != null) {
+            log.info(entity.getUsername() + " " + entity.getPassword());
             EntityManager em = EMF.getEM();
-            UsersEntity usersEntity = usersDao.findNUserByUsernameAndPassword(em, entity.getUsername(), entity.getPassword());
+            UsersEntity usersEntity = usersDao.findNUserByUsernameAndPassword(em, entity.getUsername(), password);
             log.info(String.valueOf(usersEntity));
             if (usersEntity == null) {
                 log.warn("Wrong username or password", entity.getId());

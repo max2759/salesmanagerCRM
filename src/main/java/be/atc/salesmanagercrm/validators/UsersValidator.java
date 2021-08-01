@@ -53,7 +53,6 @@ public class UsersValidator {
             errors.add("Votre pseudo ne peux pas être vide");
         }
 */
-
         return errors;
     }
 

@@ -28,6 +28,13 @@ public class RolesDaoImpl implements RolesDao {
     }
 
     @Override
+    public List<RolesEntity> findAllRolesActive(EntityManager em) {
+        return em.createNamedQuery("Roles.findAllActiveRoles",
+                RolesEntity.class)
+                .getResultList();
+    }
+
+    @Override
     public RolesEntity findByLabel(EntityManager em, String label) {
         try {
             return em.createNamedQuery("Roles.findByLabel",

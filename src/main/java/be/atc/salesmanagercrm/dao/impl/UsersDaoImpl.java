@@ -20,11 +20,15 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public UsersEntity findNUserByUsernameAndPassword(EntityManager em, String username, String password) {
-        return em.createNamedQuery("Users.findNUserByUsernameAndPassword",
-                UsersEntity.class)
-                .setParameter("username", username)
-                .setParameter("password", password)
-                .getSingleResult();
+        try {
+            return em.createNamedQuery("Users.findNUserByUsernameAndPassword",
+                    UsersEntity.class)
+                    .setParameter("username", username)
+                    .setParameter("password", password)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override
@@ -59,18 +63,34 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public UsersEntity findPassword(EntityManager em, int id) {
-        return em.createNamedQuery("Users.findPassword",
-                UsersEntity.class)
-                .setParameter("id", id)
-                .getSingleResult();
+        try {
+            return em.createNamedQuery("Users.findPassword",
+                    UsersEntity.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override
     public UsersEntity findUsername(EntityManager em, int id) {
-        return em.createNamedQuery("Users.findUsername",
+        try {
+            return em.createNamedQuery("Users.findUsername",
+                    UsersEntity.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<UsersEntity> findActiveUsers(EntityManager em) {
+        return em.createNamedQuery("Users.findActiveUsers",
                 UsersEntity.class)
-                .setParameter("id", id)
-                .getSingleResult();
+                .getResultList();
+
     }
 
 }

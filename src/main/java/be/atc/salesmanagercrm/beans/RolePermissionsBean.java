@@ -376,9 +376,6 @@ log.info(String.valueOf(permissionsEntities.size()));
         }
     }
 
-    private void checkDuplicateCombo() {
-
-    }
 
 
    /* public void manageRolesPermissions() {
