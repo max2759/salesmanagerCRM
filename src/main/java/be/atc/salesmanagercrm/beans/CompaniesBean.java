@@ -501,6 +501,9 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
 
+    /**
+     * Public method that call update company
+     */
     public void updateCompanies() {
         update(companiesEntity);
     }
@@ -586,8 +589,70 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
     }
 
+    public void activateCompanyByIdCompany() {
+
+        log.info("method : deleteCompany()");
+        log.info("Id de companies = " + getParam("companiesID"));
+
+        activeCompany(Integer.parseInt(getParam("companiesID")));
+
+        loadListEntities("displayDisableCompany");
+
+    }
+
     /**
-     * Delete company by id
+     * Re activate Company by it's id
+     *
+     * @param id id
+     */
+    protected void activeCompany(int id) {
+
+        FacesMessage facesMessage;
+
+        if (id == 0) {
+            log.error("Companies ID is null");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return;
+        }
+
+        CompaniesEntity companiesEntityToActivate;
+        EntityManager em = EMF.getEM();
+        em.getTransaction();
+        EntityTransaction tx = null;
+
+        try {
+            companiesEntityToActivate = companiesDao.findById(em, id);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return;
+        }
+
+        companiesEntityToActivate.setActive(true);
+
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            companiesDao.update(em, companiesEntityToActivate);
+            tx.commit();
+            log.info("Company enable ok");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "company.activated"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        } catch (Exception ex) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            log.info("Soft delete échec");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        } finally {
+            em.clear();
+            em.clear();
+        }
+    }
+
+    /**
+     * Soft delete company by id
      *
      * @param id id
      */
@@ -623,12 +688,12 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             tx.begin();
             companiesDao.update(em, companiesEntityToDelete);
             tx.commit();
-            log.info("Delete ok");
+            log.info("Soft delete ok");
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "company.deleted"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
-            log.info("Delete échec");
+            log.info("Soft delete échec");
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         } finally {

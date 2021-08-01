@@ -29,10 +29,6 @@ public class CompaniesDaoImpl extends EntityFinderImpl<CompaniesEntity> implemen
         em.merge(companiesEntity);
     }
 
-    @Override
-    public void delete(EntityManager em, CompaniesEntity companiesEntity) {
-        em.remove(em.merge(companiesEntity));
-    }
 
     @Override
     public CompaniesEntity findByIdCompanyAndByIdUser(EntityManager em, int id, int idUser) {
