@@ -83,6 +83,18 @@ public class CitiesBean extends ExtendBean implements Serializable {
             em.clear();
             em.close();
         }
-
     }
+
+    /**
+     * Sort Cities by group in form
+     *
+     * @param entityGroup CitiesEntity
+     * @return label of entitygroup
+     */
+
+    public char getCitiesEntityGroup(CitiesEntity entityGroup) {
+        return entityGroup.getLabel().charAt(0);
+    }
+
+
 }

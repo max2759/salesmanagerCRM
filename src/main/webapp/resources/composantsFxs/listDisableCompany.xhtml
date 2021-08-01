@@ -60,6 +60,14 @@
                         value="#{empty companies.branchActivitiesByIdBranchActivities.label ? '--' : companies.branchActivitiesByIdBranchActivities.label}"/>
             </p:column>
 
+            <p:column>
+                <p:commandLink update="@(form) msgs"
+                               action="#{companiesBean.activateCompanyByIdCompany}">
+                    <i class="ui-icon ui-icon-update"/>
+                    <f:param name="companiesID" value="#{companies.id}"></f:param>
+                </p:commandLink>
+            </p:column>
+
         </p:dataTable>
     </f:view>
 </cc:implementation>
