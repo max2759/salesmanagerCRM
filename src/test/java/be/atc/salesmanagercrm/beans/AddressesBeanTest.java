@@ -1,8 +1,6 @@
 package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.entities.AddressesEntity;
-import be.atc.salesmanagercrm.entities.CitiesEntity;
-import be.atc.salesmanagercrm.entities.CompaniesEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,24 +25,7 @@ class AddressesBeanTest {
         addressesBean = null;
     }
 
-    @Test
-    void createAddresseByCompanies() {
 
-        CompaniesEntity companiesEntity = new CompaniesEntity();
-        CitiesEntity citiesEntity = new CitiesEntity();
-
-        companiesEntity.setId(3);
-        citiesEntity.setId(3);
-
-        AddressesEntity addressesEntity = new AddressesEntity();
-
-        addressesEntity.setNumber("10");
-        addressesEntity.setStreet("Rue test");
-        addressesEntity.setCitiesByIdCities(citiesEntity);
-        addressesEntity.setCompaniesByIdCompanies(companiesEntity);
-
-        addressesBean.createAddresseByCompanies();
-    }
 
     @Test
     void findByIdCompanies() {

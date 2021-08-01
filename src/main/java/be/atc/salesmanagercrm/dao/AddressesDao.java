@@ -9,11 +9,7 @@ import javax.persistence.EntityManager;
  */
 public interface AddressesDao {
 
-    void add(EntityManager em, AddressesEntity addressesEntity);
-
     AddressesEntity findByIdCompanies(EntityManager em, int id);
-
-    void deleteByIdCompanies(EntityManager em, AddressesEntity addressesEntity);
 
     void update(EntityManager em, AddressesEntity addressesEntity);
 }
