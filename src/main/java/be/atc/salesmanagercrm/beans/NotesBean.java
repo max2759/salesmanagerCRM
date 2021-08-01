@@ -9,6 +9,7 @@ import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
+import be.atc.salesmanagercrm.exceptions.InvalidOperationException;
 import be.atc.salesmanagercrm.utils.EMF;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.validators.NotesValidator;
@@ -20,6 +21,7 @@ import org.primefaces.event.RowEditEvent;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -63,6 +65,12 @@ public class NotesBean implements Serializable {
     @Setter
     private List<NotesEntity> notesEntities;
 
+    @Inject
+    private UsersBean usersBean;
+
+    /**
+     * Use this method for save entity note
+     */
     public void saveEntity() {
         log.info("method : saveEntity()");
 
@@ -120,10 +128,40 @@ public class NotesBean implements Serializable {
      * @param event RowEditEvent<NotesEntity>
      */
     public void onRowEdit(RowEditEvent<NotesEntity> event) {
-        // TODO : Corriger le idUser
-        NotesEntity notesEntityToUpdate = findById(event.getObject().getId(), 1);
 
-        notesEntityToUpdate.setMessage(event.getObject().getMessage());
+        int idNote;
+        FacesMessage msg;
+        try {
+            idNote = event.getObject().getId();
+        } catch (NumberFormatException exception) {
+            log.info(exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "notes.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
+        // TODO : Modifier USER
+        usersBean.getUsersEntity().setId(1);
+
+        NotesEntity notesEntityToUpdate;
+
+        try {
+            notesEntityToUpdate = findById(idNote, usersBean.getUsersEntity().getId());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "notes.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
+        try {
+            notesEntityToUpdate.setMessage(event.getObject().getMessage());
+        } catch (InvalidOperationException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "notes.validator.message"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
 
         update(notesEntityToUpdate);
 

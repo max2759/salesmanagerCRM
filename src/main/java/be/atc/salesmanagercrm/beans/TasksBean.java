@@ -136,7 +136,6 @@ public class TasksBean extends ExtendBean implements Serializable {
     public void listEntities() {
         log.info("method : listEntities()");
         loadListEntities("all");
-
     }
 
     /**
@@ -724,6 +723,11 @@ public class TasksBean extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * Valide Task date End
+     *
+     * @param entity TasksEntity
+     */
     private void validateTaskDateEnd(TasksEntity entity) {
         if (entity.getEndDate() != null) {
             if (entity.getEndDate().isBefore(entity.getCreationDate())) {
@@ -732,5 +736,4 @@ public class TasksBean extends ExtendBean implements Serializable {
             }
         }
     }
-
 }

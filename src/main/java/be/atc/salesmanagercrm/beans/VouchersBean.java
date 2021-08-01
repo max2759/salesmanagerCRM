@@ -98,7 +98,28 @@ public class VouchersBean extends ExtendBean implements Serializable {
     public void showModalUpdate() {
         log.info("VouchersBean => method : showModalUpdate()");
         log.info("param : " + getParam("idEntity"));
-        this.vouchersEntity = findById(Integer.parseInt(getParam("idEntity")), 1);
+        int idVoucher;
+        FacesMessage msg;
+        try {
+            idVoucher = Integer.parseInt(getParam("idEntity"));
+        } catch (NumberFormatException exception) {
+            log.info(exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "vouchers.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
+        // TODO : Modifier USER
+        usersBean.getUsersEntity().setId(1);
+
+        try {
+            this.vouchersEntity = findById(idVoucher, usersBean.getUsersEntity().getId());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
     }
 
     /**

@@ -8,20 +8,15 @@
 
     <ui:define name="title">#{bundle['notes.title']}</ui:define>
     <ui:define name="content">
-        <div class="ui-g ui-fluid">
-            <div class="ui-g-12">
-                <f:metadata>
-                    <f:viewAction action="#{notesBean.createNewEntity}"/>
-                    <f:viewAction action="#{notesBean.listEntitiesContacts}"/>
-                </f:metadata>
+        <f:metadata>
+            <f:viewAction action="#{notesBean.createNewEntity}"/>
+            <f:viewAction action="#{notesBean.listEntitiesContacts}"/>
+        </f:metadata>
 
-                <p:growl id="msgs" life="2000"/>
+        <p:growl id="msgs" life="2000"/>
 
 
-                <fxs:listNotes id="listNotes"/>
-                <fxs:createNotes id="createNotes"/>
-            </div>
-        </div>
+        <fxs:listNotes id="listNotes"/>
 
     </ui:define>
 </ui:composition>
