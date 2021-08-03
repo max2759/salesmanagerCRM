@@ -95,6 +95,8 @@ public class TasksBean extends ExtendBean implements Serializable {
     private ContactsBean contactsBean;
     @Inject
     private CompaniesBean companiesBean;
+    @Inject
+    private UsersBean usersBean;
 
     /**
      * Save entity form
@@ -104,7 +106,7 @@ public class TasksBean extends ExtendBean implements Serializable {
 
         log.info("TaskEntity = : " + tasksEntity);
 
-        tasksEntity.setUsersByIdUsers(getUsersBean().getUsersEntity());
+        tasksEntity.setUsersByIdUsers(usersBean.getUsersEntity());
 
         save(tasksEntity);
 
@@ -204,7 +206,7 @@ public class TasksBean extends ExtendBean implements Serializable {
 
         FacesMessage msg;
         try {
-            TasksEntity tasksEntityToUpdate = findById(event.getObject().getId(), getUsersBean().getUsersEntity().getId());
+            TasksEntity tasksEntityToUpdate = findById(event.getObject().getId(), usersBean.getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
@@ -235,7 +237,7 @@ public class TasksBean extends ExtendBean implements Serializable {
 
         try {
             int idEntity = Integer.parseInt(getParam("idEntity"));
-            delete(idEntity, getUsersBean().getUsersEntity().getId());
+            delete(idEntity, usersBean.getUsersEntity().getId());
         } catch (NumberFormatException exception) {
             log.warn(exception.getMessage());
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
@@ -252,7 +254,7 @@ public class TasksBean extends ExtendBean implements Serializable {
         log.info("TasksBean => method : showModalUpdate()");
         try {
             int idEntity = Integer.parseInt(getParam("idEntity"));
-            tasksEntity = findById(idEntity, getUsersBean().getUsersEntity().getId());
+            tasksEntity = findById(idEntity, usersBean.getUsersEntity().getId());
         } catch (NumberFormatException exception) {
             log.warn(exception.getMessage());
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
@@ -293,7 +295,7 @@ public class TasksBean extends ExtendBean implements Serializable {
         TasksEntity tasksEntityToUpdate;
         FacesMessage msg;
         try {
-            tasksEntityToUpdate = findById((Integer) event.getComponent().getAttributes().get("idTask"), getUsersBean().getUsersEntity().getId());
+            tasksEntityToUpdate = findById((Integer) event.getComponent().getAttributes().get("idTask"), usersBean.getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
@@ -315,20 +317,20 @@ public class TasksBean extends ExtendBean implements Serializable {
      */
     public void loadListEntities(String typeLoad) {
         if (typeLoad.equalsIgnoreCase("displayByCompany")) {
-            tasksEntities = findTasksEntityByCompaniesByIdCompanies(companiesBean.getCompaniesEntity().getId(), getUsersBean().getUsersEntity().getId());
+            tasksEntities = findTasksEntityByCompaniesByIdCompanies(companiesBean.getCompaniesEntity().getId(), usersBean.getUsersEntity().getId());
         } else if (typeLoad.equalsIgnoreCase("displayByContact")) {
-            tasksEntities = findTasksEntityByContactsByIdContacts(contactsBean.getContactsEntity().getId(), getUsersBean().getUsersEntity().getId());
+            tasksEntities = findTasksEntityByContactsByIdContacts(contactsBean.getContactsEntity().getId(), usersBean.getUsersEntity().getId());
         } else if (typeLoad.equalsIgnoreCase("all")) {
 
             LocalDateTime dateTime = LocalDate.now().atTime(0, 0, 0, 0).plusDays(1);
 
-            tasksEntities = findAll(getUsersBean().getUsersEntity().getId());
+            tasksEntities = findAll(usersBean.getUsersEntity().getId());
 
             this.tasksEntitiesToCome = tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isAfter(LocalDateTime.now())).collect(Collectors.toList());
             this.tasksEntitiesDueToday = tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isBefore(dateTime) && t.getEndDate().isAfter(LocalDateTime.now())).collect(Collectors.toList());
             this.tasksEntitiesToLate = tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isBefore(LocalDateTime.now())).collect(Collectors.toList());
 
-            tasksEntitiesFinished = findTasksFinished(getUsersBean().getUsersEntity().getId());
+            tasksEntitiesFinished = findTasksFinished(usersBean.getUsersEntity().getId());
         }
     }
 

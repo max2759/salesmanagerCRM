@@ -23,11 +23,6 @@ public abstract class ExtendBean {
     @Setter
     private Subject currentUser;
 
-    @Inject
-    @Getter
-    @Setter
-    private UsersBean usersBean;
-
     @PostConstruct
     public void init() {
         setCurrentUser(SecurityUtils.getSubject());

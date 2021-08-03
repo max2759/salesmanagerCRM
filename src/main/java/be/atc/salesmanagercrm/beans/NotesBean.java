@@ -69,6 +69,8 @@ public class NotesBean extends ExtendBean implements Serializable {
     private ContactsBean contactsBean;
     @Inject
     private CompaniesBean companiesBean;
+    @Inject
+    private UsersBean usersBean;
 
     /**
      * Use this method for save entity note
@@ -78,7 +80,7 @@ public class NotesBean extends ExtendBean implements Serializable {
 
         log.info("message : " + notesEntity.getMessage());
 
-        notesEntity.setUsersByIdUsers(getUsersBean().getUsersEntity());
+        notesEntity.setUsersByIdUsers(usersBean.getUsersEntity());
 
         save(notesEntity);
 
@@ -92,7 +94,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      */
     public void listEntitiesContacts() {
         log.info("NotesBean => method : listEntitiesContacts()");
-        notesEntities = findNotesEntityByContactsByIdContacts(contactsBean.getContactsEntity().getId(), getUsersBean().getUsersEntity().getId());
+        notesEntities = findNotesEntityByContactsByIdContacts(contactsBean.getContactsEntity().getId(), usersBean.getUsersEntity().getId());
     }
 
     /**
@@ -100,7 +102,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      */
     public void listEntitiesCompanies() {
         log.info("NotesBean => method : listEntitiesCompanies()");
-        notesEntities = findNotesEntityByCompaniesByIdCompanies(companiesBean.getCompaniesEntity().getId(), getUsersBean().getUsersEntity().getId());
+        notesEntities = findNotesEntityByCompaniesByIdCompanies(companiesBean.getCompaniesEntity().getId(), usersBean.getUsersEntity().getId());
     }
 
     /**
@@ -171,7 +173,7 @@ public class NotesBean extends ExtendBean implements Serializable {
         NotesEntity notesEntityToUpdate;
 
         try {
-            notesEntityToUpdate = findById(idNote, getUsersBean().getUsersEntity().getId());
+            notesEntityToUpdate = findById(idNote, usersBean.getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "notes.notExist"), null);
@@ -211,7 +213,7 @@ public class NotesBean extends ExtendBean implements Serializable {
 
         try {
             int idEntity = Integer.parseInt(getParam("idEntity"));
-            delete(idEntity, getUsersBean().getUsersEntity().getId());
+            delete(idEntity, usersBean.getUsersEntity().getId());
         } catch (NumberFormatException exception) {
             log.warn(exception.getMessage());
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
