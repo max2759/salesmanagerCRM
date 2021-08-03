@@ -69,35 +69,15 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
-    private List<CompaniesEntity> companiesEntitiesFiltred;
+    private List<CompaniesEntity> companiesEntitiesFiltered;
 
     @Getter
     @Setter
     private int idCompanyDel;
 
     @Inject
-    private BranchActivitiesBean branchActivitiesBean;
-
-    @Inject
-    private CompanyTypesBean companyTypesBean;
-
-    @Inject
-    private ContactsBean contactsBean;
-
-    @Inject
     private AddressesBean addressesBean;
-    @Inject
-    private NotesBean notesBean;
-    @Inject
-    private TasksBean tasksBean;
-    @Inject
-    private VouchersBean vouchersBean;
-    @Inject
-    private TransactionsBean transactionsBean;
-    @Inject
-    private TransactionHistoriesBean transactionHistoriesBean;
-    @Inject
-    private VoucherHistoriesBean voucherHistoriesBean;
+
 
     @Getter
     @Setter
@@ -180,6 +160,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         companiesEntity.setRegisterDate(LocalDateTime.now());
         companiesEntity.setActive(true);
+        // TODO Modifier USER
         usersEntity.setId(1);
         companiesEntity.setUsersByIdUsers(usersEntity);
 
@@ -269,7 +250,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Load TasksEntities when Tab Change !
+     * Load loadListEntities when Tab Change !
      *
      * @param event TabChangeEvent
      */
@@ -281,7 +262,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Auto Complete form creation
+     * Auto Complete for companies in form
      *
      * @param query String
      * @return List Contacts Entities
@@ -296,7 +277,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Sort Contacts by group in form
+     * Sort Companies by group in form
      *
      * @param entityGroup CompaniesEntity
      * @return entity label
@@ -440,8 +421,8 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         } catch (Exception ex) {
             log.info("Nothing");
             throw new EntityNotFoundException(
-                    "Aucune compagny avec l ID " + id + " et l ID User " + idUser + " n a ete trouvee dans la BDD",
-                    ErrorCodes.CONTACT_NOT_FOUND
+                    "Aucune entreprise avec l ID " + id + " et l ID User " + idUser + " n a ete trouvee dans la BDD",
+                    ErrorCodes.COMPANY_NOT_FOUND
             );
         } finally {
             em.clear();
@@ -485,50 +466,9 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Auto complete for branchActivivites
-     *
-     * @param search String
-     * @return list of BranchActivitiesEntity
+     * Public method to display company
      */
-    public List<BranchActivitiesEntity> completeBranchActivities(String search) {
-
-        String searchLowerCase = search.toLowerCase();
-
-        List<BranchActivitiesEntity> companiesEntitiesDropDown = branchActivitiesBean.findBranchActvivitiesList();
-
-        return companiesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
-
-    }
-
-    public List<ContactsEntity> completeContacts(String search) {
-
-        String searchLowerCase = search.toLowerCase();
-
-        List<ContactsEntity> contactEntityDropDown = contactsBean.findAll();
-
-        return contactEntityDropDown.stream().filter(t -> t.getLastname().concat(' ' + t.getFirstname()).toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
-    }
-
-    /**
-     * Auto complete for CompanyTypes
-     *
-     * @param search String
-     * @return list of CompanyTypesEntity
-     */
-    public List<CompanyTypesEntity> completeCompanyTypes(String search) {
-
-        String searchLowerCase = search.toLowerCase();
-
-        List<CompanyTypesEntity> companyTypesEntitiesDropDown = companyTypesBean.findCompanyTypesList();
-
-        return companyTypesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
-
-    }
-
-    /**
-     * Public method to display company and address by companiesID
-     */
-    public void displayCompanyAndAddressById() {
+    public void displayCompanyDetails() {
         displayOneCompany();
     }
 
@@ -576,7 +516,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
 
     }
-
 
     /**
      * Public method that call update company
@@ -666,6 +605,9 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
     }
 
+    /**
+     * Public method for activeCompany
+     */
     public void activateCompanyByIdCompany() {
 
         log.info("method : deleteCompany()");
@@ -793,24 +735,16 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
 
     /**
-     * Sort CompanyTypes by group in form
+     * Auto complete for CompaniesEntity
      *
-     * @param entityGroup CompanyTypesEntity
-     * @return label of entitygroup
+     * @param search search
+     * @return List of label Companies Entity
      */
+    public List<CompaniesEntity> completeCompanies(String search) {
+        String searchLowerCase = search.toLowerCase();
 
-    public char getCompanyTypesEntityGroup(CompanyTypesEntity entityGroup) {
-        return entityGroup.getLabel().charAt(0);
-    }
+        List<CompaniesEntity> companiesEntitiesDropdown = findActiveCompanies(1);
 
-    /**
-     * Sort BranchActivities by group in form
-     *
-     * @param entityGroup BranchActivitiesEntity
-     * @return label of entitygroup
-     */
-
-    public char getBranchActivitiesEntityGroup(BranchActivitiesEntity entityGroup) {
-        return entityGroup.getLabel().charAt(0);
+        return companiesEntitiesDropdown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
     }
 }

@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface CompaniesContactsDao {
 
-    void add(EntityManager em, CompaniesContactsEntity companiesContactsEntity);
-
     void update(EntityManager em, CompaniesContactsEntity companiesContactsEntity);
 
     List<CompaniesContactsEntity> findAll(EntityManager em);
+
+    CompaniesContactsEntity findByIdContacts(EntityManager em, int idContacts);
 }

@@ -6,6 +6,9 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "civilities", schema = "salesmanagercrm")
+@NamedQueries({
+        @NamedQuery(name = "Civilities.findAll", query = "SELECT c from CivilitiesEntity c"),
+})
 public class CivilitiesEntity {
     private int id;
     private String label;

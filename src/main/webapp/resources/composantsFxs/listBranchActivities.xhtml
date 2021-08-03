@@ -17,11 +17,14 @@
         <p:dataTable var="branchActivities" value="#{branchActivitiesBean.branchActivitiesEntityList}" rows="10"
                      id="branchActivitiesDatatable"
                      paginatorPosition="bottom"
+                     selection="#{branchActivitiesBean.selectedBranchActivitiesEntity}"
+                     filteredValue="#{branchActivitiesBean.branchActivitiesEntitiesFiltered}"
                      emptyMessage="#{bundle['branchActivities.branchActivitiesNotFound']}"
                      paginator="true" styleClass="dataTable-margin-top"
                      rowsPerPageTemplate="10,20,50">
+
             <p:column headerText="#{bundle['branchActivities.title']}" filterBy="#{branchActivities.label}"
-                      filterMatchMode="contains">
+                      filterMatchMode="contains" sortBy="#{branchActivities.label}">
                 <h:outputText value="#{branchActivities.label}"/>
             </p:column>
             <p:column headerText="#{bundle['edit']}">

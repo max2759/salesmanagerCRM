@@ -1,10 +1,9 @@
 package be.atc.salesmanagercrm.converters;
 
-import be.atc.salesmanagercrm.beans.CitiesBean;
-import be.atc.salesmanagercrm.entities.CitiesEntity;
+import be.atc.salesmanagercrm.beans.CivilitiesBean;
+import be.atc.salesmanagercrm.entities.CivilitiesEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
@@ -19,50 +18,49 @@ import java.util.Locale;
  * @author Maximilien Zabbara
  */
 @Slf4j
-@FacesConverter(value = "citiesConverter")
-public class CitiesConverter implements Converter {
+@FacesConverter(value = "civilitiesConverter")
+public class CivilitiesConverter implements Converter {
 
-    private final CitiesBean citiesBean = new CitiesBean();
+    private final CivilitiesBean civilitiesBean = new CivilitiesBean();
 
-    @Getter
     private final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
 
-        CitiesEntity citiesEntity;
+        CivilitiesEntity civilitiesEntity;
         log.info("Value = " + value);
 
         int id;
 
         if (value == null) {
-            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "CitiesNotExist"), null));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "civilitiesNotExist"), null));
         }
+
         try {
             id = Integer.parseInt(value);
         } catch (NumberFormatException nfe) {
-            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "CitiesNotExist"), null));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "civilitiesNotExist"), null));
         }
 
         if (id != 0) {
             try {
-                citiesEntity = citiesBean.findById(id);
-                return citiesEntity;
+                civilitiesEntity = civilitiesBean.returnFindById(id);
+                return civilitiesEntity;
             } catch (EntityNotFoundException exception) {
                 log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "CitiesNotExist"), null));
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "civilitiesNotExist"), null));
             }
         } else {
-            log.warn("Erreur Converter Cities");
-            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "CitiesNotExist"), null));
+            log.warn("Erreur Converter Civility");
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "civilitiesNotExist"), null));
         }
     }
-
 
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value) {
         if (value != null) {
-            return String.valueOf(((CitiesEntity) value).getId());
+            return String.valueOf(((CivilitiesEntity) value).getId());
         } else {
             return null;
         }

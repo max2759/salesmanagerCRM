@@ -32,7 +32,7 @@ public class ContactsDaoImpl extends EntityFinderImpl<ContactsEntity> implements
     public List<ContactsEntity> findContactsEntityByIdUser(EntityManager em, int idUser) {
 
         return em.createNamedQuery("Contacts.findContactsEntityByIdUser",
-                        ContactsEntity.class)
+                ContactsEntity.class)
                 .setParameter("idUser", idUser)
                 .getResultList();
     }
@@ -40,5 +40,10 @@ public class ContactsDaoImpl extends EntityFinderImpl<ContactsEntity> implements
     @Override
     public List<ContactsEntity> findAll() {
         return this.findByNamedQuery("Contacts.findAll", new ContactsEntity());
+    }
+
+    @Override
+    public void update(EntityManager em, ContactsEntity contactsEntity) {
+        em.merge(contactsEntity);
     }
 }

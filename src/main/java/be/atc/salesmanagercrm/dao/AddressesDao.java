@@ -11,5 +11,7 @@ public interface AddressesDao {
 
     AddressesEntity findByIdCompanies(EntityManager em, int id);
 
+    AddressesEntity findByIdContacts(EntityManager em, int id);
+
     void update(EntityManager em, AddressesEntity addressesEntity);
 }

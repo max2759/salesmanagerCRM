@@ -61,6 +61,9 @@ public class CheckEntities extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private RolesPermissionsDao rolesPermissionsDao = new RolesPermissionsDaoImpl();
+    @Getter
+    @Setter
+    private ContactTypesDao contactTypesDao = new ContactTypesDaoImpl();
 
 
     /**
@@ -217,6 +220,49 @@ public class CheckEntities extends ExtendBean implements Serializable {
                 log.warn("Company type with ID {} was not found in the DB", companyTypesEntity.getId());
                 throw new EntityNotFoundException(
                         "Aucun type de société avec l ID " + companyTypesEntity.getId() + " n a ete trouvé dans la DB", ErrorCodes.COMPANYTYPES_NOT_FOUND
+                );
+            }
+        }
+    }
+
+
+    /**
+     * Check if contact type exist
+     *
+     * @param contactTypesEntity ContactTypesEntity
+     */
+    public void checkContactType(ContactTypesEntity contactTypesEntity) {
+
+        if (contactTypesEntity != null) {
+            EntityManager em = EMF.getEM();
+
+            ContactTypesEntity contactTypesEntityToCheck = contactTypesDao.findById(em, contactTypesEntity.getId());
+
+            if (contactTypesEntityToCheck == null) {
+                log.warn("Contact type with ID {} was not found in the DB", contactTypesEntity.getId());
+                throw new EntityNotFoundException(
+                        "Aucun type de contact avec l ID " + contactTypesEntity.getId() + " n'a été trouvé dans la DB", ErrorCodes.CONTACTTYPE_NOT_FOUND
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if jobtitle exist
+     *
+     * @param jobTitlesEntity jobTitlesEntity
+     */
+    public void checkJobTitles(JobTitlesEntity jobTitlesEntity) {
+
+        if (jobTitlesEntity != null) {
+            EntityManager em = EMF.getEM();
+
+            JobTitlesEntity jobTitlesEntityToCheck = jobTitlesDao.findById(em, jobTitlesEntity.getId());
+
+            if (jobTitlesEntityToCheck == null) {
+                log.warn("Contact type with ID {} was not found in the DB", jobTitlesEntity.getId());
+                throw new EntityNotFoundException(
+                        "Aucun intitulé de poste avec l ID " + jobTitlesEntity.getId() + " n'a été trouvé dans la DB", ErrorCodes.JOBTITLES_NOT_FOUND
                 );
             }
         }
