@@ -17,17 +17,16 @@
 
         <h:form>
             <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                <p:outputLabel value="#{bundle['title']} :" for="acTitle" styleClass="boldText"/>
-                <p:inputText id="acTitle" value="#{tasksBean.tasksEntity.title}"
+                <p:outputLabel value="#{bundle['title']} :" for="acTitleCreate" styleClass="boldText"/>
+                <p:inputText id="acTitleCreate" value="#{tasksBean.tasksEntity.title}"
                              required="true"
                              requiredMessage="#{bundle['task.validator.title']}"
                              style="margin-bottom:10px;">
                     <p:ajax update="msg" event="keyup"/>
                 </p:inputText>
 
-
-                <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskType" styleClass="boldText"/>
-                <p:selectOneMenu id="taskType"
+                <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskTypeCreate" styleClass="boldText"/>
+                <p:selectOneMenu id="taskTypeCreate"
                                  value="#{tasksBean.tasksEntity.taskTypesByIdTaskTypes}"
                                  converter="taskTypeConverter">
 
@@ -36,8 +35,8 @@
                                    itemLabel="#{taskTypesEntities.label}"/>
                 </p:selectOneMenu>
 
-                <p:outputLabel value="#{bundle['priority']}:" for="taskPriority" styleClass="boldText"/>
-                <p:selectOneMenu id="taskPriority"
+                <p:outputLabel value="#{bundle['priority']}:" for="taskPriorityCreate" styleClass="boldText"/>
+                <p:selectOneMenu id="taskPriorityCreate"
                                  value="#{tasksBean.tasksEntity.priority}">
                     <f:selectItems value="#{enumPriorityBean.enumPriority}"
                                    var="enumPriority" itemValue="#{enumPriority}"
@@ -45,9 +44,9 @@
                     <f:validator validatorId="enumPriorityValidator"/>
                 </p:selectOneMenu>
 
-                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:" styleClass="boldText"/>
+                <p:outputLabel for="datetimeCreate" value="#{bundle['dueDate']}:" styleClass="boldText"/>
                 <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
-                            id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
+                            id="datetimeCreate" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
 
                 <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact" styleClass="boldText"/>
                 <p:autoComplete id="Contact" value="#{tasksBean.tasksEntity.contactsByIdContacts}"
@@ -70,8 +69,8 @@
 
             </p:panelGrid>
             <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                <p:outputLabel for="description" value="#{bundle['tasks.description']}:" styleClass="boldText"/>
-                <p:inputTextarea value="#{tasksBean.tasksEntity.description}" id="description"
+                <p:outputLabel for="descriptionCreate" value="#{bundle['tasks.description']}:" styleClass="boldText"/>
+                <p:inputTextarea value="#{tasksBean.tasksEntity.description}" id="descriptionCreate"
                                  rows="4" cols="100"
                                  placeholder="#{bundle['tasks.description']}"
                                  autoResize="false"/>
@@ -79,11 +78,9 @@
                 <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
-                                 oncomplete="PF('dlg3').hide()"
+                                 oncomplete="PF('createDialogTask').hide()"
                                  value="#{bundle['save']}"
-                                 action="#{tasksBean.saveEntity}">
-                    <f:param name="typeEntities" value="all"/>
-                </p:commandButton>
+                                 action="#{tasksBean.saveEntity}"/>
             </p:panelGrid>
         </h:form>
 

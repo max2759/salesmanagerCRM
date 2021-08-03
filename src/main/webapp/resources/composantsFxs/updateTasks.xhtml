@@ -79,7 +79,7 @@
                 <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
-                                 oncomplete="PF('dlg2').hide()"
+                                 oncomplete="PF('updateDialogTask').hide()"
                                  value="#{bundle['update']}"
                                  action="#{tasksBean.updateEntity}">
                     <f:param name="typeEntities" value="all"/>

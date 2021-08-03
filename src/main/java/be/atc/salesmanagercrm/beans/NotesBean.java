@@ -20,6 +20,7 @@ import org.primefaces.event.RowEditEvent;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -60,52 +61,46 @@ public class NotesBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private List<NotesEntity> notesEntities;
+    @Getter
+    @Setter
+    private String paramType = "";
+
+    @Inject
+    private ContactsBean contactsBean;
+    @Inject
+    private CompaniesBean companiesBean;
 
     /**
      * Use this method for save entity note
      */
     public void saveEntity() {
-        log.info("method : saveEntity()");
+        log.info("NotesBean => method : saveEntity()");
 
         log.info("message : " + notesEntity.getMessage());
 
-        getUsersBean().getUsersEntity().setId(1);
-        contactsEntity.setId(1);
-
         notesEntity.setUsersByIdUsers(getUsersBean().getUsersEntity());
-        notesEntity.setContactsByIdContacts(contactsEntity);
 
         save(notesEntity);
 
-        // TODO : Corriger ça
         createNewEntity();
-        listEntitiesContacts();
-//        listEntitiesCompanies();
+
+        checkTypeParamAndFindNotesEntitiesByContactOrByCompany();
     }
 
     /**
      * Find all entities for Contacts
      */
     public void listEntitiesContacts() {
-        log.info("method : listEntitiesContacts()");
-        // TODO : Modifier avec User !!
-        getUsersBean().getUsersEntity().setId(1);
-        contactsEntity.setId(1);
-
-        notesEntities = findNotesEntityByContactsByIdContacts(contactsEntity.getId(), getUsersBean().getUsersEntity().getId());
-
+        log.info("NotesBean => method : listEntitiesContacts()");
+        notesEntities = findNotesEntityByContactsByIdContacts(contactsBean.getContactsEntity().getId(), getUsersBean().getUsersEntity().getId());
     }
 
     /**
      * Find all entities for Companies
      */
     public void listEntitiesCompanies() {
-        log.info("method : listEntitiesCompanies()");
-        // TODO : Modifier avec User
-        getUsersBean().getUsersEntity().setId(1);
-        companiesEntity.setId(1);
-
-        notesEntities = findNotesEntityByCompaniesByIdCompanies(companiesEntity.getId(), getUsersBean().getUsersEntity().getId());
+        log.info("NotesBean => method : listEntitiesCompanies()");
+        notesEntities = findNotesEntityByCompaniesByIdCompanies(companiesBean.getCompaniesEntity().getId(), getUsersBean().getUsersEntity().getId());
     }
 
     /**
@@ -114,13 +109,42 @@ public class NotesBean extends ExtendBean implements Serializable {
     public void showModalCreate() {
         log.info("NotesBean => method : showModalCreate()");
         notesEntity = new NotesEntity();
+        checkTypeParamAndSetContactOrCompanyInNotesEntity();
+    }
+
+    /**
+     * Check type Param on create Notes and set Contact or Company entity in NotesEntity !!
+     */
+    public void checkTypeParamAndSetContactOrCompanyInNotesEntity() {
+        if (this.paramType.equalsIgnoreCase("displayByContact")) {
+            setContactEntityInNotesEntity();
+        } else if (this.paramType.equalsIgnoreCase("displayByCompany")) {
+            setCompanyEntityInNotesEntity();
+        } else {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    /**
+     * Check type Param for find list Notes by contact or by company !!
+     */
+    public void checkTypeParamAndFindNotesEntitiesByContactOrByCompany() {
+        if (this.paramType.equalsIgnoreCase("displayByContact")) {
+            listEntitiesContacts();
+        } else if (this.paramType.equalsIgnoreCase("displayByCompany")) {
+            listEntitiesCompanies();
+        } else {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
     }
 
     /**
      * Create new instance for objects
      */
     public void createNewEntity() {
-        log.info("method : createNewEntity()");
+        log.info("NotesBean => method : createNewEntity()");
         notesEntity = new NotesEntity();
         notesEntities = new ArrayList<>();
     }
@@ -131,6 +155,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      * @param event RowEditEvent<NotesEntity>
      */
     public void onRowEdit(RowEditEvent<NotesEntity> event) {
+        log.info("NotesBean => method : onRowEdit(RowEditEvent<NotesEntity> event)");
 
         int idNote;
         FacesMessage msg;
@@ -142,9 +167,6 @@ public class NotesBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-
-        // TODO : Modifier USER
-        getUsersBean().getUsersEntity().setId(1);
 
         NotesEntity notesEntityToUpdate;
 
@@ -168,10 +190,7 @@ public class NotesBean extends ExtendBean implements Serializable {
 
         update(notesEntityToUpdate);
 
-
-        // TODO : Corriger ça
-//        listEntitiesCompanies();
-        listEntitiesContacts();
+        checkTypeParamAndFindNotesEntitiesByContactOrByCompany();
     }
 
 
@@ -179,6 +198,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      * On cancel delete
      */
     public void onRowCancel(RowEditEvent<NotesEntity> event) {
+        log.info("NotesBean => method : onRowCancel(RowEditEvent<NotesEntity> event)");
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "canceled"), null);
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
@@ -187,14 +207,47 @@ public class NotesBean extends ExtendBean implements Serializable {
      * Method for delete entity
      */
     public void deleteEntity() {
+        log.info("NotesBean => method : deleteEntity()");
 
-        // TODO : Corriger l idUser
-        delete(Integer.parseInt(getParam("idEntity")), 1);
+        try {
+            int idEntity = Integer.parseInt(getParam("idEntity"));
+            delete(idEntity, getUsersBean().getUsersEntity().getId());
+        } catch (NumberFormatException exception) {
+            log.warn(exception.getMessage());
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
 
+        checkTypeParamAndFindNotesEntitiesByContactOrByCompany();
+    }
 
-        // TODO : Corriger ça
-        listEntitiesContacts();
-//        listEntitiesCompanies();
+    /**
+     * Set ContactEntity in NotesEntity
+     */
+    public void setContactEntityInNotesEntity() {
+        log.info("NotesBean => method : setContactEntityInNotesEntity()");
+        try {
+            this.notesEntity.setContactsByIdContacts(contactsBean.getContactsEntity());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    /**
+     * Set ContactEntity in NotesEntity
+     */
+    public void setCompanyEntityInNotesEntity() {
+        log.info("NotesBean => method : setCompanyEntityInNotesEntity()");
+        try {
+            this.notesEntity.setCompaniesByIdCompanies(companiesBean.getCompaniesEntity());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
     }
 
     /**
@@ -203,6 +256,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      * @param entity NotesEntity
      */
     protected void save(NotesEntity entity) {
+        log.info("NotesBean => method : save(NotesEntity entity)");
         try {
             validateNote(entity);
         } catch (InvalidEntityException exception) {
@@ -279,6 +333,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      * @return Notes Entity
      */
     protected NotesEntity findById(int id, int idUser) {
+        log.info("NotesBean => method : findById(int id, int idUser)");
 
         FacesMessage msg;
 
@@ -317,6 +372,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      * @return List NotesEntity
      */
     protected List<NotesEntity> findNotesEntityByContactsByIdContacts(int id, int idUser) {
+        log.info("NotesBean => method : findNotesEntityByContactsByIdContacts(int id, int idUser)");
         FacesMessage msg;
         if (id == 0) {
             log.error("Contact ID is null");
@@ -348,6 +404,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      * @return List NotesEntity
      */
     protected List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(int id, int idUser) {
+        log.info("NotesBean => method : findNotesEntityByCompaniesByIdCompanies(int id, int idUser)");
         FacesMessage msg;
         if (id == 0) {
             log.error("Company ID is null");
@@ -378,6 +435,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      * @return List NotesEntity
      */
     protected List<NotesEntity> findAll(int idUser) {
+        log.info("NotesBean => method : findAll(int idUser)");
         FacesMessage msg;
         if (idUser == 0) {
             log.error("User ID is null");
@@ -400,6 +458,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      * @param id note
      */
     protected void delete(int id, int idUser) {
+        log.info("NotesBean => method : delete(int id, int idUser)");
         FacesMessage msg;
         if (id == 0) {
             log.error("Note ID is null");
@@ -454,6 +513,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      * @param entity NoteEntity
      */
     protected void update(NotesEntity entity) {
+        log.info("NotesBean => method : update(NotesEntity entity)");
 
 
         try {
@@ -539,6 +599,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      * @param entity NotesEntity
      */
     private void validateNote(NotesEntity entity) {
+        log.info("NotesBean => method : validateNote(NotesEntity entity)");
         List<String> errors = NotesValidator.validate(entity);
         if (!errors.isEmpty()) {
             log.error("Note is not valide {}", entity);

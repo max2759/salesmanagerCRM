@@ -8,74 +8,62 @@
       xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
       xmlns:cc="http://java.sun.com/jsf/composite">
 
-<cc:interface name="createNotes"
+<cc:interface name="listNotesByContact"
               displayName="#{bundle['notes.create']}"
               shortDescription="#{bundle['notes.create']}"
 >
 </cc:interface>
 <cc:implementation>
     <f:view>
+        <h:form>
+            <p:commandButton value="#{bundle['notes.create']}"
+                             update="@(form) msgs"
+                             onclick="PF('createDialogNotes').show();" styleClass="NavyButton marginBottom15"
+                             action="#{notesBean.showModalCreate}"/>
+        </h:form>
 
-        <p:dialog header="#{bundle['notes.create']}" widgetVar="createDialog" modal="true" responsive="true"
-                  showEffect="fade">
-            <fxs:createNotes id="createNotes"/>
-        </p:dialog>
+        <h:form id="form">
+            <p:dataTable id="note1" var="note" value="#{notesBean.notesEntities}" editable="true">
 
-        <div class="card card-w-title">
-            <h1>#{bundle['notes.title']}</h1>
-            <h:form>
-                <p:commandButton value="#{bundle['notes.create']}"
-                                 update="@(form) msgs"
-                                 onclick="PF('createDialog').show();" styleClass="NavyButton marginBottom15"
-                                 action="#{notesBean.showModalCreate}">
-                    <f:param name="type" value="contact"/>
-                </p:commandButton>
-            </h:form>
+                <p:ajax event="rowEdit" listener="#{notesBean.onRowEdit}" update="@this msgs"/>
+                <p:ajax event="rowEditCancel" listener="#{notesBean.onRowCancel}" update="@this msgs"/>
 
-            <h:form id="form">
-                <p:dataTable id="note1" var="note" value="#{notesBean.notesEntities}" editable="true">
+                <p:column>
 
-                    <p:ajax event="rowEdit" listener="#{notesBean.onRowEdit}" update="@this msgs"/>
-                    <p:ajax event="rowEditCancel" listener="#{notesBean.onRowCancel}" update="@this msgs"/>
+                    <h:outputText styleClass="boldText" value="#{bundle['notes.remarks']} "/>
+                    <h:outputText title="#{bundle['by']} : #{note.usersByIdUsers.email}"
+                                  value="#{bundle['by']} #{note.usersByIdUsers.username} "/>
 
-                    <p:column>
+                    <h:outputText value="#{note.creationDate}">
+                        <f:convertDateTime type="localDate"
+                                           pattern="dd/MM/yy ' #{bundle['at']} ' HH:mm"/>
+                    </h:outputText>
 
-                        <h:outputText styleClass="boldText" value="#{bundle['notes.remarks']} "/>
-                        <h:outputText title="#{bundle['by']} : #{note.usersByIdUsers.email}"
-                                      value="#{bundle['by']} #{note.usersByIdUsers.username} "/>
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText escape="false" value="#{note.message}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputTextarea widgetVar="editor1" value="#{note.message}" required="true"
+                                             rows="6"
+                                             cols="100"
+                                             autoResize="false" label="Name"/>
+                        </f:facet>
+                    </p:cellEditor>
 
-                        <h:outputText value="#{note.creationDate}">
-                            <f:convertDateTime type="localDate"
-                                               pattern="dd/MM/yy ' #{bundle['at']} ' HH:mm"/>
-                        </h:outputText>
+                    <p:rowEditor editTitle="#{bundle['edit']}"
+                                 cancelTitle="#{bundle['cancel']}"
+                                 saveTitle="#{bundle['save']}"/>
 
-                        <p:cellEditor>
-                            <f:facet name="output">
-                                <h:outputText escape="false" value="#{note.message}"/>
-                            </f:facet>
-                            <f:facet name="input">
-                                <p:inputTextarea widgetVar="editor1" value="#{note.message}" required="true"
-                                                 rows="6"
-                                                 cols="100"
-                                                 autoResize="false" label="Name"/>
-                            </f:facet>
-                        </p:cellEditor>
+                    <p:commandLink update="@form msgs"
+                                   action="#{notesBean.deleteEntity}">
+                        <i class="ui-icon ui-icon-delete-forever"/>
+                        <f:param name="idEntity" value="#{note.id}"/>
+                    </p:commandLink>
+                </p:column>
 
-                        <p:rowEditor editTitle="#{bundle['edit']}"
-                                     cancelTitle="#{bundle['cancel']}"
-                                     saveTitle="#{bundle['save']}"/>
-
-                        <p:commandLink update="@form msgs"
-                                       action="#{notesBean.deleteEntity}">
-                            <i class="ui-icon ui-icon-delete-forever"></i>
-                            <f:param name="idEntity" value="#{note.id}"/>
-                        </p:commandLink>
-                    </p:column>
-
-
-                </p:dataTable>
-            </h:form>
-        </div>
+            </p:dataTable>
+        </h:form>
 
     </f:view>
 </cc:implementation>
