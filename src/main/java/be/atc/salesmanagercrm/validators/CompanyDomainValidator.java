@@ -36,7 +36,7 @@ public class CompanyDomainValidator implements Validator {
                 checkUrlDomain(companiesEntity);
             } catch (InvalidOperationException exception) {
                 log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                throw new ValidatorException(new FacesMessage(getMessageDomainError()));
+                throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, getMessageDomainError(), null));
             }
         }
     }

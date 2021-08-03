@@ -19,6 +19,14 @@ public class AddressesDaoImpl extends EntityFinderImpl<AddressesEntity> implemen
     }
 
     @Override
+    public AddressesEntity findByIdContacts(EntityManager em, int id) {
+        return em.createNamedQuery("Addresses.findByIdContacts",
+                AddressesEntity.class)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+
+    @Override
     public void update(EntityManager em, AddressesEntity addressesEntity) {
         em.merge(addressesEntity);
     }

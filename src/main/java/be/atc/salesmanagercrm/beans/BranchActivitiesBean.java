@@ -14,13 +14,16 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Maximilien Zabbara
@@ -45,7 +48,19 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
+    private BranchActivitiesEntity selectedBranchActivitiesEntity;
+
+    @Getter
+    @Setter
+    private List<BranchActivitiesEntity> branchActivitiesEntitiesFiltered;
+
+    @Getter
+    @Setter
     private String sendType = "";
+
+    @Getter
+    @Setter
+    private boolean disable = true;
 
     /**
      * Public method that call either addBranchActivities if sendType=add or updateBranchActivitiesLabel if sendType=edit
@@ -239,6 +254,33 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * Auto complete for branchActivivites
+     *
+     * @param search String
+     * @return list of BranchActivitiesEntity
+     */
+    public List<BranchActivitiesEntity> completeBranchActivities(String search) {
+
+        String searchLowerCase = search.toLowerCase();
+
+        List<BranchActivitiesEntity> companiesEntitiesDropDown = findBranchActvivitiesList();
+
+        return companiesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
+
+    }
+
+    /**
+     * Sort BranchActivities by group in form
+     *
+     * @param entityGroup BranchActivitiesEntity
+     * @return label of entitygroup
+     */
+
+    public char getBranchActivitiesEntityGroup(BranchActivitiesEntity entityGroup) {
+        return entityGroup.getLabel().charAt(0);
+    }
+
+    /**
      * Method for checking sendType and open good modal
      */
     public void checkSendType() {
@@ -263,5 +305,18 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
             log.error("BranchActivities is not valid {}", entity);
             throw new InvalidEntityException("Le secteur d'activité n'est pas valide", ErrorCodes.BRANCHACTIVITIESLABEL_NOT_VALID, errors);
         }
+    }
+
+
+    /**
+     * return true if value null and false if value not null
+     *
+     * @param event event
+     */
+    public void makeDisable(AjaxBehaviorEvent event) {
+        log.info("Start of makeDisable");
+        log.info("label : " + ((UIInput) event.getSource()).getValue());
+
+        this.disable = ((UIInput) event.getSource()).getValue() == null;
     }
 }

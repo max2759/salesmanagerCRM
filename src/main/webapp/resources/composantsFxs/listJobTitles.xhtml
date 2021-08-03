@@ -14,14 +14,18 @@
         <p:dataTable var="jobtitles" value="#{jobtitlesBean.jobTitlesEntityList}" rows="10"
                      id="jobtitlesDatatable"
                      paginatorPosition="bottom"
+                     selection="#{jobtitlesBean.selectedJobTitlesEntity}"
+                     filteredValue="#{jobtitlesBean.jobTitlesEntitiesFiltered}"
                      emptyMessage="#{bundle['jobTitles.jobTitlesNotFound']}"
                      paginator="true" styleClass="dataTable-margin-top"
                      rowsPerPageTemplate="10,20,50">
 
             <p:column headerText="#{bundle['jobTitles.title']}" filterBy="#{jobtitles.label}"
+                      sortBy="#{jobtitles.label}"
                       filterMatchMode="contains">
                 <h:outputText value="#{jobtitles.label}"/>
             </p:column>
+
             <p:column headerText="#{bundle['edit']}">
                 <p:commandButton icon="ui-icon-edit" styleClass="NavyButton" update="@(form)"
                                  onclick="PF('jobTitlesModal').show();"
