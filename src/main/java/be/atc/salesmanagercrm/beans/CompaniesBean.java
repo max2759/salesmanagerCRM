@@ -77,7 +77,18 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
     @Inject
     private AddressesBean addressesBean;
-
+    @Inject
+    private NotesBean notesBean;
+    @Inject
+    private TasksBean tasksBean;
+    @Inject
+    private VouchersBean vouchersBean;
+    @Inject
+    private TransactionsBean transactionsBean;
+    @Inject
+    private TransactionHistoriesBean transactionHistoriesBean;
+    @Inject
+    private VoucherHistoriesBean voucherHistoriesBean;
 
     @Getter
     @Setter
