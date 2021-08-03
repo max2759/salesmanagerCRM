@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
 import javax.annotation.PostConstruct;
@@ -20,7 +21,7 @@ public abstract class ExtendBean {
     private Locale locale;
     @Getter
     @Setter
-    private Subject currentUser = SecurityUtils.getSubject();
+    private Subject currentUser;
 
     @Inject
     @Getter
@@ -29,6 +30,7 @@ public abstract class ExtendBean {
 
     @PostConstruct
     public void init() {
+        setCurrentUser(SecurityUtils.getSubject());
         locale = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
     }
 

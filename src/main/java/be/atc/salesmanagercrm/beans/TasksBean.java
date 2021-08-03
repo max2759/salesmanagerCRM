@@ -2,8 +2,7 @@ package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.dao.TasksDao;
 import be.atc.salesmanagercrm.dao.impl.TasksDaoImpl;
-import be.atc.salesmanagercrm.entities.CompaniesEntity;
-import be.atc.salesmanagercrm.entities.ContactsEntity;
+import be.atc.salesmanagercrm.entities.NotesEntity;
 import be.atc.salesmanagercrm.entities.TaskTypesEntity;
 import be.atc.salesmanagercrm.entities.TasksEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
@@ -47,13 +46,6 @@ public class TasksBean extends ExtendBean implements Serializable {
     @Setter
     private TasksDao dao = new TasksDaoImpl();
     @Getter
-    @Setter
-    private ContactsEntity contactsEntity = new ContactsEntity();
-    @Getter
-    @Setter
-    private CompaniesEntity companiesEntity = new CompaniesEntity();
-
-    @Getter
     private final LocalDateTime now = LocalDateTime.now().plusSeconds(10);
     @Getter
     @Setter
@@ -65,12 +57,6 @@ public class TasksBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private List<TasksEntity> tasksEntities;
-    @Getter
-    @Setter
-    private List<TasksEntity> tasksEntitiesByCompanies;
-    @Getter
-    @Setter
-    private List<TasksEntity> tasksEntitiesByContacts;
     @Getter
     @Setter
     private List<TasksEntity> tasksEntitiesFiltered;
@@ -98,10 +84,13 @@ public class TasksBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private List<TasksEntity> tasksEntitiesFinishedFiltered;
-
     @Getter
     @Setter
     private TaskTypesEntity taskTypesEntity = new TaskTypesEntity();
+    @Getter
+    @Setter
+    private String paramType = "";
+
     @Inject
     private ContactsBean contactsBean;
     @Inject
@@ -111,21 +100,17 @@ public class TasksBean extends ExtendBean implements Serializable {
      * Save entity form
      */
     public void saveEntity() {
-        log.info("method : saveEntity()");
-        log.info("Param : " + getParam("typeEntities"));
+        log.info("TasksBean => method : saveEntity()");
 
         log.info("TaskEntity = : " + tasksEntity);
-        getUsersBean().getUsersEntity().setId(1);
 
         tasksEntity.setUsersByIdUsers(getUsersBean().getUsersEntity());
 
-
         save(tasksEntity);
 
-        // TODO : Corriger ça
         createNewEntity();
 
-        loadListEntities(getParam("typeEntities"));
+        loadListEntities(getParamType());
     }
 
 
@@ -133,7 +118,7 @@ public class TasksBean extends ExtendBean implements Serializable {
      * Find all entities for Users
      */
     public void listEntities() {
-        log.info("method : listEntities()");
+        log.info("TasksBean => method : listEntities()");
         loadListEntities("all");
     }
 
@@ -141,7 +126,7 @@ public class TasksBean extends ExtendBean implements Serializable {
      * Find all entities for Contacts
      */
     public void listEntitiesContacts() {
-        log.info("method : listEntitiesContacts()");
+        log.info("TasksBean => method : listEntitiesContacts()");
         loadListEntities("displayByContact");
     }
 
@@ -149,10 +134,7 @@ public class TasksBean extends ExtendBean implements Serializable {
      * Find all entities for Companies
      */
     public void listEntitiesCompanies() {
-        log.info("method : listEntitiesCompanies()");
-        getUsersBean().getUsersEntity().setId(1);
-        companiesEntity.setId(1);
-
+        log.info("TasksBean => method : listEntitiesCompanies()");
         loadListEntities("displayByCompany");
     }
 
@@ -160,13 +142,56 @@ public class TasksBean extends ExtendBean implements Serializable {
      * Create new instance for objects
      */
     public void createNewEntity() {
-        log.info("method : createNewEntity()");
+        log.info("TasksBean => method : createNewEntity()");
         this.tasksEntity = new TasksEntity();
         this.tasksEntities = new ArrayList<>();
-        this.tasksEntitiesDueToday = new ArrayList<>();
-        this.tasksEntitiesToLate = new ArrayList<>();
-        this.tasksEntitiesToCome = new ArrayList<>();
-        this.tasksEntitiesFinished = new ArrayList<>();
+
+        checkTypeParamAndSetContactOrCompanyInTasksEntity();
+        if (!(paramType.equalsIgnoreCase("displayByContact") || paramType.equalsIgnoreCase("displayByCompany"))) {
+            this.tasksEntitiesDueToday = new ArrayList<>();
+            this.tasksEntitiesToLate = new ArrayList<>();
+            this.tasksEntitiesToCome = new ArrayList<>();
+            this.tasksEntitiesFinished = new ArrayList<>();
+        }
+    }
+
+    /**
+     * Check type Param on create Tasks and set Contact or Company entity in NotesEntity !!
+     */
+    public void checkTypeParamAndSetContactOrCompanyInTasksEntity() {
+        if (this.paramType.equalsIgnoreCase("displayByContact")) {
+            setContactEntityInTasksEntity();
+        } else if (this.paramType.equalsIgnoreCase("displayByCompany")) {
+            setCompanyEntityInTasksEntity();
+        }
+    }
+
+    /**
+     * Set ContactEntity in TasksEntity
+     */
+    public void setContactEntityInTasksEntity() {
+        log.info("NotesBean => method : setContactEntityInTasksEntity()");
+        try {
+            this.tasksEntity.setContactsByIdContacts(contactsBean.getContactsEntity());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    /**
+     * Set ContactEntity in NotesEntity
+     */
+    public void setCompanyEntityInTasksEntity() {
+        log.info("NotesBean => method : setCompanyEntityInTasksEntity()");
+        try {
+            this.tasksEntity.setCompaniesByIdCompanies(companiesBean.getCompaniesEntity());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
     }
 
     /**
@@ -175,23 +200,29 @@ public class TasksBean extends ExtendBean implements Serializable {
      * @param event RowEditEvent<NotesEntity>
      */
     public void onRowEdit(RowEditEvent<TasksEntity> event) {
-        // TODO : Corriger le idUser
-        TasksEntity tasksEntityToUpdate = findById(event.getObject().getId(), 1);
+        log.info("TasksBean => method : onRowEdit(RowEditEvent<TasksEntity> event)");
+
+        FacesMessage msg;
+        try {
+            TasksEntity tasksEntityToUpdate = findById(event.getObject().getId(), getUsersBean().getUsersEntity().getId());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
 
         log.info("event : " + event);
         update(event.getObject());
 
-
-        // TODO : Corriger ça
-//        listEntitiesCompanies();
-        listEntitiesContacts();
+        loadListEntities(getParamType());
     }
 
     /**
      * On cancel delete
      */
-    public void onRowCancel() {
-        log.info("method : onRowCancel()");
+    public void onRowCancel(RowEditEvent<NotesEntity> event) {
+        log.info("TasksBean => method : onRowCancel()");
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "canceled"), null);
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
@@ -200,34 +231,42 @@ public class TasksBean extends ExtendBean implements Serializable {
      * Method for delete entity
      */
     public void deleteEntity() {
-        log.info("method : deleteEntity()");
-        log.info("Param value : " + getParam("typeEntities"));
-        log.info("Param value idEntity : " + getParam("idEntity"));
-        // TODO : Corriger l idUser
-        delete(Integer.parseInt(getParam("idEntity")), 1);
+        log.info("TasksBean => method : deleteEntity()");
 
-        loadListEntities(getParam("typeEntities"));
+        try {
+            int idEntity = Integer.parseInt(getParam("idEntity"));
+            delete(idEntity, getUsersBean().getUsersEntity().getId());
+        } catch (NumberFormatException exception) {
+            log.warn(exception.getMessage());
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+        loadListEntities(getParamType());
     }
 
     /**
      * Method to show modal in update task
-     *
-     * @param
      */
     public void showModalUpdate() {
-        log.info("method : showModalUpdate()");
-        log.info("param : " + getParam("idEntity"));
-        tasksEntity = findById(Integer.parseInt(getParam("idEntity")), 1);
+        log.info("TasksBean => method : showModalUpdate()");
+        try {
+            int idEntity = Integer.parseInt(getParam("idEntity"));
+            tasksEntity = findById(idEntity, getUsersBean().getUsersEntity().getId());
+        } catch (NumberFormatException exception) {
+            log.warn(exception.getMessage());
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
     }
 
     /**
      * Method to show modal in create task
-     *
-     * @param
      */
     public void showModalCreate() {
-        log.info("method : showModalCreate()");
+        log.info("TasksBean => method : showModalCreate()");
         tasksEntity = new TasksEntity();
+        checkTypeParamAndSetContactOrCompanyInTasksEntity();
     }
 
     /**
@@ -235,7 +274,6 @@ public class TasksBean extends ExtendBean implements Serializable {
      */
     public void updateEntity() {
         log.info("method : updateEntity()");
-        log.info("Param value : " + getParam("typeEntities"));
         log.info("TaskEntity = : " + tasksEntity);
 
         update(tasksEntity);
@@ -251,13 +289,11 @@ public class TasksBean extends ExtendBean implements Serializable {
      */
     public void updateStatus(AjaxBehaviorEvent event) {
         log.info("method : updateStatus()");
-        log.info("event : " + event.getComponent().getAttributes().get("idTask"));
 
-        TasksEntity tasksEntityToUpdate = new TasksEntity();
+        TasksEntity tasksEntityToUpdate;
         FacesMessage msg;
         try {
-            // TODO : Mettre l'id de USER
-            tasksEntityToUpdate = findById((Integer) event.getComponent().getAttributes().get("idTask"), 1);
+            tasksEntityToUpdate = findById((Integer) event.getComponent().getAttributes().get("idTask"), getUsersBean().getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
@@ -278,16 +314,10 @@ public class TasksBean extends ExtendBean implements Serializable {
      * @param typeLoad String
      */
     public void loadListEntities(String typeLoad) {
-
-        // Todo : Modifier avec user
-        getUsersBean().getUsersEntity().setId(1);
-        contactsEntity.setId(1);
-        companiesEntity.setId(1);
-
         if (typeLoad.equalsIgnoreCase("displayByCompany")) {
-            tasksEntitiesByCompanies = findTasksEntityByCompaniesByIdCompanies(companiesEntity.getId(), getUsersBean().getUsersEntity().getId());
+            tasksEntities = findTasksEntityByCompaniesByIdCompanies(companiesBean.getCompaniesEntity().getId(), getUsersBean().getUsersEntity().getId());
         } else if (typeLoad.equalsIgnoreCase("displayByContact")) {
-            tasksEntitiesByContacts = findTasksEntityByContactsByIdContacts(contactsEntity.getId(), getUsersBean().getUsersEntity().getId());
+            tasksEntities = findTasksEntityByContactsByIdContacts(contactsBean.getContactsEntity().getId(), getUsersBean().getUsersEntity().getId());
         } else if (typeLoad.equalsIgnoreCase("all")) {
 
             LocalDateTime dateTime = LocalDate.now().atTime(0, 0, 0, 0).plusDays(1);

@@ -16,12 +16,12 @@
 <cc:implementation>
     <f:view>
 
-        <p:dialog header="#{bundle['tasks.update']}" widgetVar="dlg2" modal="true" responsive="true"
+        <p:dialog header="#{bundle['tasks.update']}" widgetVar="updateDialogTask" modal="true" responsive="true"
                   showEffect="fade">
             <fxs:updateTasks id="updateTasks"/>
         </p:dialog>
 
-        <p:dialog header="#{bundle['tasks.create']}" widgetVar="dlg3" modal="true" responsive="true"
+        <p:dialog header="#{bundle['tasks.create']}" widgetVar="createDialogTask" modal="true" responsive="true"
                   showEffect="fade">
             <fxs:createTasks id="createTasks"/>
         </p:dialog>
@@ -31,7 +31,7 @@
             <h:form>
                 <p:commandButton value="#{bundle['tasks.create']}"
                                  update="@(form) msgs"
-                                 onclick="PF('dlg3').show();" styleClass="NavyButton marginBottom10"
+                                 onclick="PF('createDialogTask').show();" styleClass="NavyButton marginBottom10"
                                  action="#{tasksBean.showModalCreate}"
                 />
             </h:form>
@@ -147,7 +147,7 @@
 
                             <p:column colspan="1" width="70">
                                 <p:commandLink update="@(form) msgs"
-                                               onclick="PF('dlg2').show();"
+                                               onclick="PF('updateDialogTask').show();"
                                                action="#{tasksBean.showModalUpdate}">
                                     <i class="ui-icon ui-icon-create"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
@@ -262,7 +262,7 @@
 
                             <p:column colspan="1" width="70">
                                 <p:commandLink update="@(form) msgs"
-                                               onclick="PF('dlg2').show();"
+                                               onclick="PF('updateDialogTask').show();"
                                                action="#{tasksBean.showModalUpdate}">
                                     <i class="ui-icon ui-icon-create"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
@@ -387,7 +387,7 @@
 
                             <p:column colspan="1" width="70">
                                 <p:commandLink update="@(form) msgs"
-                                               onclick="PF('dlg2').show();"
+                                               onclick="PF('updateDialogTask').show();"
                                                action="#{tasksBean.showModalUpdate}">
                                     <i class="ui-icon ui-icon-create"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
@@ -512,7 +512,7 @@
 
                             <p:column colspan="1" width="70">
                                 <p:commandLink update="@(form) msgs"
-                                               onclick="PF('dlg2').show();"
+                                               onclick="PF('updateDialogTask').show();"
                                                action="#{tasksBean.showModalUpdate}">
                                     <i class="ui-icon ui-icon-create"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
@@ -632,7 +632,7 @@
 
                             <p:column colspan="1" width="70">
                                 <p:commandLink update="@(form) msgs"
-                                               onclick="PF('dlg2').show();"
+                                               onclick="PF('updateDialogTask').show();"
                                                action="#{tasksBean.showModalUpdate}">
                                     <i class="ui-icon ui-icon-create"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>

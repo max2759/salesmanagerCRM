@@ -86,54 +86,74 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
     @Inject
     private AddressesBean addressesBean;
-
+    @Inject
+    private NotesBean notesBean;
+    @Inject
+    private TasksBean tasksBean;
+    @Inject
+    private VouchersBean vouchersBean;
+    @Inject
+    private TransactionsBean transactionsBean;
+    @Inject
+    private TransactionHistoriesBean transactionHistoriesBean;
+    @Inject
+    private VoucherHistoriesBean voucherHistoriesBean;
 
     @Getter
     @Setter
     private Map<LocalDateTime, Object> listActivity = new TreeMap<>(Collections.reverseOrder());
-
-    public void test(Object o) {
-
-    }
 
     /**
      * this method is used in activity page
      */
     public void activityThread() {
         log.info("CompaniesBean : activityThread");
-        // TODO : Modifier ça par la company !
-        companiesEntity = findByIdCompanyAndByIdUser(1, 1);
+        FacesMessage msg;
 
-        for (NotesEntity n : companiesEntity.getNotesById()) {
+        try {
+            // TODO : Modifier ça par la Compagnie !
+            companiesEntity = findByIdCompanyAndByIdUser(1, getUsersBean().getUsersEntity().getId());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
+        List<NotesEntity> notesEntities = notesBean.findNotesEntityByCompaniesByIdCompanies(companiesEntity.getId(), getUsersBean().getUsersEntity().getId());
+        for (NotesEntity n : notesEntities) {
             ObjectActivity objectActivity = new ObjectActivity(n.getClass().getName(), n);
             listActivity.put(n.getCreationDate(), objectActivity);
         }
-        for (TasksEntity t : companiesEntity.getTasksById()) {
+
+        // TODO : modifier avec Compagnie
+        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByCompaniesByIdCompanies(companiesEntity.getId(), getUsersBean().getUsersEntity().getId());
+        for (TasksEntity t : tasksEntities) {
             ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
             listActivity.put(t.getCreationDate(), objectActivity);
         }
-        for (TransactionsEntity t : companiesEntity.getTransactionsById()) {
-            if (t.isActive()) {
-                ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
-                listActivity.put(t.getCreationDate(), objectActivity);
 
-                TransactionsBean transactionsBean = new TransactionsBean();
-                // TODO Modifier USER
-                TransactionsEntity transactionsEntity = transactionsBean.findById(t.getId(), 1);
-                for (TransactionHistoriesEntity tH : transactionsEntity.getTransactionHistoriesById()) {
-                    ObjectActivity objectActivity1 = new ObjectActivity(tH.getClass().getName(), tH);
-                    listActivity.put(tH.getSaveDate(), objectActivity1);
-                }
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByCompaniesByIdCompanies(companiesEntity.getId(), getUsersBean().getUsersEntity().getId());
+        for (TransactionsEntity t : transactionsEntities) {
+            ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
+            listActivity.put(t.getCreationDate(), objectActivity);
+
+            // TODO Modifier USER
+            List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(t.getId(), getUsersBean().getUsersEntity().getId());
+            for (TransactionHistoriesEntity tH : transactionHistoriesEntities) {
+                ObjectActivity objectActivity1 = new ObjectActivity(tH.getClass().getName(), tH);
+                listActivity.put(tH.getSaveDate(), objectActivity1);
             }
         }
-        for (VouchersEntity v : companiesEntity.getVouchersById()) {
+
+        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByCompaniesByIdCompanies(companiesEntity.getId(), getUsersBean().getUsersEntity().getId());
+        for (VouchersEntity v : vouchersEntities) {
             ObjectActivity objectActivity = new ObjectActivity(v.getClass().getName(), v);
             listActivity.put(v.getCreationDate(), objectActivity);
 
-            VouchersBean vouchersBean = new VouchersBean();
             // TODO Modifier USER
-            VouchersEntity vouchersEntity = vouchersBean.findById(v.getId(), 1);
-            for (VoucherHistoriesEntity vH : vouchersEntity.getVoucherHistoriesById()) {
+            List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(v.getId(), getUsersBean().getUsersEntity().getId());
+            for (VoucherHistoriesEntity vH : voucherHistoriesEntities) {
                 ObjectActivity objectActivity1 = new ObjectActivity(vH.getClass().getName(), vH);
                 listActivity.put(vH.getSaveDate(), objectActivity1);
             }

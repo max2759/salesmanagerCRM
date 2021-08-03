@@ -13,6 +13,7 @@ import be.atc.salesmanagercrm.validators.ContactValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.primefaces.event.TabChangeEvent;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -83,8 +84,17 @@ public class ContactsBean extends ExtendBean implements Serializable {
      */
     public void activityThread() {
         log.info("ContactsBean : activityThread");
-        // TODO : Modifier ça par le contact !
-        contactsEntity = findByIdContactAndByIdUser(1, getUsersBean().getUsersEntity().getId());
+        FacesMessage msg;
+
+        try {
+            // TODO : Modifier ça par le contact !
+            contactsEntity = findByIdContactAndByIdUser(1, getUsersBean().getUsersEntity().getId());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
 
         List<NotesEntity> notesEntities = notesBean.findNotesEntityByContactsByIdContacts(contactsEntity.getId(), getUsersBean().getUsersEntity().getId());
         for (NotesEntity n : notesEntities) {
@@ -127,7 +137,6 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
         log.info("Liste : " + listActivity);
     }
-
 
     public void findAllContacts() {
         contactsEntityList = findContactsEntityByIdUser(1);

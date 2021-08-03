@@ -30,6 +30,7 @@
                 <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  value="#{bundle['notes.save']}"
+                                 oncomplete="PF('createDialogNotes').hide()"
                                  update="@(form) msgs"
                                  action="#{notesBean.saveEntity}"/>
             </p:panelGrid>
