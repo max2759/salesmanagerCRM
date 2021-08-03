@@ -14,13 +14,16 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Maximilien Zabbara
@@ -45,7 +48,19 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
+    private JobTitlesEntity selectedJobTitlesEntity;
+
+    @Getter
+    @Setter
+    private List<JobTitlesEntity> jobTitlesEntitiesFiltered;
+
+    @Getter
+    @Setter
     private String sendType = "";
+
+    @Getter
+    @Setter
+    private boolean disable = true;
 
     /**
      * Public method that call either addJobTitle if sendType=add or update if sendType=edit
@@ -54,8 +69,10 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
 
         if (sendType.equalsIgnoreCase("add")) {
             addJobTitle(jobTitlesEntity);
+            this.disable = true;
         } else if (sendType.equalsIgnoreCase("edit")) {
             update(jobTitlesEntity);
+            this.disable = true;
         }
 
         findAllJobTitles();
@@ -250,6 +267,34 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
             log.error("Job title is not valid {}", entity);
             throw new InvalidEntityException("L'intitulé du poste n'est pas valide", ErrorCodes.JOBTITLES_NOT_VALID, errors);
         }
+    }
+
+    /**
+     * Auto complete for JobTitlesEntity
+     *
+     * @param search String
+     * @return list of JobTitlesEntity
+     */
+    public List<JobTitlesEntity> completeJobTitles(String search) {
+
+        String searchLowerCase = search.toLowerCase();
+
+        List<JobTitlesEntity> jobTitlesEntitiesDropdown = jobTitlesDao.findAll();
+
+        return jobTitlesEntitiesDropdown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
+    }
+
+
+    /**
+     * return true if value null and false if value not null
+     *
+     * @param event event
+     */
+    public void makeDisable(AjaxBehaviorEvent event) {
+        log.info("Start of makeDisable");
+        log.info("label : " + ((UIInput) event.getSource()).getValue());
+
+        this.disable = ((UIInput) event.getSource()).getValue() == null;
     }
 
 

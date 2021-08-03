@@ -25,6 +25,8 @@
                                      value="#{branchActivitiesBean.branchActivitiesEntity.label}"
                                      required="true" requiredMessage="#{bundle['jobTitles.labelError']}">
                             <f:validator validatorId="branchActivitiesLabelValidator"/>
+                            <p:ajax event="keyup" listener="#{branchActivitiesBean.makeDisable}"
+                                    update="validateBranchActivitiesBtn"></p:ajax>
                         </p:inputText>
                         <label>#{bundle['branchActivities.title']}</label>
                         <p:message for="branchActivitiesLabel"/>
@@ -34,6 +36,8 @@
                 <div align="right" class="modalValidateBtn-margin-top">
                     <p:commandButton value="#{branchActivitiesBean.sendType eq 'add' ? bundle['save'] : bundle['edit']}"
                                      icon="ui-icon-check"
+                                     id="validateBranchActivitiesBtn"
+                                     disabled="#{branchActivitiesBean.disable}"
                                      update="@(form) facesMessage" action="#{branchActivitiesBean.saveBranchActivities}"
                                      onclick="PF('branchActivitiesModal').close();"/>
                 </div>

@@ -20,8 +20,9 @@
                <h:panelGroup styleClass="md-inputfield jobtitlesFullDisplay">
                   <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
                   <p:inputText id="jobTitlesLabel" value="#{jobtitlesBean.jobTitlesEntity.label}"
-                               required="true" requiredMessage="#{bundle['jobTitles.labelError']}">
+                               required="true" requiredMessage="#{bundle['jobTitles.labelError']}" immediate="true">
                      <f:validator validatorId="jobTitlesLabelValidator"/>
+                     <p:ajax event="keyup" listener="#{jobtitlesBean.makeDisable}" update="validateJobTitlesBtn"/>
                   </p:inputText>
                   <label>#{bundle['jobTitles.modalLabel']}</label>
                   <p:message for="jobTitlesLabel"/>
@@ -30,7 +31,9 @@
 
             <div align="right" class="modalValidateBtn-margin-top">
                <p:commandButton value="#{jobtitlesBean.sendType eq 'add' ? bundle['save'] : bundle['edit']}"
+                                id="validateJobTitlesBtn"
                                 icon="ui-icon-check"
+                                disabled="#{jobtitlesBean.disable}"
                                 update="@(form) facesMessage" action="#{jobtitlesBean.saveJobTitles}"
                                 onclick="PF('jobTitlesModal').close();"/>
             </div>

@@ -18,6 +18,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Maximilien Zabbara
@@ -105,4 +106,29 @@ public class CompanyTypesBean extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * Auto complete for CompanyTypes
+     *
+     * @param search String
+     * @return list of CompanyTypesEntity
+     */
+    public List<CompanyTypesEntity> completeCompanyTypes(String search) {
+
+        String searchLowerCase = search.toLowerCase();
+
+        List<CompanyTypesEntity> companyTypesEntitiesDropDown = findCompanyTypesList();
+
+        return companyTypesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
+
+    }
+
+    /**
+     * Sort CompanyTypes by group in form
+     *
+     * @param entityGroup CompanyTypesEntity
+     * @return label of entitygroup
+     */
+    public char getCompanyTypesEntityGroup(CompanyTypesEntity entityGroup) {
+        return entityGroup.getLabel().charAt(0);
+    }
 }

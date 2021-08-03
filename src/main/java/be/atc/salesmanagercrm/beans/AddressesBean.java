@@ -3,7 +3,6 @@ package be.atc.salesmanagercrm.beans;
 import be.atc.salesmanagercrm.dao.AddressesDao;
 import be.atc.salesmanagercrm.dao.impl.AddressesDaoImpl;
 import be.atc.salesmanagercrm.entities.AddressesEntity;
-import be.atc.salesmanagercrm.entities.CitiesEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.utils.EMF;
@@ -20,8 +19,6 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Maximilien Zabbara
@@ -42,26 +39,8 @@ public class AddressesBean extends ExtendBean implements Serializable {
 
     @Inject
     private CompaniesBean companiesBean;
-
     @Inject
-    private CitiesBean citiesBean;
-
-
-    /**
-     * Auto Complete form creation
-     *
-     * @param query String
-     * @return List Contacts Entities
-     */
-    public List<CitiesEntity> completeCitiesEntityContains(String query) {
-
-        String queryLowerCase = query.toLowerCase();
-
-        // TODO : à modifier
-        List<CitiesEntity> citiesEntityListForm = citiesBean.findCitiesEntityList();
-
-        return citiesEntityListForm.stream().filter(t -> t.getLabel().toLowerCase().contains(queryLowerCase)).collect(Collectors.toList());
-    }
+    private ContactsBean contactsBean;
 
 
     /**
@@ -77,6 +56,19 @@ public class AddressesBean extends ExtendBean implements Serializable {
             addressesEntity = new AddressesEntity();
         }
 
+    }
+
+
+    /**
+     * Return addressEntity by id contacts if exist else return new AddressesEntity
+     */
+    public void getAddressByIdContacts() {
+
+        try {
+            addressesEntity = findByIdContacts(contactsBean.getContactsEntity().getId());
+        } catch (EntityNotFoundException exception) {
+            addressesEntity = new AddressesEntity();
+        }
     }
 
 
@@ -117,10 +109,52 @@ public class AddressesBean extends ExtendBean implements Serializable {
 
 
     /**
+     * Find address by ID Contacts
+     *
+     * @param id id
+     * @return AddressesEntity AddressesEntity
+     */
+    protected AddressesEntity findByIdContacts(int id) {
+
+        log.info("Start of findByIdContacts");
+        FacesMessage facesMessage;
+
+        if (id == 0) {
+            log.error("ID Contacts is null");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "addressesNotFound"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return null;
+        }
+
+        EntityManager em = EMF.getEM();
+
+        try {
+            return addressesDao.findByIdContacts(em, id);
+        } catch (Exception ex) {
+            log.info("Nothing");
+            throw new EntityNotFoundException(
+                    "Aucun contact avec l'ID " + id + " n'a été trouve dans la DB",
+                    ErrorCodes.CONTACT_NOT_FOUND
+            );
+
+        } finally {
+            em.clear();
+            em.close();
+        }
+    }
+
+
+    /**
      * Method that call updateAddress
      */
     public void updateEntity() {
-        updateAddress(this.addressesEntity);
+
+        if (addressesEntity.getCitiesByIdCities() != null) {
+            updateAddress(this.addressesEntity);
+        } else {
+            addressesEntity = new AddressesEntity();
+        }
+
     }
 
     /**

@@ -21,7 +21,6 @@ import java.util.Locale;
 @FacesValidator("branchActivitiesLabelValidator")
 public class BranchActivitiesLabelValidator implements Validator {
 
-
     Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Override
@@ -38,7 +37,7 @@ public class BranchActivitiesLabelValidator implements Validator {
                 checkEntities.checkBranchActivitiesLabel(branchActivitiesEntity);
             } catch (InvalidEntityException exception) {
                 log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                throw new ValidatorException(new FacesMessage(getMessageErrorLabelAlreadyExist()));
+                throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, getMessageErrorLabelAlreadyExist(), null));
             }
         }
     }

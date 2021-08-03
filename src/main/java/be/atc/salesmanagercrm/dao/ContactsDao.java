@@ -16,4 +16,6 @@ public interface ContactsDao {
     List<ContactsEntity> findContactsEntityByIdUser(EntityManager em, int idUser);
 
     List<ContactsEntity> findAll();
+
+    void update(EntityManager em, ContactsEntity contactsEntity);
 }

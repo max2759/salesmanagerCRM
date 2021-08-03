@@ -55,11 +55,13 @@ public class ContactsBean extends ExtendBean implements Serializable {
     @Setter
     private ContactsDao contactsDao = new ContactsDaoImpl();
 
-    @Inject
-    private JobTitlesBean jobTitlesBean;
+    @Getter
+    @Setter
+    private ContactsEntity selectedContactsEntity;
 
-    @Inject
-    private ContactTypesBean contactTypesBean;
+    @Getter
+    @Setter
+    private List<ContactsEntity> contactEntitiesFiltred;
     @Inject
     private NotesBean notesBean;
     @Inject
@@ -72,11 +74,15 @@ public class ContactsBean extends ExtendBean implements Serializable {
     private TransactionHistoriesBean transactionHistoriesBean;
     @Inject
     private VoucherHistoriesBean voucherHistoriesBean;
-
+    @Inject
+    private AddressesBean addressesBean;
+    @Inject
+    private CompaniesContactsBean companiesContactsBean;
 
     @Getter
     @Setter
     private Map<LocalDateTime, Object> listActivity = new TreeMap<>(Collections.reverseOrder());
+
 
     /**
      * this method is used in activity page
@@ -127,7 +133,6 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
         log.info("Liste : " + listActivity);
     }
-
 
     public void findAllContacts() {
         contactsEntityList = findContactsEntityByIdUser(1);
@@ -211,6 +216,62 @@ public class ContactsBean extends ExtendBean implements Serializable {
         }
     }
 
+    public void getDisplayOneContact() {
+
+        usersEntity.setId(1);
+        displayOneContact(usersEntity.getId());
+    }
+
+    /**
+     * display one contact by CompanyId and User id
+     *
+     * @param idUser idUser
+     */
+    protected void displayOneContact(int idUser) {
+
+        FacesMessage facesMessage;
+
+        log.info("Début méthode displayOneContact");
+        log.info("Param : " + getParam("contactID"));
+
+        int idContact;
+
+        try {
+            idContact = Integer.parseInt(getParam("contactID"));
+        } catch (NumberFormatException exception) {
+            log.info(exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "contact.error"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return;
+        }
+
+        log.info("Id de la société : " + idContact);
+
+        if (idContact == 0) {
+            log.error("Contact ID is null");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contact.error"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            throw new InvalidEntityException("L'Id du contact n'existe pas", ErrorCodes.CONTACT_NOT_VALID);
+        }
+        if (idUser == 0) {
+            log.error("User ID is null");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            throw new InvalidEntityException("L'Id de l'utilisateur n'existe pas", ErrorCodes.USER_NOT_VALID);
+        }
+
+        EntityManager em = EMF.getEM();
+
+        try {
+            contactsEntity = contactsDao.findByIdContactAndByIdUser(em, idContact, idUser);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "contact.error"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return;
+        }
+    }
+
     /**
      * Create new instance for objects
      */
@@ -245,8 +306,8 @@ public class ContactsBean extends ExtendBean implements Serializable {
     /**
      * Sort Contacts by group in form
      *
-     * @param entityGroup
-     * @return
+     * @param entityGroup ContactsEntity
+     * @return list of firstname from ContactsEntity
      */
 
     public char getContactsEntityGroup(ContactsEntity entityGroup) {
@@ -311,35 +372,94 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
     }
 
-    /**
-     * Auto complete for JobTitlesEntity
-     *
-     * @param search String
-     * @return list of JobTitlesEntity
-     */
-    public List<JobTitlesEntity> completeJobTitles(String search) {
-
-        String searchLowerCase = search.toLowerCase();
-
-        List<JobTitlesEntity> jobTitlesEntitiesDropdown = jobTitlesBean.findAll();
-
-        return jobTitlesEntitiesDropdown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
-
+    public void updateContact() {
+        update(contactsEntity);
     }
 
-    /**
-     * Auto complete for ContactTypesEntity
-     *
-     * @param search String
-     * @return list of ContactTypesEntity
-     */
-    public List<ContactTypesEntity> completeContactType(String search) {
+    protected void update(ContactsEntity contactsEntity) {
 
-        String searchLowerCase = search.toLowerCase();
+        FacesMessage facesMessage;
 
-        List<ContactTypesEntity> contactTypesDropdown = contactTypesBean.findAll();
+        CheckEntities checkEntities = new CheckEntities();
 
-        return contactTypesDropdown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
+
+        try {
+            validateContacts(contactsEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
+
+        try {
+            checkEntities.checkUser(contactsEntity.getUsersByIdUsers());
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return;
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return;
+        }
+
+        try {
+            checkEntities.checkContactType(contactsEntity.getContactTypesByIdContactTypes());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contact"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return;
+        }
+
+        if (contactsEntity.getBranchActivitiesByIdBranchActivities() != null) {
+            try {
+                checkEntities.checkBranchActivities(contactsEntity.getBranchActivitiesByIdBranchActivities());
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactTypes.NotExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+                return;
+            }
+        }
+
+        if (contactsEntity.getJobTitlesByIdJobTitles() != null) {
+            try {
+                checkEntities.checkJobTitles(contactsEntity.getJobTitlesByIdJobTitles());
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "jobTitles.notExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+                return;
+            }
+        }
+
+        EntityManager em = EMF.getEM();
+        EntityTransaction tx = null;
+
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            contactsDao.update(em, contactsEntity);
+            addressesBean.getAddressesEntity().setContactsByIdContacts(contactsEntity);
+            addressesBean.updateEntity();
+            companiesContactsBean.getCompaniesContactsEntity().setContactsByIdContacts(contactsEntity);
+            companiesContactsBean.createCompaniesContacts();
+            tx.commit();
+            log.info("Update ok");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "company.updated"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        } catch (Exception ex) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            log.info("Update échec");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        } finally {
+            em.clear();
+            em.clear();
+        }
+
     }
 
     /**

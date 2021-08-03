@@ -10,11 +10,6 @@ import java.util.List;
 public class CompaniesContactsDaoImpl extends EntityFinderImpl<CompaniesContactsEntity> implements CompaniesContactsDao {
 
     @Override
-    public void add(EntityManager em, CompaniesContactsEntity companiesContactsEntity) {
-        em.persist(companiesContactsEntity);
-    }
-
-    @Override
     public void update(EntityManager em, CompaniesContactsEntity companiesContactsEntity) {
         em.merge(companiesContactsEntity);
     }
@@ -22,7 +17,15 @@ public class CompaniesContactsDaoImpl extends EntityFinderImpl<CompaniesContacts
     @Override
     public List<CompaniesContactsEntity> findAll(EntityManager em) {
         return em.createNamedQuery("CompaniesContacts.findAll",
-                        CompaniesContactsEntity.class)
+                CompaniesContactsEntity.class)
                 .getResultList();
+    }
+
+    @Override
+    public CompaniesContactsEntity findByIdContacts(EntityManager em, int idContacts) {
+        return em.createNamedQuery("CompaniesContacts.findByIdContacts",
+                CompaniesContactsEntity.class)
+                .setParameter("idContacts", idContacts)
+                .getSingleResult();
     }
 }

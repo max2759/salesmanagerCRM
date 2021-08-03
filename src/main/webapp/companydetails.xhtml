@@ -9,14 +9,14 @@
     <ui:define name="content">
 
         <f:metadata>
-            <f:viewAction action="#{companiesBean.displayCompanyAndAddressById}"/>
+            <f:viewAction action="#{companiesBean.displayCompanyDetails}"/>
             <f:viewAction action="#{addressesBean.getAddressByIdCompany}"/>
         </f:metadata>
 
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="card card-w-title">
-                    <h1>Company Details</h1>
+                    <h1>#{bundle['company.details']}</h1>
 
                     <p:growl id="msgs"/>
 
@@ -54,13 +54,13 @@
                                                   style="margin-top:30px; margin-bottom:10px;">
                                         <p:autoComplete id="branchActivitiesDisplay" dropdown="true"
                                                         value="#{companiesBean.companiesEntity.branchActivitiesByIdBranchActivities}"
-                                                        completeMethod="#{companiesBean.completeBranchActivities}"
+                                                        completeMethod="#{branchActivitiesBean.completeBranchActivities}"
                                                         var="branchActivities"
                                                         itemLabel="#{branchActivities.label}"
                                                         itemValue="#{branchActivities}"
                                                         converter="branchActivitiesConverter"
                                                         scrollHeight="250"
-                                                        groupBy="#{companiesBean.getBranchActivitiesEntityGroup(branchActivities)}"
+                                                        groupBy="#{branchActivitiesBean.getBranchActivitiesEntityGroup(branchActivities)}"
                                                         placeholder="#{bundle['company.chooseBranchActivity']}"/>
                                     </h:panelGroup>
 
@@ -70,13 +70,13 @@
                                                         value="#{companiesBean.companiesEntity.companyTypesByIdCompanyTypes}"
                                                         required="true"
                                                         requiredMessage="#{bundle['company.companiesTypeNotValid']}"
-                                                        completeMethod="#{companiesBean.completeCompanyTypes}"
+                                                        completeMethod="#{companyTypesBean.completeCompanyTypes}"
                                                         var="companyTypes"
                                                         itemLabel="#{companyTypes.label}"
                                                         itemValue="#{companyTypes}"
                                                         converter="companyTypesConverter"
                                                         scrollHeight="250"
-                                                        groupBy="#{companiesBean.getCompanyTypesEntityGroup(companyTypes)}"
+                                                        groupBy="#{companyTypesBean.getCompanyTypesEntityGroup(companyTypes)}"
                                                         placeholder="#{bundle['company.chooseCompanyType']}"/>
                                     </h:panelGroup>
 
@@ -140,15 +140,15 @@
                                         <p:inputText id="companyAddressStreet"
                                                      value="#{addressesBean.addressesEntity.street}">
                                         </p:inputText>
-                                        <label>Rue</label>
+                                        <label>#{bundle['address.street']}</label>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:30px; margin-bottom:10px;">
-                                        <p:inputText id="companyNumber"
+                                        <p:inputText id="companyNumberAdress"
                                                      value="#{addressesBean.addressesEntity.number}">
                                         </p:inputText>
-                                        <label>Numéro</label>
+                                        <label>#{bundle['address.number']}</label>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
@@ -156,14 +156,14 @@
                                         <p:inputText id="companyBox"
                                                      value="#{addressesBean.addressesEntity.box}">
                                         </p:inputText>
-                                        <label>Boite</label>
+                                        <label>#{bundle['address.box']}</label>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:30px; margin-bottom:10px;">
                                         <p:autoComplete id="addressCity" dropdown="true"
                                                         value="#{addressesBean.addressesEntity.citiesByIdCities}"
-                                                        completeMethod="#{addressesBean.completeCitiesEntityContains}"
+                                                        completeMethod="#{citiesBean.completeCitiesEntityContains}"
                                                         var="cities"
                                                         itemLabel="#{cities.label}"
                                                         itemValue="#{cities}"
@@ -276,7 +276,7 @@
                         </p:panelGrid>
 
                         <div align="right">
-                            <p:commandButton value="valider"
+                            <p:commandButton value="#{bundle['validate']}"
                                              action="#{companiesBean.updateCompanies}"
                                              icon="ui-icon-check"
                                              update="@(form)" process="@this"

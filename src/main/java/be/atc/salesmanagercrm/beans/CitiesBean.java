@@ -18,6 +18,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Maximilien Zabbara
@@ -65,7 +66,7 @@ public class CitiesBean extends ExtendBean implements Serializable {
 
         if (id == 0) {
             log.error("Cities ID is null");
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "CitiesNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
             return null;
         }
@@ -92,9 +93,24 @@ public class CitiesBean extends ExtendBean implements Serializable {
      * @param entityGroup CitiesEntity
      * @return label of entitygroup
      */
-
     public char getCitiesEntityGroup(CitiesEntity entityGroup) {
         return entityGroup.getLabel().charAt(0);
+    }
+
+
+    /**
+     * Auto Complete form cities entity
+     *
+     * @param query String
+     * @return List Cities Entities
+     */
+    public List<CitiesEntity> completeCitiesEntityContains(String query) {
+
+        String queryLowerCase = query.toLowerCase();
+
+        List<CitiesEntity> citiesEntityListForm = findCitiesEntityList();
+
+        return citiesEntityListForm.stream().filter(t -> t.getLabel().toLowerCase().contains(queryLowerCase)).collect(Collectors.toList());
     }
 
 
