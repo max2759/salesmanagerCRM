@@ -15,6 +15,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -49,6 +50,9 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     @Setter
     private ConversationsEntity conversationsForDialog;
 
+    @Inject
+    private UsersBean usersBean;
+
     public void initialiseDialogConversId(Integer idConvers) {
         if (idConvers == null || idConvers < 1) {
             return;
@@ -59,8 +63,8 @@ public class ConversationsBean extends ExtendBean implements Serializable {
 
 
     public void add() {
-        log.info(String.valueOf(getUsersBean().getUsersEntity().getId()));
-        log.info("user entity: " + getUsersBean().getUsersEntity().getUsername());
+        log.info(String.valueOf(usersBean.getUsersEntity().getId()));
+        log.info("user entity: " + usersBean.getUsersEntity().getUsername());
         try {
             validateConversations(conversationsEntity);
         } catch (InvalidEntityException exception) {
@@ -75,13 +79,13 @@ public class ConversationsBean extends ExtendBean implements Serializable {
 
         CheckEntities checkEntities = new CheckEntities();
 //finir les verifs ici
-        //   getUsersBean().findUser();
+        //   usersBean.findUser();
 
         conversationsEntity.setMessage(message);
         conversationsEntity.setCreationDate(LocalDateTime.now());
         conversationsEntity.setActive(true);
-        log.info(String.valueOf(getUsersBean().getUsersEntity()));
-        conversationsEntity.setUsersByIdUsers(getUsersBean().getUsersEntity());
+        log.info(String.valueOf(usersBean.getUsersEntity()));
+        conversationsEntity.setUsersByIdUsers(usersBean.getUsersEntity());
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -188,7 +192,7 @@ public class ConversationsBean extends ExtendBean implements Serializable {
 */
 
     //  public void findUser() {
-    //    getUsersBean().findUser();
+    //    usersBean.findUser();
     // }
 
 

@@ -58,6 +58,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
 
     @Inject
     private VoucherHistoriesBean voucherHistoriesBean;
+    @Inject
+    private UsersBean usersBean;
 
 
     /**
@@ -67,9 +69,9 @@ public class VouchersBean extends ExtendBean implements Serializable {
         log.info("VouchersBean => method : saveEntity()");
 
         log.info("VouchersEntity = : " + this.vouchersEntity);
-        getUsersBean().getUsersEntity().setId(1);
+        usersBean.getUsersEntity().setId(1);
 
-        this.vouchersEntity.setUsersByIdUsers(getUsersBean().getUsersEntity());
+        this.vouchersEntity.setUsersByIdUsers(usersBean.getUsersEntity());
 
         save(this.vouchersEntity);
         findAllEntitiesAndFilter();
@@ -107,10 +109,10 @@ public class VouchersBean extends ExtendBean implements Serializable {
         }
 
         // TODO : Modifier USER
-        getUsersBean().getUsersEntity().setId(1);
+        usersBean.getUsersEntity().setId(1);
 
         try {
-            this.vouchersEntity = findById(idVoucher, getUsersBean().getUsersEntity().getId());
+            this.vouchersEntity = findById(idVoucher, usersBean.getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
@@ -154,17 +156,17 @@ public class VouchersBean extends ExtendBean implements Serializable {
         }
 
         // TODO : Modifier USER
-        getUsersBean().getUsersEntity().setId(1);
+        usersBean.getUsersEntity().setId(1);
 
         try {
-            this.vouchersEntity = findById(idVoucher, getUsersBean().getUsersEntity().getId());
+            this.vouchersEntity = findById(idVoucher, usersBean.getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "vouchers.notExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-        voucherHistoriesBean.findAllEntities(idVoucher, getUsersBean().getUsersEntity().getId());
+        voucherHistoriesBean.findAllEntities(idVoucher, usersBean.getUsersEntity().getId());
     }
 
     /**

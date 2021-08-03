@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -56,6 +57,8 @@ public class RolesBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private List<RolesEntity> rolesEntities;
+    @Inject
+    private UsersBean usersBean;
 
     public void initialiseDialogRoleId(Integer idRole) {
         if (idRole == null || idRole < 1) {
@@ -87,7 +90,7 @@ public class RolesBean extends ExtendBean implements Serializable {
     }
 
     public void findAllRoles() {
-        log.info("bgin findallrole " + getUsersBean().getUsersEntity().getId());
+        log.info("bgin findallrole " + usersBean.getUsersEntity().getId());
 
         //test a typed permission (not instance-level)
         //   if (getCurrentUser().isPermitted("addRoles")) {
