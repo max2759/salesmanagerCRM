@@ -13,7 +13,6 @@ import be.atc.salesmanagercrm.validators.ContactValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.primefaces.event.TabChangeEvent;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -228,18 +227,17 @@ public class ContactsBean extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * public method that call displayOneContact
+     */
     public void getDisplayOneContact() {
-
-        usersEntity.setId(1);
-        displayOneContact(usersEntity.getId());
+        displayOneContact();
     }
 
     /**
-     * display one contact by CompanyId and User id
-     *
-     * @param idUser idUser
+     * display one contact by CompanyId
      */
-    protected void displayOneContact(int idUser) {
+    protected void displayOneContact() {
 
         FacesMessage facesMessage;
 
@@ -257,30 +255,41 @@ public class ContactsBean extends ExtendBean implements Serializable {
             return;
         }
 
-        log.info("Id de la société : " + idContact);
-
-        if (idContact == 0) {
-            log.error("Contact ID is null");
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contact.error"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            throw new InvalidEntityException("L'Id du contact n'existe pas", ErrorCodes.CONTACT_NOT_VALID);
-        }
-        if (idUser == 0) {
-            log.error("User ID is null");
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            throw new InvalidEntityException("L'Id de l'utilisateur n'existe pas", ErrorCodes.USER_NOT_VALID);
-        }
-
-        EntityManager em = EMF.getEM();
-
         try {
-            contactsEntity = contactsDao.findByIdContactAndByIdUser(em, idContact, idUser);
+            contactsEntity = findById(idContact);
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "contact.error"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
             return;
+        }
+
+        addressesBean.getAddressByIdContacts();
+    }
+
+    protected ContactsEntity findById(int id) {
+        FacesMessage facesMessage;
+
+        if (id == 0) {
+            log.error("Contact ID is null");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contact.error"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            throw new InvalidEntityException("L'Id du contact n'existe pas", ErrorCodes.CONTACT_NOT_VALID);
+        }
+
+        EntityManager em = EMF.getEM();
+
+        try {
+            return contactsDao.findById(em, id);
+        } catch (Exception ex) {
+            log.info("Nothing");
+            throw new EntityNotFoundException(
+                    "Aucun contact avec l ID " + id + " n'a été trouvé dans la DB",
+                    ErrorCodes.CONTACT_NOT_FOUND
+            );
+        } finally {
+            em.clear();
+            em.close();
         }
     }
 
@@ -384,10 +393,18 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
     }
 
+    /**
+     * Public method that call update
+     */
     public void updateContact() {
         update(contactsEntity);
     }
 
+    /**
+     * Update contacts entity
+     *
+     * @param contactsEntity
+     */
     protected void update(ContactsEntity contactsEntity) {
 
         FacesMessage facesMessage;

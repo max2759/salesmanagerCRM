@@ -48,8 +48,6 @@ public class AddressesBean extends ExtendBean implements Serializable {
      */
     public void getAddressByIdCompany() {
 
-        checkIfIdCompanyExist();
-
         try {
             addressesEntity = findByIdCompanies(companiesBean.getCompaniesEntity().getId());
         } catch (EntityNotFoundException exception) {

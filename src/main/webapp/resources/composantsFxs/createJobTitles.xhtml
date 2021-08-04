@@ -19,10 +19,9 @@
             <p:outputPanel id="jobtitlesManageContent" class="ui-fluid">
                <h:panelGroup styleClass="md-inputfield jobtitlesFullDisplay">
                   <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
-                  <p:inputText id="jobTitlesLabel" value="#{jobtitlesBean.jobTitlesEntity.label}"
-                               required="true" requiredMessage="#{bundle['jobTitles.labelError']}" immediate="true">
-                     <f:validator validatorId="jobTitlesLabelValidator"/>
-                     <p:ajax event="keyup" listener="#{jobtitlesBean.makeDisable}" update="validateJobTitlesBtn"/>
+                  <p:inputText id="jobTitlesLabel" value="#{jobtitlesBean.jobTitlesEntity.label}">
+                      <f:validator validatorId="jobTitlesLabelValidator"/>
+                      <p:ajax event="keyup" update="validateJobTitlesBtn"/>
                   </p:inputText>
                   <label>#{bundle['jobTitles.modalLabel']}</label>
                   <p:message for="jobTitlesLabel"/>
@@ -33,7 +32,7 @@
                <p:commandButton value="#{jobtitlesBean.sendType eq 'add' ? bundle['save'] : bundle['edit']}"
                                 id="validateJobTitlesBtn"
                                 icon="ui-icon-check"
-                                disabled="#{jobtitlesBean.disable}"
+                                disabled="#{empty jobtitlesBean.jobTitlesEntity.label or jobtitlesBean.jobTitlesEntity.label eq 'f'}"
                                 update="@(form) facesMessage" action="#{jobtitlesBean.saveJobTitles}"
                                 onclick="PF('jobTitlesModal').close();"/>
             </div>

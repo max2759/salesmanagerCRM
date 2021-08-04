@@ -16,7 +16,10 @@ public class ContactsDaoImpl extends EntityFinderImpl<ContactsEntity> implements
 
     @Override
     public ContactsEntity findById(EntityManager em, int id) {
-        return em.find(ContactsEntity.class, id);
+        return em.createNamedQuery("Contacts.findById",
+                        ContactsEntity.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     @Override
