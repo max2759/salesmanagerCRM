@@ -294,7 +294,7 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
         log.info("Start of makeDisable");
         log.info("label : " + ((UIInput) event.getSource()).getValue());
 
-        this.disable = ((UIInput) event.getSource()).getValue() == null;
+        this.disable = ((UIInput) event.getSource()).getValue() == null || ((UIInput) event.getSource()).getValue() == "";
     }
 
 

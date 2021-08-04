@@ -10,7 +10,6 @@
 
         <f:metadata>
             <f:viewAction action="#{companiesBean.displayCompanyDetails}"/>
-            <f:viewAction action="#{addressesBean.getAddressByIdCompany}"/>
         </f:metadata>
 
         <div class="ui-g">
@@ -41,6 +40,7 @@
                                                      required="true"
                                                      requiredMessage="#{bundle['company.labelNotValid']}"/>
                                         <label>#{bundle['company.labelName']}</label>
+                                        <p:ajax event="keyup" update="@form:companyDetailsValidateBtn"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
@@ -146,6 +146,7 @@
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:30px; margin-bottom:10px;">
                                         <p:inputText id="companyNumberAdress"
+                                                     required="#{not empty addressesBean.addressesEntity.street}"
                                                      value="#{addressesBean.addressesEntity.number}">
                                         </p:inputText>
                                         <label>#{bundle['address.number']}</label>
@@ -278,6 +279,8 @@
                         <div align="right">
                             <p:commandButton value="#{bundle['validate']}"
                                              action="#{companiesBean.updateCompanies}"
+                                             id="companyDetailsValidateBtn"
+                                             disabled="#{empty companiesBean.companiesEntity.label}"
                                              icon="ui-icon-check"
                                              update="@(form)" process="@this"
                                              onclick="PF('companyModal').close();"/>

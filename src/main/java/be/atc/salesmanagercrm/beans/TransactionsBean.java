@@ -168,6 +168,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         log.info("Param : " + getParam("idTransaction"));
         int idTransaction;
         FacesMessage msg;
+
         try {
             idTransaction = Integer.parseInt(getParam("idTransaction"));
         } catch (NumberFormatException exception) {

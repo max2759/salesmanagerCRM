@@ -484,6 +484,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      */
     public void displayCompanyDetails() {
         displayOneCompany();
+
     }
 
     /**
@@ -507,20 +508,9 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             return;
         }
 
-
-        log.info("Id de la société : " + idCompany);
-
-        if (idCompany == 0) {
-            log.error("Company ID is null");
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "company.error"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            throw new InvalidEntityException("L'Id de l'entreprise n'existe pas", ErrorCodes.COMPANY_NOT_VALID);
-        }
-
-        EntityManager em = EMF.getEM();
-
+        // TODO: faire une méthode findbyid dans bean
         try {
-            companiesEntity = companiesDao.findById(em, idCompany);
+            companiesEntity = findById(idCompany);
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "company.error"), null);
@@ -528,7 +518,41 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             return;
         }
 
+        addressesBean.getAddressByIdCompany();
 
+    }
+
+    /**
+     * Find Companies by id
+     *
+     * @param id Companies
+     * @return CompaniesEntity
+     */
+    protected CompaniesEntity findById(int id) {
+
+        FacesMessage msg;
+
+        if (id == 0) {
+            log.error("Companies ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "company.error"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return null;
+        }
+
+        EntityManager em = EMF.getEM();
+
+        try {
+            return companiesDao.findById(em, id);
+        } catch (Exception ex) {
+            log.info("Nothing");
+            throw new EntityNotFoundException(
+                    "Aucune entreprise avec l ID " + id + " n a ete trouvee dans la BDD",
+                    ErrorCodes.COMPANY_NOT_FOUND
+            );
+        } finally {
+            em.clear();
+            em.close();
+        }
     }
 
     /**
