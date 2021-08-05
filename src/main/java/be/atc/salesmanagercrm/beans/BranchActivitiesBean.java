@@ -14,9 +14,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -54,25 +52,12 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
     @Setter
     private List<BranchActivitiesEntity> branchActivitiesEntitiesFiltered;
 
-    @Getter
-    @Setter
-    private String sendType = "";
-
-    @Getter
-    @Setter
-    private boolean disable = true;
-
     /**
      * Public method that call either addBranchActivities if sendType=add or updateBranchActivitiesLabel if sendType=edit
      */
     public void saveBranchActivities() {
 
-        if (sendType.equalsIgnoreCase("add")) {
-            addBranchActivities(branchActivitiesEntity);
-        } else if (sendType.equalsIgnoreCase("edit")) {
-            updateBranchActivitiesLabel(branchActivitiesEntity);
-        }
-
+        addBranchActivities(branchActivitiesEntity);
         findAllBranchActivities();
     }
 
@@ -196,6 +181,14 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * Public method that call updateBranchActivitiesLabel
+     */
+    public void updateBranchActivities() {
+        updateBranchActivitiesLabel(branchActivitiesEntity);
+        findAllBranchActivities();
+    }
+
+    /**
      * Update BranchActivities
      *
      * @param branchActivitiesEntity BranchActivities
@@ -270,6 +263,29 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * Method to show modal in create branchActivities
+     */
+    public void showModalCreate() {
+        log.info("BranchActivitiesBean => method : showModalCreate()");
+        branchActivitiesEntity = new BranchActivitiesEntity();
+    }
+
+    /**
+     * Method to show modal in update branchActivities
+     */
+    public void showModalUpdate() {
+        log.info("BranchActivitiesBean => method : showModalUpdate()");
+        try {
+            int idBranchActivities = Integer.parseInt(getParam("id"));
+            branchActivitiesEntity = findById(idBranchActivities);
+        } catch (NumberFormatException exception) {
+            log.warn(exception.getMessage());
+            FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        }
+    }
+
+    /**
      * Sort BranchActivities by group in form
      *
      * @param entityGroup BranchActivitiesEntity
@@ -280,19 +296,6 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
         return entityGroup.getLabel().charAt(0);
     }
 
-    /**
-     * Method for checking sendType and open good modal
-     */
-    public void checkSendType() {
-        sendType = getParam("sendType");
-        log.info("type envoyé : " + sendType);
-        if (sendType.equalsIgnoreCase("edit")) {
-            branchActivitiesEntity = findById(Integer.parseInt(getParam("id")));
-            log.info("jobtitles : " + branchActivitiesEntity.getId());
-        } else if (sendType.equalsIgnoreCase("add")) {
-            branchActivitiesEntity = new BranchActivitiesEntity();
-        }
-    }
 
     /**
      * Validate BranchActivities !
@@ -305,18 +308,5 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
             log.error("BranchActivities is not valid {}", entity);
             throw new InvalidEntityException("Le secteur d'activité n'est pas valide", ErrorCodes.BRANCHACTIVITIESLABEL_NOT_VALID, errors);
         }
-    }
-
-
-    /**
-     * return true if value null and false if value not null
-     *
-     * @param event event
-     */
-    public void makeDisable(AjaxBehaviorEvent event) {
-        log.info("Start of makeDisable");
-        log.info("label : " + ((UIInput) event.getSource()).getValue());
-
-        this.disable = ((UIInput) event.getSource()).getValue() == null;
     }
 }

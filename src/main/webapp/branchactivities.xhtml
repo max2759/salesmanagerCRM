@@ -20,7 +20,7 @@
                         <h1>#{bundle['branchActivities.title']}</h1>
                         <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
                                          onclick="PF('branchActivitiesModal').show();" styleClass="NavyButton"
-                                         action="#{branchActivitiesBean.checkSendType}">
+                                         action="#{branchActivitiesBean.showModalCreate}">
                             <f:param name="sendType" value="add"/>
                         </p:commandButton>
 
@@ -28,6 +28,7 @@
                     </div>
                 </h:form>
                 <fxs:createBranchActivities id="createBranchActivities"/>
+                <fxs:updateBranchActivities id="updateBranchActivities"/>
             </div>
         </div>
     </ui:define>

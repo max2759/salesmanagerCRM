@@ -21,7 +21,7 @@
 
                         <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
                                          onclick="PF('jobTitlesModal').show();" styleClass="NavyButton"
-                                         action="#{jobtitlesBean.checkSendType}">
+                                         action="#{jobtitlesBean.showModalCreate}">
                             <f:param name="sendType" value="add"/>
                         </p:commandButton>
 
@@ -30,6 +30,7 @@
                 </h:form>
             </div>
             <fxs:createJobTitles id="createJobTitles"/>
+            <fxs:updateJobTitles id="updateJobTitles"/>
         </div>
 
     </ui:define>

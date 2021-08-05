@@ -27,12 +27,11 @@
             </p:column>
 
             <p:column headerText="#{bundle['edit']}">
-                <p:commandButton icon="ui-icon-edit" styleClass="NavyButton" update="@(form)"
-                                 onclick="PF('jobTitlesModal').show();"
-                                 action="#{jobtitlesBean.checkSendType}">
+                <p:commandLink icon="ui-icon-edit" styleClass="NavyButton" update="@(form)"
+                               onclick="PF('updateJobTitlesModal').show();" action="#{jobtitlesBean.showModalUpdate}">
+                    <i class="ui-icon ui-icon-create"/>
                     <f:param name="id" value="#{jobtitles.id}"/>
-                    <f:param name="sendType" value="edit"/>
-                </p:commandButton>
+                </p:commandLink>
             </p:column>
         </p:dataTable>
     </f:view>

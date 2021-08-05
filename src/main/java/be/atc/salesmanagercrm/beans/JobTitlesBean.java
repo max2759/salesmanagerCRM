@@ -14,9 +14,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -54,26 +52,14 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
     @Setter
     private List<JobTitlesEntity> jobTitlesEntitiesFiltered;
 
-    @Getter
-    @Setter
-    private String sendType = "";
 
-    @Getter
-    @Setter
-    private boolean disable = true;
 
     /**
      * Public method that call either addJobTitle if sendType=add or update if sendType=edit
      */
     public void saveJobTitles() {
 
-        if (sendType.equalsIgnoreCase("add")) {
-            addJobTitle(jobTitlesEntity);
-            this.disable = true;
-        } else if (sendType.equalsIgnoreCase("edit")) {
-            update(jobTitlesEntity);
-            this.disable = true;
-        }
+        addJobTitle(jobTitlesEntity);
 
         findAllJobTitles();
     }
@@ -184,17 +170,11 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Method for checking sendType and open good modal
+     * Public method that call update
      */
-    public void checkSendType() {
-        sendType = getParam("sendType");
-        log.info("type envoyé : " + sendType);
-        if (sendType.equalsIgnoreCase("edit")) {
-            jobTitlesEntity = findById(Integer.parseInt(getParam("id")));
-            log.info("jobtitles : " + jobTitlesEntity.getId());
-        } else if (sendType.equalsIgnoreCase("add")) {
-            jobTitlesEntity = new JobTitlesEntity();
-        }
+    public void updateJobTitles() {
+        update(jobTitlesEntity);
+        findAllJobTitles();
     }
 
     /**
@@ -284,17 +264,27 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
         return jobTitlesEntitiesDropdown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
     }
 
+    /**
+     * Method to show modal in update jobTitles
+     */
+    public void showModalUpdate() {
+        log.info("JobTitlesBean => method : showModalUpdate()");
+        try {
+            int idJobTitle = Integer.parseInt(getParam("id"));
+            jobTitlesEntity = findById(idJobTitle);
+        } catch (NumberFormatException exception) {
+            log.warn(exception.getMessage());
+            FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        }
+    }
 
     /**
-     * return true if value null and false if value not null
-     *
-     * @param event event
+     * Method to show modal in create jobtitles
      */
-    public void makeDisable(AjaxBehaviorEvent event) {
-        log.info("Start of makeDisable");
-        log.info("label : " + ((UIInput) event.getSource()).getValue());
-
-        this.disable = ((UIInput) event.getSource()).getValue() == null || ((UIInput) event.getSource()).getValue() == "";
+    public void showModalCreate() {
+        log.info("JobtitlesBean => method : showModalCreate()");
+        jobTitlesEntity = new JobTitlesEntity();
     }
 
 

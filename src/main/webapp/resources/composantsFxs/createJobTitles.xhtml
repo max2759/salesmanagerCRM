@@ -12,7 +12,7 @@
 <cc:implementation>
    <f:view>
       <p:dialog
-              header="#{jobtitlesBean.sendType eq 'add' ? bundle['jobTitles.modalHeader'] : bundle['jobTitles.modalHeaderEdit']}"
+              header="#{bundle['jobTitles.modalHeader']}"
               modal="true"
               id="jobTitlesModal" widgetVar="jobTitlesModal" responsive="true">
          <h:form>
@@ -29,10 +29,10 @@
             </p:outputPanel>
 
             <div align="right" class="modalValidateBtn-margin-top">
-               <p:commandButton value="#{jobtitlesBean.sendType eq 'add' ? bundle['save'] : bundle['edit']}"
+               <p:commandButton value="#{bundle['save']}"
                                 id="validateJobTitlesBtn"
                                 icon="ui-icon-check"
-                                disabled="#{empty jobtitlesBean.jobTitlesEntity.label or jobtitlesBean.jobTitlesEntity.label eq 'f'}"
+                                disabled="#{empty jobtitlesBean.jobTitlesEntity.label}"
                                 update="@(form) facesMessage" action="#{jobtitlesBean.saveJobTitles}"
                                 onclick="PF('jobTitlesModal').close();"/>
             </div>
