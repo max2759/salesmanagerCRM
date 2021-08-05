@@ -28,12 +28,12 @@
                 <h:outputText value="#{branchActivities.label}"/>
             </p:column>
             <p:column headerText="#{bundle['edit']}">
-                <p:commandButton icon="ui-icon-edit" styleClass="NavyButton" update="@(form)"
-                                 onclick="PF('branchActivitiesModal').show();"
-                                 action="#{branchActivitiesBean.checkSendType}">
+                <p:commandLink icon="ui-icon-edit" styleClass="NavyButton" update="@(form)"
+                               onclick="PF('updateBranchActivitiesModal').show();"
+                               action="#{branchActivitiesBean.showModalUpdate}">
+                    <i class="ui-icon ui-icon-create"/>
                     <f:param name="id" value="#{branchActivities.id}"/>
-                    <f:param name="sendType" value="edit"/>
-                </p:commandButton>
+                </p:commandLink>
             </p:column>
         </p:dataTable>
 

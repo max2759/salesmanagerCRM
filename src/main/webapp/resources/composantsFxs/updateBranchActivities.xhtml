@@ -7,37 +7,38 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:cc="http://java.sun.com/jsf/composite">
 
-<cc:interface name="createBranchActivities"
+<cc:interface name="updateBranchActivities"
               displayName="#{bundle['branchActivities.create']}"
               shortDescription="#{bundle['branchActivities.create']}"/>
 
 <cc:implementation>
     <f:view>
         <p:dialog
-                header="#{bundle['jobTitles.modalHeader']}"
+                header="#{bundle['jobTitles.modalHeaderEdit']}"
                 modal="true"
-                id="branchActivitiesModal" widgetVar="branchActivitiesModal" responsive="true">
+                id="updateBranchActivitiesModal" widgetVar="updateBranchActivitiesModal" responsive="true">
             <h:form>
                 <p:outputPanel id="branchActivitiesManageContent" class="ui-fluid">
                     <h:panelGroup styleClass="md-inputfield jobtitlesFullDisplay">
                         <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
-                        <p:inputText id="branchActivitiesLabel"
+                        <p:inputText id="branchActivitiesLabelUpdate"
                                      value="#{branchActivitiesBean.branchActivitiesEntity.label}">
                             <f:validator validatorId="branchActivitiesLabelValidator"/>
-                            <p:ajax event="keyup" update="validateBranchActivitiesBtn"/>
+                            <p:ajax event="keyup" update="validateUpdateBranchActivitiesBtn"/>
                         </p:inputText>
                         <label>#{bundle['branchActivities.title']}</label>
-                        <p:message for="branchActivitiesLabel"/>
+                        <p:message for="branchActivitiesLabelUpdate"/>
                     </h:panelGroup>
                 </p:outputPanel>
 
                 <div align="right" class="modalValidateBtn-margin-top">
-                    <p:commandButton value="#{bundle['save']}"
+                    <p:commandButton value="#{bundle['edit']}"
                                      icon="ui-icon-check"
-                                     id="validateBranchActivitiesBtn"
+                                     id="validateUpdateBranchActivitiesBtn"
                                      disabled="#{empty branchActivitiesBean.branchActivitiesEntity.label or branchActivitiesBean.branchActivitiesEntity.label eq null}"
-                                     update="@(form) facesMessage" action="#{branchActivitiesBean.saveBranchActivities}"
-                                     onclick="PF('branchActivitiesModal').close();"/>
+                                     update="@(form) facesMessage"
+                                     action="#{branchActivitiesBean.updateBranchActivities}"
+                                     onclick="PF('updateBranchActivitiesModal').close();"/>
                 </div>
             </h:form>
         </p:dialog>
