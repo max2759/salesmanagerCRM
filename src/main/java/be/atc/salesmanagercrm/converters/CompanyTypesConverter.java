@@ -37,12 +37,12 @@ public class CompanyTypesConverter implements Converter {
 
         int id;
         if (value == null) {
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.NotExist")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "companyTypes.NotExist"), null));
         }
         try {
             id = Integer.parseInt(value);
         } catch (NumberFormatException nfe) {
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.NotExist")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "companyTypes.NotExist"), null));
         }
 
         if (id != 0) {
@@ -51,11 +51,11 @@ public class CompanyTypesConverter implements Converter {
                 return companyTypesEntity;
             } catch (EntityNotFoundException exception) {
                 log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.NotExist")));
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "companyTypes.NotExist"), null));
             }
         } else {
             log.warn("Erreur Converter company types");
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.NotExist")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "companyTypes.NotExist"), null));
         }
 
     }

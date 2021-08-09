@@ -16,7 +16,7 @@
             <f:viewAction action="#{companiesBean.findAllActiveCompanies}"/>
         </f:metadata>
 
-        <p:growl id="msgs"/>
+        <p:growl id="msgs" skipDetailIfEqualsSummary="true"/>
 
         <div class="ui-g">
             <div class="ui-g-12">
@@ -24,12 +24,11 @@
                     <div class="card card-w-title">
                         <h1>#{bundle['company.title']}</h1>
                         <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
-                                         onclick="PF('companyModal').show();" styleClass="NavyButton"
-                                         action="#{companiesBean.checkSendType}">
+                                         onclick="PF('companyModal').show();" styleClass="NavyButton">
                             <f:param name="sendType" value="add"/>
                         </p:commandButton>
 
-                        <p:tabView>
+                        <p:tabView style="margin-top: 10px">
 
                             <p:ajax event="tabChange" listener="#{companiesBean.onTabChange}" update="@form msgs"/>
 
@@ -47,5 +46,7 @@
             </div>
             <fxs:createCompany id="createCompany"/>
         </div>
+
+
     </ui:define>
 </ui:composition>

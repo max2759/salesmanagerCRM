@@ -71,10 +71,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     @Setter
     private List<CompaniesEntity> companiesEntitiesFiltered;
 
-    @Getter
-    @Setter
-    private int idCompanyDel;
-
     @Inject
     private AddressesBean addressesBean;
     @Inject
@@ -96,6 +92,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private Map<LocalDateTime, Object> listActivity = new TreeMap<>(Collections.reverseOrder());
+
 
     /**
      * this method is used in activity page
@@ -450,20 +447,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     public void createNewEntity() {
         log.info("method : createNewEntity()");
         companiesEntity = new CompaniesEntity();
-    }
-
-    /**
-     * Method for checking sendType and open good modal
-     */
-    public void checkSendType() {
-        sendType = getParam("sendType");
-        log.info("type envoyé : " + sendType);
-        if (sendType.equalsIgnoreCase("edit")) {
-            companiesEntity = null;
-            log.info("jobtitles : " + companiesEntity.getId());
-        } else if (sendType.equalsIgnoreCase("add")) {
-            companiesEntity = new CompaniesEntity();
-        }
     }
 
     /**

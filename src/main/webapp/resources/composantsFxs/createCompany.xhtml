@@ -19,6 +19,12 @@
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:inputText id="labelCompany" value="#{companiesBean.companiesEntity.label}"/>
+                        <label>#{bundle['company.labelName']}</label>
+                        <p:ajax update="validateCompany" event="keyup"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                         <p:inputText id="domainName" value="#{companiesBean.companiesEntity.domainName}">
                             <f:validator validatorId="companyDomainValidator"/>
                         </p:inputText>
@@ -26,15 +32,9 @@
                     </h:panelGroup>
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputText id="labelCompany" value="#{companiesBean.companiesEntity.label}" required="true"
-                                     requiredMessage="#{bundle['company.labelNotValid']}"/>
-                        <label>#{bundle['company.labelName']}</label>
-                    </h:panelGroup>
-
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                         <p:autoComplete id="branchActivitiesDisplay" dropdown="true"
                                         value="#{companiesBean.companiesEntity.branchActivitiesByIdBranchActivities}"
-                                        completeMethod="#{companiesBean.completeBranchActivities}"
+                                        completeMethod="#{branchActivitiesBean.completeBranchActivities}"
                                         var="branchActivities"
                                         itemLabel="#{branchActivities.label}"
                                         itemValue="#{branchActivities}"
@@ -46,11 +46,12 @@
                         <p:autoComplete id="companyTypesDisplay" dropdown="true"
                                         value="#{companiesBean.companiesEntity.companyTypesByIdCompanyTypes}"
                                         required="true" requiredMessage="#{bundle['company.companiesTypeNotValid']}"
-                                        completeMethod="#{companiesBean.completeCompanyTypes}" var="companyTypes"
+                                        completeMethod="#{companyTypesBean.completeCompanyTypes}" var="companyTypes"
                                         itemLabel="#{companyTypes.label}"
                                         itemValue="#{companyTypes}"
                                         converter="companyTypesConverter"
                                         scrollHeight="250" placeholder="#{bundle['company.chooseCompanyType']}"/>
+                        <p:ajax update="validateCompany" event="keyup"/>
                     </h:panelGroup>
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
@@ -79,7 +80,9 @@
 
                 <div align="right">
                     <p:commandButton value="valider"
+                                     id="validateCompany"
                                      action="#{companiesBean.saveCompany}"
+                                     disabled="#{empty companiesBean.companiesEntity.label or companiesBean.companiesEntity.companyTypesByIdCompanyTypes.label eq ''}"
                                      icon="ui-icon-check"
                                      update="@(form)" process="@this"
                                      onclick="PF('companyModal').close();"/>
