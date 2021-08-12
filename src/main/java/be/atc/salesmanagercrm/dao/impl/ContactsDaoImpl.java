@@ -33,9 +33,16 @@ public class ContactsDaoImpl extends EntityFinderImpl<ContactsEntity> implements
 
     @Override
     public List<ContactsEntity> findContactsEntityByIdUser(EntityManager em, int idUser) {
-
         return em.createNamedQuery("Contacts.findContactsEntityByIdUser",
-                ContactsEntity.class)
+                        ContactsEntity.class)
+                .setParameter("idUser", idUser)
+                .getResultList();
+    }
+
+    @Override
+    public List<ContactsEntity> findDisableContactsEntityByIdUser(EntityManager em, int idUser) {
+        return em.createNamedQuery("Contacts.findDisableContactsEntityByIdUser",
+                        ContactsEntity.class)
                 .setParameter("idUser", idUser)
                 .getResultList();
     }

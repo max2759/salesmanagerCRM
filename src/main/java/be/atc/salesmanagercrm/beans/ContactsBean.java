@@ -13,6 +13,7 @@ import be.atc.salesmanagercrm.validators.ContactValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.primefaces.event.TabChangeEvent;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -61,7 +62,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
-    private List<ContactsEntity> contactEntitiesFiltred;
+    private List<ContactsEntity> contactEntitiesFiltered;
     @Inject
     private NotesBean notesBean;
     @Inject
@@ -145,8 +146,8 @@ public class ContactsBean extends ExtendBean implements Serializable {
         log.info("Liste : " + listActivity);
     }
 
-    public void findAllContacts() {
-        contactsEntityList = findContactsEntityByIdUser(1);
+    public void findAllActiveContacts() {
+        loadListEntities("displayActiveContacts");
     }
 
     /**
@@ -173,6 +174,34 @@ public class ContactsBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * Load loadListEntities when Tab Change !
+     *
+     * @param event TabChangeEvent
+     */
+    public void onTabChange(TabChangeEvent event) {
+        log.info("method : onTabChange()");
+        log.info("event : " + event.getTab().getId());
+
+        loadListEntities(event.getTab().getId());
+    }
+
+    /**
+     * method to know which entity to reload
+     *
+     * @param typeLoad String
+     */
+    public void loadListEntities(String typeLoad) {
+
+        usersEntity.setId(1);
+
+        if (typeLoad.equalsIgnoreCase("displayActiveContacts")) {
+            contactsEntityList = findContactsEntityByIdUser(usersEntity.getId());
+        } else if (typeLoad.equalsIgnoreCase("displayDisableContacts")) {
+            contactsEntityList = findDisableContacts(usersEntity.getId());
+        }
+    }
+
+    /**
      * Find all ContactTypes entities
      *
      * @return List of Contact Types
@@ -187,6 +216,35 @@ public class ContactsBean extends ExtendBean implements Serializable {
         em.close();
 
         return contactsEntityList1;
+    }
+
+    /**
+     * Find all disable Contacts
+     *
+     * @param idUser idUser
+     * @return List disable ContactsEntity
+     */
+    protected List<ContactsEntity> findDisableContacts(int idUser) {
+
+        log.info("Start method findDisableContacts");
+
+        FacesMessage facesMessage;
+
+        if (idUser == 0) {
+            log.error("User ID is null");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return Collections.emptyList();
+        }
+
+        EntityManager em = EMF.getEM();
+
+        List<ContactsEntity> contactsEntities = contactsDao.findDisableContactsEntityByIdUser(em, idUser);
+
+        em.clear();
+        em.close();
+
+        return contactsEntities;
     }
 
     /**
@@ -306,7 +364,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      */
     public void addContact() {
         save(contactsEntity);
-        findAllContacts();
+        findAllActiveContacts();
     }
 
     /**

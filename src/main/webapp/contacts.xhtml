@@ -11,7 +11,7 @@
 
       <f:metadata>
          <f:viewAction action="#{contactsBean.createNewEntity}"/>
-         <f:viewAction action="#{contactsBean.findAllContacts}"/>
+         <f:viewAction action="#{contactsBean.findAllActiveContacts}"/>
       </f:metadata>
 
       <p:growl id="msgs"/>
@@ -21,12 +21,25 @@
             <h:form>
                <div class="card card-w-title">
                   <h1>#{bundle['contacts.title']}</h1>
-                        <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
-                                         onclick="PF('companyModal').show();" styleClass="NavyButton"
-                                         action="#{companiesBean.checkSendType}">
-                           <f:param name="sendType" value="add"/>
-                        </p:commandButton>
-                  <fxs:listContacts id="listContacts"/>
+                  <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
+                                   onclick="PF('companyModal').show();" styleClass="NavyButton">
+                     <f:param name="sendType" value="add"/>
+                  </p:commandButton>
+
+                  <p:tabView style="margin-top: 10px">
+
+                     <p:ajax event="tabChange" listener="#{contactsBean.onTabChange}" update="@form msgs"/>
+
+                     <p:tab id="displayActiveContacts" title="#{bundle['contacts.contactsActive']}">
+                        <fxs:listContacts id="listContacts"/>
+                     </p:tab>
+
+                     <p:tab id="displayDisableContacts" title="#{bundle['contacts.contactsDisable']}">
+                        <fxs:listDisableContacts id="listDisableContacts"/>
+                     </p:tab>
+
+                  </p:tabView>
+
                </div>
             </h:form>
          </div>
