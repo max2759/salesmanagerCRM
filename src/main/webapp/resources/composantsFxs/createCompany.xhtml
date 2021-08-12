@@ -45,7 +45,6 @@
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                         <p:autoComplete id="companyTypesDisplay" dropdown="true"
                                         value="#{companiesBean.companiesEntity.companyTypesByIdCompanyTypes}"
-                                        required="true" requiredMessage="#{bundle['company.companiesTypeNotValid']}"
                                         completeMethod="#{companyTypesBean.completeCompanyTypes}" var="companyTypes"
                                         itemLabel="#{companyTypes.label}"
                                         itemValue="#{companyTypes}"
@@ -82,7 +81,7 @@
                     <p:commandButton value="valider"
                                      id="validateCompany"
                                      action="#{companiesBean.saveCompany}"
-                                     disabled="#{empty companiesBean.companiesEntity.label or companiesBean.companiesEntity.companyTypesByIdCompanyTypes.label eq ''}"
+                                     disabled="#{empty companiesBean.companiesEntity.label or companiesBean.companiesEntity.companyTypesByIdCompanyTypes.label eq null }"
                                      icon="ui-icon-check"
                                      update="@(form)" process="@this"
                                      onclick="PF('companyModal').close();"/>

@@ -19,6 +19,18 @@
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:inputText id="contactFirstName" value="#{contactsBean.contactsEntity.firstname}"/>
+                        <label>#{bundle['contacts.firstname']}</label>
+                        <p:ajax update="validateContacts" event="keyup"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                        <p:inputText id="contactLastName" value="#{contactsBean.contactsEntity.lastname}"/>
+                        <label>#{bundle['contacts.lastname']}</label>
+                        <p:ajax update="validateContacts" event="keyup"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                         <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}">
                             <f:validator validatorId="contactEmailValidator"/>
                         </p:inputText>
@@ -26,23 +38,9 @@
                     </h:panelGroup>
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputText id="contactFirstName" value="#{contactsBean.contactsEntity.firstname}"
-                                     required="true" requiredMessage="#{bundle['contacts.firstnameNotValid']}"
-                        />
-                        <label>#{bundle['contacts.firstname']}</label>
-                    </h:panelGroup>
-
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputText id="contactLastName" value="#{contactsBean.contactsEntity.lastname}"
-                                     required="true" requiredMessage="#{bundle['contacts.lastnameNotValid']}"
-                        />
-                        <label>#{bundle['contacts.lastname']}</label>
-                    </h:panelGroup>
-
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                         <p:autoComplete id="jobTitlesDisplay" dropdown="true"
                                         value="#{contactsBean.contactsEntity.jobTitlesByIdJobTitles}"
-                                        completeMethod="#{contactsBean.completeJobTitles}"
+                                        completeMethod="#{jobtitlesBean.completeJobTitles}"
                                         var="jobtitles"
                                         itemLabel="#{jobtitles.label}"
                                         itemValue="#{jobtitles}"
@@ -62,19 +60,22 @@
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                         <p:autoComplete id="contactTypeDisplay" dropdown="true"
                                         value="#{contactsBean.contactsEntity.contactTypesByIdContactTypes}"
-                                        completeMethod="#{contactsBean.completeContactType}"
+                                        completeMethod="#{contactTypesBean.completeContactType}"
                                         var="contactType"
                                         itemLabel="#{contactType.label}"
                                         itemValue="#{contactType}"
                                         converter="contactTypesConverter"
                                         scrollHeight="250" placeholder="#{bundle['contacts.chooseContactType']}"
-                                        required="true" requiredMessage="#{bundle['contacts.ContactTypeNotValid']}"/>
+                        />
+                        <p:ajax update="validateContacts" event="keyup"/>
                     </h:panelGroup>
                 </p:panelGrid>
 
                 <div align="right">
                     <p:commandButton value="valider"
                                      action="#{contactsBean.addContact}"
+                                     id="validateContacts"
+                                     disabled="#{empty contactsBean.contactsEntity.firstname or empty contactsBean.contactsEntity.lastname}"
                                      icon="ui-icon-check"
                                      update="@(form)" process="@this"
                                      onclick="PF('companyModal').close();"/>
