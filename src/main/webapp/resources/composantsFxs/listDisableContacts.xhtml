@@ -64,6 +64,13 @@
             </h:outputText>
          </p:column>
 
+         <p:column>
+            <p:commandLink update="@(form) msgs"
+                           action="#{contactsBean.activateContactbyIdContact}">
+               <i class="ui-icon ui-icon-update"/>
+               <f:param name="contactsID" value="#{contacts.id}"></f:param>
+            </p:commandLink>
+         </p:column>
 
       </p:dataTable>
    </f:view>
