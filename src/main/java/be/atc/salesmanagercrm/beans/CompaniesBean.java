@@ -631,7 +631,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      */
     public void activateCompanyByIdCompany() {
 
-        log.info("method : deleteCompany()");
+        log.info("method : activateCompany()");
         log.info("Id de companies = " + getParam("companiesID"));
 
         activeCompany(Integer.parseInt(getParam("companiesID")));
@@ -641,9 +641,9 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Re activate Company by it's id
+     * Re activate Company by its id
      *
-     * @param id id
+     * @param id id Company
      */
     protected void activeCompany(int id) {
 
@@ -682,7 +682,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
-            log.info("Soft delete échec");
+            log.info("Soft delete failed");
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         } finally {
@@ -692,9 +692,9 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Soft delete company by id
+     * Soft delete for company by id
      *
-     * @param id id
+     * @param id id Company
      */
     protected void delete(int id) {
 

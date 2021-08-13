@@ -202,6 +202,116 @@ public class ContactsBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * Method for soft delete
+     */
+    public void deleteContact() {
+        log.info("Id de contacts = " + getParam("contactsID"));
+
+        delete(Integer.parseInt(getParam("contactsID")));
+
+        loadListEntities("displayActiveContacts");
+    }
+
+    /**
+     * Public method for activateContact
+     */
+    public void activateContactbyIdContact() {
+        log.info("method : activateContactbyIdContact()");
+        log.info("Id de contact = " + getParam("contactsID"));
+
+        activateContact(Integer.parseInt(getParam("contactsID")));
+
+        loadListEntities("displayDisableContacts");
+    }
+
+    /**
+     * Activate contact by its id
+     *
+     * @param id contact id
+     */
+    protected void activateContact(int id) {
+
+        FacesMessage facesMessage;
+
+        ContactsEntity contactsEntityToActivate;
+        EntityManager em = EMF.getEM();
+        EntityTransaction tx = null;
+
+        try {
+            contactsEntityToActivate = findByIdContactAndByIdUser(id, usersEntity.getId());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return;
+        }
+
+        contactsEntityToActivate.setActive(true);
+
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            contactsDao.update(em, contactsEntityToActivate);
+            tx.commit();
+            log.info("Contact enable ok");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "contacts.activated"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        } catch (Exception ex) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            log.info("Contact enable failed");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        } finally {
+            em.clear();
+            em.clear();
+        }
+    }
+
+    /**
+     * Soft delete for contacts by id
+     *
+     * @param id id Contacts
+     */
+    protected void delete(int id) {
+
+        FacesMessage facesMessage;
+        usersEntity.setId(1);
+
+        ContactsEntity contactsEntityToDelete;
+        EntityManager em = EMF.getEM();
+        EntityTransaction tx = null;
+
+        try {
+            contactsEntityToDelete = findByIdContactAndByIdUser(id, usersEntity.getId());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return;
+        }
+
+        contactsEntityToDelete.setActive(false);
+
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            contactsDao.update(em, contactsEntityToDelete);
+            tx.commit();
+            log.info("Soft delete ok");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "contacts.deleted"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        } catch (Exception ex) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            log.info("Soft delete échec");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        } finally {
+            em.clear();
+            em.clear();
+        }
+    }
+
+    /**
      * Find all ContactTypes entities
      *
      * @return List of Contact Types
@@ -461,7 +571,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
     /**
      * Update contacts entity
      *
-     * @param contactsEntity
+     * @param contactsEntity contactsEntity
      */
     protected void update(ContactsEntity contactsEntity) {
 

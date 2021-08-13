@@ -64,6 +64,14 @@
                 </h:outputText>
             </p:column>
 
+            <p:column>
+                <p:commandLink update="@(form) msgs"
+                               action="#{contactsBean.deleteContact}">
+                    <i class="ui-icon ui-icon-delete-forever"/>
+                    <f:param name="contactsID" value="#{contacts.id}"/>
+                </p:commandLink>
+            </p:column>
+
 
         </p:dataTable>
     </f:view>
