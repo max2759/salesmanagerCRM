@@ -20,20 +20,21 @@
             <f:viewAction action="#{notesBean.createNewEntity}"/>
             <f:viewAction action="#{notesBean.listEntitiesContacts}"/>
             <f:viewAction action="#{contactsBean.activityThread}"/>
+            <f:viewAction action="#{companiesBean.findAllActiveCompanies}"/>
+            <f:viewAction action="#{companiesContactsBean.fillSelectedCompaniesContacts}"/>
         </f:metadata>
 
         <p:growl id="msgs" skipDetailIfEqualsSummary="true" life="10000"/>
 
 
         <div class="ui-g">
-            <div class="ui-g-12">
+            <div class="ui-g-12 ui-md-6 ui-lg-5">
                 <div class="card card-w-title">
                     <h1>#{bundle['contact.details']}</h1>
                     <h:form>
                         <p:panelGrid columns="4" layout="flex"
                                      columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
                                      contentStyleClass="ui-fluid" styleClass="ui-panelgrid-blank form-group">
-
                             <p:accordionPanel multiple="true">
                                 <p:tab title="test">
                                     <h:panelGroup styleClass="md-inputfield"
@@ -147,17 +148,17 @@
                                         </h:outputText>
                                     </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
-                                        <p:autoComplete id="contactDisplay" dropdown="true"
-                                                        value="#{companiesContactsBean.companiesContactsEntity.companiesByIdCompanies}"
-                                                        completeMethod="#{companiesBean.completeCompanies}"
-                                                        var="company"
-                                                        itemLabel="#{company.label}"
-                                                        itemValue="#{company}"
-                                                        converter="companiesConverter"
-                                                        scrollHeight="250"
-                                                        placeholder="#{bundle['contacts.chooseCompany']}"/>
+                                    <h:panelGroup style="margin-top:30px; margin-bottom:10px;">
+                                        <p:selectCheckboxMenu label="#{bundle['contacts.chooseCompany']}" filter="true"
+                                                              filterMatchMode="contains" style="width: 100%"
+                                                              value="#{companiesContactsBean.selectedCompaniesContacts}"
+                                                              multiple="true">
+                                            <p:ajax event="itemUnselect" listener="#{contactsBean.onItemUnselect}"/>
+                                            <f:selectItems value="#{companiesBean.companiesEntityList}"
+                                                           var="company"
+                                                           itemValue="#{company}"
+                                                           itemLabel="#{company.label}"/>
+                                        </p:selectCheckboxMenu>
                                     </h:panelGroup>
 
                                     <h:panelGroup
@@ -252,9 +253,12 @@
                     </h:form>
                 </div>
             </div>
+
+
+            <div class="ui-g-12 ui-md-6 ui-lg-7">
+                <fxs:contactDetailsRight id="contactDetailsRight"/>
+            </div>
+
         </div>
-
-
-        <fxs:contactDetailsRight id="contactDetailsRight"/>
     </ui:define>
 </ui:composition>

@@ -1,7 +1,6 @@
 package be.atc.salesmanagercrm.converters;
 
 import be.atc.salesmanagercrm.beans.CompaniesBean;
-import be.atc.salesmanagercrm.beans.UsersBean;
 import be.atc.salesmanagercrm.entities.CompaniesEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
@@ -15,18 +14,15 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
-import javax.inject.Inject;
+import java.util.List;
 import java.util.Locale;
 
 
 @Slf4j
-@FacesConverter(value = "companiesConverter")
-public class CompaniesConverter implements Converter {
+@FacesConverter(value = "companiesListConverter")
+public class CompaniesListConverter implements Converter {
 
     private final CompaniesBean companiesBean = new CompaniesBean();
-
-    @Inject
-    private UsersBean usersBean;
 
     @Getter
     @Setter
@@ -35,7 +31,7 @@ public class CompaniesConverter implements Converter {
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
 
-        CompaniesEntity companiesEntity;
+        List<CompaniesEntity> companiesEntityList;
         log.info("Value = " + value);
 
         int id;
@@ -51,14 +47,15 @@ public class CompaniesConverter implements Converter {
 
         if (id != 0) {
             try {
-                companiesEntity = companiesBean.findByIdCompanyAndByIdUser(id, usersBean.getUsersEntity().getId());
-                return companiesEntity;
+                // TODO : A modifier et à rajouter l'id de User
+                companiesEntityList = companiesBean.callFindByIdCompaniAndByIdUser(id);
+                return companiesEntityList;
             } catch (EntityNotFoundException exception) {
                 log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyNotExist")));
             }
         } else {
-            log.warn("Erreur Converter Contact");
+            log.warn("Erreur Converter ContactList");
             throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyNotExist")));
         }
     }

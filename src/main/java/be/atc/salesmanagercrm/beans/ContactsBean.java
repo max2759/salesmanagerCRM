@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.primefaces.event.TabChangeEvent;
+import org.primefaces.event.UnselectEvent;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -47,10 +48,6 @@ public class ContactsBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private List<ContactsEntity> contactsEntityList;
-
-    @Getter
-    @Setter
-    private UsersEntity usersEntity = new UsersEntity();
 
     @Getter
     @Setter
@@ -180,12 +177,10 @@ public class ContactsBean extends ExtendBean implements Serializable {
      */
     public void loadListEntities(String typeLoad) {
 
-        usersEntity.setId(1);
-
         if (typeLoad.equalsIgnoreCase("displayActiveContacts")) {
-            contactsEntityList = findContactsEntityByIdUser(usersEntity.getId());
+            contactsEntityList = findContactsEntityByIdUser(usersBean.getUsersEntity().getId());
         } else if (typeLoad.equalsIgnoreCase("displayDisableContacts")) {
-            contactsEntityList = findDisableContacts(usersEntity.getId());
+            contactsEntityList = findDisableContacts(usersBean.getUsersEntity().getId());
         }
     }
 
@@ -226,7 +221,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
         EntityTransaction tx = null;
 
         try {
-            contactsEntityToActivate = findByIdContactAndByIdUser(id, usersEntity.getId());
+            contactsEntityToActivate = findByIdContactAndByIdUser(id, usersBean.getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
@@ -263,14 +258,13 @@ public class ContactsBean extends ExtendBean implements Serializable {
     protected void delete(int id) {
 
         FacesMessage facesMessage;
-        usersEntity.setId(1);
 
         ContactsEntity contactsEntityToDelete;
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
 
         try {
-            contactsEntityToDelete = findByIdContactAndByIdUser(id, usersEntity.getId());
+            contactsEntityToDelete = findByIdContactAndByIdUser(id, usersBean.getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
@@ -297,6 +291,15 @@ public class ContactsBean extends ExtendBean implements Serializable {
             em.clear();
             em.clear();
         }
+    }
+
+    public void onItemUnselect(UnselectEvent event) {
+
+        FacesMessage facesMessage;
+
+        facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "contacts.removed"), null);
+
+        FacesContext.getCurrentInstance().addMessage(null, facesMessage);
     }
 
     /**
@@ -500,8 +503,8 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
         contactsEntity.setRegisterDate(LocalDateTime.now());
         contactsEntity.setActive(true);
-        usersEntity.setId(1);
-        contactsEntity.setUsersByIdUsers(usersEntity);
+
+        contactsEntity.setUsersByIdUsers(usersBean.getUsersEntity());
 
         try {
             validateContacts(contactsEntity);
@@ -629,7 +632,6 @@ public class ContactsBean extends ExtendBean implements Serializable {
             contactsDao.update(em, contactsEntity);
             addressesBean.getAddressesEntity().setContactsByIdContacts(contactsEntity);
             addressesBean.updateEntity();
-            companiesContactsBean.getCompaniesContactsEntity().setContactsByIdContacts(contactsEntity);
             companiesContactsBean.createCompaniesContacts();
             tx.commit();
             log.info("Update ok");
