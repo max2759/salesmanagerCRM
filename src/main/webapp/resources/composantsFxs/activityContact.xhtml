@@ -5,7 +5,6 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
       xmlns:cc="http://java.sun.com/jsf/composite">
 
 <cc:interface name="activityContact"
@@ -16,7 +15,7 @@
 <cc:implementation>
     <f:view>
 
-        <h:form id="form">
+        <h:form id="formActivity">
             <p:dataScroller chunkSize="10"
                             emptyMessage="#{bundle['activity.notFound']}"
                             var="activity"

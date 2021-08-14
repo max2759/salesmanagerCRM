@@ -5,7 +5,6 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
       xmlns:cc="http://java.sun.com/jsf/composite">
 
 <cc:interface name="listNotesByContact"
@@ -22,48 +21,46 @@
                              action="#{notesBean.showModalCreate}"/>
         </h:form>
 
-        <h:form id="form">
-            <p:dataTable id="note1" var="note" value="#{notesBean.notesEntities}" editable="true">
+        <p:dataTable id="note1" var="note" value="#{notesBean.notesEntities}" editable="true">
 
-                <p:ajax event="rowEdit" listener="#{notesBean.onRowEdit}" update="@this msgs"/>
-                <p:ajax event="rowEditCancel" listener="#{notesBean.onRowCancel}" update="@this msgs"/>
+            <p:ajax event="rowEdit" listener="#{notesBean.onRowEdit}" update="@this msgs"/>
+            <p:ajax event="rowEditCancel" listener="#{notesBean.onRowCancel}" update="@this msgs"/>
 
-                <p:column>
+            <p:column>
 
-                    <h:outputText styleClass="boldText" value="#{bundle['notes.remarks']} "/>
-                    <h:outputText title="#{bundle['by']} : #{note.usersByIdUsers.email}"
-                                  value="#{bundle['by']} #{note.usersByIdUsers.username} "/>
+                <h:outputText styleClass="boldText" value="#{bundle['notes.remarks']} "/>
+                <h:outputText title="#{bundle['by']} : #{note.usersByIdUsers.email}"
+                              value="#{bundle['by']} #{note.usersByIdUsers.username} "/>
 
-                    <h:outputText value="#{note.creationDate}">
-                        <f:convertDateTime type="localDate"
-                                           pattern="dd/MM/yy ' #{bundle['at']} ' HH:mm"/>
-                    </h:outputText>
+                <h:outputText value="#{note.creationDate}">
+                    <f:convertDateTime type="localDate"
+                                       pattern="dd/MM/yy ' #{bundle['at']} ' HH:mm"/>
+                </h:outputText>
 
-                    <p:cellEditor>
-                        <f:facet name="output">
-                            <h:outputText escape="false" value="#{note.message}"/>
-                        </f:facet>
-                        <f:facet name="input">
-                            <p:inputTextarea widgetVar="editor1" value="#{note.message}" required="true"
-                                             rows="6"
-                                             cols="100"
-                                             autoResize="false" label="Name"/>
-                        </f:facet>
-                    </p:cellEditor>
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText escape="false" value="#{note.message}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputTextarea widgetVar="editor1" value="#{note.message}" required="true"
+                                         rows="6"
+                                         cols="100"
+                                         autoResize="false" label="Name"/>
+                    </f:facet>
+                </p:cellEditor>
 
-                    <p:rowEditor editTitle="#{bundle['edit']}"
-                                 cancelTitle="#{bundle['cancel']}"
-                                 saveTitle="#{bundle['save']}"/>
+                <p:rowEditor editTitle="#{bundle['edit']}"
+                             cancelTitle="#{bundle['cancel']}"
+                             saveTitle="#{bundle['save']}"/>
 
-                    <p:commandLink update="@form msgs"
-                                   action="#{notesBean.deleteEntity}">
-                        <i class="ui-icon ui-icon-delete-forever"/>
-                        <f:param name="idEntity" value="#{note.id}"/>
-                    </p:commandLink>
-                </p:column>
+                <p:commandLink update="@(form) msgs"
+                               action="#{notesBean.deleteEntity}">
+                    <i class="ui-icon ui-icon-delete-forever"/>
+                    <f:param name="idEntity" value="#{note.id}"/>
+                </p:commandLink>
+            </p:column>
 
-            </p:dataTable>
-        </h:form>
+        </p:dataTable>
 
     </f:view>
 </cc:implementation>

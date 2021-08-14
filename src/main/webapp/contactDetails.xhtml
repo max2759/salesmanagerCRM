@@ -3,23 +3,32 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
                 template="WEB-INF/templates/template.xhtml">
 
-    <ui:define name="title">#{bundle['company.title']}</ui:define>
+    <ui:define name="title">#{bundle['contact']}</ui:define>
     <ui:define name="content">
 
         <f:metadata>
             <f:viewAction action="#{contactsBean.getDisplayOneContact}"/>
             <f:viewAction action="#{civilitiesBean.completeCiviltyEntitiesList}"/>
+            <f:viewAction action="#{notesBean.setParamType('displayByContact')}"/>
+            <f:viewAction action="#{tasksBean.setParamType('displayByContact')}"/>
+            <f:viewAction action="#{tasksBean.createNewEntity}"/>
+            <f:viewAction action="#{tasksBean.listEntitiesContacts}"/>
+            <f:viewAction action="#{taskTypesBean.findAllTaskTypesEntities}"/>
+            <f:viewAction action="#{notesBean.createNewEntity}"/>
+            <f:viewAction action="#{notesBean.listEntitiesContacts}"/>
+            <f:viewAction action="#{contactsBean.activityThread}"/>
         </f:metadata>
+
+        <p:growl id="msgs" skipDetailIfEqualsSummary="true" life="10000"/>
+
 
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="card card-w-title">
                     <h1>#{bundle['contact.details']}</h1>
-
-                    <p:growl id="msgs"/>
-
                     <h:form>
                         <p:panelGrid columns="4" layout="flex"
                                      columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
@@ -244,5 +253,8 @@
                 </div>
             </div>
         </div>
+
+
+        <fxs:contactDetailsRight id="contactDetailsRight"/>
     </ui:define>
 </ui:composition>

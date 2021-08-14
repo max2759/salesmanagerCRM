@@ -84,7 +84,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
-    private Map<LocalDateTime, Object> listActivity = new TreeMap<>(Collections.reverseOrder());
+    private Map<LocalDateTime, Object> listActivity;
 
 
     /**
@@ -92,27 +92,15 @@ public class ContactsBean extends ExtendBean implements Serializable {
      */
     public void activityThread() {
         log.info("ContactsBean : activityThread");
-        FacesMessage msg;
 
-        try {
-            // TODO : Modifier ça par le contact !
-            contactsEntity = findByIdContactAndByIdUser(1, usersBean.getUsersEntity().getId());
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return;
-        }
+        this.listActivity = new TreeMap<>(Collections.reverseOrder());
 
-        List<NotesEntity> notesEntities = notesBean.findNotesEntityByContactsByIdContacts(contactsEntity.getId(), usersBean.getUsersEntity().getId());
-        for (NotesEntity n : notesEntities) {
+        for (NotesEntity n : notesBean.getNotesEntities()) {
             ObjectActivity objectActivity = new ObjectActivity(n.getClass().getName(), n);
             listActivity.put(n.getCreationDate(), objectActivity);
         }
 
-        // TODO : modifier avec contact
-        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByContactsByIdContacts(contactsEntity.getId(), usersBean.getUsersEntity().getId());
-        for (TasksEntity t : tasksEntities) {
+        for (TasksEntity t : tasksBean.getTasksEntities()) {
             ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
             listActivity.put(t.getCreationDate(), objectActivity);
         }

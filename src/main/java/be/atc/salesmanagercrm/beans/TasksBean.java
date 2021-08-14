@@ -206,7 +206,7 @@ public class TasksBean extends ExtendBean implements Serializable {
 
         FacesMessage msg;
         try {
-            TasksEntity tasksEntityToUpdate = findById(event.getObject().getId(), usersBean.getUsersEntity().getId());
+            findById(event.getObject().getId(), usersBean.getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
@@ -319,6 +319,9 @@ public class TasksBean extends ExtendBean implements Serializable {
         if (typeLoad.equalsIgnoreCase("displayByCompany")) {
             tasksEntities = findTasksEntityByCompaniesByIdCompanies(companiesBean.getCompaniesEntity().getId(), usersBean.getUsersEntity().getId());
         } else if (typeLoad.equalsIgnoreCase("displayByContact")) {
+            log.info("id contact : " + contactsBean.getContactsEntity().getId());
+            log.info("id User : " + usersBean.getUsersEntity().getId());
+
             tasksEntities = findTasksEntityByContactsByIdContacts(contactsBean.getContactsEntity().getId(), usersBean.getUsersEntity().getId());
         } else if (typeLoad.equalsIgnoreCase("all")) {
 

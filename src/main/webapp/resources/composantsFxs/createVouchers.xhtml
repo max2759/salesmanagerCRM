@@ -24,7 +24,7 @@
                              placeholder="#{bundle['title']}"
                              required="true"
                              requiredMessage="#{bundle['vouchers.validator.title']}">
-                    <p:ajax update="msg" event="keyup"/>
+                    <p:ajax update="@form msg" event="keyup"/>
                 </p:inputText>
 
                 <p:outputLabel value="#{bundle['vouchers.status']}:" for="voucherStatus" styleClass="boldText"/>
@@ -81,10 +81,12 @@
             <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
                 <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
+                                 id="buttonCreateVoucher"
                                  update="@(form) msgs"
                                  oncomplete="PF('createDialog').hide()"
                                  value="#{bundle['save']}"
                                  action="#{vouchersBean.saveEntity}"
+                                 disabled="#{empty vouchersBean.vouchersEntity.title}"
                 >
                 </p:commandButton>
             </p:panelGrid>
