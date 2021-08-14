@@ -66,6 +66,9 @@ public class UsersBean extends ExtendBean implements Serializable {
     private String password2;
     @Getter
     @Setter
+    private String passwordCo;
+    @Getter
+    @Setter
     private List<UsersEntity> usersEntityList;
 
     @Getter
@@ -235,15 +238,17 @@ public class UsersBean extends ExtendBean implements Serializable {
         //Example using most common scenario of username/password pair:
         //https://shiro.apache.org/authentication.html
 
+        log.info(passwordCo);
+
         try {
-            validateConnection(usersEntity);
+            validateConnection(usersEntity, passwordCo);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
 
-        String password = usersEntity.getPassword();
-        String hashPass = encrypt(password);
+        //String password = usersEntity.getPassword();
+        String hashPass = encrypt(passwordCo);
 
         //CheckEntities checkEntities = new CheckEntities();
  /*       try {
@@ -376,7 +381,7 @@ public class UsersBean extends ExtendBean implements Serializable {
             tx.commit();
             log.info("Delete ok");
             findAllUsers();
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.deleted"), null);
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.reactivate"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
@@ -414,10 +419,12 @@ public class UsersBean extends ExtendBean implements Serializable {
 
     public void updateByAdmin() {
         updateUsersAdmin(this.usersEntity);
-        usersEntityList = findAll();
+        //usersEntityList = findAll();
+        findAllUsers();
     }
 
     private void updateUsersAdmin(UsersEntity usersEntity) {
+        FacesMessage msg;
         log.info("begin updateUsrAdmin" + usersEntity.getUsername());
         log.info(String.valueOf(usersEntity.getEmail()));
 
@@ -466,10 +473,15 @@ public class UsersBean extends ExtendBean implements Serializable {
             tx.begin();
             dao.update(em, usersEntity);
             tx.commit();
+            findAllUsers();
             log.info("Persist ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.updated"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();
@@ -559,14 +571,14 @@ public class UsersBean extends ExtendBean implements Serializable {
         log.info(String.valueOf(usersEntity));
     }
 
-    private void findByUsernameAndPass(UsersEntity entity) {
-        List<String> errors = UsersValidator.connection(entity);
-        if (!errors.isEmpty()) {
-            log.error("Connexion is not valide {}", entity);
-            throw new InvalidEntityException("Le mot de passe ou le pseudo ne sont pas valide", ErrorCodes.USER_NOT_VALID, errors);
-        }
-    }
-
+    /* private void findByUsernameAndPass(UsersEntity entity) {
+         List<String> errors = UsersValidator.connection(entity);
+         if (!errors.isEmpty()) {
+             log.error("Connexion is not valide {}", entity);
+             throw new InvalidEntityException("Le mot de passe ou le pseudo ne sont pas valide", ErrorCodes.USER_NOT_VALID, errors);
+         }
+     }
+ */
     private void validateUsers(UsersEntity entity) {
         List<String> errors = UsersValidator.validate(entity);
         if (!errors.isEmpty()) {
@@ -609,8 +621,8 @@ public class UsersBean extends ExtendBean implements Serializable {
         }
     }
 
-    private void validateConnection(UsersEntity entity) {
-        List<String> errors = UsersValidator.connection(entity);
+    private void validateConnection(UsersEntity entity, String passwordCo) {
+        List<String> errors = UsersValidator.connection(entity, passwordCo);
         if (!errors.isEmpty()) {
             log.error("Connexion is not valide {}", entity);
             throw new InvalidEntityException("La connexion n est pas valide", ErrorCodes.USER_NOT_VALID, errors);

@@ -28,20 +28,31 @@
                         <p:outputLabel value="#{convers.usersByIdUsers.username}"/>
                     </h:column>
 
+                    <h:column>
+                        <f:facet name="header">#{bundle['user.username']}</f:facet>
+                        <p:outputLabel value="#{convers.creationDate}">
+                            <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
+                    </h:column>
+
+
                     <p:commandButton value="Editer" type="button" icon="ui-icon-add-box"
                                      onclick="PF('updateConversationModal').show();" styleClass="NavyButton"
                     />
 
 
                     <h:column>
-                        <p:commandButton value="#{bundle['delete']}" action="#{conversationsBean.delete(convers.id)}"
-                                         update="@(form)"/>
-                    </h:column>
+                        <h:panelGroup rendered="#{convers.active}">
+                            <p:commandButton value="#{bundle['delete']}"
+                                             action="#{conversationsBean.delete(convers)}"
+                                             update="@(form)"/>
+                        </h:panelGroup>
 
-                    <h:column>
-                        <p:commandButton value="#{bundle['activate']}"
-                                         action="#{conversationsBean.activate(convers.id)}"
-                                         update="@(form)"/>
+                        <h:panelGroup rendered="#{not convers.active}">
+                            <p:commandButton value="#{bundle['activate']}"
+                                             action="#{conversationsBean.activate(convers)}"
+                                             update="@(form)"/>
+                        </h:panelGroup>
                     </h:column>
 
                     <h:column>

@@ -9,12 +9,15 @@ import be.atc.salesmanagercrm.entities.ConversationsEntity;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.validators.ConversationsValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -61,8 +64,12 @@ public class ConversationsBean extends ExtendBean implements Serializable {
         conversationsEntity = dao.findById(EMF.getEM(), idConvers);
     }
 
+    public void addEntity() {
+        add(this.conversationsEntity);
+        conversationsEntityList = find10convers();
+    }
 
-    public void add() {
+    public void add(ConversationsEntity conversationsEntity) {
         log.info(String.valueOf(usersBean.getUsersEntity().getId()));
         log.info("user entity: " + usersBean.getUsersEntity().getUsername());
         try {
@@ -85,6 +92,7 @@ public class ConversationsBean extends ExtendBean implements Serializable {
         conversationsEntity.setCreationDate(LocalDateTime.now());
         conversationsEntity.setActive(true);
         log.info(String.valueOf(usersBean.getUsersEntity()));
+        log.info(usersBean.getUsersEntity().getUsername());
         conversationsEntity.setUsersByIdUsers(usersBean.getUsersEntity());
 
         EntityManager em = EMF.getEM();
@@ -111,22 +119,14 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     }
 
     protected void updateConvers(ConversationsEntity entity) {
-
-    /*    try {
-            validateRoles(rolesEntity);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
-
-        CheckEntities checkEntities = new CheckEntities();
+        FacesMessage msg;
         try {
-            checkEntities.checkRoleByLabel(rolesEntity);
+            validateConversations(conversationsEntity);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
-*/
+
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -139,6 +139,8 @@ public class ConversationsBean extends ExtendBean implements Serializable {
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();
@@ -147,7 +149,14 @@ public class ConversationsBean extends ExtendBean implements Serializable {
 
 
     public void delete(ConversationsEntity entity) {
+        FacesMessage msg;
         //verifs
+        try {
+            validateConvers(conversationsEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
 
         entity.setActive(false);
 
@@ -159,15 +168,56 @@ public class ConversationsBean extends ExtendBean implements Serializable {
             dao.update(em, entity);
             tx.commit();
             log.info("Persist ok");
+            conversationsEntityList = findAll();
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.deleted"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();
         }
 
     }
+
+    public void activate(ConversationsEntity entity) {
+        FacesMessage msg;
+        //verifs
+        try {
+            validateConvers(conversationsEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
+
+        entity.setActive(true);
+
+        EntityManager em = EMF.getEM();
+        EntityTransaction tx = null;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            dao.update(em, entity);
+            tx.commit();
+            log.info("Persist ok");
+            conversationsEntityList = findAll();
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.deleted"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } catch (Exception ex) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            log.info("Persist echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } finally {
+            em.clear();
+            em.clear();
+        }
+
+    }
+
 
 
     public void get10convers() {
@@ -215,6 +265,14 @@ public class ConversationsBean extends ExtendBean implements Serializable {
 
     private void validateConversations(ConversationsEntity entity) {
         List<String> errors = ConversationsValidator.validate(entity);
+        if (!errors.isEmpty()) {
+            log.error("Conversation is not valide {}", entity);
+            throw new InvalidEntityException("L'ajout du message n'est pas valide", ErrorCodes.CONVERSATION_NOT_VALID, errors);
+        }
+    }
+
+    private void validateConvers(ConversationsEntity entity) {
+        List<String> errors = ConversationsValidator.validateEntity(entity);
         if (!errors.isEmpty()) {
             log.error("Conversation is not valide {}", entity);
             throw new InvalidEntityException("L'ajout du message n'est pas valide", ErrorCodes.CONVERSATION_NOT_VALID, errors);

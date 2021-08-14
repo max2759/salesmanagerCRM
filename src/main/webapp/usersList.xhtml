@@ -19,7 +19,6 @@
             <h1>#{bundle['usersList.title']}</h1>
 
             <div class="card card-w-title">
-                <h1>#{bundle['transactions.title']}</h1>
                 <h:form id="form">
                     <p:tab id="displayAll" title="#{bundle['all']} (#{usersBean.usersEntities.size()})">
                         <p:dataTable paginator="true" rows="10"
@@ -47,12 +46,17 @@
                             </p:column>
 
                             <p:column headerText="#{bundle['firstname']}"
-                                      sortBy="#{user.username}">
-                                <h:outputText value="#{user.username}"/>
+                                      sortBy="#{user.firstname}"
+                                      filterBy="#{user.firstname}"
+                                      filterMatchMode="contains"
+                            >
+                                <h:outputText value="#{user.firstname}"/>
                             </p:column>
 
                             <p:column headerText="#{bundle['lastname']}"
-                                      sortBy="#{user.lastname}">
+                                      sortBy="#{user.lastname}"
+                                      filterBy="#{user.lastname}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{user.lastname}">
 
                                 </h:outputText>
@@ -65,8 +69,10 @@
                                 </h:outputText>
                             </p:column>
 
-                            <p:column headerText="#{bundle['roles']}"
-                                      sortBy="#{user.rolesByIdRoles.label}">
+                            <p:column headerText="#{bundle['role']}"
+                                      sortBy="#{user.rolesByIdRoles.label}"
+                                      filterBy="#{user.rolesByIdRoles.label}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{user.rolesByIdRoles.label}">
                                     <f:convertNumber currencySymbol="€" type="currency"/>
                                 </h:outputText>
@@ -121,25 +127,28 @@
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                             <p:inputText value="#{usersBean.usersEntity.firstname}"
-                                         placeholder="#{usersBean.userForDialog.firstname}"/>
+                                         placeholder="#{usersBean.userForDialog.firstname}"
+                                         required="true"/>
                             <label>#{bundle['firstname']}</label>
                         </h:panelGroup>
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                             <p:inputText value="#{usersBean.usersEntity.lastname}"
-                                         placeholder="#{usersBean.userForDialog.lastname}"/>
+                                         placeholder="#{usersBean.userForDialog.lastname}"
+                                         required="true"/>
                             <label>#{bundle['lastname']}</label>
                         </h:panelGroup>
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                             <p:inputText value="#{usersBean.usersEntity.username}"
-                                         placeholder="#{usersBean.userForDialog.username}"/>
+                                         placeholder="#{usersBean.userForDialog.username}"
+                                         required="true"/>
                             <label>#{bundle['user.username']}</label>
                         </h:panelGroup>
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                             <p:inputText value="#{usersBean.usersEntity.email}"
-                                         placeholder="#{usersBean.userForDialog.email}">
+                                         placeholder="#{usersBean.userForDialog.email}" required="true">
                                 <f:validator validatorId="userEmailValidator"></f:validator>
                             </p:inputText>
                             <label>#{bundle['email']}</label>

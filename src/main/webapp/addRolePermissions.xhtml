@@ -25,10 +25,9 @@
 
 
             <h:form id="updateRolePermissionsDialogForm">
-
-                    <!-- liste déroulante des roles -->
-
-                <p:selectOneMenu id="rolePermissions"
+                <!-- liste déroulante des roles -->
+                <p:outputLabel for="role" value="#{bundle['role']}"></p:outputLabel>
+                <p:selectOneMenu id="role"
                                  value="#{rolesPermissionsBean.rolesPermissionsEntity.rolesByIdRoles}"
                                  converter="rolesConverter"
                 >
@@ -39,7 +38,7 @@
                     <p:ajax update="@(form)" listener="#{rolesPermissionsBean.findPermissionWhithIdRoleList}"/>
                 </p:selectOneMenu>
 
-                    <!--checkbox des permissions -->
+                <!--checkbox des permissions -->
 
                 <p:selectManyCheckbox id="grid2"
                                       value="#{rolesPermissionsBean.permissionsEntitiesRole}"
@@ -49,10 +48,8 @@
                                    itemLabel="#{rolesPermissions.label}" itemValue="#{rolesPermissions}"/>
                 </p:selectManyCheckbox>
 
-
                 <p:commandButton value="Confirmer Valider" action="#{rolesPermissionsBean.manageRolesPermissions}"
                                  process="@form"/>
-
 
             </h:form>
 

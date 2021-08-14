@@ -174,7 +174,7 @@ public class UsersValidator {
         return pass.equals(pass2);
     }
 
-    public static List<String> connection(UsersEntity entity) {
+    public static List<String> connection(UsersEntity entity, String passwordCo) {
         List<String> errors = new ArrayList<>();
 
         log.info(String.valueOf(entity));
@@ -187,7 +187,7 @@ public class UsersValidator {
         if (entity.getUsername() == null || entity.getUsername().isEmpty()) {
             errors.add("Le pseudo est vide");
         }
-        if (entity.getPassword() == null || entity.getPassword().isEmpty()) {
+        if (passwordCo == null || passwordCo.isEmpty()) {
             errors.add("Le mot de passe est vide");
         }
 
