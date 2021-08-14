@@ -81,12 +81,20 @@ public class NotesBean extends ExtendBean implements Serializable {
         log.info("message : " + notesEntity.getMessage());
 
         notesEntity.setUsersByIdUsers(usersBean.getUsersEntity());
+        if (getParamType().equalsIgnoreCase("displayByContact")) {
+            notesEntity.setContactsByIdContacts(contactsBean.getContactsEntity());
+        } else if (getParamType().equalsIgnoreCase("displayByContact")) {
+            notesEntity.setCompaniesByIdCompanies(companiesBean.getCompaniesEntity());
+        } else {
+            return;
+        }
 
         save(notesEntity);
 
         createNewEntity();
 
         checkTypeParamAndFindNotesEntitiesByContactOrByCompany();
+
     }
 
     /**
@@ -193,6 +201,7 @@ public class NotesBean extends ExtendBean implements Serializable {
         update(notesEntityToUpdate);
 
         checkTypeParamAndFindNotesEntitiesByContactOrByCompany();
+
     }
 
 
