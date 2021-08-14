@@ -34,4 +34,19 @@ public class ConversationsValidator {
         return errors;
     }
 
+    public static List<String> validateEntity(ConversationsEntity entity) {
+        List<String> errors = new ArrayList<>();
+        ConversationsDao dao = new ConversationsDaoImpl();
+
+        log.info(String.valueOf(entity));
+        EntityManager em = EMF.getEM();
+        if (entity == null) {
+            errors.add("La reception des données à échouée");
+            errors.add("Veuillez recommencer votre inscription");
+            return errors;
+        }
+
+        return errors;
+    }
+
 }

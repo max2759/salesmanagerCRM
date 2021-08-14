@@ -135,8 +135,12 @@ public class RolesBean extends ExtendBean implements Serializable {
 
     }
 
+    public void addEntity() {
+        addRoles(this.rolesEntity);
+        rolesEntityList = findAll();
+    }
 
-    public void addRoles() {
+    public void addRoles(RolesEntity rolesEntity) {
         //rolesEntity = rolesBean.findById(em, idRole);
         try {
             validateRoles(rolesEntity);
@@ -152,6 +156,7 @@ public class RolesBean extends ExtendBean implements Serializable {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
+        rolesEntity.setActive(true);
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -176,7 +181,9 @@ public class RolesBean extends ExtendBean implements Serializable {
         rolesEntityList = findAll();
     }
 
+
     protected void updateRole(RolesEntity rolesEntity) {
+        FacesMessage msg;
 
         try {
             validateRoles(rolesEntity);
@@ -201,9 +208,13 @@ public class RolesBean extends ExtendBean implements Serializable {
             dao.update(em, rolesEntity);
             tx.commit();
             log.info("Persist ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.updateOk"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();
@@ -230,6 +241,7 @@ public class RolesBean extends ExtendBean implements Serializable {
                 dao.update(em, rolesEntity1);
                 tx.commit();
                 log.info("Delete ok");
+                rolesEntityList = findAll();
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.deleted"), null);
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             } catch (Exception ex) {
@@ -265,6 +277,7 @@ public class RolesBean extends ExtendBean implements Serializable {
             dao.update(em, rolesEntity1);
             tx.commit();
             log.info("Delete ok");
+            rolesEntityList = findAll();
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.activate"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {

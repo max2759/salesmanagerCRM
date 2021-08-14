@@ -12,31 +12,41 @@
             <f:viewAction action="#{conversationsBean.get10convers}"/>
         </f:metadata>
 
-
-        <div class="card">
-            <h:form>
-                <h:dataTable value="#{conversationsBean.conversationsEntityList}" var="convers">
-
-                    <h:column>
-                        <f:facet name="header">#{bundle['conversation.message']}</f:facet>
-                        <p:outputLabel value="#{convers.message}"/>
-                    </h:column>
-
-                </h:dataTable>
+        <h1>#{bundle['conversation.title']}</h1>
 
 
-                <h5 class="p-mt-0">Basic</h5>
-                <p:textEditor secure="false" widgetVar="message"
-                              value="#{conversationsBean.conversationsEntity.message}" height="300"/>
+        <div class="ui-g dashboard">
 
-                <p:commandButton value="Confirmer Valider" action="#{conversationsBean.add}"
-                                 update="@(form)"/>
-            </h:form>
 
-            <p:messages id="messages" showDetail="true">
-                <p:autoUpdate/>
-            </p:messages>
+            <div class="ui-g-12 ui-lg-8 chat">
+                <p:panel header="Chat" styleClass="ui-shadow-content">
 
+                    <ul>
+                        <ui:repeat value="#{conversationsBean.conversationsEntityList}" var="convers">
+                            <li class="#{convers.usersByIdUsers.username eq usersBean.usersEntity.username ? 'clearfix message-own' : 'clearfix message-from'}">
+                                <span>
+                                    <p:outputLabel value="#{convers.creationDate}">
+                            <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
+                                    </p:outputLabel>
+                                    <h:outputText
+                                            value="    #{convers.usersByIdUsers.lastname} #{convers.usersByIdUsers.firstname} #{bundle['say']}: #{convers.message}"/>
+                                </span>
+                            </li>
+                        </ui:repeat>
+                    </ul>
+
+                    <div class="new-message">
+                        <div class="message-attachment">
+                            <i class="fa fa-paperclip"/>
+                        </div>
+                        <div class="message-input">
+                            <input type="text" placeholder="#{'WriteAMessage'}"/>
+                        </div>
+                    </div>
+                </p:panel>
+            </div>
         </div>
+
+
     </ui:define>
 </ui:composition>

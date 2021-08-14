@@ -15,6 +15,17 @@
         <h:body>
             <h1>#{bundle['roleList.title']}</h1>
             <div class="card card-w-title">
+                <h:form>
+                    <p:commandButton
+                            value="#{bundle['role.create']}"
+                            actionListener="#{rolesBean.initialiseDialogRoleId(role.id)}"
+                            update="addRoleDialogForm:addRoleDialog"
+                            oncomplete="PF('addRole').show();return false;"
+                            styleClass="NavyButton marginBottom10">
+
+                    </p:commandButton>
+
+                </h:form>
 
                 <h:form id="form">
                     <p:tab id="displayAll" title="#{bundle['all']} (#{rolesBean.rolesEntities.size()})">
@@ -51,17 +62,26 @@
                                         styleClass="NavyButton">
                                     <i class="ui-icon ui-icon-create"></i>
                                 </p:commandLink>
-                                <p:commandLink update="@form"
-                                               action="#{rolesBean.delete(role.id)}">
-                                    <i class="ui-icon ui-icon-delete-forever"></i>
-                                    <f:param name="idEntity" value="#{role.id}"/>
-                                    <f:param name="typeEntities" value="all"/>
-                                </p:commandLink>
                             </p:column>
-                            <p:column>
 
-                                <p:commandButton value="#{bundle['activate']}" action="#{rolesBean.activate(role.id)}"
-                                                 update="@(form)"/>
+                            <p:column>
+                                <h:panelGroup rendered="#{role.active}">
+                                    <p:commandLink update="@form"
+                                                   action="#{rolesBean.delete(role.id)}">
+                                        <i class="ui-icon ui-icon-delete-forever"></i>
+                                        <f:param name="idEntity" value="#{role.id}"/>
+                                        <f:param name="typeEntities" value="all"/>
+                                    </p:commandLink>
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{not role.active}">
+                                    <p:commandLink update="@form"
+                                                   action="#{rolesBean.activate(role.id)}">
+                                        <i class="ui-button-icon-left ui-icon ui-c ui-icon-plusthick"></i>
+                                        <f:param name="idEntity" value="#{role.id}"/>
+                                        <f:param name="typeEntities" value="all"/>
+                                    </p:commandLink>
+                                </h:panelGroup>
                             </p:column>
 
                         </p:dataTable>
@@ -71,7 +91,7 @@
                 </h:form>
             </div>
 
-            <!-- e**************************************e- -->
+            <!-- e*******************update*******************e- -->
 
             <h:form id="updateRoleDialogForm">
 
@@ -91,6 +111,30 @@
 
 
                         <p:commandButton value="Confirmer Valider" action="#{rolesBean.updateEntity}"
+                                         update="@(form)"/>
+                    </p:panelGrid>
+                </p:dialog>
+
+            </h:form>
+            <!-- e*******************add*******************e- -->
+            <h:form id="addRoleDialogForm">
+
+                <p:dialog header="Modal Dialog" widgetVar="addRole" modal="true"
+                          responsive="true" id="addRoleDialog">
+
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                            <p:inputText value="#{rolesBean.rolesEntity.label}"
+                                         placeholder="#{rolesBean.roleForDialog.label}">
+                                <f:validator validatorId="roleLabelValidator"></f:validator>
+                            </p:inputText>
+
+                            <label>#{bundle['role.label']}</label>
+                        </h:panelGroup>
+
+
+                        <p:commandButton value="Confirmer Valider" action="#{rolesBean.addEntity}"
                                          update="@(form)"/>
                     </p:panelGrid>
                 </p:dialog>

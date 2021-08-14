@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="WEB-INF/templates/template.xhtml">
 
-    <ui:define name="title">#{bundle['usersList.title']}</ui:define>
+    <ui:define name="title">#{bundle['user.updateByUser']}</ui:define>
     <ui:define name="content">
 
         <f:metadata>
@@ -17,9 +17,9 @@
                 username, password, email, recup de l'id du gus pour afficher ce formulaire
 
                 <div class="p-field p-grid">
-                    <p:outputLabel value="#{bundle['user.password']}">*</p:outputLabel>
+                    <p:outputLabel for="password" value="#{bundle['user.password']}"></p:outputLabel>
                     <div class="p-col">
-                        <p:password value="#{usersBean.usersEntity.password}" match="password2" required="true">
+                        <p:password id="password" value="#{usersBean.usersEntity.password}" match="password2">
                             <f:validator validatorId="userPasswordValidator"></f:validator>
                         </p:password>
                     </div>
@@ -29,13 +29,13 @@
                     <p:outputLabel for="password2" styleClass="p-col-fixed" style="width:100px"
                                    value="#{bundle['user.password2']}"/>
                     <div class="p-col">
-                        <p:password id="password2" value="#{usersBean.password2}" label="password2" required="true"/>
+                        <p:password id="password2" value="#{usersBean.password2}" label="password2"/>
                     </div>
                 </div>
 
 
-                <p:outputLabel value="#{bundle['email']}"> * </p:outputLabel>
-                <p:inputText value="#{usersBean.usersEntity.email}">
+                <p:outputLabel for="email" value="#{bundle['email']}"></p:outputLabel>
+                <p:inputText id="email" value="#{usersBean.usersEntity.email}" required="true">
                     <f:validator validatorId="userEmailValidator"></f:validator>
                 </p:inputText>
 

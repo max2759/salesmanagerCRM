@@ -13,51 +13,58 @@
         </f:metadata>
 
         <h:body>
-            <h1>Register</h1>
+            <h1>#{bundle['register.register']}</h1>
 
             <h:form>
                 <p:growl id="msg" life="2000"></p:growl>
 
-                <p:outputLabel value="#{bundle['register.register']}"></p:outputLabel>
+
+                <p:outputLabel for="firstname" value="#{bundle['firstname']}"/>
+                <p:inputText value="#{usersBean.usersEntity.firstname}" required="true" id="firstname"></p:inputText>
+                <p:message for="firstname">
+                    <p:autoUpdate/>
+                </p:message>
                 <br/>
-                <p:outputLabel value="#{bundle['firstname']}">*</p:outputLabel>
-                <p:inputText value="#{usersBean.usersEntity.firstname}" required="true"></p:inputText>
+                <p:outputLabel for="lastname" value="#{bundle['lastname']}"></p:outputLabel>
+                <p:inputText id="lastname" value="#{usersBean.usersEntity.lastname}" required="true"></p:inputText>
+                <p:message for="lastname">
+                    <p:autoUpdate/>
+                </p:message>
                 <br/>
-                <p:outputLabel value="#{bundle['lastname']}">*</p:outputLabel>
-                <p:inputText value="#{usersBean.usersEntity.lastname}" required="true"></p:inputText>
-                <br/>
-               <!-- <p:outputLabel value="#{bundle['user.username']}">*</p:outputLabel>
-                <p:inputText value="#{usersBean.usersEntity.username}" required="true">
-                    <f:validator validatorId="userUsernameValidator"></f:validator>
-                </p:inputText>
-                -->
+                <!-- <p:outputLabel value="#{bundle['user.username']}">*</p:outputLabel>
+                 <p:inputText value="#{usersBean.usersEntity.username}" required="true">
+                     <f:validator validatorId="userUsernameValidator"></f:validator>
+                 </p:inputText>
+                 -->
                 <h:messages style="color:red;"/>
 
 
-                <br/>
-
                 <!--verifier si le mail est obligatoire  -->
-                <br/>
-                <p:outputLabel value="#{bundle['email']}"> * </p:outputLabel>
-                <p:inputText value="#{usersBean.usersEntity.email}" required="true">
+
+                <p:outputLabel for="email" value="#{bundle['email']}"></p:outputLabel>
+                <p:inputText id="email" value="#{usersBean.usersEntity.email}" required="true" type="email">
                     <f:validator validatorId="userEmailValidator"></f:validator>
                 </p:inputText>
+                <p:message for="email">
+                    <p:autoUpdate/>
+                </p:message>
                 <br/>
 
+                <p:outputLabel for="rolesByUsers" value="#{bundle['role']}"></p:outputLabel>
                 <p:selectOneMenu id="rolesByUsers"
                                  value="#{usersBean.usersEntity.rolesByIdRoles}"
-                                 converter="rolesConverter"
+                                 converter="rolesConverter" required="true"
                 >
                     <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes" itemValue="#{companyTypes}"
                                    itemLabel="#{companyTypes.label}"/>
                 </p:selectOneMenu>
-
+                <br/>
                 <p:commandButton value="Valider" action="#{usersBean.register}"/>
 
 
             </h:form>
 
-            <p:messages id="messages" showDetail="true">
+            <p:messages id="messages">
                 <p:autoUpdate/>
             </p:messages>
 
