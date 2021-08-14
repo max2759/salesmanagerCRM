@@ -13,6 +13,7 @@ import java.util.Objects;
         @NamedQuery(name = "Companies.findDisableCompany", query = "SELECT c from CompaniesEntity c where (c.usersByIdUsers.id = :idUser and c.active = false)"),
         @NamedQuery(name = "Companies.findCompaniesEntityByIdUser", query = "select c from CompaniesEntity c where (c.usersByIdUsers.id = :idUser)"),
         @NamedQuery(name = "Companies.findByIdCompanyAndByIdUser", query = "select c from CompaniesEntity c where (c.id = :id and c.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Companies.findByIdCompaniAndByIdUser", query = "select c from CompaniesEntity c where (c.id = :id and c.usersByIdUsers.id = :idUser and c.active=true)"),
         @NamedQuery(name = "Companies.findById", query = "select c from CompaniesEntity c where c.id=:id"),
 })
 public class CompaniesEntity {

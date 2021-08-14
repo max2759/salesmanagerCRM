@@ -46,7 +46,16 @@ public class CompaniesDaoImpl extends EntityFinderImpl<CompaniesEntity> implemen
     public List<CompaniesEntity> findCompaniesEntityByIdUser(EntityManager em, int idUser) {
 
         return em.createNamedQuery("Companies.findCompaniesEntityByIdUser",
-                CompaniesEntity.class)
+                        CompaniesEntity.class)
+                .setParameter("idUser", idUser)
+                .getResultList();
+    }
+
+    @Override
+    public List<CompaniesEntity> findByIdCompaniAndByIdUser(EntityManager em, int id, int idUser) {
+        return em.createNamedQuery("Companies.findByIdCompanyAndByIdUser",
+                        CompaniesEntity.class)
+                .setParameter("id", id)
                 .setParameter("idUser", idUser)
                 .getResultList();
     }
@@ -54,7 +63,7 @@ public class CompaniesDaoImpl extends EntityFinderImpl<CompaniesEntity> implemen
     @Override
     public List<CompaniesEntity> findActiveCompany(EntityManager em, int idUser) {
         return em.createNamedQuery("Companies.findActiveCompany",
-                CompaniesEntity.class)
+                        CompaniesEntity.class)
                 .setParameter("idUser", idUser)
                 .getResultList();
     }

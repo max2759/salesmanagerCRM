@@ -50,10 +50,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
-    private UsersEntity usersEntity = new UsersEntity();
-
-    @Getter
-    @Setter
     private List<CompaniesEntity> companiesEntityList;
 
     @Getter
@@ -171,9 +167,8 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         companiesEntity.setRegisterDate(LocalDateTime.now());
         companiesEntity.setActive(true);
-        // TODO Modifier USER
-        usersEntity.setId(1);
-        companiesEntity.setUsersByIdUsers(usersEntity);
+
+        companiesEntity.setUsersByIdUsers(usersBean.getUsersEntity());
 
         try {
             validateCompanies(companiesEntity);
@@ -251,12 +246,10 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      */
     public void loadListEntities(String typeLoad) {
 
-        usersEntity.setId(1);
-
         if (typeLoad.equalsIgnoreCase("displayActiveCompany")) {
-            companiesEntityList = findActiveCompanies(usersEntity.getId());
+            companiesEntityList = findActiveCompanies(usersBean.getUsersEntity().getId());
         } else if (typeLoad.equalsIgnoreCase("displayDisableCompany")) {
-            companiesEntityList = findDisableCompanies(usersEntity.getId());
+            companiesEntityList = findDisableCompanies(usersBean.getUsersEntity().getId());
         }
     }
 
@@ -403,6 +396,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         return companiesEntities;
     }
 
+
     /**
      * Find Company by ID
      *
@@ -429,6 +423,50 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         EntityManager em = EMF.getEM();
         try {
             return companiesDao.findByIdCompanyAndByIdUser(em, id, idUser);
+        } catch (Exception ex) {
+            log.info("Nothing");
+            throw new EntityNotFoundException(
+                    "Aucune entreprise avec l ID " + id + " et l ID User " + idUser + " n a ete trouvee dans la BDD",
+                    ErrorCodes.COMPANY_NOT_FOUND
+            );
+        } finally {
+            em.clear();
+            em.close();
+        }
+    }
+
+    public List<CompaniesEntity> callFindByIdCompaniAndByIdUser(int id) {
+        return findByIdCompaniAndByIdUser(id, usersBean.getUsersEntity().getId());
+    }
+
+    /**
+     * Return list of Companies by its id and idUser
+     *
+     * @param id     id Companies
+     * @param idUser id User
+     * @return CompaniesEntity
+     */
+    private List<CompaniesEntity> findByIdCompaniAndByIdUser(int id, int idUser) {
+
+        FacesMessage msg;
+
+        if (id == 0) {
+            log.error("Company ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return null;
+        }
+        if (idUser == 0) {
+            log.error("User ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return null;
+        }
+
+        EntityManager em = EMF.getEM();
+
+        try {
+            return companiesDao.findByIdCompaniAndByIdUser(em, id, idUser);
         } catch (Exception ex) {
             log.info("Nothing");
             throw new EntityNotFoundException(

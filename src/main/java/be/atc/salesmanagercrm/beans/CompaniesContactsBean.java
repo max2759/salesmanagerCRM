@@ -20,6 +20,8 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Maximilien Zabbara
@@ -40,11 +42,21 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
+    private List<CompaniesEntity> selectedCompaniesContacts = new ArrayList<>();
+
+    @Getter
+    @Setter
+    private List<CompaniesEntity> selectedCompaniesContactsTemp = new ArrayList<>();
+
+
+    @Getter
+    @Setter
     private CompaniesEntity companiesEntity = new CompaniesEntity();
 
 
     @Inject
     private ContactsBean contactsBean;
+
 
     /**
      * Save companies and contacts in CompaniesContacts
@@ -54,34 +66,39 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
         FacesMessage facesMessage;
         log.info("Start of createCompaniesContacts");
 
-        companiesContactsEntity.setContactsByIdContacts(contactsBean.getContactsEntity());
-
-//        try{
-//            companiesContactsEntity = findByIdContacts(contactsBean.getContactsEntity());
-//        }catch (EntityNotFoundException exception) {
-//            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-//            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
-//            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-//            return;
-//        }
-
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
 
         try {
             tx = em.getTransaction();
             tx.begin();
-            companiesContactsDao.update(em, companiesContactsEntity);
+            for (CompaniesEntity c : selectedCompaniesContacts) {
+                CompaniesContactsEntity companiesContactsEntity1 = new CompaniesContactsEntity();
+                companiesContactsEntity1.setContactsByIdContacts(contactsBean.getContactsEntity());
+                companiesContactsEntity1.setCompaniesByIdCompanies(c);
+                companiesContactsDao.update(em, companiesContactsEntity1);
+            }
             tx.commit();
             log.info("Persist ok");
+            // TODO : ajouter message
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
-            log.info("Persist echec");
+            log.info("Persist failed");
         } finally {
             em.clear();
             em.clear();
         }
 
+    }
+
+    public void fillSelectedCompaniesContacts() {
+        List<CompaniesContactsEntity> companiesContactsEntityList = findByIdContacts(contactsBean.getContactsEntity().getId());
+
+        for (CompaniesContactsEntity c : companiesContactsEntityList
+        ) {
+            this.selectedCompaniesContacts.add(c.getCompaniesByIdCompanies());
+            this.selectedCompaniesContactsTemp.add(c.getCompaniesByIdCompanies());
+        }
     }
 
     /**
@@ -90,7 +107,7 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
      * @param id id
      * @return CompaniesContactsEntity
      */
-    protected CompaniesContactsEntity findByIdContacts(int id) {
+    protected List<CompaniesContactsEntity> findByIdContacts(int id) {
 
         FacesMessage facesMessage;
 

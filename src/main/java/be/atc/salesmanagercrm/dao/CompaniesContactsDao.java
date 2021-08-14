@@ -9,7 +9,5 @@ public interface CompaniesContactsDao {
 
     void update(EntityManager em, CompaniesContactsEntity companiesContactsEntity);
 
-    List<CompaniesContactsEntity> findAll(EntityManager em);
-
-    CompaniesContactsEntity findByIdContacts(EntityManager em, int idContacts);
+    List<CompaniesContactsEntity> findByIdContacts(EntityManager em, int idContacts);
 }

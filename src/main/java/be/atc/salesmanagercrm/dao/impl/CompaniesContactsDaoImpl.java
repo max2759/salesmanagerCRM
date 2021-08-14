@@ -15,17 +15,10 @@ public class CompaniesContactsDaoImpl extends EntityFinderImpl<CompaniesContacts
     }
 
     @Override
-    public List<CompaniesContactsEntity> findAll(EntityManager em) {
-        return em.createNamedQuery("CompaniesContacts.findAll",
-                CompaniesContactsEntity.class)
-                .getResultList();
-    }
-
-    @Override
-    public CompaniesContactsEntity findByIdContacts(EntityManager em, int idContacts) {
+    public List<CompaniesContactsEntity> findByIdContacts(EntityManager em, int idContacts) {
         return em.createNamedQuery("CompaniesContacts.findByIdContacts",
-                CompaniesContactsEntity.class)
+                        CompaniesContactsEntity.class)
                 .setParameter("idContacts", idContacts)
-                .getSingleResult();
+                .getResultList();
     }
 }
