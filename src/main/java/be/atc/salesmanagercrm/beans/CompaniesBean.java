@@ -87,7 +87,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
-    private Map<LocalDateTime, Object> listActivity = new TreeMap<>(Collections.reverseOrder());
+    private Map<LocalDateTime, Object> listActivity;
 
 
     /**
@@ -95,26 +95,14 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      */
     public void activityThread() {
         log.info("CompaniesBean : activityThread");
-        FacesMessage msg;
+        this.listActivity = new TreeMap<>(Collections.reverseOrder());
 
-        try {
-            companiesEntity = findByIdCompanyAndByIdUser(1, usersBean.getUsersEntity().getId());
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return;
-        }
-
-        List<NotesEntity> notesEntities = notesBean.findNotesEntityByCompaniesByIdCompanies(companiesEntity.getId(), usersBean.getUsersEntity().getId());
-        for (NotesEntity n : notesEntities) {
+        for (NotesEntity n : notesBean.getNotesEntities()) {
             ObjectActivity objectActivity = new ObjectActivity(n.getClass().getName(), n);
             listActivity.put(n.getCreationDate(), objectActivity);
         }
 
-        // TODO : modifier avec Compagnie
-        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByCompaniesByIdCompanies(companiesEntity.getId(), usersBean.getUsersEntity().getId());
-        for (TasksEntity t : tasksEntities) {
+        for (TasksEntity t : tasksBean.getTasksEntities()) {
             ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
             listActivity.put(t.getCreationDate(), objectActivity);
         }
@@ -124,7 +112,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
             listActivity.put(t.getCreationDate(), objectActivity);
 
-            // TODO Modifier USER
             List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(t.getId(), usersBean.getUsersEntity().getId());
             for (TransactionHistoriesEntity tH : transactionHistoriesEntities) {
                 ObjectActivity objectActivity1 = new ObjectActivity(tH.getClass().getName(), tH);
@@ -137,7 +124,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             ObjectActivity objectActivity = new ObjectActivity(v.getClass().getName(), v);
             listActivity.put(v.getCreationDate(), objectActivity);
 
-            // TODO Modifier USER
             List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(v.getId(), usersBean.getUsersEntity().getId());
             for (VoucherHistoriesEntity vH : voucherHistoriesEntities) {
                 ObjectActivity objectActivity1 = new ObjectActivity(vH.getClass().getName(), vH);

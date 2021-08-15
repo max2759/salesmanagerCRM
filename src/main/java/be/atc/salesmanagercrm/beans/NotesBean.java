@@ -75,7 +75,7 @@ public class NotesBean extends ExtendBean implements Serializable {
         notesEntity.setUsersByIdUsers(usersBean.getUsersEntity());
         if (getParamType().equalsIgnoreCase("displayByContact")) {
             notesEntity.setContactsByIdContacts(contactsBean.getContactsEntity());
-        } else if (getParamType().equalsIgnoreCase("displayByContact")) {
+        } else if (getParamType().equalsIgnoreCase("displayByCompany")) {
             notesEntity.setCompaniesByIdCompanies(companiesBean.getCompaniesEntity());
         } else {
             return;

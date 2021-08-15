@@ -16,7 +16,7 @@
     <f:view>
         <h:form>
             <p:commandButton value="#{bundle['tasks.create']}"
-                             update="contactDetailsRight:formTabView contactDetailsRight:createTasks:formCreateTask msgs"
+                             update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
                              onclick="PF('createDialogTask').show();" styleClass="NavyButton marginBottom15"
                              action="#{tasksBean.showModalCreate}"/>
         </h:form>
@@ -135,7 +135,7 @@
                 <p:rowEditor styleClass="displayInlineBlock"/>
 
                 <p:commandLink
-                        update="contactDetailsRight:formTabView contactDetailsRight:createTasks:formCreateTask msgs"
+                        update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
                         action="#{tasksBean.deleteEntity}">
                     <i class="ui-icon ui-icon-delete-forever"/>
                     <f:param name="idEntity" value="#{task.id}"/>

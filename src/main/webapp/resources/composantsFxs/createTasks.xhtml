@@ -22,7 +22,7 @@
                              required="true"
                              requiredMessage="#{bundle['task.validator.title']}"
                              style="margin-bottom:10px;">
-                    <p:ajax update="contactDetailsRight:createTasks:msg" event="keyup"/>
+                    <p:ajax update="detailsRight:createTasks:msg" event="keyup"/>
                 </p:inputText>
 
                 <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskTypeCreate" styleClass="boldText"/>
@@ -76,7 +76,7 @@
                                  autoResize="false"/>
 
                 <p:commandButton style="width:auto;margin-bottom:10px;"
-                                 update="contactDetailsRight:formTabView contactDetailsRight:createTasks:formCreateTask msgs"
+                                 update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
                                  oncomplete="PF('createDialogTask').hide()"
                                  value="#{bundle['save']}"
                                  action="#{tasksBean.saveEntity}"/>
