@@ -8,9 +8,9 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:cc="http://java.sun.com/jsf/composite">
 
-<cc:interface name="contactDetailsRight"
-              displayName="#{bundle['contact']}"
-              shortDescription="#{bundle['contact']}"
+<cc:interface name="detailsRight"
+              displayName="#{bundle['company']}"
+              shortDescription="#{bundle['company']}"
 >
 </cc:interface>
 <cc:implementation>
@@ -29,15 +29,15 @@
 
             <h:form id="formTabView">
                 <p:tabView id="tabViewRight">
-                    <p:ajax event="tabChange" listener="#{contactsBean.activityThread}" update="tabViewRight msgs"/>
-                    <p:tab id="activityContactTab" title="#{bundle['activity.title']}">
-                        <fxs:activityContact id="activityContact"/>
+                    <p:ajax event="tabChange" listener="#{companiesBean.activityThread}" update="tabViewRight msgs"/>
+                    <p:tab id="activityCompanyTab" title="#{bundle['activity.title']}">
+                        <fxs:activityCompany id="activityCompany"/>
                     </p:tab>
-                    <p:tab id="listNotesContactTab" title="#{bundle['notes']}">
+                    <p:tab id="listNotesCompanyTab" title="#{bundle['notes']}">
                         <fxs:listNotes id="listNotes"/>
                     </p:tab>
-                    <p:tab id="listTasksByContactTab" title="#{bundle['tasks.title']}">
-                        <fxs:listTasksByContactOrByCompany id="listTasksByContact"/>
+                    <p:tab id="listTasksByCompanyTab" title="#{bundle['tasks.title']}">
+                        <fxs:listTasksByContactOrByCompany id="listTasksByCompany"/>
                     </p:tab>
                 </p:tabView>
             </h:form>

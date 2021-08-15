@@ -88,7 +88,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * this method is used in activity page
      */
     public void activityThread() {
-        log.info("ContactsBean : activityThread");
+        log.info("ContactsBean : activityThread()");
 
         this.listActivity = new TreeMap<>(Collections.reverseOrder());
 

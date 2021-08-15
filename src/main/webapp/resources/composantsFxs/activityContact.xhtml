@@ -18,7 +18,6 @@
         <h:form id="formActivity">
             <p:panelGrid rendered="#{empty contactsBean.listActivity ? false : true}">
                 <p:dataScroller chunkSize="10"
-                                emptyMessage="#{bundle['activity.notFound']}"
                                 var="activity"
                                 value="#{contactsBean.listActivity}">
                     <f:facet name="header">
@@ -36,7 +35,7 @@
 
                             <h:outputText styleClass="boldText" value="#{bundle['notes.remarks']} "/>
                             <h:outputText title="#{bundle['by']} : #{activity.value.object.usersByIdUsers.email}"
-                                          value="#{bundle['by']} #{activity.value.object.usersByIdUsers.username} "/>
+                                          value="#{bundle['by']} #{activity.value.object.usersByIdUsers.firstname} "/>
                             <h:outputText value="#{activity.value.object.message}" styleClass="outputTextNotes"/>
                         </p:panel>
                     </h:panelGroup>
@@ -53,7 +52,7 @@
                                        hideEffect="fold" position="bottom"/>
                             <h:outputText styleClass="boldText" value="#{bundle['tasks.title']} "/>
                             <h:outputText title="#{bundle['by']} : #{activity.value.object.usersByIdUsers.email}"
-                                          value="#{bundle['by']} #{activity.value.object.usersByIdUsers.username} "/>
+                                          value="#{bundle['by']} #{activity.value.object.usersByIdUsers.firstname} "/>
 
                             <p:outputLabel id="task"
                                            styleClass="outputTextNotes">#{activity.value.object.title}</p:outputLabel>
@@ -85,7 +84,7 @@
 
                             <h:outputText styleClass="boldText" value="#{bundle['vouchers.title']} "/>
                             <h:outputText title="#{bundle['by']} : #{activity.value.object.usersByIdUsers.email}"
-                                          value="#{bundle['by']} #{activity.value.object.usersByIdUsers.username} "/>
+                                          value="#{bundle['by']} #{activity.value.object.usersByIdUsers.firstname} "/>
                             <h:link styleClass="outputTextNotes" value=" #{activity.value.object.title} "
                                     outcome="voucherDetails">
                                 <f:param name="idVoucher" value="#{activity.value.object.id}"/>
@@ -98,7 +97,7 @@
                         <p:panel header="#{bundle['activity.voucher']} " toggleable="true">
 
                             <h:outputText styleClass="boldText"
-                                          value="#{activity.value.object.vouchersByIdVouchers.usersByIdUsers.username} "/>
+                                          value="#{activity.value.object.vouchersByIdVouchers.usersByIdUsers.firstname} "/>
                             <h:outputText value="#{bundle['activity.voucherStatus1']}"/>
                             <h:link value=" #{activity.value.object.vouchersByIdVouchers.title} "
                                     outcome="voucherDetails">
@@ -114,7 +113,7 @@
 
                             <h:outputText styleClass="boldText" value="#{bundle['transactions.title']} "/>
                             <h:outputText title="#{bundle['by']} : #{activity.value.object.usersByIdUsers.email}"
-                                          value="#{bundle['by']} #{activity.value.object.usersByIdUsers.username} "/>
+                                          value="#{bundle['by']} #{activity.value.object.usersByIdUsers.firstname} "/>
                             <h:link styleClass="outputTextNotes" value=" #{activity.value.object.title} "
                                     outcome="transactionDetails">
                                 <f:param name="idTransaction" value="#{activity.value.object.id}"/>
@@ -126,7 +125,7 @@
                         <p:panel header="#{bundle['activity.transaction']} " toggleable="true">
 
                             <h:outputText styleClass="boldText"
-                                          value="#{activity.value.object.transactionsByIdTransactions.usersByIdUsers.username} "/>
+                                          value="#{activity.value.object.transactionsByIdTransactions.usersByIdUsers.firstname} "/>
                             <h:outputText value="#{bundle['activity.transactionPhase1']}"/>
                             <h:link value=" #{activity.value.object.transactionsByIdTransactions.title} "
                                     outcome="transactionDetails">

@@ -25,12 +25,12 @@
                                  requiredMessage="#{bundle['notes.validator.message']}"
                                  placeholder="#{bundle['notes.messageHolder']}"
                                  autoResize="false">
-                    <p:ajax update="contactDetailsRight:createNotes:msg" event="keyup"/>
+                    <p:ajax update="detailsRight:createNotes:msg" event="keyup"/>
                 </p:inputTextarea>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  value="#{bundle['notes.save']}"
                                  oncomplete="PF('createDialogNotes').hide()"
-                                 update="contactDetailsRight:formTabView contactDetailsRight:createNotes:formCreateNotes msgs"
+                                 update="detailsRight:formTabView detailsRight:createNotes:formCreateNotes msgs"
                                  action="#{notesBean.saveEntity}"/>
             </p:panelGrid>
         </h:form>
