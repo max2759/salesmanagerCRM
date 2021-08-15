@@ -8,7 +8,7 @@
       xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
       xmlns:cc="http://java.sun.com/jsf/composite">
 
-<cc:interface name="listAllTasks"
+<cc:interface name="detailsRight"
               displayName="#{bundle['tasks.list']}"
               shortDescription="#{bundle['tasks.list']}"
 >
@@ -27,6 +27,7 @@
         </p:dialog>
 
         <div class="card card-w-title">
+
             <h1>#{bundle['tasks.title']}</h1>
             <h:form>
                 <p:commandButton value="#{bundle['tasks.create']}"
@@ -35,7 +36,7 @@
                                  action="#{tasksBean.showModalCreate}"
                 />
             </h:form>
-            <h:form id="form">
+            <h:form id="formTabView">
                 <p:tabView>
                     <p:ajax event="tabChange" update="@form msgs"/>
 
@@ -174,8 +175,7 @@
                                      rowsPerPageTemplate="10,20,50"
                                      value="#{tasksBean.tasksEntitiesDueToday}"
                                      widgetVar="displayEntitiesDueToday"
-                                     filteredValue="#{tasksBean.tasksEntitiesDueTodayFiltered}"
-                                     rendered="#{tasksBean.tasksEntitiesDueToday.size() eq 0 ? false : true}">
+                                     filteredValue="#{tasksBean.tasksEntitiesDueTodayFiltered}">
 
                             <p:column colspan="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusToday" value="#{task.status}">
@@ -288,8 +288,7 @@
                                      rowsPerPageTemplate="10,20,50"
                                      value="#{tasksBean.tasksEntitiesToLate}"
                                      widgetVar="displayEntitiesToLate"
-                                     filteredValue="#{tasksBean.tasksEntitiesToLateFiltered}"
-                                     rendered="#{tasksBean.tasksEntitiesToLate.size() eq 0 ? false : true}">
+                                     filteredValue="#{tasksBean.tasksEntitiesToLateFiltered}">
 
                             <p:column colspan="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusToLate" value="#{task.status}">
@@ -413,8 +412,7 @@
                                      rowsPerPageTemplate="10,20,50"
                                      value="#{tasksBean.tasksEntitiesToCome}"
                                      widgetVar="displayEntitiesToCome"
-                                     filteredValue="#{tasksBean.tasksEntitiesToComeFiltered}"
-                                     rendered="#{tasksBean.tasksEntitiesToCome.size() eq 0 ? false : true}">
+                                     filteredValue="#{tasksBean.tasksEntitiesToComeFiltered}">
 
                             <p:column colspan="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusToCome" value="#{task.status}">
@@ -538,8 +536,7 @@
                                      rowsPerPageTemplate="10,20,50"
                                      value="#{tasksBean.tasksEntitiesFinished}"
                                      widgetVar="displayEntitiesFinished"
-                                     filteredValue="#{tasksBean.tasksEntitiesFinishedFiltered}"
-                                     rendered="#{tasksBean.tasksEntitiesFinished.size() eq 0 ? false : true}">
+                                     filteredValue="#{tasksBean.tasksEntitiesFinishedFiltered}">
 
                             <p:column colspan="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusFinished" value="#{task.status}">
