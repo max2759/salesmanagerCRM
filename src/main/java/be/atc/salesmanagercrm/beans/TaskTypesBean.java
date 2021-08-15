@@ -106,7 +106,6 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
      * Find All TaskTypess and filter
      */
     public void findAllEntities() {
-        // TODO : Remplacer par user
         this.taskTypesEntities = findAll();
     }
 

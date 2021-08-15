@@ -56,7 +56,7 @@
                                 var="Contact"
                                 itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
                                 itemValue="#{Contact}"
-                                converter="contactConverter"
+                                converter="#{contactsConverter}"
                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
 
                 <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company" styleClass="boldText"/>
@@ -65,7 +65,7 @@
                                 var="Company"
                                 itemLabel="#{Company.label}"
                                 itemValue="#{Company}"
-                                converter="companiesConverter"
+                                converter="#{companiesConverter}"
                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
 
             </p:panelGrid>

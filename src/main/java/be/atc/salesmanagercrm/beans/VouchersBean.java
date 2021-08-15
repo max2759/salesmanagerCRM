@@ -108,9 +108,6 @@ public class VouchersBean extends ExtendBean implements Serializable {
             return;
         }
 
-        // TODO : Modifier USER
-        usersBean.getUsersEntity().setId(1);
-
         try {
             this.vouchersEntity = findById(idVoucher, usersBean.getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
@@ -133,8 +130,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
      */
     public void findAllEntitiesAndFilter() {
         log.info("VouchersBean => method : findAllEntitiesAndFilter()");
-        // TODO : Remplacer par user
-        this.vouchersEntities = findAll(1);
+        this.vouchersEntities = findAll(usersBean.getUsersEntity().getId());
     }
 
 
@@ -154,9 +150,6 @@ public class VouchersBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-
-        // TODO : Modifier USER
-        usersBean.getUsersEntity().setId(1);
 
         try {
             this.vouchersEntity = findById(idVoucher, usersBean.getUsersEntity().getId());

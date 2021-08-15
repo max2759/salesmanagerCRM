@@ -280,7 +280,6 @@ public class TasksBean extends ExtendBean implements Serializable {
 
         update(tasksEntity);
 
-        // TODO : Modifier avec l id User
         loadListEntities(getParam("typeEntities"));
     }
 
@@ -316,9 +315,11 @@ public class TasksBean extends ExtendBean implements Serializable {
      * @param typeLoad String
      */
     public void loadListEntities(String typeLoad) {
+
         if (typeLoad.equalsIgnoreCase("displayByCompany")) {
             tasksEntities = findTasksEntityByCompaniesByIdCompanies(companiesBean.getCompaniesEntity().getId(), usersBean.getUsersEntity().getId());
         } else if (typeLoad.equalsIgnoreCase("displayByContact")) {
+            // TODO : Régler le bug qui s'affiche de temps en temps !!
             log.info("id contact : " + contactsBean.getContactsEntity().getId());
             log.info("id User : " + usersBean.getUsersEntity().getId());
 

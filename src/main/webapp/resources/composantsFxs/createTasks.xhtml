@@ -15,14 +15,14 @@
 <cc:implementation>
     <f:view>
 
-        <h:form>
+        <h:form id="formCreateTask">
             <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
                 <p:outputLabel value="#{bundle['title']} :" for="acTitleCreate" styleClass="boldText"/>
                 <p:inputText id="acTitleCreate" value="#{tasksBean.tasksEntity.title}"
                              required="true"
                              requiredMessage="#{bundle['task.validator.title']}"
                              style="margin-bottom:10px;">
-                    <p:ajax update="msg" event="keyup"/>
+                    <p:ajax update="contactDetailsRight:createTasks:msg" event="keyup"/>
                 </p:inputText>
 
                 <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskTypeCreate" styleClass="boldText"/>
@@ -54,7 +54,7 @@
                                 var="Contact"
                                 itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
                                 itemValue="#{Contact}"
-                                converter="contactConverter"
+                                converter="#{contactsConverter}"
                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
 
                 <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company" styleClass="boldText"/>
@@ -63,7 +63,7 @@
                                 var="Company"
                                 itemLabel="#{Company.label}"
                                 itemValue="#{Company}"
-                                converter="companiesConverter"
+                                converter="#{companiesConverter}"
                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
 
 
@@ -75,15 +75,14 @@
                                  placeholder="#{bundle['tasks.description']}"
                                  autoResize="false"/>
 
-                <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
-                                 update="@(form) msgs"
+                                 update="contactDetailsRight:formTabView contactDetailsRight:createTasks:formCreateTask msgs"
                                  oncomplete="PF('createDialogTask').hide()"
                                  value="#{bundle['save']}"
                                  action="#{tasksBean.saveEntity}"/>
             </p:panelGrid>
         </h:form>
-
+        <p:messages id="msg" closable="true" display="message"/>
     </f:view>
 </cc:implementation>
 </html>

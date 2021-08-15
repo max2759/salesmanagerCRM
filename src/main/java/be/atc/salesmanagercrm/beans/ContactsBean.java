@@ -107,7 +107,6 @@ public class ContactsBean extends ExtendBean implements Serializable {
             ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
             listActivity.put(t.getCreationDate(), objectActivity);
 
-            // TODO Modifier USER
             List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(t.getId(), usersBean.getUsersEntity().getId());
             for (TransactionHistoriesEntity tH : transactionHistoriesEntities) {
                 ObjectActivity objectActivity1 = new ObjectActivity(tH.getClass().getName(), tH);
@@ -120,7 +119,6 @@ public class ContactsBean extends ExtendBean implements Serializable {
             ObjectActivity objectActivity = new ObjectActivity(v.getClass().getName(), v);
             listActivity.put(v.getCreationDate(), objectActivity);
 
-            // TODO Modifier USER
             List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(v.getId(), usersBean.getUsersEntity().getId());
             for (VoucherHistoriesEntity vH : voucherHistoriesEntities) {
                 ObjectActivity objectActivity1 = new ObjectActivity(vH.getClass().getName(), vH);
@@ -477,8 +475,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
     public List<ContactsEntity> completeContactsContains(String query) {
         String queryLowerCase = query.toLowerCase();
 
-        // TODO : à modifier
-        List<ContactsEntity> contactsEntitiesForm = findContactsEntityByIdUser(1);
+        List<ContactsEntity> contactsEntitiesForm = findContactsEntityByIdUser(usersBean.getUsersEntity().getId());
 
         return contactsEntitiesForm.stream().filter(t -> (t.getFirstname().toLowerCase().contains(queryLowerCase)) || (t.getLastname().toLowerCase().contains(queryLowerCase))).collect(Collectors.toList());
     }

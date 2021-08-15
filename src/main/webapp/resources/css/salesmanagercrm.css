@@ -51,3 +51,56 @@
 .outputTextDueDatePanel {
     padding: 10px 0px 10px 10px;
 }
+
+.displayInlineBlock {
+    display: inline-block;
+}
+
+.columnEditDelte {
+    width: 85px;
+}
+
+.styleEditorOutPut {
+    padding: 10px 0 10px 0;
+}
+
+.align-center {
+    display: flex;
+    align-items: center !important;
+}
+
+.justify-end {
+    display: flex;
+    justify-content: flex-end !important;
+}
+
+.flex-shrink-0, .no-shrink {
+    display: flex;
+    flex-shrink: 0 !important;
+}
+
+.align-start {
+    display: flex;
+    align-items: flex-start !important;
+}
+
+.justify-between {
+    display: flex;
+    justify-content: space-between !important;
+}
+
+.display-inline-flex {
+    display: inline-flex !important;
+}
+
+.outputTextCellEditor {
+    padding-right: 20px;
+}
+
+.fontStyleItalic {
+    font-style: italic;
+}
+
+.padingRight5Px {
+    padding-right: 5px;
+}

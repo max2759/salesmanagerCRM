@@ -2,8 +2,6 @@ package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.dao.NotesDao;
 import be.atc.salesmanagercrm.dao.impl.NotesDaoImpl;
-import be.atc.salesmanagercrm.entities.CompaniesEntity;
-import be.atc.salesmanagercrm.entities.ContactsEntity;
 import be.atc.salesmanagercrm.entities.NotesEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
@@ -46,12 +44,6 @@ public class NotesBean extends ExtendBean implements Serializable {
     @Setter
     private NotesDao dao = new NotesDaoImpl();
 
-    @Getter
-    @Setter
-    private ContactsEntity contactsEntity = new ContactsEntity();
-    @Getter
-    @Setter
-    private CompaniesEntity companiesEntity = new CompaniesEntity();
     @Getter
     @Setter
     private NotesEntity notesEntity;
