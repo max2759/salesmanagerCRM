@@ -96,7 +96,6 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      */
     public void deleteEntity() {
         log.info("method : deleteEntity()");
-        // TODO : Corriger l idUser
         log.info("Param : " + getParam("idTransaction"));
         int idTransaction;
         FacesMessage msg;
@@ -108,7 +107,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-        delete(idTransaction, 1);
+        delete(idTransaction, usersBean.getUsersEntity().getId());
 
         findAllEntitiesAndFilter();
     }
@@ -130,9 +129,6 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-
-        // TODO : Modifier USER
-        usersBean.getUsersEntity().setId(1);
 
         try {
             transactionsEntity = findById(idTransaction, usersBean.getUsersEntity().getId());
@@ -156,8 +152,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * Find All Transactions and filter
      */
     public void findAllEntitiesAndFilter() {
-        // TODO : Remplacer par user
-        this.transactionsEntities = findAll(1);
+        this.transactionsEntities = findAll(usersBean.getUsersEntity().getId());
     }
 
     /**
@@ -177,9 +172,6 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-
-        // TODO : Modifier USER
-        usersBean.getUsersEntity().setId(1);
 
         try {
             transactionsEntity = findById(idTransaction, usersBean.getUsersEntity().getId());

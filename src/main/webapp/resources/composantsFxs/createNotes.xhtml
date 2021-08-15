@@ -15,7 +15,7 @@
 <cc:implementation>
     <f:view>
 
-        <h:form>
+        <h:form id="formCreateNotes">
             <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
                 <p:outputLabel value="#{bundle['notes.title']} :" for="title" styleClass="boldText"/>
@@ -25,16 +25,16 @@
                                  requiredMessage="#{bundle['notes.validator.message']}"
                                  placeholder="#{bundle['notes.messageHolder']}"
                                  autoResize="false">
-                    <p:ajax update="msg" event="keyup"/>
+                    <p:ajax update="contactDetailsRight:createNotes:msg" event="keyup"/>
                 </p:inputTextarea>
-                <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  value="#{bundle['notes.save']}"
                                  oncomplete="PF('createDialogNotes').hide()"
-                                 update="@(form) msgs"
+                                 update="contactDetailsRight:formTabView contactDetailsRight:createNotes:formCreateNotes msgs"
                                  action="#{notesBean.saveEntity}"/>
             </p:panelGrid>
         </h:form>
+        <p:messages id="msg" closable="true" display="message"/>
 
     </f:view>
 </cc:implementation>

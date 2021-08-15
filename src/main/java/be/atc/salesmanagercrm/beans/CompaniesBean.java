@@ -98,7 +98,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         FacesMessage msg;
 
         try {
-            // TODO : Modifier ça par la Compagnie !
             companiesEntity = findByIdCompanyAndByIdUser(1, usersBean.getUsersEntity().getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
@@ -274,8 +273,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     public List<CompaniesEntity> completeCompaniesContains(String query) {
         String queryLowerCase = query.toLowerCase();
 
-        // TODO : à modifier
-        List<CompaniesEntity> companiesEntitiesForm = findCompaniesEntityByIdUser(1);
+        List<CompaniesEntity> companiesEntitiesForm = findCompaniesEntityByIdUser(usersBean.getUsersEntity().getId());
 
         return companiesEntitiesForm.stream().filter(t -> t.getLabel().toLowerCase().contains(queryLowerCase)).collect(Collectors.toList());
     }

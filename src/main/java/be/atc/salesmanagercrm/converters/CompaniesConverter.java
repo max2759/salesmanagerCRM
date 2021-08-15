@@ -9,22 +9,24 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import javax.faces.convert.FacesConverter;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Locale;
 
 
+@RequestScoped
 @Slf4j
-@FacesConverter(value = "companiesConverter")
+@Named
 public class CompaniesConverter implements Converter {
 
-    private final CompaniesBean companiesBean = new CompaniesBean();
-
+    @Inject
+    private CompaniesBean companiesBean;
     @Inject
     private UsersBean usersBean;
 

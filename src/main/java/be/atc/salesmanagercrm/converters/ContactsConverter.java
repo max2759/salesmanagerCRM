@@ -1,26 +1,32 @@
 package be.atc.salesmanagercrm.converters;
 
 import be.atc.salesmanagercrm.beans.ContactsBean;
+import be.atc.salesmanagercrm.beans.UsersBean;
 import be.atc.salesmanagercrm.entities.ContactsEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Locale;
 
 
+@RequestScoped
 @Slf4j
-@FacesConverter(value = "contactConverter")
+@Named
 public class ContactsConverter implements Converter {
-
-    private final ContactsBean contactsBean = new ContactsBean();
+    @Inject
+    private ContactsBean contactsBean;
+    @Inject
+    private UsersBean usersBean;
 
     @Getter
     private final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
@@ -44,8 +50,7 @@ public class ContactsConverter implements Converter {
 
         if (id != 0) {
             try {
-                // TODO : A modifier et à rajouter l'id de User
-                contactsEntity = contactsBean.findByIdContactAndByIdUser(id, 1);
+                contactsEntity = contactsBean.findByIdContactAndByIdUser(id, usersBean.getUsersEntity().getId());
                 return contactsEntity;
             } catch (EntityNotFoundException exception) {
                 log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
