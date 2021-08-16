@@ -120,11 +120,18 @@
                                 update="@(form) msgs"
                                 oncomplete="PF('dlg2').hide()"
                                 action="#{transactionsBean.updateEntity}"/>
+
                     <p:menuitem icon="ui-icon-delete"
+                                update="@(form) msgs"
                                 value="#{bundle['delete']}"
+                                action="#{transactionsBean.deleteEntity}"
+                                oncomplete="PF('dlg2').hide()"
                     >
-                        <p:confirm header="Confirmation" message="#{bundle['areYouSure']}" icon="fa fa-warning"/>
+                        <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
+                                   icon="fa fa-warning"/>
+                        <f:param name="idTransaction" value="#{transactionsBean.transactionsEntity.id}"/>
                     </p:menuitem>
+
                     <p:menuitem icon="ui-icon-update"
                                 outcome="transactionDetails"
                                 value="#{bundle['viewHistory']}">
@@ -132,16 +139,13 @@
                     </p:menuitem>
                 </p:menuButton>
             </div>
+
             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
-                <p:commandButton value="#{bundle['yes']}"
-                                 update="@(form) msgs"
-                                 action="#{transactionsBean.deleteEntity}"
-                                 oncomplete="PF('dlg2').hide()"
+                <p:commandButton value="#{bundle['yes']}" type="button"
                                  styleClass="ui-confirmdialog-yes GreenButton"
-                                 icon="ui-icon-check">
-                    <f:param name="idTransaction" value="#{transactionsBean.transactionsEntity.id}"/>
-                </p:commandButton>
-                <p:commandButton value="#{bundle['no']}" type="button" styleClass="ui-confirmdialog-no RedButton"
+                                 icon="ui-icon-check"/>
+                <p:commandButton value="#{bundle['no']}" type="button"
+                                 styleClass="ui-confirmdialog-no RedButton"
                                  icon="ui-icon-close"/>
             </p:confirmDialog>
 

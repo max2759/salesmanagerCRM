@@ -153,13 +153,25 @@
                                     <i class="ui-icon ui-icon-create"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                 </p:commandLink>
+
                                 <p:commandLink update="@form msgs"
-                                               action="#{tasksBean.deleteEntity}"
-                                               onclick="return confirmer();">
+                                               action="#{tasksBean.deleteEntity}">
+                                    <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
+                                               icon="fa fa-warning"/>
                                     <i class="ui-icon ui-icon-delete-forever"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                     <f:param name="typeEntities" value="all"/>
                                 </p:commandLink>
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                                    <p:commandButton value="#{bundle['yes']}" type="button"
+                                                     styleClass="ui-confirmdialog-yes GreenButton"
+                                                     icon="ui-icon-check"/>
+                                    <p:commandButton value="#{bundle['no']}" type="button"
+                                                     styleClass="ui-confirmdialog-no RedButton"
+                                                     icon="ui-icon-close"/>
+                                </p:confirmDialog>
+
                             </p:column>
                         </p:dataTable>
                     </p:tab>
@@ -269,10 +281,21 @@
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
                                                action="#{tasksBean.deleteEntity}">
+                                    <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
+                                               icon="fa fa-warning"/>
                                     <i class="ui-icon ui-icon-delete-forever"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                     <f:param name="typeEntities" value="all"/>
                                 </p:commandLink>
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                                    <p:commandButton value="#{bundle['yes']}" type="button"
+                                                     styleClass="ui-confirmdialog-yes GreenButton"
+                                                     icon="ui-icon-check"/>
+                                    <p:commandButton value="#{bundle['no']}" type="button"
+                                                     styleClass="ui-confirmdialog-no RedButton"
+                                                     icon="ui-icon-close"/>
+                                </p:confirmDialog>
                             </p:column>
                         </p:dataTable>
                     </p:tab>
@@ -393,10 +416,21 @@
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
                                                action="#{tasksBean.deleteEntity}">
+                                    <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
+                                               icon="fa fa-warning"/>
                                     <i class="ui-icon ui-icon-delete-forever"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                     <f:param name="typeEntities" value="all"/>
                                 </p:commandLink>
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                                    <p:commandButton value="#{bundle['yes']}" type="button"
+                                                     styleClass="ui-confirmdialog-yes GreenButton"
+                                                     icon="ui-icon-check"/>
+                                    <p:commandButton value="#{bundle['no']}" type="button"
+                                                     styleClass="ui-confirmdialog-no RedButton"
+                                                     icon="ui-icon-close"/>
+                                </p:confirmDialog>
                             </p:column>
                         </p:dataTable>
                     </p:tab>
@@ -517,10 +551,21 @@
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
                                                action="#{tasksBean.deleteEntity}">
+                                    <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
+                                               icon="fa fa-warning"/>
                                     <i class="ui-icon ui-icon-delete-forever"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                     <f:param name="typeEntities" value="all"/>
                                 </p:commandLink>
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                                    <p:commandButton value="#{bundle['yes']}" type="button"
+                                                     styleClass="ui-confirmdialog-yes GreenButton"
+                                                     icon="ui-icon-check"/>
+                                    <p:commandButton value="#{bundle['no']}" type="button"
+                                                     styleClass="ui-confirmdialog-no RedButton"
+                                                     icon="ui-icon-close"/>
+                                </p:confirmDialog>
                             </p:column>
                         </p:dataTable>
                     </p:tab>
@@ -636,10 +681,21 @@
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
                                                action="#{tasksBean.deleteEntity}">
+                                    <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
+                                               icon="fa fa-warning"/>
                                     <i class="ui-icon ui-icon-delete-forever"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                     <f:param name="typeEntities" value="all"/>
                                 </p:commandLink>
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                                    <p:commandButton value="#{bundle['yes']}" type="button"
+                                                     styleClass="ui-confirmdialog-yes GreenButton"
+                                                     icon="ui-icon-check"/>
+                                    <p:commandButton value="#{bundle['no']}" type="button"
+                                                     styleClass="ui-confirmdialog-no RedButton"
+                                                     icon="ui-icon-close"/>
+                                </p:confirmDialog>
                             </p:column>
                         </p:dataTable>
                     </p:tab>
