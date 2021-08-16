@@ -70,7 +70,6 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         log.info("method : saveEntity()");
 
         log.info("TransactionsEntity = : " + transactionsEntity);
-        usersBean.getUsersEntity().setId(1);
 
         transactionsEntity.setUsersByIdUsers(usersBean.getUsersEntity());
 

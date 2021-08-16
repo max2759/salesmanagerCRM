@@ -69,7 +69,6 @@ public class VouchersBean extends ExtendBean implements Serializable {
         log.info("VouchersBean => method : saveEntity()");
 
         log.info("VouchersEntity = : " + this.vouchersEntity);
-        usersBean.getUsersEntity().setId(1);
 
         this.vouchersEntity.setUsersByIdUsers(usersBean.getUsersEntity());
 
