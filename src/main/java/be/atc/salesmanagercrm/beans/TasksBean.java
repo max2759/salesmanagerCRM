@@ -237,6 +237,7 @@ public class TasksBean extends ExtendBean implements Serializable {
 
         try {
             int idEntity = Integer.parseInt(getParam("idEntity"));
+            log.info("ID Task : " + idEntity);
             delete(idEntity, usersBean.getUsersEntity().getId());
         } catch (NumberFormatException exception) {
             log.warn(exception.getMessage());
