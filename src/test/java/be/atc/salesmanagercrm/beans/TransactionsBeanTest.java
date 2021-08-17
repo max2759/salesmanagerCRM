@@ -66,11 +66,12 @@ class TransactionsBeanTest {
 
         // Mettre un id incorrect
         int idTransaction = 2;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
         TransactionsEntity transactionsEntity = null;
 
         try {
-            transactionsEntity = transactionsBean.findById(idTransaction, idUser);
+            transactionsEntity = transactionsBean.findById(idTransaction, usersEntity);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
         }
@@ -88,11 +89,12 @@ class TransactionsBeanTest {
 
         // Mettre un id correct
         int idTransaction = 1;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
         TransactionsEntity transactionsEntity = null;
 
         try {
-            transactionsEntity = transactionsBean.findById(idTransaction, idUser);
+            transactionsEntity = transactionsBean.findById(idTransaction, usersEntity);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
         }
@@ -108,10 +110,12 @@ class TransactionsBeanTest {
     void findTransactionsEntityByContactsByIdContactsShouldReturnTrue() {
 
         // Mettre un id correct
-        int idContact = 1;
-        int idUser = 1;
+        ContactsEntity contactsEntity = new ContactsEntity();
+        contactsEntity.setId(5151);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByContactsByIdContacts(idContact, idUser);
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByContactsByIdContacts(contactsEntity, usersEntity);
 
 
         boolean test = !transactionsEntities.isEmpty();
@@ -125,11 +129,12 @@ class TransactionsBeanTest {
     void findTransactionsEntityByContactsByIdContactsShouldReturnFalse() {
 
         // Mettre un id incorrect
-        int idContact = 1;
+        ContactsEntity contactsEntity = new ContactsEntity();
+        contactsEntity.setId(5151);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(10);
 
-        int idUser = 10;
-
-        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByContactsByIdContacts(idContact, idUser);
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByContactsByIdContacts(contactsEntity, usersEntity);
 
 
         boolean test = !transactionsEntities.isEmpty();
@@ -143,10 +148,12 @@ class TransactionsBeanTest {
     void findTransactionsEntityByCompaniesByIdCompaniesShouldReturnTrue() {
 
         // Mettre un id correct
-        int idCompany = 1;
-        int idUser = 1;
+        CompaniesEntity companiesEntity = new CompaniesEntity();
+        companiesEntity.setId(1);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByCompaniesByIdCompanies(idCompany, idUser);
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByCompaniesByIdCompanies(companiesEntity, usersEntity);
 
 
         boolean test = !transactionsEntities.isEmpty();
@@ -160,10 +167,12 @@ class TransactionsBeanTest {
     void findTransactionsEntityByCompaniesByIdCompaniesShouldReturnFalse() {
 
         // Mettre un id incorrect
-        int idCompany = 1;
-        int idUser = 10;
+        CompaniesEntity companiesEntity = new CompaniesEntity();
+        companiesEntity.setId(5441);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(10);
 
-        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByCompaniesByIdCompanies(idCompany, idUser);
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByCompaniesByIdCompanies(companiesEntity, usersEntity);
 
 
         boolean test = !transactionsEntities.isEmpty();
@@ -175,8 +184,9 @@ class TransactionsBeanTest {
 
     @Test
     void findAll() {
-        int idUser = 1;
-        List<TransactionsEntity> transactionsEntities = transactionsBean.findAll(idUser);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findAll(usersEntity);
 
 
         boolean test = !transactionsEntities.isEmpty();
@@ -221,19 +231,21 @@ class TransactionsBeanTest {
     @Test
     void delete() {
 
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
         TransactionsEntity entity = new TransactionsEntity();
 
         entity.setId(2);
-        transactionsBean.delete(entity.getId(), idUser);
+        transactionsBean.delete(entity.getId(), usersEntity);
 
     }
 
     @Test
     void findAllByPhase() {
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
         String phaseTransaction = "Prospection";
-        List<TransactionsEntity> transactionsEntities = transactionsBean.findAllByPhase(idUser, phaseTransaction);
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findAllByPhase(usersEntity, phaseTransaction);
 
 
         boolean test = !transactionsEntities.isEmpty();
@@ -245,8 +257,9 @@ class TransactionsBeanTest {
 
     @Test
     void entitiesToFind() {
-
-        List<TransactionsEntity> transactionsEntities = transactionsBean.findAll(1);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findAll(usersEntity);
 
         List<TransactionsEntity> transactionsEntitiesProspection = transactionsEntities.stream()
                 .filter(t -> t.getTransactionPhasesByIdTransactionPhases().getLabel().equalsIgnoreCase("Prospection"))

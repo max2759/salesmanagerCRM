@@ -4,8 +4,7 @@ import be.atc.salesmanagercrm.dao.TransactionHistoriesDao;
 import be.atc.salesmanagercrm.dao.TransactionsDao;
 import be.atc.salesmanagercrm.dao.impl.TransactionHistoriesDaoImpl;
 import be.atc.salesmanagercrm.dao.impl.TransactionsDaoImpl;
-import be.atc.salesmanagercrm.entities.TransactionHistoriesEntity;
-import be.atc.salesmanagercrm.entities.TransactionsEntity;
+import be.atc.salesmanagercrm.entities.*;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
@@ -106,7 +105,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-        delete(idTransaction, usersBean.getUsersEntity().getId());
+        delete(idTransaction, usersBean.getUsersEntity());
 
         findAllEntitiesAndFilter();
     }
@@ -130,7 +129,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         }
 
         try {
-            transactionsEntity = findById(idTransaction, usersBean.getUsersEntity().getId());
+            transactionsEntity = findById(idTransaction, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
@@ -151,7 +150,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * Find All Transactions and filter
      */
     public void findAllEntitiesAndFilter() {
-        this.transactionsEntities = findAll(usersBean.getUsersEntity().getId());
+        this.transactionsEntities = findAll(usersBean.getUsersEntity());
     }
 
     /**
@@ -173,14 +172,14 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         }
 
         try {
-            transactionsEntity = findById(idTransaction, usersBean.getUsersEntity().getId());
+            transactionsEntity = findById(idTransaction, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-        transactionHistoriesBean.findAllEntities(idTransaction, usersBean.getUsersEntity().getId());
+        transactionHistoriesBean.findAllEntities(idTransaction, usersBean.getUsersEntity());
     }
 
     /**
@@ -311,11 +310,11 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Find Transaction entity by id
      *
-     * @param id     Transaction
-     * @param idUser User
+     * @param id          Transaction
+     * @param usersEntity UsersEntity
      * @return TransactionsEntity
      */
-    protected TransactionsEntity findById(int id, int idUser) {
+    protected TransactionsEntity findById(int id, UsersEntity usersEntity) {
 
         FacesMessage msg;
 
@@ -325,8 +324,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
@@ -334,11 +333,11 @@ public class TransactionsBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
         try {
-            return dao.findById(em, id, idUser);
+            return dao.findById(em, id, usersEntity.getId());
         } catch (Exception ex) {
             log.info("Nothing");
             throw new EntityNotFoundException(
-                    "Aucune transaction avec l ID " + id + " et l ID User " + idUser + " n a ete trouvee dans la BDD",
+                    "Aucune transaction avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouvee dans la BDD",
                     ErrorCodes.TRANSACTION_NOT_FOUND
             );
         } finally {
@@ -350,26 +349,27 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Find Transactions entities by id contact
      *
-     * @param id Contact
+     * @param contactsEntity ContactsEntity
+     * @param usersEntity    UsersEntity
      * @return List TransactionsEntities
      */
-    protected List<TransactionsEntity> findTransactionsEntityByContactsByIdContacts(int id, int idUser) {
+    protected List<TransactionsEntity> findTransactionsEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity) {
         FacesMessage msg;
-        if (id == 0) {
-            log.error("Contact ID is null");
+        if (contactsEntity == null) {
+            log.error("Contact Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
 
-        List<TransactionsEntity> transactionsEntities = dao.findTransactionsEntityByContactsByIdContacts(em, id, idUser);
+        List<TransactionsEntity> transactionsEntities = dao.findTransactionsEntityByContactsByIdContacts(em, contactsEntity.getId(), usersEntity.getId());
 
         em.clear();
         em.close();
@@ -381,26 +381,26 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Find Transactions entities by id company
      *
-     * @param id Company
+     * @param companiesEntity CompaniesEntity
      * @return List TransactionsEntities
      */
-    protected List<TransactionsEntity> findTransactionsEntityByCompaniesByIdCompanies(int id, int idUser) {
+    protected List<TransactionsEntity> findTransactionsEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity) {
         FacesMessage msg;
-        if (id == 0) {
-            log.error("Company ID is null");
+        if (companiesEntity == null) {
+            log.error("Company Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
 
         EntityManager em = EMF.getEM();
-        List<TransactionsEntity> transactionsEntities = dao.findTransactionsEntityByCompaniesByIdCompanies(em, id, idUser);
+        List<TransactionsEntity> transactionsEntities = dao.findTransactionsEntityByCompaniesByIdCompanies(em, companiesEntity.getId(), usersEntity.getId());
 
         em.clear();
         em.close();
@@ -413,16 +413,16 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      *
      * @return List TransactionsEntity
      */
-    protected List<TransactionsEntity> findAll(int idUser) {
+    protected List<TransactionsEntity> findAll(UsersEntity usersEntity) {
         FacesMessage msg;
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
-        List<TransactionsEntity> transactionsEntities = dao.findAll(em, idUser);
+        List<TransactionsEntity> transactionsEntities = dao.findAll(em, usersEntity.getId());
 
         em.clear();
         em.close();
@@ -435,16 +435,16 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      *
      * @return List TransactionsEntity
      */
-    protected List<TransactionsEntity> findAllByPhase(int idUser, String phaseTransaction) {
+    protected List<TransactionsEntity> findAllByPhase(UsersEntity usersEntity, String phaseTransaction) {
         FacesMessage msg;
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
-        List<TransactionsEntity> transactionsEntitiesToFind = dao.findAllByPhase(em, idUser, phaseTransaction);
+        List<TransactionsEntity> transactionsEntitiesToFind = dao.findAllByPhase(em, usersEntity.getId(), phaseTransaction);
 
         em.clear();
         em.close();
@@ -469,7 +469,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
 
         FacesMessage msg;
         try {
-            TransactionsEntity transactionsEntityToFind = findById(entity.getId(), entity.getUsersByIdUsers().getId());
+            TransactionsEntity transactionsEntityToFind = findById(entity.getId(), entity.getUsersByIdUsers());
             entity.setCreationDate(transactionsEntityToFind.getCreationDate());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
@@ -579,10 +579,10 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Logical Delete transaction
      *
-     * @param id     int
-     * @param idUser int
+     * @param id          int
+     * @param usersEntity UsersEntity
      */
-    protected void delete(int id, int idUser) {
+    protected void delete(int id, UsersEntity usersEntity) {
         FacesMessage msg;
         if (id == 0) {
             log.error("Transaction ID is null");
@@ -590,15 +590,15 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
         TransactionsEntity transactionsEntityToDelete;
         try {
-            transactionsEntityToDelete = findById(id, idUser);
+            transactionsEntityToDelete = findById(id, usersEntity);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);

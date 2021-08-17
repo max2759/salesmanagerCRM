@@ -3,6 +3,7 @@ package be.atc.salesmanagercrm.beans;
 import be.atc.salesmanagercrm.entities.ContactTypesEntity;
 import be.atc.salesmanagercrm.entities.ContactsEntity;
 import be.atc.salesmanagercrm.entities.JobTitlesEntity;
+import be.atc.salesmanagercrm.entities.UsersEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,9 +36,10 @@ class ContactsBeanTest {
     void findContactsEntityByIdUser() {
 
         // Mettre un id correct
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<ContactsEntity> contactsEntities = contactsBean.findContactsEntityByIdUser(idUser);
+        List<ContactsEntity> contactsEntities = contactsBean.findContactsEntityByIdUser(usersEntity);
 
         boolean test = !contactsEntities.isEmpty();
 

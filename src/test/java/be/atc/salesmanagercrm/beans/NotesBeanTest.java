@@ -1,5 +1,7 @@
 package be.atc.salesmanagercrm.beans;
 
+import be.atc.salesmanagercrm.entities.CompaniesEntity;
+import be.atc.salesmanagercrm.entities.ContactsEntity;
 import be.atc.salesmanagercrm.entities.NotesEntity;
 import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
@@ -47,11 +49,12 @@ class NotesBeanTest {
     @Test
     void findByIdShouldReturnFalse() {
         int id = 1;
-        int idUser = 1014;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
         NotesEntity notesEntity = null;
         try {
-            notesEntity = notesBean.findById(id, idUser);
+            notesEntity = notesBean.findById(id, usersEntity);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
         }
@@ -65,11 +68,12 @@ class NotesBeanTest {
     @Test
     void findByIdShouldReturnTrue() {
         int id = 1;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
         NotesEntity notesEntity = null;
         try {
-            notesEntity = notesBean.findById(id, idUser);
+            notesEntity = notesBean.findById(id, usersEntity);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
         }
@@ -83,10 +87,12 @@ class NotesBeanTest {
     void findEntityNotesEntityByContactsByIdContactsShouldReturnTrue() {
 
         // Mettre un id correct
-        int id = 1;
-        int idUser = 1;
+        ContactsEntity contactsEntity = new ContactsEntity();
+        contactsEntity.setId(1);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<NotesEntity> notesEntities = notesBean.findNotesEntityByContactsByIdContacts(id, idUser);
+        List<NotesEntity> notesEntities = notesBean.findNotesEntityByContactsByIdContacts(contactsEntity, usersEntity);
 
         boolean test = !notesEntities.isEmpty();
 
@@ -99,11 +105,12 @@ class NotesBeanTest {
     void findEntityNotesEntityByContactsByIdContactsShouldReturnFalse() {
 
         // Mettre un id incorrect
-        int id = 1;
+        ContactsEntity contactsEntity = new ContactsEntity();
+        contactsEntity.setId(1);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(11);
 
-        int idUser = 11;
-
-        List<NotesEntity> notesEntities = notesBean.findNotesEntityByContactsByIdContacts(id, idUser);
+        List<NotesEntity> notesEntities = notesBean.findNotesEntityByContactsByIdContacts(contactsEntity, usersEntity);
 
         boolean test = !notesEntities.isEmpty();
 
@@ -117,10 +124,12 @@ class NotesBeanTest {
     void findEntityNotesEntityByCompaniesByIdCompaniesShouldReturnTrue() {
 
         // Mettre un id correct
-        int id = 1;
-        int idUser = 1;
+        CompaniesEntity companiesEntity = new CompaniesEntity();
+        companiesEntity.setId(1);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<NotesEntity> notesEntities = notesBean.findNotesEntityByCompaniesByIdCompanies(id, idUser);
+        List<NotesEntity> notesEntities = notesBean.findNotesEntityByCompaniesByIdCompanies(companiesEntity, usersEntity);
 
         boolean test = !notesEntities.isEmpty();
 
@@ -133,10 +142,12 @@ class NotesBeanTest {
     void findEntityNotesEntityByCompaniesByIdCompaniesShouldReturnFalse() {
 
         // Mettre un id incorrect
-        int id = 195;
-        int idUser = 1;
+        CompaniesEntity companiesEntity = new CompaniesEntity();
+        companiesEntity.setId(195);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<NotesEntity> notesEntities = notesBean.findNotesEntityByCompaniesByIdCompanies(id, idUser);
+        List<NotesEntity> notesEntities = notesBean.findNotesEntityByCompaniesByIdCompanies(companiesEntity, usersEntity);
 
         boolean test = !notesEntities.isEmpty();
 
@@ -147,8 +158,9 @@ class NotesBeanTest {
 
     @Test
     void findAll() {
-        int idUser = 1;
-        List<NotesEntity> notesEntities = notesBean.findAll(idUser);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
+        List<NotesEntity> notesEntities = notesBean.findAll(usersEntity);
 
 
         boolean test = !notesEntities.isEmpty();
@@ -161,9 +173,10 @@ class NotesBeanTest {
     @Test
     void delete() {
         int id = 12;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        notesBean.delete(id, idUser);
+        notesBean.delete(id, usersEntity);
 
     }
 

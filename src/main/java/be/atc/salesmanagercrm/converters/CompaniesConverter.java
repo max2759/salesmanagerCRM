@@ -53,7 +53,7 @@ public class CompaniesConverter implements Converter {
 
         if (id != 0) {
             try {
-                companiesEntity = companiesBean.findByIdCompanyAndByIdUser(id, usersBean.getUsersEntity().getId());
+                companiesEntity = companiesBean.findByIdCompanyAndByIdUser(id, usersBean.getUsersEntity());
                 return companiesEntity;
             } catch (EntityNotFoundException exception) {
                 log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());

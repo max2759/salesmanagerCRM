@@ -2,6 +2,7 @@ package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.dao.VoucherHistoriesDao;
 import be.atc.salesmanagercrm.dao.impl.VoucherHistoriesDaoImpl;
+import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.entities.VoucherHistoriesEntity;
 import be.atc.salesmanagercrm.utils.EMF;
 import be.atc.salesmanagercrm.utils.JsfUtils;
@@ -39,8 +40,8 @@ public class VoucherHistoriesBean extends ExtendBean implements Serializable {
     private List<VoucherHistoriesEntity> voucherHistoriesEntitiesFiltered;
 
 
-    public void findAllEntities(int idVoucher, int idUser) {
-        voucherHistoriesEntities = findAllByIdUserAndByIdVoucher(idVoucher, idUser);
+    public void findAllEntities(int idVoucher, UsersEntity usersEntity) {
+        voucherHistoriesEntities = findAllByIdUserAndByIdVoucher(idVoucher, usersEntity);
     }
 
     /**
@@ -49,7 +50,7 @@ public class VoucherHistoriesBean extends ExtendBean implements Serializable {
      * @param idVoucher id VouchersEntity
      * @return List VouchersEntities
      */
-    protected List<VoucherHistoriesEntity> findAllByIdUserAndByIdVoucher(int idVoucher, int idUser) {
+    protected List<VoucherHistoriesEntity> findAllByIdUserAndByIdVoucher(int idVoucher, UsersEntity usersEntity) {
         FacesMessage msg;
         if (idVoucher == 0) {
             log.error("Voucher ID is null");
@@ -57,15 +58,15 @@ public class VoucherHistoriesBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
 
         EntityManager em = EMF.getEM();
-        List<VoucherHistoriesEntity> VoucherHistoriesEntity = dao.findAllByIdUserAndByIdVoucher(em, idVoucher, idUser);
+        List<VoucherHistoriesEntity> VoucherHistoriesEntity = dao.findAllByIdUserAndByIdVoucher(em, idVoucher, usersEntity.getId());
 
         em.clear();
         em.close();

@@ -2,7 +2,10 @@ package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.dao.NotesDao;
 import be.atc.salesmanagercrm.dao.impl.NotesDaoImpl;
+import be.atc.salesmanagercrm.entities.CompaniesEntity;
+import be.atc.salesmanagercrm.entities.ContactsEntity;
 import be.atc.salesmanagercrm.entities.NotesEntity;
+import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
@@ -94,7 +97,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      */
     public void listEntitiesContacts() {
         log.info("NotesBean => method : listEntitiesContacts()");
-        notesEntities = findNotesEntityByContactsByIdContacts(contactsBean.getContactsEntity().getId(), usersBean.getUsersEntity().getId());
+        notesEntities = findNotesEntityByContactsByIdContacts(contactsBean.getContactsEntity(), usersBean.getUsersEntity());
     }
 
     /**
@@ -102,7 +105,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      */
     public void listEntitiesCompanies() {
         log.info("NotesBean => method : listEntitiesCompanies()");
-        notesEntities = findNotesEntityByCompaniesByIdCompanies(companiesBean.getCompaniesEntity().getId(), usersBean.getUsersEntity().getId());
+        notesEntities = findNotesEntityByCompaniesByIdCompanies(companiesBean.getCompaniesEntity(), usersBean.getUsersEntity());
     }
 
     /**
@@ -173,7 +176,7 @@ public class NotesBean extends ExtendBean implements Serializable {
         NotesEntity notesEntityToUpdate;
 
         try {
-            notesEntityToUpdate = findById(idNote, usersBean.getUsersEntity().getId());
+            notesEntityToUpdate = findById(idNote, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "notes.notExist"), null);
@@ -214,7 +217,7 @@ public class NotesBean extends ExtendBean implements Serializable {
 
         try {
             int idEntity = Integer.parseInt(getParam("idEntity"));
-            delete(idEntity, usersBean.getUsersEntity().getId());
+            delete(idEntity, usersBean.getUsersEntity());
         } catch (NumberFormatException exception) {
             log.warn(exception.getMessage());
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
@@ -335,7 +338,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      * @param id NotesEntity
      * @return Notes Entity
      */
-    protected NotesEntity findById(int id, int idUser) {
+    protected NotesEntity findById(int id, UsersEntity usersEntity) {
         log.info("NotesBean => method : findById(int id, int idUser)");
 
         FacesMessage msg;
@@ -346,8 +349,8 @@ public class NotesBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
@@ -355,11 +358,11 @@ public class NotesBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
         try {
-            return dao.findById(em, id, idUser);
+            return dao.findById(em, id, usersEntity.getId());
         } catch (Exception ex) {
             log.info("Nothing");
             throw new EntityNotFoundException(
-                    "Aucune Note avec l ID " + id + " et l ID User " + idUser + " n a ete trouvee dans la BDD",
+                    "Aucune Note avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouvee dans la BDD",
                     ErrorCodes.NOTE_NOT_FOUND
             );
         } finally {
@@ -371,20 +374,20 @@ public class NotesBean extends ExtendBean implements Serializable {
     /**
      * Find Notes entities by id Contact
      *
-     * @param id Contact
+     * @param contactsEntity ContactsEntity
      * @return List NotesEntity
      */
-    protected List<NotesEntity> findNotesEntityByContactsByIdContacts(int id, int idUser) {
+    protected List<NotesEntity> findNotesEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity) {
         log.info("NotesBean => method : findNotesEntityByContactsByIdContacts(int id, int idUser)");
         FacesMessage msg;
-        if (id == 0) {
-            log.error("Contact ID is null");
+        if (contactsEntity == null) {
+            log.error("Contact Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -392,7 +395,7 @@ public class NotesBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
 
-        List<NotesEntity> notesEntities = dao.findNotesEntityByContactsByIdContacts(em, id, idUser);
+        List<NotesEntity> notesEntities = dao.findNotesEntityByContactsByIdContacts(em, contactsEntity.getId(), usersEntity.getId());
 
         em.clear();
         em.close();
@@ -403,20 +406,20 @@ public class NotesBean extends ExtendBean implements Serializable {
     /**
      * Find Notes Entities by Id Company
      *
-     * @param id Company
+     * @param companiesEntity CompaniesEntity
      * @return List NotesEntity
      */
-    protected List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(int id, int idUser) {
+    protected List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity) {
         log.info("NotesBean => method : findNotesEntityByCompaniesByIdCompanies(int id, int idUser)");
         FacesMessage msg;
-        if (id == 0) {
-            log.error("Company ID is null");
+        if (companiesEntity == null) {
+            log.error("Company Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -424,7 +427,7 @@ public class NotesBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
 
-        List<NotesEntity> notesEntities = dao.findNotesEntityByCompaniesByIdCompanies(em, id, idUser);
+        List<NotesEntity> notesEntities = dao.findNotesEntityByCompaniesByIdCompanies(em, companiesEntity.getId(), usersEntity.getId());
 
         em.clear();
         em.close();
@@ -437,17 +440,17 @@ public class NotesBean extends ExtendBean implements Serializable {
      *
      * @return List NotesEntity
      */
-    protected List<NotesEntity> findAll(int idUser) {
+    protected List<NotesEntity> findAll(UsersEntity usersEntity) {
         log.info("NotesBean => method : findAll(int idUser)");
         FacesMessage msg;
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
-        List<NotesEntity> notesEntities = dao.findAll(em, idUser);
+        List<NotesEntity> notesEntities = dao.findAll(em, usersEntity.getId());
 
         em.clear();
         em.close();
@@ -460,7 +463,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      *
      * @param id note
      */
-    protected void delete(int id, int idUser) {
+    protected void delete(int id, UsersEntity usersEntity) {
         log.info("NotesBean => method : delete(int id, int idUser)");
         FacesMessage msg;
         if (id == 0) {
@@ -469,8 +472,8 @@ public class NotesBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
@@ -479,7 +482,7 @@ public class NotesBean extends ExtendBean implements Serializable {
         NotesEntity notesEntity;
 
         try {
-            notesEntity = findById(id, idUser);
+            notesEntity = findById(id, usersEntity);
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "note.notExist"), null);
@@ -528,7 +531,7 @@ public class NotesBean extends ExtendBean implements Serializable {
 
         FacesMessage msg;
         try {
-            NotesEntity notesEntity = findById(entity.getId(), entity.getUsersByIdUsers().getId());
+            NotesEntity notesEntity = findById(entity.getId(), entity.getUsersByIdUsers());
             entity.setCreationDate(notesEntity.getCreationDate());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());

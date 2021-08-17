@@ -109,15 +109,19 @@
                               sortBy="#{transaction.contactsByIdContacts.lastname.concat(transaction.contactsByIdContacts.firstname)}"
                               filterBy="#{transaction.contactsByIdContacts.lastname.concat(transaction.contactsByIdContacts.firstname)}"
                               filterMatchMode="contains">
-                        <h:outputText
-                                value="#{transaction.contactsByIdContacts.lastname} #{transaction.contactsByIdContacts.firstname}"/>
+                        <h:link
+                                value="#{transaction.contactsByIdContacts.lastname} #{transaction.contactsByIdContacts.firstname}"
+                                outcome="contactDetails.xhtml?contactID=#{transaction.contactsByIdContacts.id}"
+                        />
                     </p:column>
 
                     <p:column headerText="#{bundle['transactions.company']}"
                               sortBy="#{transaction.companiesByIdCompanies.label}"
                               filterBy="#{transaction.companiesByIdCompanies.label}"
                               filterMatchMode="contains">
-                        <h:outputText value="#{transaction.companiesByIdCompanies.label}"/>
+                        <h:link
+                                value="#{transaction.companiesByIdCompanies.label}"
+                                outcome="companydetails.xhtml?companyID=#{transaction.companiesByIdCompanies.id}"/>
                     </p:column>
 
                     <p:column headerText="#{bundle['transactions.creationDate']}"

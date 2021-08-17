@@ -98,8 +98,10 @@
                               sortBy="#{voucher.contactsByIdContacts.lastname.concat(voucher.contactsByIdContacts.firstname)}"
                               filterBy="#{voucher.contactsByIdContacts.lastname.concat(voucher.contactsByIdContacts.firstname)}"
                               filterMatchMode="contains">
-                        <h:outputText
-                                value="#{voucher.contactsByIdContacts.lastname} #{voucher.contactsByIdContacts.firstname}"/>
+                        <h:link
+                                value="#{voucher.contactsByIdContacts.lastname} #{voucher.contactsByIdContacts.firstname}"
+                                outcome="contactDetails.xhtml?contactID=#{voucher.contactsByIdContacts.id}"
+                        />
                     </p:column>
 
                     <p:column headerText="#{bundle['vouchers.company']}"
@@ -107,7 +109,9 @@
                               sortBy="#{voucher.companiesByIdCompanies.label}"
                               filterBy="#{voucher.companiesByIdCompanies.label}"
                               filterMatchMode="contains">
-                        <h:outputText value="#{voucher.companiesByIdCompanies.label}"/>
+                        <h:link
+                                value="#{voucher.companiesByIdCompanies.label}"
+                                outcome="companydetails.xhtml?companyID=#{voucher.companiesByIdCompanies.id}"/>
                     </p:column>
 
                     <p:column headerText="#{bundle['vouchers.status']}"

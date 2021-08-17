@@ -3,6 +3,7 @@ package be.atc.salesmanagercrm.beans;
 import be.atc.salesmanagercrm.dao.TransactionHistoriesDao;
 import be.atc.salesmanagercrm.dao.impl.TransactionHistoriesDaoImpl;
 import be.atc.salesmanagercrm.entities.TransactionHistoriesEntity;
+import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.utils.EMF;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.Getter;
@@ -39,8 +40,8 @@ public class TransactionHistoriesBean extends ExtendBean implements Serializable
     private List<TransactionHistoriesEntity> transactionHistoriesEntitiesFiltered;
 
 
-    public void findAllEntities(int idTransaction, int idUser) {
-        transactionHistoriesEntities = findAllByIdUserAndByIdTransaction(idTransaction, idUser);
+    public void findAllEntities(int idTransaction, UsersEntity usersEntity) {
+        transactionHistoriesEntities = findAllByIdUserAndByIdTransaction(idTransaction, usersEntity);
     }
 
     /**
@@ -49,7 +50,7 @@ public class TransactionHistoriesBean extends ExtendBean implements Serializable
      * @param idTransaction id TransactionsEntity
      * @return List TransactionsEntities
      */
-    protected List<TransactionHistoriesEntity> findAllByIdUserAndByIdTransaction(int idTransaction, int idUser) {
+    protected List<TransactionHistoriesEntity> findAllByIdUserAndByIdTransaction(int idTransaction, UsersEntity usersEntity) {
         FacesMessage msg;
         if (idTransaction == 0) {
             log.error("Transaction ID is null");
@@ -57,7 +58,7 @@ public class TransactionHistoriesBean extends ExtendBean implements Serializable
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
-        if (idUser == 0) {
+        if (usersEntity == null) {
             log.error("User ID is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -65,7 +66,7 @@ public class TransactionHistoriesBean extends ExtendBean implements Serializable
         }
 
         EntityManager em = EMF.getEM();
-        List<TransactionHistoriesEntity> TransactionHistoriesEntity = dao.findAllByIdUserAndByIdTransaction(em, idTransaction, idUser);
+        List<TransactionHistoriesEntity> TransactionHistoriesEntity = dao.findAllByIdUserAndByIdTransaction(em, idTransaction, usersEntity.getId());
 
         em.clear();
         em.close();
