@@ -1,6 +1,8 @@
 package be.atc.salesmanagercrm.beans;
 
+import be.atc.salesmanagercrm.dao.RolesDao;
 import be.atc.salesmanagercrm.dao.UsersDao;
+import be.atc.salesmanagercrm.dao.impl.RolesDaoImpl;
 import be.atc.salesmanagercrm.dao.impl.UsersDaoImpl;
 import be.atc.salesmanagercrm.entities.RolesEntity;
 import be.atc.salesmanagercrm.entities.UsersEntity;
@@ -36,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 
 /**
@@ -51,6 +54,9 @@ public class UsersBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private UsersDao dao = new UsersDaoImpl();
+    @Getter
+    @Setter
+    private RolesDao rolesDao = new RolesDaoImpl();
     @Getter
     @Setter
     private UsersEntity usersEntity = new UsersEntity();
@@ -87,8 +93,10 @@ public class UsersBean extends ExtendBean implements Serializable {
     private List<UsersEntity> usersEntities;
     @Getter
     @Setter
+    private List<RolesEntity> rolesEntities;
+    @Getter
+    @Setter
     private UsersEntity selectedUserEntity;
-
     @Getter
     @Setter
     private List<UsersEntity> usersEntitiesRole = new ArrayList<>();
@@ -107,6 +115,8 @@ public class UsersBean extends ExtendBean implements Serializable {
 
         FacesMessage msg;
         FacesMessage msg1;
+        log.info(String.valueOf(usersEntity));
+        log.info(String.valueOf(rolesEntity));
 
         Subject currentUser = SecurityUtils.getSubject();
         //test a typed permission (not instance-level)
@@ -558,6 +568,43 @@ public class UsersBean extends ExtendBean implements Serializable {
 
         return password;
     }
+
+
+    /**
+     * Auto complete for RolesType
+     *
+     * @param search String
+     * @return list of rolesEntity
+     */
+    public List<RolesEntity> completeRolesAjax(String search) {
+
+        String searchLowerCase = search.toLowerCase();
+
+        List<RolesEntity> rolesEntitiesDropDown = findRoleAjaxList();
+        log.info(String.valueOf(rolesEntitiesDropDown));
+        log.info(String.valueOf(rolesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList())));
+
+        return rolesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
+
+    }
+
+    /**
+     * Find rolesTypes entities
+     *
+     * @return List RolesEntity
+     */
+    public List<RolesEntity> findRoleAjaxList() {
+
+        EntityManager em = EMF.getEM();
+
+        List<RolesEntity> rolesEntities = rolesDao.findAllRolesActive(em);
+
+        em.clear();
+        em.close();
+
+        return rolesEntities;
+    }
+
 
     public void findUser() {
 

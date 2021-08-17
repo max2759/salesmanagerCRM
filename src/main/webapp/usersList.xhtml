@@ -18,6 +18,18 @@
         <h:body>
             <h1>#{bundle['usersList.title']}</h1>
 
+            <h:form>
+
+                <p:commandLink
+                        oncomplete="PF('addUser').show();return false;"
+                        styleClass="NavyButton">
+                    <i class="ui-icon ui-icon-create"></i>
+                </p:commandLink>
+
+
+            </h:form>
+
+
             <div class="card card-w-title">
                 <h:form id="form">
                     <p:tab id="displayAll" title="#{bundle['all']} (#{usersBean.usersEntities.size()})">
@@ -116,7 +128,7 @@
             </div>
 
 
-            <!-- *****************************************************************- -->
+            <!-- ********************************update*********************************- -->
 
 
             <h:form id="updateUserDialogForm">
@@ -159,9 +171,9 @@
                                              value="#{usersBean.usersEntity.rolesByIdRoles}"
                                              converter="rolesConverter"
                             >
-                                <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
-                                               itemValue="#{companyTypes}"
-                                               itemLabel="#{companyTypes.label}"/>
+                                <f:selectItems value="#{rolesBean.rolesEntityList}" var="roles"
+                                               itemValue="#{roles}"
+                                               itemLabel="#{roles.label}"/>
                             </p:selectOneMenu>
                         </h:panelGroup>
 
@@ -172,6 +184,64 @@
                 </p:dialog>
 
             </h:form>
+
+            <!-- ********************************add*********************************- -->
+
+
+            <p:dialog header="Modal Dialog" widgetVar="addUser" modal="true"
+                      responsive="true" id="addUserDialog">
+                <h:form id="addUserDialogForm">
+                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <p:growl id="msg" life="2000"></p:growl>
+
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="firstname" value="#{usersBean.usersEntity.firstname}" required="true"
+                                         feedback="false"/>
+                            <p:outputLabel for="firstname" value="#{bundle['firstname']}"/>
+                            <p:messages for="firstname">
+                                <p:autoUpdate/>
+                            </p:messages>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="lastname" value="#{usersBean.usersEntity.lastname}" required="true"
+                                         feedback="false"/>
+                            <p:outputLabel for="lastname" value="#{bundle['lastname']}"/>
+                            <p:messages for="lastname">
+                                <p:autoUpdate/>
+                            </p:messages>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="email" value="#{usersBean.usersEntity.email}" required="true" type="email"
+                                         feedback="false">
+                                <f:validator validatorId="userEmailValidator"></f:validator>
+                            </p:inputText>
+                            <p:outputLabel for="email" value="#{bundle['email']}"></p:outputLabel>
+                            <p:message for="email">
+                                <p:autoUpdate/>
+                            </p:message>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel for="rolesByUsers" value="#{bundle['role']}"></p:outputLabel>
+                            <p:selectOneMenu id="rolesByUsers"
+                                             value="#{usersBean.usersEntity.rolesByIdRoles}"
+                                             converter="rolesConverter" required="true" feedback="false"
+                            >
+                                <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
+                                               itemValue="#{companyTypes}"
+                                               itemLabel="#{companyTypes.label}"/>
+                            </p:selectOneMenu>
+
+                        </h:panelGroup>
+
+
+                        <p:commandButton value="Valider" action="#{usersBean.register}" id="validateRole"/>
+                    </p:panelGrid>
+                </h:form>
+            </p:dialog>
+
 
             <p:messages id="messages" showDetail="true">
                 <p:autoUpdate/>
