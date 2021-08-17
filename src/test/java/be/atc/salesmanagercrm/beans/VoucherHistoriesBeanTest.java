@@ -1,5 +1,6 @@
 package be.atc.salesmanagercrm.beans;
 
+import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.entities.VoucherHistoriesEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,13 +33,14 @@ class VoucherHistoriesBeanTest {
     }
 
     @Test
-    void findAllByIdUserAndByIdTransactionShouldReturnTrue() {
+    void findAllByusersEntityAndByIdTransactionShouldReturnTrue() {
 
         // Mettre un id incorrect
         int idVoucher = 3;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(idVoucher, idUser);
+        List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(idVoucher, usersEntity);
 
 
         boolean test = !voucherHistoriesEntities.isEmpty();
@@ -53,9 +55,10 @@ class VoucherHistoriesBeanTest {
 
         // Mettre un id correct
         int idVoucher = 1540;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(idVoucher, idUser);
+        List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(idVoucher, usersEntity);
 
 
         boolean test = !voucherHistoriesEntities.isEmpty();

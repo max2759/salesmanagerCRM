@@ -60,11 +60,12 @@ class VouchersBeanTest {
 
         // Mettre un id incorrect
         int id = 10;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
         VouchersEntity vouchersEntity = null;
 
         try {
-            vouchersEntity = vouchersBean.findById(id, idUser);
+            vouchersEntity = vouchersBean.findById(id, usersEntity);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
         }
@@ -82,11 +83,12 @@ class VouchersBeanTest {
 
         // Mettre un id correct
         int id = 1;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
         VouchersEntity vouchersEntity = null;
 
         try {
-            vouchersEntity = vouchersBean.findById(id, idUser);
+            vouchersEntity = vouchersBean.findById(id, usersEntity);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
         }
@@ -102,10 +104,12 @@ class VouchersBeanTest {
     void findVouchersEntityByContactsByIdContactsShouldReturnTrue() {
 
         // Mettre un id correct
-        int id = 1;
-        int idUser = 1;
+        ContactsEntity contactsEntity = new ContactsEntity();
+        contactsEntity.setId(1);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByContactsByIdContacts(id, idUser);
+        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByContactsByIdContacts(contactsEntity, usersEntity);
 
 
         boolean test = !vouchersEntities.isEmpty();
@@ -119,11 +123,13 @@ class VouchersBeanTest {
     void findVouchersEntityByContactsByIdContactsShouldReturnFalse() {
 
         // Mettre un id incorrect
-        int id = 10;
+        ContactsEntity contactsEntity = new ContactsEntity();
+        contactsEntity.setId(5001);
 
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByContactsByIdContacts(id, idUser);
+        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByContactsByIdContacts(contactsEntity, usersEntity);
 
 
         boolean test = !vouchersEntities.isEmpty();
@@ -137,10 +143,12 @@ class VouchersBeanTest {
     void findVouchersEntityByCompaniesByIdCompaniesShouldReturnTrue() {
 
         // Mettre un id correct
-        int id = 1;
-        int idUser = 1;
+        CompaniesEntity companiesEntity = new CompaniesEntity();
+        companiesEntity.setId(1);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByCompaniesByIdCompanies(id, idUser);
+        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByCompaniesByIdCompanies(companiesEntity, usersEntity);
 
 
         boolean test = !vouchersEntities.isEmpty();
@@ -154,10 +162,12 @@ class VouchersBeanTest {
     void findVouchersEntityByCompaniesByIdCompaniesShouldReturnFalse() {
 
         // Mettre un id incorrect
-        int id = 195;
-        int idUser = 1;
+        CompaniesEntity companiesEntity = new CompaniesEntity();
+        companiesEntity.setId(15415);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByCompaniesByIdCompanies(id, idUser);
+        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByCompaniesByIdCompanies(companiesEntity, usersEntity);
 
 
         boolean test = !vouchersEntities.isEmpty();
@@ -169,8 +179,9 @@ class VouchersBeanTest {
 
     @Test
     void findAll() {
-        int idUser = 1;
-        List<VouchersEntity> vouchersEntities = vouchersBean.findAll(idUser);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
+        List<VouchersEntity> vouchersEntities = vouchersBean.findAll(usersEntity);
 
 
         boolean test = !vouchersEntities.isEmpty();

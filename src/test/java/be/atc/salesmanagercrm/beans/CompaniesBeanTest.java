@@ -58,9 +58,10 @@ class CompaniesBeanTest {
     @Test
     void findCompaniesEntityByIdUser() {
         // Mettre un id correct
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<CompaniesEntity> companiesEntities = companiesBean.findCompaniesEntityByIdUser(idUser);
+        List<CompaniesEntity> companiesEntities = companiesBean.findCompaniesEntityByIdUser(usersEntity);
 
         boolean test = !companiesEntities.isEmpty();
 
@@ -74,9 +75,10 @@ class CompaniesBeanTest {
     void findByIdCompanyAndByIdUser() {
 
         int id = 1;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        CompaniesEntity companiesEntity = companiesBean.findByIdCompanyAndByIdUser(id, idUser);
+        CompaniesEntity companiesEntity = companiesBean.findByIdCompanyAndByIdUser(id, usersEntity);
 
         boolean test = !(companiesEntity == null);
 

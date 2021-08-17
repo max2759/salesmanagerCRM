@@ -15,6 +15,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.primefaces.event.TabChangeEvent;
 
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -107,24 +108,24 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             listActivity.put(t.getCreationDate(), objectActivity);
         }
 
-        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByCompaniesByIdCompanies(companiesEntity.getId(), usersBean.getUsersEntity().getId());
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByCompaniesByIdCompanies(companiesEntity, usersBean.getUsersEntity());
         for (TransactionsEntity t : transactionsEntities) {
             ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
             listActivity.put(t.getCreationDate(), objectActivity);
 
-            List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(t.getId(), usersBean.getUsersEntity().getId());
+            List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(t.getId(), usersBean.getUsersEntity());
             for (TransactionHistoriesEntity tH : transactionHistoriesEntities) {
                 ObjectActivity objectActivity1 = new ObjectActivity(tH.getClass().getName(), tH);
                 listActivity.put(tH.getSaveDate(), objectActivity1);
             }
         }
 
-        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByCompaniesByIdCompanies(companiesEntity.getId(), usersBean.getUsersEntity().getId());
+        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByCompaniesByIdCompanies(companiesEntity, usersBean.getUsersEntity());
         for (VouchersEntity v : vouchersEntities) {
             ObjectActivity objectActivity = new ObjectActivity(v.getClass().getName(), v);
             listActivity.put(v.getCreationDate(), objectActivity);
 
-            List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(v.getId(), usersBean.getUsersEntity().getId());
+            List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(v.getId(), usersBean.getUsersEntity());
             for (VoucherHistoriesEntity vH : voucherHistoriesEntities) {
                 ObjectActivity objectActivity1 = new ObjectActivity(vH.getClass().getName(), vH);
                 listActivity.put(vH.getSaveDate(), objectActivity1);
@@ -232,9 +233,9 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     public void loadListEntities(String typeLoad) {
 
         if (typeLoad.equalsIgnoreCase("displayActiveCompany")) {
-            companiesEntityList = findActiveCompanies(usersBean.getUsersEntity().getId());
+            companiesEntityList = findActiveCompanies(usersBean.getUsersEntity());
         } else if (typeLoad.equalsIgnoreCase("displayDisableCompany")) {
-            companiesEntityList = findDisableCompanies(usersBean.getUsersEntity().getId());
+            companiesEntityList = findDisableCompanies(usersBean.getUsersEntity());
         }
     }
 
@@ -259,7 +260,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     public List<CompaniesEntity> completeCompaniesContains(String query) {
         String queryLowerCase = query.toLowerCase();
 
-        List<CompaniesEntity> companiesEntitiesForm = findCompaniesEntityByIdUser(usersBean.getUsersEntity().getId());
+        List<CompaniesEntity> companiesEntitiesForm = findCompaniesEntityByIdUser(usersBean.getUsersEntity());
 
         return companiesEntitiesForm.stream().filter(t -> t.getLabel().toLowerCase().contains(queryLowerCase)).collect(Collectors.toList());
     }
@@ -278,20 +279,20 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     /**
      * Find all Companies entities by userID
      *
-     * @param idUser idUser
+     * @param usersEntity UsersEntity
      * @return List CompaniesEntities
      */
-    protected List<CompaniesEntity> findAll(int idUser) {
+    protected List<CompaniesEntity> findAll(UsersEntity usersEntity) {
 
         log.info("Start method findAll");
 
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User Entity is null");
             return Collections.emptyList();
         }
 
         EntityManager em = EMF.getEM();
-        List<CompaniesEntity> companiesEntities = companiesDao.findAll(em, idUser);
+        List<CompaniesEntity> companiesEntities = companiesDao.findAll(em, usersEntity.getId());
 
         em.clear();
         em.close();
@@ -302,17 +303,17 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     /**
      * Find all active companies
      *
-     * @param idUser idUser
+     * @param usersEntity UsersEntity
      * @return List Active CompaniesEntity
      */
-    protected List<CompaniesEntity> findActiveCompanies(int idUser) {
+    protected List<CompaniesEntity> findActiveCompanies(UsersEntity usersEntity) {
 
         log.info("Start method findActiveCompanies");
 
         FacesMessage facesMessage;
 
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User Entity is null");
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
             return Collections.emptyList();
@@ -320,7 +321,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
 
-        List<CompaniesEntity> companiesEntities = companiesDao.findActiveCompany(em, idUser);
+        List<CompaniesEntity> companiesEntities = companiesDao.findActiveCompany(em, usersEntity.getId());
 
         em.clear();
         em.close();
@@ -331,17 +332,17 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     /**
      * Find all disable companies
      *
-     * @param idUser idUser
+     * @param usersEntity UsersEntity
      * @return List disable CompaniesEntity
      */
-    protected List<CompaniesEntity> findDisableCompanies(int idUser) {
+    protected List<CompaniesEntity> findDisableCompanies(UsersEntity usersEntity) {
 
         log.info("Start method findDisableCompanies");
 
         FacesMessage facesMessage;
 
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User Entity is null");
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
             return Collections.emptyList();
@@ -349,7 +350,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
 
-        List<CompaniesEntity> companiesEntities = companiesDao.findDisableCompany(em, idUser);
+        List<CompaniesEntity> companiesEntities = companiesDao.findDisableCompany(em, usersEntity.getId());
 
         em.clear();
         em.close();
@@ -360,19 +361,19 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     /**
      * Find Companies entities by id User
      *
-     * @param idUser UsersEntity
+     * @param usersEntity UsersEntity
      * @return List CompaniesEntity
      */
-    public List<CompaniesEntity> findCompaniesEntityByIdUser(int idUser) {
+    public List<CompaniesEntity> findCompaniesEntityByIdUser(UsersEntity usersEntity) {
 
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User Entity is null");
             return Collections.emptyList();
         }
 
         EntityManager em = EMF.getEM();
 
-        List<CompaniesEntity> companiesEntities = companiesDao.findCompaniesEntityByIdUser(em, idUser);
+        List<CompaniesEntity> companiesEntities = companiesDao.findCompaniesEntityByIdUser(em, usersEntity.getId());
 
         em.clear();
         em.close();
@@ -387,7 +388,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @param id CompaniesEntity
      * @return Companies Entity
      */
-    public CompaniesEntity findByIdCompanyAndByIdUser(int id, int idUser) {
+    public CompaniesEntity findByIdCompanyAndByIdUser(int id, UsersEntity usersEntity) {
 
         FacesMessage msg;
 
@@ -397,8 +398,8 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
@@ -406,11 +407,11 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
         try {
-            return companiesDao.findByIdCompanyAndByIdUser(em, id, idUser);
+            return companiesDao.findByIdCompanyAndByIdUser(em, id, usersEntity.getId());
         } catch (Exception ex) {
             log.info("Nothing");
             throw new EntityNotFoundException(
-                    "Aucune entreprise avec l ID " + id + " et l ID User " + idUser + " n a ete trouvee dans la BDD",
+                    "Aucune entreprise avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouvee dans la BDD",
                     ErrorCodes.COMPANY_NOT_FOUND
             );
         } finally {
@@ -420,17 +421,17 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
     public List<CompaniesEntity> callFindByIdCompaniAndByIdUser(int id) {
-        return findByIdCompaniAndByIdUser(id, usersBean.getUsersEntity().getId());
+        return findByIdCompaniAndByIdUser(id, usersBean.getUsersEntity());
     }
 
     /**
      * Return list of Companies by its id and idUser
      *
-     * @param id     id Companies
-     * @param idUser id User
+     * @param id          id Companies
+     * @param usersEntity UsersEntity
      * @return CompaniesEntity
      */
-    private List<CompaniesEntity> findByIdCompaniAndByIdUser(int id, int idUser) {
+    private List<CompaniesEntity> findByIdCompaniAndByIdUser(int id, UsersEntity usersEntity) {
 
         FacesMessage msg;
 
@@ -440,8 +441,8 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
@@ -450,11 +451,11 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         EntityManager em = EMF.getEM();
 
         try {
-            return companiesDao.findByIdCompaniAndByIdUser(em, id, idUser);
+            return companiesDao.findByIdCompaniAndByIdUser(em, id, usersEntity.getId());
         } catch (Exception ex) {
             log.info("Nothing");
             throw new EntityNotFoundException(
-                    "Aucune entreprise avec l ID " + id + " et l ID User " + idUser + " n a ete trouvee dans la BDD",
+                    "Aucune entreprise avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouvee dans la BDD",
                     ErrorCodes.COMPANY_NOT_FOUND
             );
         } finally {
@@ -496,7 +497,8 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * Get company by it's ID
      */
     protected void displayOneCompany() {
-
+        FacesContext fc = FacesContext.getCurrentInstance();
+        ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
         FacesMessage facesMessage;
 
         log.info("Début méthode displayOneCompany");
@@ -510,6 +512,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             log.info(exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "company.error"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            nav.performNavigation("/company.xhtml");
             return;
         }
 
@@ -520,11 +523,10 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "company.error"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            nav.performNavigation("/company.xhtml");
             return;
         }
-
         addressesBean.getAddressByIdCompany();
-
     }
 
     /**
@@ -786,7 +788,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     public List<CompaniesEntity> completeCompanies(String search) {
         String searchLowerCase = search.toLowerCase();
 
-        List<CompaniesEntity> companiesEntitiesDropdown = findActiveCompanies(1);
+        List<CompaniesEntity> companiesEntitiesDropdown = findActiveCompanies(usersBean.getUsersEntity());
 
         return companiesEntitiesDropdown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
     }

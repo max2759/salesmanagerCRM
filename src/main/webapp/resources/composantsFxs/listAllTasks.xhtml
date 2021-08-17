@@ -77,15 +77,19 @@
                                       sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterMatchMode="contains">
-                                <h:outputText
-                                        value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
+                                <h:link
+                                        value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"
+                                        outcome="contactDetails.xhtml?contactID=#{task.contactsByIdContacts.id}"
+                                />
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
                                       sortBy="#{task.companiesByIdCompanies.label}"
                                       filterBy="#{task.companiesByIdCompanies.label}"
                                       filterMatchMode="contains">
-                                <h:outputText value="#{task.companiesByIdCompanies.label}"/>
+                                <h:link
+                                        value="#{task.companiesByIdCompanies.label}"
+                                        outcome="companydetails.xhtml?companyID=#{task.companiesByIdCompanies.id}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.taskType']}"
@@ -214,15 +218,19 @@
                                       sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterMatchMode="contains">
-                                <h:outputText
-                                        value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
+                                <h:link
+                                        value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"
+                                        outcome="contactDetails.xhtml?contactID=#{task.contactsByIdContacts.id}"
+                                />
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
                                       sortBy="#{task.companiesByIdCompanies.label}"
                                       filterBy="#{task.companiesByIdCompanies.label}"
                                       filterMatchMode="contains">
-                                <h:outputText value="#{task.companiesByIdCompanies.label}"/>
+                                <h:link
+                                        value="#{task.companiesByIdCompanies.label}"
+                                        outcome="companydetails.xhtml?companyID=#{task.companiesByIdCompanies.id}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.taskType']}"
@@ -338,15 +346,19 @@
                                       sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterMatchMode="contains">
-                                <h:outputText
-                                        value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
+                                <h:link
+                                        value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"
+                                        outcome="contactDetails.xhtml?contactID=#{task.contactsByIdContacts.id}"
+                                />
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
                                       sortBy="#{task.companiesByIdCompanies.label}"
                                       filterBy="#{task.companiesByIdCompanies.label}"
                                       filterMatchMode="contains">
-                                <h:outputText value="#{task.companiesByIdCompanies.label}"/>
+                                <h:link
+                                        value="#{task.companiesByIdCompanies.label}"
+                                        outcome="companydetails.xhtml?companyID=#{task.companiesByIdCompanies.id}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.taskType']}"
@@ -473,15 +485,19 @@
                                       sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterMatchMode="contains">
-                                <h:outputText
-                                        value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
+                                <h:link
+                                        value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"
+                                        outcome="contactDetails.xhtml?contactID=#{task.contactsByIdContacts.id}"
+                                />
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
                                       sortBy="#{task.companiesByIdCompanies.label}"
                                       filterBy="#{task.companiesByIdCompanies.label}"
                                       filterMatchMode="contains">
-                                <h:outputText value="#{task.companiesByIdCompanies.label}"/>
+                                <h:link
+                                        value="#{task.companiesByIdCompanies.label}"
+                                        outcome="companydetails.xhtml?companyID=#{task.companiesByIdCompanies.id}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.taskType']}"
@@ -608,15 +624,19 @@
                                       sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterMatchMode="contains">
-                                <h:outputText
-                                        value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"/>
+                                <h:link
+                                        value="#{task.contactsByIdContacts.lastname} #{task.contactsByIdContacts.firstname}"
+                                        outcome="contactDetails.xhtml?contactID=#{task.contactsByIdContacts.id}"
+                                />
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.company']}"
                                       sortBy="#{task.companiesByIdCompanies.label}"
                                       filterBy="#{task.companiesByIdCompanies.label}"
                                       filterMatchMode="contains">
-                                <h:outputText value="#{task.companiesByIdCompanies.label}"/>
+                                <h:link
+                                        value="#{task.companiesByIdCompanies.label}"
+                                        outcome="companydetails.xhtml?companyID=#{task.companiesByIdCompanies.id}"/>
                             </p:column>
 
                             <p:column colspan="1" headerText="#{bundle['tasks.taskType']}"

@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.event.UnselectEvent;
 
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -88,6 +89,9 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * this method is used in activity page
      */
     public void activityThread() {
+        if (contactsEntity == null) {
+            return;
+        }
         log.info("ContactsBean : activityThread()");
 
         this.listActivity = new TreeMap<>(Collections.reverseOrder());
@@ -102,24 +106,24 @@ public class ContactsBean extends ExtendBean implements Serializable {
             listActivity.put(t.getCreationDate(), objectActivity);
         }
 
-        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByContactsByIdContacts(contactsEntity.getId(), usersBean.getUsersEntity().getId());
+        List<TransactionsEntity> transactionsEntities = transactionsBean.findTransactionsEntityByContactsByIdContacts(contactsEntity, usersBean.getUsersEntity());
         for (TransactionsEntity t : transactionsEntities) {
             ObjectActivity objectActivity = new ObjectActivity(t.getClass().getName(), t);
             listActivity.put(t.getCreationDate(), objectActivity);
 
-            List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(t.getId(), usersBean.getUsersEntity().getId());
+            List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(t.getId(), usersBean.getUsersEntity());
             for (TransactionHistoriesEntity tH : transactionHistoriesEntities) {
                 ObjectActivity objectActivity1 = new ObjectActivity(tH.getClass().getName(), tH);
                 listActivity.put(tH.getSaveDate(), objectActivity1);
             }
         }
 
-        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByContactsByIdContacts(contactsEntity.getId(), usersBean.getUsersEntity().getId());
+        List<VouchersEntity> vouchersEntities = vouchersBean.findVouchersEntityByContactsByIdContacts(contactsEntity, usersBean.getUsersEntity());
         for (VouchersEntity v : vouchersEntities) {
             ObjectActivity objectActivity = new ObjectActivity(v.getClass().getName(), v);
             listActivity.put(v.getCreationDate(), objectActivity);
 
-            List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(v.getId(), usersBean.getUsersEntity().getId());
+            List<VoucherHistoriesEntity> voucherHistoriesEntities = voucherHistoriesBean.findAllByIdUserAndByIdVoucher(v.getId(), usersBean.getUsersEntity());
             for (VoucherHistoriesEntity vH : voucherHistoriesEntities) {
                 ObjectActivity objectActivity1 = new ObjectActivity(vH.getClass().getName(), vH);
                 listActivity.put(vH.getSaveDate(), objectActivity1);
@@ -136,19 +140,19 @@ public class ContactsBean extends ExtendBean implements Serializable {
     /**
      * Find Contacts entities by id User
      *
-     * @param idUser UsersEntity
+     * @param usersEntity UsersEntity
      * @return List ContactsEntity
      */
-    public List<ContactsEntity> findContactsEntityByIdUser(int idUser) {
+    public List<ContactsEntity> findContactsEntityByIdUser(UsersEntity usersEntity) {
 
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User Entity is null");
             return Collections.emptyList();
         }
 
         EntityManager em = EMF.getEM();
 
-        List<ContactsEntity> contactsEntities = contactsDao.findContactsEntityByIdUser(em, idUser);
+        List<ContactsEntity> contactsEntities = contactsDao.findContactsEntityByIdUser(em, usersEntity.getId());
 
         em.clear();
         em.close();
@@ -176,9 +180,9 @@ public class ContactsBean extends ExtendBean implements Serializable {
     public void loadListEntities(String typeLoad) {
 
         if (typeLoad.equalsIgnoreCase("displayActiveContacts")) {
-            contactsEntityList = findContactsEntityByIdUser(usersBean.getUsersEntity().getId());
+            contactsEntityList = findContactsEntityByIdUser(usersBean.getUsersEntity());
         } else if (typeLoad.equalsIgnoreCase("displayDisableContacts")) {
-            contactsEntityList = findDisableContacts(usersBean.getUsersEntity().getId());
+            contactsEntityList = findDisableContacts(usersBean.getUsersEntity());
         }
     }
 
@@ -219,7 +223,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
         EntityTransaction tx = null;
 
         try {
-            contactsEntityToActivate = findByIdContactAndByIdUser(id, usersBean.getUsersEntity().getId());
+            contactsEntityToActivate = findByIdContactAndByIdUser(id, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
@@ -262,7 +266,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
         EntityTransaction tx = null;
 
         try {
-            contactsEntityToDelete = findByIdContactAndByIdUser(id, usersBean.getUsersEntity().getId());
+            contactsEntityToDelete = findByIdContactAndByIdUser(id, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
@@ -320,17 +324,17 @@ public class ContactsBean extends ExtendBean implements Serializable {
     /**
      * Find all disable Contacts
      *
-     * @param idUser idUser
+     * @param usersEntity UsersEntity
      * @return List disable ContactsEntity
      */
-    protected List<ContactsEntity> findDisableContacts(int idUser) {
+    protected List<ContactsEntity> findDisableContacts(UsersEntity usersEntity) {
 
         log.info("Start method findDisableContacts");
 
         FacesMessage facesMessage;
 
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User Entity is null");
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
             return Collections.emptyList();
@@ -338,7 +342,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
 
-        List<ContactsEntity> contactsEntities = contactsDao.findDisableContactsEntityByIdUser(em, idUser);
+        List<ContactsEntity> contactsEntities = contactsDao.findDisableContactsEntityByIdUser(em, usersEntity.getId());
 
         em.clear();
         em.close();
@@ -352,7 +356,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * @param id ContactsEntity
      * @return Contacts Entity
      */
-    public ContactsEntity findByIdContactAndByIdUser(int id, int idUser) {
+    public ContactsEntity findByIdContactAndByIdUser(int id, UsersEntity usersEntity) {
 
         FacesMessage msg;
 
@@ -362,8 +366,8 @@ public class ContactsBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
@@ -371,11 +375,11 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
         try {
-            return contactsDao.findByIdContactAndByIdUser(em, id, idUser);
+            return contactsDao.findByIdContactAndByIdUser(em, id, usersEntity.getId());
         } catch (Exception ex) {
             log.info("Nothing");
             throw new EntityNotFoundException(
-                    "Aucun contact avec l ID " + id + " et l ID User " + idUser + " n a ete trouvee dans la BDD",
+                    "Aucun contact avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouvee dans la BDD",
                     ErrorCodes.CONTACT_NOT_FOUND
             );
         } finally {
@@ -395,7 +399,8 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * display one contact by CompanyId
      */
     protected void displayOneContact() {
-
+        FacesContext fc = FacesContext.getCurrentInstance();
+        ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
         FacesMessage facesMessage;
 
         log.info("Début méthode displayOneContact");
@@ -409,15 +414,17 @@ public class ContactsBean extends ExtendBean implements Serializable {
             log.info(exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "contact.error"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            nav.performNavigation("/contacts.xhtml");
             return;
         }
 
         try {
-            contactsEntity = findById(idContact);
+            contactsEntity = findByIdContactAndByIdUser(idContact, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "contact.error"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            nav.performNavigation("/contacts.xhtml");
             return;
         }
 
@@ -475,7 +482,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
     public List<ContactsEntity> completeContactsContains(String query) {
         String queryLowerCase = query.toLowerCase();
 
-        List<ContactsEntity> contactsEntitiesForm = findContactsEntityByIdUser(usersBean.getUsersEntity().getId());
+        List<ContactsEntity> contactsEntitiesForm = findContactsEntityByIdUser(usersBean.getUsersEntity());
 
         return contactsEntitiesForm.stream().filter(t -> (t.getFirstname().toLowerCase().contains(queryLowerCase)) || (t.getLastname().toLowerCase().contains(queryLowerCase))).collect(Collectors.toList());
     }

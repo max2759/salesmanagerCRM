@@ -50,7 +50,7 @@ public class ContactsConverter implements Converter {
 
         if (id != 0) {
             try {
-                contactsEntity = contactsBean.findByIdContactAndByIdUser(id, usersBean.getUsersEntity().getId());
+                contactsEntity = contactsBean.findByIdContactAndByIdUser(id, usersBean.getUsersEntity());
                 return contactsEntity;
             } catch (EntityNotFoundException exception) {
                 log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());

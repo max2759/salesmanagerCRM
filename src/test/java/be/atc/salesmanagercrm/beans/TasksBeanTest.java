@@ -61,11 +61,12 @@ class TasksBeanTest {
 
         // Mettre un id incorrect
         int id = 12;
-        int idUser = 11;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
         TasksEntity tasksEntity = null;
 
         try {
-            tasksEntity = tasksBean.findById(id, idUser);
+            tasksEntity = tasksBean.findById(id, usersEntity);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
         }
@@ -83,11 +84,12 @@ class TasksBeanTest {
 
         // Mettre un id correct
         int id = 12;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
         TasksEntity tasksEntity = null;
 
         try {
-            tasksEntity = tasksBean.findById(id, idUser);
+            tasksEntity = tasksBean.findById(id, usersEntity);
         } catch (EntityNotFoundException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
         }
@@ -103,10 +105,12 @@ class TasksBeanTest {
     void findTasksEntityByContactsByIdContactsShouldReturnTrue() {
 
         // Mettre un id correct
-        int id = 1;
-        int idUser = 1;
+        ContactsEntity contactsEntity = new ContactsEntity();
+        contactsEntity.setId(1);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByContactsByIdContacts(id, idUser);
+        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByContactsByIdContacts(contactsEntity, usersEntity);
 
 
         boolean test = !tasksEntities.isEmpty();
@@ -120,11 +124,13 @@ class TasksBeanTest {
     void findTasksEntityByContactsByIdContactsShouldReturnFalse() {
 
         // Mettre un id incorrect
-        int id = 1;
+        ContactsEntity contactsEntity = new ContactsEntity();
+        contactsEntity.setId(1884);
 
-        int idUser = 11;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(11);
 
-        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByContactsByIdContacts(id, idUser);
+        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByContactsByIdContacts(contactsEntity, usersEntity);
 
 
         boolean test = !tasksEntities.isEmpty();
@@ -138,10 +144,12 @@ class TasksBeanTest {
     void findTasksEntityByCompaniesByIdCompaniesShouldReturnTrue() {
 
         // Mettre un id correct
-        int id = 1;
-        int idUser = 1;
+        CompaniesEntity companiesEntity = new CompaniesEntity();
+        companiesEntity.setId(1);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByCompaniesByIdCompanies(id, idUser);
+        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByCompaniesByIdCompanies(companiesEntity, usersEntity);
 
 
         boolean test = !tasksEntities.isEmpty();
@@ -155,10 +163,12 @@ class TasksBeanTest {
     void findTasksEntityByCompaniesByIdCompaniesShouldReturnFalse() {
 
         // Mettre un id incorrect
-        int id = 195;
-        int idUser = 1;
+        CompaniesEntity companiesEntity = new CompaniesEntity();
+        companiesEntity.setId(195);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByCompaniesByIdCompanies(id, idUser);
+        List<TasksEntity> tasksEntities = tasksBean.findTasksEntityByCompaniesByIdCompanies(companiesEntity, usersEntity);
 
 
         boolean test = !tasksEntities.isEmpty();
@@ -170,8 +180,9 @@ class TasksBeanTest {
 
     @Test
     void findAll() {
-        int idUser = 1;
-        List<TasksEntity> tasksEntities = tasksBean.findAll(idUser);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
+        List<TasksEntity> tasksEntities = tasksBean.findAll(usersEntity);
 
 
         boolean test = !tasksEntities.isEmpty();
@@ -185,9 +196,10 @@ class TasksBeanTest {
     @Test
     void delete() {
         int id = 12;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        tasksBean.delete(id, idUser);
+        tasksBean.delete(id, usersEntity);
 
     }
 
@@ -208,10 +220,11 @@ class TasksBeanTest {
 
     @Test
     void findTasksFinished() {
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
 
-        List<TasksEntity> tasksEntities = tasksBean.findTasksFinished(idUser);
+        List<TasksEntity> tasksEntities = tasksBean.findTasksFinished(usersEntity);
 
 
         boolean test = !tasksEntities.isEmpty();

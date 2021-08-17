@@ -92,6 +92,9 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
     }
 
     public void fillSelectedCompaniesContacts() {
+        if (contactsBean.getContactsEntity() == null) {
+            return;
+        }
         List<CompaniesContactsEntity> companiesContactsEntityList = findByIdContacts(contactsBean.getContactsEntity().getId());
 
         for (CompaniesContactsEntity c : companiesContactsEntityList

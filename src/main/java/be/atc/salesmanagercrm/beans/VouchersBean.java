@@ -4,8 +4,7 @@ import be.atc.salesmanagercrm.dao.VoucherHistoriesDao;
 import be.atc.salesmanagercrm.dao.VouchersDao;
 import be.atc.salesmanagercrm.dao.impl.VoucherHistoriesDaoImpl;
 import be.atc.salesmanagercrm.dao.impl.VouchersDaoImpl;
-import be.atc.salesmanagercrm.entities.VoucherHistoriesEntity;
-import be.atc.salesmanagercrm.entities.VouchersEntity;
+import be.atc.salesmanagercrm.entities.*;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
@@ -108,7 +107,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
         }
 
         try {
-            this.vouchersEntity = findById(idVoucher, usersBean.getUsersEntity().getId());
+            this.vouchersEntity = findById(idVoucher, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
@@ -129,7 +128,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
      */
     public void findAllEntitiesAndFilter() {
         log.info("VouchersBean => method : findAllEntitiesAndFilter()");
-        this.vouchersEntities = findAll(usersBean.getUsersEntity().getId());
+        this.vouchersEntities = findAll(usersBean.getUsersEntity());
     }
 
 
@@ -151,14 +150,14 @@ public class VouchersBean extends ExtendBean implements Serializable {
         }
 
         try {
-            this.vouchersEntity = findById(idVoucher, usersBean.getUsersEntity().getId());
+            this.vouchersEntity = findById(idVoucher, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "vouchers.notExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-        voucherHistoriesBean.findAllEntities(idVoucher, usersBean.getUsersEntity().getId());
+        voucherHistoriesBean.findAllEntities(idVoucher, usersBean.getUsersEntity());
     }
 
     /**
@@ -248,7 +247,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
 
         VoucherHistoriesEntity voucherHistoriesEntity = saveVoucherHistories(entity);
 
-        checkStatusAndSetClosingDate(entity);
+        entity = checkStatusAndSetClosingDate(entity);
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -276,11 +275,11 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Find Voucher entity by id
      *
-     * @param id     Voucher
-     * @param idUser User
+     * @param id          Voucher
+     * @param usersEntity UsersEntity
      * @return VouchersEntity
      */
-    protected VouchersEntity findById(int id, int idUser) {
+    protected VouchersEntity findById(int id, UsersEntity usersEntity) {
 
         FacesMessage msg;
 
@@ -290,7 +289,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
         }
-        if (idUser == 0) {
+        if (usersEntity == null) {
             log.error("User ID is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -299,11 +298,11 @@ public class VouchersBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
         try {
-            return dao.findById(em, id, idUser);
+            return dao.findById(em, id, usersEntity.getId());
         } catch (Exception ex) {
             log.info("Nothing");
             throw new EntityNotFoundException(
-                    "Aucun ticket avec l ID " + id + " et l ID User " + idUser + " n a ete trouve dans la BDD",
+                    "Aucun ticket avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouve dans la BDD",
                     ErrorCodes.VOUCHER_NOT_FOUND
             );
         } finally {
@@ -315,26 +314,27 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Find vouchers entities by id contact
      *
-     * @param id Contact
+     * @param contactsEntity ContactsEntity
+     * @param usersEntity    UsersEntity
      * @return List VouchersEntities
      */
-    protected List<VouchersEntity> findVouchersEntityByContactsByIdContacts(int id, int idUser) {
+    protected List<VouchersEntity> findVouchersEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity) {
         FacesMessage msg;
-        if (id == 0) {
-            log.error("Contact ID is null");
+        if (contactsEntity == null) {
+            log.error("Contact Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
 
-        List<VouchersEntity> vouchersEntities = dao.findVouchersEntityByContactsByIdContacts(em, id, idUser);
+        List<VouchersEntity> vouchersEntities = dao.findVouchersEntityByContactsByIdContacts(em, contactsEntity.getId(), usersEntity.getId());
 
         em.clear();
         em.close();
@@ -346,26 +346,27 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Find vouchers entities by id company
      *
-     * @param id Company
+     * @param companiesEntity CompaniesEntity
+     * @param usersEntity     UsersEntity
      * @return List VouchersEntities
      */
-    protected List<VouchersEntity> findVouchersEntityByCompaniesByIdCompanies(int id, int idUser) {
+    protected List<VouchersEntity> findVouchersEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity) {
         FacesMessage msg;
-        if (id == 0) {
-            log.error("Company ID is null");
+        if (companiesEntity == null) {
+            log.error("Company Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
 
         EntityManager em = EMF.getEM();
-        List<VouchersEntity> vouchersEntities = dao.findVouchersEntityByCompaniesByIdCompanies(em, id, idUser);
+        List<VouchersEntity> vouchersEntities = dao.findVouchersEntityByCompaniesByIdCompanies(em, companiesEntity.getId(), usersEntity.getId());
 
         em.clear();
         em.close();
@@ -376,18 +377,19 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Find All vouchers Entities
      *
+     * @param usersEntity UsersEntity
      * @return List VouchersEntity
      */
-    protected List<VouchersEntity> findAll(int idUser) {
+    protected List<VouchersEntity> findAll(UsersEntity usersEntity) {
         FacesMessage msg;
-        if (idUser == 0) {
-            log.error("User ID is null");
+        if (usersEntity == null) {
+            log.error("User is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
-        List<VouchersEntity> vouchersEntities = dao.findAll(em, idUser);
+        List<VouchersEntity> vouchersEntities = dao.findAll(em, usersEntity.getId());
 
         em.clear();
         em.close();
@@ -413,7 +415,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
         FacesMessage msg;
 
         try {
-            VouchersEntity vouchersEntityToFind = findById(entity.getId(), entity.getUsersByIdUsers().getId());
+            VouchersEntity vouchersEntityToFind = findById(entity.getId(), entity.getUsersByIdUsers());
             entity.setCreationDate(vouchersEntityToFind.getCreationDate());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
@@ -492,7 +494,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
 
         VoucherHistoriesEntity voucherHistoriesEntity = saveVoucherHistories(entity);
 
-        checkStatusAndSetClosingDate(entity);
+        entity = checkStatusAndSetClosingDate(entity);
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;

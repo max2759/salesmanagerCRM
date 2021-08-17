@@ -1,6 +1,7 @@
 package be.atc.salesmanagercrm.beans;
 
 import be.atc.salesmanagercrm.entities.TransactionHistoriesEntity;
+import be.atc.salesmanagercrm.entities.UsersEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -36,9 +37,10 @@ class TransactionHistoriesBeanTest {
 
         // Mettre un id correct
         int idTransaction = 1;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(idTransaction, idUser);
+        List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(idTransaction, usersEntity);
 
 
         boolean test = !transactionHistoriesEntities.isEmpty();
@@ -53,9 +55,10 @@ class TransactionHistoriesBeanTest {
 
         // Mettre un id incorrect
         int idTransaction = 1540;
-        int idUser = 1;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
 
-        List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(idTransaction, idUser);
+        List<TransactionHistoriesEntity> transactionHistoriesEntities = transactionHistoriesBean.findAllByIdUserAndByIdTransaction(idTransaction, usersEntity);
 
 
         boolean test = !transactionHistoriesEntities.isEmpty();
