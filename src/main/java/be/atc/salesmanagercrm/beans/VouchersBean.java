@@ -248,6 +248,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
 
         VoucherHistoriesEntity voucherHistoriesEntity = saveVoucherHistories(entity);
 
+        checkStatusAndSetClosingDate(entity);
+
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
         try {
@@ -431,16 +433,25 @@ public class VouchersBean extends ExtendBean implements Serializable {
             }
         }
 
+        if (entity.getEndDate() != null) {
+            log.error("Voucher status is closed {}", entity);
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "vouchers.validator.statusClose"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
         CheckEntities checkEntities = new CheckEntities();
 
         try {
             checkEntities.checkUser(entity.getUsersByIdUsers());
-        } catch (InvalidEntityException exception) {
+        } catch (
+                InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
-        } catch (EntityNotFoundException exception) {
+        } catch (
+                EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -449,7 +460,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
 
         try {
             checkEntities.checkVoucherStatus(entity.getVoucherStatusByIdVoucherStatus());
-        } catch (EntityNotFoundException exception) {
+        } catch (
+                EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "voucherStatusNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -480,6 +492,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
 
         VoucherHistoriesEntity voucherHistoriesEntity = saveVoucherHistories(entity);
 
+        checkStatusAndSetClosingDate(entity);
+
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
         try {
@@ -492,7 +506,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
             log.info("Update ok");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "vouchers.updated"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
+        } catch (
+                Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Update echec");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
@@ -547,5 +562,19 @@ public class VouchersBean extends ExtendBean implements Serializable {
         return voucherHistoriesEntity;
     }
 
+    /**
+     * If status is : 'fermé' => Set End Date at now
+     *
+     * @param entity VouchersEntity
+     * @return VouchersEntity
+     */
+    private VouchersEntity checkStatusAndSetClosingDate(VouchersEntity entity) {
+        if (entity != null) {
+            if (entity.getVoucherStatusByIdVoucherStatus().getLabel().equalsIgnoreCase("fermé")) {
+                entity.setEndDate(LocalDateTime.now());
+            }
+        }
+        return entity;
+    }
 
 }

@@ -17,15 +17,18 @@
 
         <h:form id="createVoucherForm">
 
-            <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+            <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
                 <p:outputLabel value="#{bundle['title']} :" for="title" styleClass="boldText"/>
                 <p:inputText id="title" value="#{vouchersBean.vouchersEntity.title}"
                              placeholder="#{bundle['title']}"
                              required="true"
                              requiredMessage="#{bundle['vouchers.validator.title']}">
-                    <p:ajax update="@form msg" event="keyup"/>
+                    <p:ajax update="@form msg listAllVouchers:createVouchers:createVoucherForm:buttonCreateVoucher"
+                            event="keyup"/>
                 </p:inputText>
+            </p:panelGrid>
+            <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
                 <p:outputLabel value="#{bundle['vouchers.status']}:" for="voucherStatus" styleClass="boldText"/>
                 <p:selectOneMenu id="voucherStatus"
@@ -46,15 +49,14 @@
                     <f:validator validatorId="enumPriorityValidator"/>
                 </p:selectOneMenu>
 
-            </p:panelGrid>
-
-            <p:panelGrid columns="4" styleClass="form-group ui-panelgrid-blank" layout="grid">
                 <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact" styleClass="boldText"/>
                 <p:autoComplete id="Contact" value="#{vouchersBean.vouchersEntity.contactsByIdContacts}"
                                 completeMethod="#{contactsBean.completeContactsContains}"
                                 var="Contact"
                                 itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
                                 itemValue="#{Contact}"
+                                dropdown="true"
+                                placeholder="#{bundle['contact']}"
                                 converter="#{contactsConverter}"
                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
 
@@ -64,6 +66,8 @@
                                 var="Company"
                                 itemLabel="#{Company.label}"
                                 itemValue="#{Company}"
+                                dropdown="true"
+                                placeholder="#{bundle['company']}"
                                 converter="#{companiesConverter}"
                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
 
@@ -86,7 +90,7 @@
                                  oncomplete="PF('createDialog').hide()"
                                  value="#{bundle['save']}"
                                  action="#{vouchersBean.saveEntity}"
-                                 disabled="#{empty vouchersBean.vouchersEntity.title}"
+                                 disabled="#{empty vouchersBean.vouchersEntity.title or vouchersBean.vouchersEntity.title.length() le 1}"
                 >
                 </p:commandButton>
             </p:panelGrid>

@@ -67,16 +67,30 @@
                               filterable="true"
                               filterBy="#{voucher.title}"
                               filterMatchMode="contains">
-                        <p:commandLink id="titleAll" value="#{voucher.title}" styleClass="boldText"
-                                       onclick="PF('dlg2').show();"
-                                       update="@(form) msgs"
-                                       action="#{vouchersBean.showModalUpdate}"
+
+                        <p:commandLink
+                                rendered="#{not voucher.voucherStatusByIdVoucherStatus.label.equalsIgnoreCase('fermé')}"
+                                id="titleAll" value="#{voucher.title}" styleClass="boldText"
+                                onclick="PF('dlg2').show();"
+                                update="@(form) msgs"
+                                action="#{vouchersBean.showModalUpdate}"
                         >
                             <p:tooltip for="titleAll" value="#{voucher.description}"
                                        showEffect="clip"
                                        hideEffect="fold" position="bottom"/>
                             <f:param name="idEntity" value="#{voucher.id}"/>
                         </p:commandLink>
+
+                        <h:outputText
+                                id="titleAllClosing"
+                                styleClass="fontStyleItalic"
+                                rendered="#{voucher.voucherStatusByIdVoucherStatus.label.equalsIgnoreCase('fermé')}"
+
+                                value="#{voucher.title}">
+                        </h:outputText>
+                        <p:tooltip for="titleAllClosing" value="#{voucher.description}"
+                                   showEffect="clip"
+                                   hideEffect="fold" position="bottom"/>
                     </p:column>
 
                     <p:column headerText="#{bundle['vouchers.contact']}"
