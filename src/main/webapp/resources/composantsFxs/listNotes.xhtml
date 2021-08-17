@@ -50,10 +50,15 @@
                             <h:outputText escape="false" value="#{note.message}"/>
                         </f:facet>
                         <f:facet name="input">
-                            <p:inputTextarea widgetVar="editor1" value="#{note.message}" required="true"
+                            <p:inputTextarea widgetVar="editor1" value="#{note.message}"
+                                             required="true"
+                                             requiredMessage="#{bundle['notes.validator.message']}"
+                                             placeholder="#{bundle['notes.messageHolder']}"
                                              rows="6"
                                              cols="100"
-                                             autoResize="false" label="Name"/>
+                                             autoResize="false" label="Name">
+                                <p:ajax update="msgs" global="false" event="keyup"/>
+                            </p:inputTextarea>
                         </f:facet>
                     </p:cellEditor>
                 </div>

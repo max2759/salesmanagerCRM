@@ -16,14 +16,15 @@
     <f:view>
 
         <h:form id="createTransactionForm">
-            <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid">
+            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
                 <p:outputLabel value="#{bundle['title']} :" for="title" styleClass="boldText"/>
                 <p:inputText id="title" value="#{transactionsBean.transactionsEntity.title}"
                              placeholder="#{bundle['title']}"
                              required="true"
                              requiredMessage="#{bundle['transactions.validator.title']}">
-                    <p:ajax update="msg" event="keyup"/>
+                    <p:ajax update="msg listAllTransactions:createTransactions:createTransactionForm:buttonCreateTransaction"
+                            event="keyup"/>
                 </p:inputText>
 
                 <p:outputLabel value="#{bundle['transactions.phase']}:" for="phase" styleClass="boldText"/>
@@ -56,27 +57,26 @@
                                    var="transactionTypesEntities" itemValue="#{transactionTypesEntities}"
                                    itemLabel="#{transactionTypesEntities.label}"/>
                 </p:selectOneMenu>
-            </p:panelGrid>
-            <h3>#{bundle['associateWith']}</h3>
-            <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
-                <p:outputLabel value="#{bundle['contact']}:" for="Contact" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact" styleClass="boldText"/>
                 <p:autoComplete id="Contact" value="#{transactionsBean.transactionsEntity.contactsByIdContacts}"
-                                placeholder="#{bundle['contact']}"
                                 completeMethod="#{contactsBean.completeContactsContains}"
                                 var="Contact"
                                 itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
                                 itemValue="#{Contact}"
+                                dropdown="true"
+                                placeholder="#{bundle['contact']}"
                                 converter="#{contactsConverter}"
                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
 
-                <p:outputLabel value="#{bundle['company']}:" for="Company" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company" styleClass="boldText"/>
                 <p:autoComplete id="Company" value="#{transactionsBean.transactionsEntity.companiesByIdCompanies}"
-                                placeholder="#{bundle['company']}"
                                 completeMethod="#{companiesBean.completeCompaniesContains}"
                                 var="Company"
                                 itemLabel="#{Company.label}"
                                 itemValue="#{Company}"
+                                dropdown="true"
+                                placeholder="#{bundle['company']}"
                                 converter="#{companiesConverter}"
                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
             </p:panelGrid>
@@ -84,6 +84,8 @@
                 <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
+                                 id="buttonCreateTransaction"
+                                 disabled="#{empty transactionsBean.transactionsEntity.title or transactionsBean.transactionsEntity.title.length() le 1}"
                                  oncomplete="PF('createDialog').hide()"
                                  value="#{bundle['save']}"
                                  action="#{transactionsBean.saveEntity}"

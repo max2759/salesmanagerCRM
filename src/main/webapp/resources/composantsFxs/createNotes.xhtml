@@ -18,16 +18,19 @@
         <h:form id="formCreateNotes">
             <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
-                <p:outputLabel value="#{bundle['notes.title']} :" for="title" styleClass="boldText"/>
-                <p:inputTextarea id="title" value="#{notesBean.notesEntity.message}"
+                <p:outputLabel value="#{bundle['notes.title']} :" for="titleNote" styleClass="boldText"/>
+                <p:inputTextarea id="titleNote" value="#{notesBean.notesEntity.message}"
                                  rows="4" cols="100"
                                  required="true"
                                  requiredMessage="#{bundle['notes.validator.message']}"
                                  placeholder="#{bundle['notes.messageHolder']}"
                                  autoResize="false">
-                    <p:ajax update="detailsRight:createNotes:msg" event="keyup"/>
+                    <p:ajax update="detailsRight:createNotes:msg detailsRight:createNotes:formCreateNotes:buttonSaveEntityNotes"
+                            global="false" event="keyup"/>
                 </p:inputTextarea>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
+                                 id="buttonSaveEntityNotes"
+                                 disabled="#{empty notesBean.notesEntity.message or notesBean.notesEntity.message.length() le 1}"
                                  value="#{bundle['notes.save']}"
                                  oncomplete="PF('createDialogNotes').hide()"
                                  update="detailsRight:formTabView detailsRight:createNotes:formCreateNotes msgs"

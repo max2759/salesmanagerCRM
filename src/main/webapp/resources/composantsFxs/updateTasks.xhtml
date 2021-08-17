@@ -56,6 +56,8 @@
                                 var="Contact"
                                 itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
                                 itemValue="#{Contact}"
+                                dropdown="true"
+                                placeholder="#{bundle['contact']}"
                                 converter="#{contactsConverter}"
                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
 
@@ -65,6 +67,8 @@
                                 var="Company"
                                 itemLabel="#{Company.label}"
                                 itemValue="#{Company}"
+                                dropdown="true"
+                                placeholder="#{bundle['company']}"
                                 converter="#{companiesConverter}"
                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
 

@@ -54,8 +54,13 @@
                         <f:facet name="input">
                             <p:outputLabel value="#{bundle['title']} :" for="acTitleUpdate"
                                            styleClass="boldText outputTextCellEditor"/>
-                            <p:inputText id="acTitleUpdate" value="#{task.title}" required="true"
-                                         label="#{bundle['title']}"/>
+                            <p:inputText id="acTitleUpdate" value="#{task.title}"
+                                         required="true"
+                                         placeholder="#{bundle['title']}"
+                                         requiredMessage="#{bundle['task.validator.title']}"
+                                         label="#{bundle['title']}">
+                                <p:ajax update="msgs" global="false" event="keyup"/>
+                            </p:inputText>
                         </f:facet>
                     </p:cellEditor>
                 </div>
@@ -89,7 +94,8 @@
                             <p:outputLabel value="#{bundle['priority']}:" for="taskPriorityUpdate"
                                            styleClass="boldText outputTextCellEditor"/>
                             <p:selectOneMenu id="taskPriorityUpdate"
-                                             value="#{task.priority}">
+                                             value="#{task.priority}"
+                                             validatorMessage="#{bundle['task.validator.priority']}">
                                 <f:selectItems value="#{enumPriorityBean.enumPriority}"
                                                var="enumPriority" itemValue="#{enumPriority}"
                                                itemLabel="#{enumPriority.label}"/>
@@ -107,8 +113,8 @@
                             <p:outputLabel for="datetimeUpdate" value="#{bundle['dueDate']}:"
                                            styleClass="boldText outputTextCellEditor"/>
                             <p:calendar placeholder="#{bundle['dueDate']}:"
-                                        value="#{task.endDate}"
-                                        id="datetimeUpdate" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
+                                        value="#{task.endDate}" validatorMessage="#{bundle['task.validator.dateEnd']}"
+                                        id="datetimeUpdate" pattern="dd/MM/yyyy HH:mm" mindate="#{task.creationDate}"/>
                         </f:facet>
                     </p:cellEditor>
                 </div>

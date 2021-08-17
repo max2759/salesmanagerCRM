@@ -14,9 +14,10 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
-        <h:form>
+        <h:form id="formUpdateTransaction">
 
-            <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid">
+            <p:panelGrid id="panelGridUpdateTransaction" columns="2" layout="grid"
+                         styleClass="ui-panelgrid-blank form-group">
                 <p:outputLabel value="#{bundle['title']} :" for="titleUpdate" styleClass="boldText"/>
                 <p:inplace>
                     <p:inputText id="titleUpdate" value="#{transactionsBean.transactionsEntity.title}"
@@ -80,48 +81,48 @@
                     </p:selectOneMenu>
                 </p:inplace>
 
-            </p:panelGrid>
-
-            <h3>#{bundle['associateWith']}</h3>
-
-            <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid">
-                <p:outputLabel value="#{bundle['contact']}:" for="Contact" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact" styleClass="boldText"/>
                 <p:inplace emptyLabel="..."
                            label="#{transactionsBean.transactionsEntity.contactsByIdContacts.lastname.concat(' '.concat(transactionsBean.transactionsEntity.contactsByIdContacts.firstname))}">
                     <p:autoComplete id="Contact" value="#{transactionsBean.transactionsEntity.contactsByIdContacts}"
-                                    placeholder="#{bundle['contact']}"
                                     completeMethod="#{contactsBean.completeContactsContains}"
                                     var="Contact"
                                     itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
                                     itemValue="#{Contact}"
+                                    dropdown="true"
+                                    placeholder="#{bundle['contact']}"
                                     converter="#{contactsConverter}"
                                     groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
                 </p:inplace>
 
 
-                <p:outputLabel value="#{bundle['company']}:" for="Company" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company" styleClass="boldText"/>
                 <p:inplace emptyLabel="..." label="#{transactionsBean.transactionsEntity.companiesByIdCompanies.label}">
                     <p:autoComplete id="Company" value="#{transactionsBean.transactionsEntity.companiesByIdCompanies}"
-                                    placeholder="#{bundle['company']}"
                                     completeMethod="#{companiesBean.completeCompaniesContains}"
                                     var="Company"
                                     itemLabel="#{Company.label}"
                                     itemValue="#{Company}"
+                                    dropdown="true"
+                                    placeholder="#{bundle['company']}"
                                     converter="#{companiesConverter}"
                                     groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
                 </p:inplace>
 
             </p:panelGrid>
             <p:messages id="msg" closable="true" display="message"/>
-            <div align="right" style="padding-top: 10px" class="modalValidateBtn-margin-top">
-                <p:menuButton value="#{bundle['actions']}">
+            <div align="right" style="padding-top: 10px" class="modalValidateBtn-margin-top"
+                 id="divActionUpdateTransaction">
+                <p:menuButton value="#{bundle['actions']}" id="buttonActionUpdateTransaction">
                     <p:menuitem icon="ui-icon-check"
+                                id="buttonSaveUpdateTransaction"
                                 value="#{bundle['save']}"
                                 update="@(form) msgs"
                                 oncomplete="PF('dlg2').hide()"
                                 action="#{transactionsBean.updateEntity}"/>
 
                     <p:menuitem icon="ui-icon-delete"
+                                id="buttonDeleteUpdateTransaction"
                                 update="@(form) msgs"
                                 value="#{bundle['delete']}"
                                 action="#{transactionsBean.deleteEntity}"
@@ -133,6 +134,7 @@
                     </p:menuitem>
 
                     <p:menuitem icon="ui-icon-update"
+                                id="buttonHistoryUpdateTransaction"
                                 outcome="transactionDetails"
                                 value="#{bundle['viewHistory']}">
                         <f:param name="idTransaction" value="#{transactionsBean.transactionsEntity.id}"/>

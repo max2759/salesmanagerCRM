@@ -20,9 +20,11 @@
                 <p:outputLabel value="#{bundle['title']} :" for="acTitleCreate" styleClass="boldText"/>
                 <p:inputText id="acTitleCreate" value="#{tasksBean.tasksEntity.title}"
                              required="true"
+                             placeholder="#{bundle['title']}"
                              requiredMessage="#{bundle['task.validator.title']}"
                              style="margin-bottom:10px;">
-                    <p:ajax update="detailsRight:createTasks:msg" event="keyup"/>
+                    <p:ajax update="detailsRight:createTasks:msg detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                            global="false" event="keyup"/>
                 </p:inputText>
 
                 <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskTypeCreate" styleClass="boldText"/>
@@ -54,6 +56,8 @@
                                 var="Contact"
                                 itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
                                 itemValue="#{Contact}"
+                                dropdown="true"
+                                placeholder="#{bundle['contact']}"
                                 converter="#{contactsConverter}"
                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
 
@@ -63,6 +67,8 @@
                                 var="Company"
                                 itemLabel="#{Company.label}"
                                 itemValue="#{Company}"
+                                dropdown="true"
+                                placeholder="#{bundle['company']}"
                                 converter="#{companiesConverter}"
                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
 
@@ -78,6 +84,8 @@
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
                                  oncomplete="PF('createDialogTask').hide()"
+                                 id="buttonSaveEntityTasks"
+                                 disabled="#{empty tasksBean.tasksEntity.title or tasksBean.tasksEntity.title.length() le 1}"
                                  value="#{bundle['save']}"
                                  action="#{tasksBean.saveEntity}"/>
             </p:panelGrid>
