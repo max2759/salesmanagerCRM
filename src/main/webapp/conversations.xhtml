@@ -20,7 +20,7 @@
 
             <div class="ui-g-12 ui-lg-8 chat">
                 <p:panel header="Chat" styleClass="ui-shadow-content">
-
+                    #{usersBean.usersEntity.username}
                     <ul>
                         <ui:repeat value="#{conversationsBean.conversationsEntityList}" var="convers">
                             <li class="#{convers.usersByIdUsers.username eq usersBean.usersEntity.username ? 'clearfix message-own' : 'clearfix message-from'}">
@@ -40,7 +40,12 @@
                             <i class="fa fa-paperclip"/>
                         </div>
                         <div class="message-input">
-                            <input type="text" placeholder="#{'WriteAMessage'}"/>
+                            <h:form>
+                                <input type="text" placeholder="#{bundle['WriteAMessage']}"/>
+                                <p:commandButton value="Confirmer Valider" action="#{conversationsBean.addEntity}"
+                                                 update="@(form)"
+                                                 process="@form" ajax="=false"/>
+                            </h:form>
                         </div>
                     </div>
                 </p:panel>
