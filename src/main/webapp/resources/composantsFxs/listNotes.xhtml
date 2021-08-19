@@ -21,8 +21,15 @@
                              action="#{notesBean.showModalCreate}"/>
         </h:form>
 
-        <p:dataTable id="note1" var="note" value="#{notesBean.notesEntities}" editable="true"
-                     emptyMessage="#{bundle['notes.notFound']}">
+        <p:dataTable id="note1" var="note"
+                     value="#{notesBean.notesEntities}"
+                     editable="true"
+                     emptyMessage="#{bundle['notes.notFound']}"
+                     paginator="true" rows="10"
+                     paginatorPosition="bottom"
+                     rowsPerPageTemplate="10,20,50"
+                     filteredValue="#{notesBean.notesEntitiesFiltered}"
+        >
 
             <p:ajax event="rowEdit" listener="#{notesBean.onRowEdit}" update="@this msgs"/>
             <p:ajax event="rowEditCancel" listener="#{notesBean.onRowCancel}" update="@this msgs"/>
