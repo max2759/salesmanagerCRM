@@ -13,6 +13,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.primefaces.event.RowEditEvent;
+import org.primefaces.model.DefaultScheduleEvent;
+import org.primefaces.model.DefaultScheduleModel;
+import org.primefaces.model.ScheduleModel;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -51,6 +54,9 @@ public class TasksBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private TasksEntity selectedTaskEntity;
+    @Getter
+    @Setter
+    private ScheduleModel eventModel;
 
     @Getter
     @Setter
@@ -345,6 +351,25 @@ public class TasksBean extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * Fill the calendar with tasks
+     */
+    public void setCalendar() {
+        eventModel = new DefaultScheduleModel();
+
+        for (TasksEntity t : tasksEntities) {
+            if (t.getEndDate() != null && t.isStatus() == false) {
+                DefaultScheduleEvent event = DefaultScheduleEvent.builder()
+                        .title(t.getTitle())
+                        .startDate(t.getCreationDate())
+                        .endDate(t.getEndDate())
+                        .description(t.getDescription())
+                        .overlapAllowed(true)
+                        .build();
+                eventModel.addEvent(event);
+            }
+        }
+    }
 
     /**
      * Save Task Entity

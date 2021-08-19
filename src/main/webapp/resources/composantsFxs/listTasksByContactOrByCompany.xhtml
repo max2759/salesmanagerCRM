@@ -21,8 +21,15 @@
                              action="#{tasksBean.showModalCreate}"/>
         </h:form>
 
-        <p:dataTable id="task1" var="task" value="#{tasksBean.tasksEntities}" editable="true"
-                     emptyMessage="#{bundle['tasks.notFound']}">
+        <p:dataTable id="task1" var="task"
+                     value="#{tasksBean.tasksEntities}"
+                     editable="true"
+                     emptyMessage="#{bundle['tasks.notFound']}"
+                     paginator="true" rows="10"
+                     paginatorPosition="bottom"
+                     rowsPerPageTemplate="10,20,50"
+                     filteredValue="#{tasksBean.tasksEntitiesFiltered}"
+        >
 
             <p:ajax event="rowEdit" listener="#{tasksBean.onRowEdit}" update="@this msgs"/>
             <p:ajax event="rowEditCancel" listener="#{tasksBean.onRowCancel}" update="@this msgs"/>

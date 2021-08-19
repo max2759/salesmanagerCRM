@@ -15,10 +15,10 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.primefaces.event.TabChangeEvent;
 
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Named(value = "companiesBean")
-@ViewScoped
+@SessionScoped
 public class CompaniesBean extends ExtendBean implements Serializable {
 
     private static final long serialVersionUID = 5861943957551000529L;
@@ -504,27 +504,29 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         log.info("Début méthode displayOneCompany");
         log.info("Param : " + getParam("companyID"));
 
-        int idCompany;
+        if (getParam("companyID") != null) {
+            int idCompany;
 
-        try {
-            idCompany = Integer.parseInt(getParam("companyID"));
-        } catch (NumberFormatException exception) {
-            log.info(exception.getMessage());
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "company.error"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            nav.performNavigation("/company.xhtml");
-            return;
-        }
+            try {
+                idCompany = Integer.parseInt(getParam("companyID"));
+            } catch (NumberFormatException exception) {
+                log.info(exception.getMessage());
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "company.error"), null);
+                FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+                nav.performNavigation("/company.xhtml");
+                return;
+            }
 
-        // TODO: faire une méthode findbyid dans bean
-        try {
-            companiesEntity = findById(idCompany);
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "company.error"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            nav.performNavigation("/company.xhtml");
-            return;
+            // TODO: faire une méthode findbyid dans bean
+            try {
+                companiesEntity = findById(idCompany);
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "company.error"), null);
+                FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+                nav.performNavigation("/company.xhtml");
+                return;
+            }
         }
         addressesBean.getAddressByIdCompany();
     }

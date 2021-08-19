@@ -58,6 +58,9 @@ public class NotesBean extends ExtendBean implements Serializable {
     private List<NotesEntity> notesEntities;
     @Getter
     @Setter
+    private List<NotesEntity> notesEntitiesFiltered;
+    @Getter
+    @Setter
     private String paramType = "";
 
     @Inject
