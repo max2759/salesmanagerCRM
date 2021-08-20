@@ -16,6 +16,7 @@
             <h1>#{bundle['conversationList.title']}</h1>
 
             <h:form>
+                <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
                 <h:dataTable value="#{conversationsBean.conversationsEntityList}" var="convers">
 
                     <h:column>

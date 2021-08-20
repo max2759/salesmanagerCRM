@@ -70,6 +70,7 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     }
 
     public void add(ConversationsEntity conversationsEntity) {
+        FacesMessage msg;
         log.info(String.valueOf(usersBean.getUsersEntity().getId()));
         log.info("user entity: " + usersBean.getUsersEntity().getUsername());
         try {
@@ -103,9 +104,13 @@ public class ConversationsBean extends ExtendBean implements Serializable {
             dao.add(em, conversationsEntity);
             tx.commit();
             log.info("Persist ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "addMessageOk"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();
@@ -136,6 +141,8 @@ public class ConversationsBean extends ExtendBean implements Serializable {
             dao.update(em, entity);
             tx.commit();
             log.info("Persist ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "updateMessageOk"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
@@ -169,7 +176,7 @@ public class ConversationsBean extends ExtendBean implements Serializable {
             tx.commit();
             log.info("Persist ok");
             conversationsEntityList = findAll();
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.deleted"), null);
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "deleteMessageOk"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
@@ -204,7 +211,7 @@ public class ConversationsBean extends ExtendBean implements Serializable {
             tx.commit();
             log.info("Persist ok");
             conversationsEntityList = findAll();
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.deleted"), null);
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "activateMessage"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
