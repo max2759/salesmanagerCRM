@@ -17,12 +17,13 @@
             <div class="card card-w-title">
 
                 <h:form id="form">
-                    <p:tab id="displayAll" title="#{bundle['all']} (#{permissionsBean.permissionsEntityList.size()})">
+                    <p:tab id="displayAll"
+                           title="#{bundle['all']} (#{conversationsBean.conversationsEntityList.size()})">
                         <p:dataTable paginator="true" rows="10"
                                      selection="#{permissionsBean.selectedPermissionsEntity}" selectionMode="single"
                                      paginatorPosition="bottom"
                                      var="perm"
-                                     rowKey="#{perm.id}"
+                                     rowKey="#{perm}"
                                      emptyMessage="#{bundle['permissions.notFound']}"
                                      rowsPerPageTemplate="10,20,50"
                                      widgetVar="displayAllEntities"

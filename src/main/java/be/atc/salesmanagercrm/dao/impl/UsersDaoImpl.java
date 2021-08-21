@@ -93,4 +93,11 @@ public class UsersDaoImpl implements UsersDao {
 
     }
 
+    @Override
+    public List<UsersEntity> findDisableUsers(EntityManager em) {
+        return em.createNamedQuery("Users.findDisableUsers",
+                UsersEntity.class)
+                .getResultList();
+    }
+
 }

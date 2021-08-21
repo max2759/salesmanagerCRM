@@ -24,4 +24,6 @@ public interface UsersDao {
     UsersEntity findUsername(EntityManager em, int id);
 
     List<UsersEntity> findActiveUsers(EntityManager em);
+
+    List<UsersEntity> findDisableUsers(EntityManager em);
 }

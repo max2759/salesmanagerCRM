@@ -15,61 +15,111 @@
         <h:body>
             <h1>#{bundle['conversationList.title']}</h1>
 
-            <h:form>
+
+            <div class="card card-w-title">
                 <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
-                <h:dataTable value="#{conversationsBean.conversationsEntityList}" var="convers">
+                <h:form id="form">
+                    <p:tab id="displayAll" title="#{bundle['all']} (#{conversationsBean.conversationsEntities.size()})">
+                        <p:dataTable paginator="true" rows="10"
+                                     selection="#{conversationsBean.selectedConversationsEntity}" selectionMode="single"
+                                     paginatorPosition="bottom"
+                                     var="convers"
+                                     rowKey="#{convers.id}"
+                                     emptyMessage="#{bundle['users.notFound']}"
+                                     rowsPerPageTemplate="10,20,50"
+                                     widgetVar="displayAllEntities"
+                                     filteredValue="#{conversationsBean.conversationsEntitiesFiltered}"
+                                     rendered="#{conversationsBean.conversationsEntities.size() eq 0 ? false : true}"
+                                     value="#{conversationsBean.conversationsEntityList}">
 
-                    <h:column>
-                        <f:facet name="header">#{bundle['message']}</f:facet>
-                        <p:outputLabel value="#{convers.message}"/>
-                    </h:column>
+                            <p:column width="500" headerText="#{bundle['message']}"
+                                      sortBy="#{convers.message}"
+                                      filterBy="#{convers.message}"
+                                      filterMatchMode="contains">
+                                <p:commandLink id="titleAll" value="#{convers.message}"
+                                               onclick="PF('dlg2').show();"
+                                               update="@(form)"
+                                >
+                                    <f:param name="idEntity" value="#{convers.id}"/>
+                                </p:commandLink>
+                            </p:column>
 
-                    <h:column>
-                        <f:facet name="header">#{bundle['user.username']}</f:facet>
-                        <p:outputLabel value="#{convers.usersByIdUsers.username}"/>
-                    </h:column>
+                            <p:column width="500" headerText="#{bundle['user.username']}"
+                                      sortBy="#{convers.usersByIdUsers.username}"
+                                      filterBy="#{convers.usersByIdUsers.username}"
+                                      filterMatchMode="contains">
+                                <p:commandLink id="titleUsername" value="#{convers.usersByIdUsers.username}"
+                                               onclick="PF('dlg2').show();"
+                                               update="@(form)"
+                                >
+                                    <f:param name="idEntity" value="#{convers.id}"/>
+                                </p:commandLink>
+                            </p:column>
 
-                    <h:column>
-                        <f:facet name="header">#{bundle['user.username']}</f:facet>
-                        <p:outputLabel value="#{convers.creationDate}">
-                            <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
-                        </p:outputLabel>
-                    </h:column>
+                            <p:column headerText="#{bundle['firstname']}"
+                                      sortBy="#{convers.usersByIdUsers.firstname}"
+                                      filterBy="#{convers.usersByIdUsers.firstname}"
+                                      filterMatchMode="contains"
+                            >
+                                <h:outputText value="#{convers.usersByIdUsers.firstname}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundle['lastname']}"
+                                      sortBy="#{convers.usersByIdUsers.lastname}"
+                                      filterBy="#{convers.usersByIdUsers.lastname}"
+                                      filterMatchMode="contains"
+                            >
+                                <h:outputText value="#{convers.usersByIdUsers.lastname}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundle['conversation.date']}"
+                                      sortBy="#{convers.creationDate}"
+                                      filterBy="#{convers.creationDate}"
+                                      filterMatchMode="contains"
+                            >
+                                <p:outputLabel value="#{convers.creationDate}">
+                                    <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
+                                </p:outputLabel>
+                            </p:column>
 
 
-                    <p:commandButton value="Editer" type="button" icon="ui-icon-add-box"
-                                     onclick="PF('updateConversationModal').show();" styleClass="NavyButton"
-                    />
+                            <p:column>
+                                <h:panelGroup rendered="#{convers.active}">
+                                    <p:commandLink update="@form"
+                                                   action="#{conversationsBean.delete(convers)}">
+                                        <i class="ui-icon ui-icon-delete-forever"></i>
+                                        <f:param name="idEntity" value="#{c.id}"/>
+                                        <f:param name="typeEntities" value="all"/>
+                                    </p:commandLink>
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{not convers.active}">
+                                    <p:commandButton value="#{bundle['activate']}"
+                                                     action="#{conversationsBean.activate(convers)}"
+                                                     update="@(form)"/>
+                                </h:panelGroup>
+                            </p:column>
+
+                            <p:column colspan="1" width="70">
+                                <p:commandLink
+                                        actionListener="#{conversationsBean.initialiseDialogConversId(convers.id)}"
+                                        update="updateConversationDialogForm:updateConversationDialog"
+                                        oncomplete="PF('updateConversation').show();return false;"
+                                        styleClass="NavyButton">
+                                    <i class="ui-icon ui-icon-create"></i>
+                                </p:commandLink>
 
 
-                    <h:column>
-                        <h:panelGroup rendered="#{convers.active}">
-                            <p:commandButton value="#{bundle['delete']}"
-                                             action="#{conversationsBean.delete(convers)}"
-                                             update="@(form)"/>
-                        </h:panelGroup>
+                            </p:column>
 
-                        <h:panelGroup rendered="#{not convers.active}">
-                            <p:commandButton value="#{bundle['activate']}"
-                                             action="#{conversationsBean.activate(convers)}"
-                                             update="@(form)"/>
-                        </h:panelGroup>
-                    </h:column>
 
-                    <h:column>
-                        <div class="ui-g">
-                            <div class="ui-g-4">
-                                <p:commandButton value="#{bundle['edit']}"
-                                                 actionListener="#{conversationsBean.initialiseDialogConversId(convers.id)}"
-                                                 update="updateConversationDialogForm:updateConversationDialog"
-                                                 oncomplete="PF('updateConversation').show();return false;"
-                                                 styleClass="NavyButton"/>
-                            </div>
-                        </div>
-                    </h:column>
+                        </p:dataTable>
+                    </p:tab>
+                    <p:staticMessage severity="info" detail="#{bundle['users.notFound']}"
+                                     rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? true : false}"/>
+                </h:form>
+            </div>
 
-                </h:dataTable>
-            </h:form>
 
             <h:form id="updateConversationDialogForm">
 
