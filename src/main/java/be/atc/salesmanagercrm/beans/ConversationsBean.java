@@ -53,6 +53,18 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     @Setter
     private ConversationsEntity conversationsForDialog;
 
+
+    @Getter
+    @Setter
+    private List<ConversationsEntity> conversationsEntities;
+    @Getter
+    @Setter
+    private ConversationsEntity selectedConversationsEntity;
+    @Getter
+    @Setter
+    private List<ConversationsEntity> conversationsEntitiesFiltered;
+
+
     @Inject
     private UsersBean usersBean;
 
@@ -86,8 +98,6 @@ public class ConversationsBean extends ExtendBean implements Serializable {
         log.info(message);
 
         CheckEntities checkEntities = new CheckEntities();
-//finir les verifs ici
-        //   usersBean.findUser();
 
         conversationsEntity.setMessage(message);
         conversationsEntity.setCreationDate(LocalDateTime.now());
@@ -131,7 +141,6 @@ public class ConversationsBean extends ExtendBean implements Serializable {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
-
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -192,7 +201,7 @@ public class ConversationsBean extends ExtendBean implements Serializable {
 
     public void activate(ConversationsEntity entity) {
         FacesMessage msg;
-        //verifs
+
         try {
             validateConvers(conversationsEntity);
         } catch (InvalidEntityException exception) {

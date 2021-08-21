@@ -100,14 +100,29 @@ public class UsersBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private List<UsersEntity> usersEntitiesRole = new ArrayList<>();
+    @Getter
+    @Setter
+    private UsersEntity userEntityNew = new UsersEntity();
+
+    @Getter
+    @Setter
+    private List<UsersEntity> usersEntitiesActive;
+    @Getter
+    @Setter
+    private List<UsersEntity> usersEntitiesDisable;
 
 
     public void initialiseDialogUserId(Integer idUser) {
+
         if (idUser == null || idUser < 1) {
             return;
         }
         userForDialog = getDao().findById(EMF.getEM(), idUser);
         usersEntity = dao.findById(EMF.getEM(), idUser);
+    }
+
+    public void createNewUserEntity() {
+        userEntityNew = new UsersEntity();
     }
 
 
@@ -200,6 +215,7 @@ public class UsersBean extends ExtendBean implements Serializable {
         //      String password = usersEntity.getPassword();
         String hashPass = encrypt(passwordUncrypt);
         log.info(hashPass);
+
 
         //ici, remplacer par un converter pour le hashage du mdp
       /*  MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -339,7 +355,12 @@ public class UsersBean extends ExtendBean implements Serializable {
 //no problem
         //faire le truc des roles
         session.setAttribute("idUser", usersEntity.getId());
+        //sessio.setattribut.idUser
 
+        session.setAttribute("usersEntity", usersEntity);
+        log.info("user entity: " + session.getAttribute("usersEntity"));
+        log.info("user entity id " + session.getAttribute("usersEntity"));
+        log.info("user entity id " + session.getAttribute("idUser"));
         FacesContext ctx = FacesContext.getCurrentInstance();
         ctx.getExternalContext().redirect("userUpdateByUser.xhtml");
     }
@@ -361,7 +382,7 @@ public class UsersBean extends ExtendBean implements Serializable {
             dao.update(em, usersEntity1);
             tx.commit();
             log.info("Delete ok");
-            findAllUsers();
+            loadListEntities();
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.deleted"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
@@ -390,7 +411,7 @@ public class UsersBean extends ExtendBean implements Serializable {
             dao.update(em, usersEntity1);
             tx.commit();
             log.info("Delete ok");
-            findAllUsers();
+            loadListEntities();
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.reactivate"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
@@ -409,6 +430,7 @@ public class UsersBean extends ExtendBean implements Serializable {
         log.info("bgin findallusers");
         usersEntityList = findAll();
         log.info(String.valueOf(usersEntityList));
+
     }
 
     protected List<UsersEntity> findAll() {
@@ -483,7 +505,7 @@ public class UsersBean extends ExtendBean implements Serializable {
             tx.begin();
             dao.update(em, usersEntity);
             tx.commit();
-            findAllUsers();
+            loadListEntities();
             log.info("Persist ok");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.updated"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -542,6 +564,49 @@ public class UsersBean extends ExtendBean implements Serializable {
             em.clear();
             em.clear();
         }
+    }
+
+
+    /**
+     * method to know which entity to reload
+     */
+    public void loadListEntities() {
+        usersEntitiesActive = findAllUsersActive();
+        usersEntitiesDisable = findAllDisable();
+    }
+
+    /**
+     * Find usersTypes entities
+     *
+     * @return List UsersEntity
+     */
+    public List<UsersEntity> findAllUsersActive() {
+
+        EntityManager em = EMF.getEM();
+
+        List<UsersEntity> usersEntitiesActive = dao.findActiveUsers(em);
+
+        em.clear();
+        em.close();
+
+        return usersEntitiesActive;
+    }
+
+    /**
+     * Find usersTypes entities
+     *
+     * @return List UsersEntity
+     */
+    public List<UsersEntity> findAllDisable() {
+
+        EntityManager em = EMF.getEM();
+
+        List<UsersEntity> usersEntities = dao.findDisableUsers(em);
+
+        em.clear();
+        em.close();
+
+        return usersEntities;
     }
 
 

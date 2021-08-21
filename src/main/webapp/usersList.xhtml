@@ -3,6 +3,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
                 template="WEB-INF/templates/template.xhtml">
 
     <ui:define name="title">#{bundle['usersList.title']}</ui:define>
@@ -10,122 +11,46 @@
 
         <f:metadata>
             <f:viewAction action="#{usersBean.findAllUsers}"/>
+            <f:viewAction action="#{usersBean.loadListEntities}"/>
             <f:viewAction action="#{rolesBean.findAllRoles}"/>
             <f:viewAction action="#{permissionsBean.findAllPermissions}"/>
         </f:metadata>
 
 
-        <h:body>
-            <h1>#{bundle['usersList.title']}</h1>
+        <p:growl id="msgs"/>
 
-            <h:form>
+        <div class="ui-g">
+            <div class="ui-g-12">
 
-                <p:commandLink
-                        oncomplete="PF('addUser').show();return false;"
-                        styleClass="NavyButton">
-                    <i class="ui-icon ui-icon-create"></i>
-                </p:commandLink>
-
-
-            </h:form>
-
-
-            <div class="card card-w-title">
-                <h:form id="form">
-                    <p:tab id="displayAll" title="#{bundle['all']} (#{usersBean.usersEntities.size()})">
-                        <p:dataTable paginator="true" rows="10"
-                                     selection="#{usersBean.selectedUserEntity}" selectionMode="single"
-                                     paginatorPosition="bottom"
-                                     var="user"
-                                     rowKey="#{user.id}"
-                                     emptyMessage="#{bundle['users.notFound']}"
-                                     rowsPerPageTemplate="10,20,50"
-                                     widgetVar="displayAllEntities"
-                                     filteredValue="#{usersBean.usersEntitiesFiltered}"
-                                     rendered="#{usersBean.usersEntities.size() eq 0 ? false : true}"
-                                     value="#{usersBean.usersEntityList}">
-
-                            <p:column width="500" headerText="#{bundle['user.username']}"
-                                      sortBy="#{user.username}"
-                                      filterBy="#{user.username}"
-                                      filterMatchMode="contains">
-                                <p:commandLink id="titleAll" value="#{user.username}"
-                                               onclick="PF('dlg2').show();"
-                                               update="@(form) "
-                                >
-                                    <f:param name="idEntity" value="#{user.id}"/>
-                                </p:commandLink>
-                            </p:column>
-
-                            <p:column headerText="#{bundle['firstname']}"
-                                      sortBy="#{user.firstname}"
-                                      filterBy="#{user.firstname}"
-                                      filterMatchMode="contains"
-                            >
-                                <h:outputText value="#{user.firstname}"/>
-                            </p:column>
-
-                            <p:column headerText="#{bundle['lastname']}"
-                                      sortBy="#{user.lastname}"
-                                      filterBy="#{user.lastname}"
-                                      filterMatchMode="contains">
-                                <h:outputText value="#{user.lastname}">
-
-                                </h:outputText>
-                            </p:column>
-
-                            <p:column headerText="#{bundle['email']}"
-                                      sortBy="#{user.email}">
-                                <h:outputText value="#{user.email}">
-
-                                </h:outputText>
-                            </p:column>
-
-                            <p:column headerText="#{bundle['role']}"
-                                      sortBy="#{user.rolesByIdRoles.label}"
-                                      filterBy="#{user.rolesByIdRoles.label}"
-                                      filterMatchMode="contains">
-                                <h:outputText value="#{user.rolesByIdRoles.label}">
-                                    <f:convertNumber currencySymbol="€" type="currency"/>
-                                </h:outputText>
-                            </p:column>
+                <div class="card card-w-title">
+                    <h1>#{bundle['usersList.title']}</h1>
+                    <h:form>
+                        <p:commandLink
+                                oncomplete="PF('addUser').show();return false;"
+                                styleClass="NavyButton" action="#{usersBean.createNewUserEntity}">
+                            <i class="ui-icon ui-icon-create"></i>
+                        </p:commandLink>
+                    </h:form>
 
 
-                            <p:column colspan="1" width="70">
-                                <p:commandLink
-                                        actionListener="#{usersBean.initialiseDialogUserId(user.id)}"
-                                        update="updateUserDialogForm:updateUserDialog"
-                                        oncomplete="PF('updateUser').show();return false;"
-                                        styleClass="NavyButton">
-                                    <i class="ui-icon ui-icon-create"></i>
-                                </p:commandLink>
+                    <h:form id="formUsers">
+                        <p:tabView style="margin-top: 10px" id="tabViewUsers">
 
+                            <p:tab id="displayActiveUsers" title="#{bundle['users.userActive']}">
+                                <fxs:listUsers id="listUsers"/>
+                            </p:tab>
 
-                            </p:column>
+                            <p:tab id="displayDisableUsers" title="#{bundle['users.userDisable']}">
+                                <fxs:listDisableUsers id="listDisableUsers"/>
+                            </p:tab>
 
-                            <p:column>
-                                <h:panelGroup rendered="#{user.active}">
-                                    <p:commandLink update="@form"
-                                                   action="#{usersBean.delete(user.id)}">
-                                        <i class="ui-icon ui-icon-delete-forever"></i>
-                                        <f:param name="idEntity" value="#{user.id}"/>
-                                        <f:param name="typeEntities" value="all"/>
-                                    </p:commandLink>
-                                </h:panelGroup>
+                        </p:tabView>
+                    </h:form>
 
-                                <h:panelGroup rendered="#{not user.active}">
-                                    <p:commandButton value="#{bundle['activate']}"
-                                                     action="#{usersBean.activate(user.id)}"
-                                                     update="@(form)"/>
-                                </h:panelGroup>
-                            </p:column>
+                </div>
 
-                        </p:dataTable>
-                    </p:tab>
-                    <p:staticMessage severity="info" detail="#{bundle['users.notFound']}"
-                                     rendered="#{usersBean.usersEntities.size() eq 0 ? true : false}"/>
-                </h:form>
             </div>
+
 
 
             <!-- ********************************update*********************************- -->
@@ -195,7 +120,7 @@
                         <p:growl id="msg" life="2000"></p:growl>
 
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="firstname" value="#{usersBean.usersEntity.firstname}" required="true"
+                            <p:inputText id="firstname" value="#{usersBean.userEntityNew.firstname}" required="true"
                                          feedback="false"/>
                             <p:outputLabel for="firstname" value="#{bundle['firstname']}"/>
                             <p:messages for="firstname">
@@ -204,7 +129,7 @@
                         </h:panelGroup>
 
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="lastname" value="#{usersBean.usersEntity.lastname}" required="true"
+                            <p:inputText id="lastname" value="#{usersBean.userEntityNew.lastname}" required="true"
                                          feedback="false"/>
                             <p:outputLabel for="lastname" value="#{bundle['lastname']}"/>
                             <p:messages for="lastname">
@@ -213,7 +138,8 @@
                         </h:panelGroup>
 
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="email" value="#{usersBean.usersEntity.email}" required="true" type="email"
+                            <p:inputText id="email" value="#{usersBean.userEntityNew.email}" required="true"
+                                         type="email"
                                          feedback="false">
                                 <f:validator validatorId="userEmailValidator"></f:validator>
                             </p:inputText>
@@ -226,7 +152,7 @@
                         <h:panelGroup>
                             <p:outputLabel for="rolesByUsers" value="#{bundle['role']}"></p:outputLabel>
                             <p:selectOneMenu id="rolesByUsers"
-                                             value="#{usersBean.usersEntity.rolesByIdRoles}"
+                                             value="#{usersBean.userEntityNew.rolesByIdRoles}"
                                              converter="rolesConverter" required="true" feedback="false"
                             >
                                 <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
@@ -242,11 +168,10 @@
                 </h:form>
             </p:dialog>
 
-
-            <p:messages id="messages" showDetail="true">
-                <p:autoUpdate/>
-            </p:messages>
-
-        </h:body>
+            <fxs:createContacts id="createContacts"/>
+        </div>
     </ui:define>
 </ui:composition>
+
+
+
