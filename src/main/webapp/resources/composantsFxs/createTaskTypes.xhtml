@@ -23,11 +23,14 @@
                              placeholder="#{bundle['title']}"
                              required="true"
                              requiredMessage="#{bundle['taskTypes.validator.title']}">
-                    <p:ajax update="msg" event="keyup"/>
+                    <p:ajax update="msg listAllTaskTypes:createTaskTypes:createTaskTypesForm:buttonCreateTaskTypes"
+                            event="keyup"/>
                 </p:inputText>
                 <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
+                                 id="buttonCreateTaskTypes"
                                  update="@(form) msgs"
+                                 disabled="#{empty taskTypesBean.taskTypesEntity.label or taskTypesBean.taskTypesEntity.label.length() le 1}"
                                  oncomplete="PF('createDialog').hide()"
                                  value="#{bundle['save']}"
                                  action="#{taskTypesBean.saveEntity}"

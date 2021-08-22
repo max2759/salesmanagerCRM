@@ -60,9 +60,8 @@ class TasksBeanTest {
     void findByIdShouldReturnFalse() {
 
         // Mettre un id incorrect
-        int id = 12;
-        UsersEntity usersEntity = new UsersEntity();
-        usersEntity.setId(1);
+        int id = 120;
+        UsersEntity usersEntity = null;
         TasksEntity tasksEntity = null;
 
         try {

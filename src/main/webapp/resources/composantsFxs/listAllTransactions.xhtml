@@ -53,6 +53,7 @@
                         <p:commandLink id="titleAll" value="#{transaction.title}"
                                        onclick="PF('dlg2').show();"
                                        update="@(form) msgs"
+                                       styleClass="boldText"
                                        action="#{transactionsBean.showModalUpdate}"
                         >
                             <f:param name="idEntity" value="#{transaction.id}"/>

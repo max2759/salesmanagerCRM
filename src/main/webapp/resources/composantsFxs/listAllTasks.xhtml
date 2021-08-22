@@ -16,7 +16,8 @@
 <cc:implementation>
     <f:view>
 
-        <p:dialog header="#{bundle['tasks.update']}" widgetVar="updateDialogTask" modal="true" responsive="true"
+        <p:dialog header="#{bundle['tasks.update']}" id="updateDialogTaskID" widgetVar="updateDialogTask" modal="true"
+                  responsive="true"
                   showEffect="fade">
             <fxs:updateTasks id="updateTasks"/>
         </p:dialog>
@@ -67,7 +68,16 @@
                                       sortBy="#{task.title}"
                                       filterBy="#{task.title}"
                                       filterMatchMode="contains">
-                                <p:outputLabel id="titleAll" value="#{task.title}"/>
+
+                                <p:commandLink id="titleAll" value="#{task.title}"
+                                               onclick="PF('updateDialogTask').show();"
+                                               update="@(form) msgs"
+                                               styleClass="boldText"
+                                               action="#{tasksBean.showModalUpdate}"
+                                >
+                                    <f:param name="idEntity" value="#{task.id}"/>
+                                </p:commandLink>
+
                                 <p:tooltip for="titleAll"
                                            value="#{empty task.description ? '' : bundle['tasks.description'].concat(' : ').concat(task.description)}"
                                            showEffect="clip" hideEffect="fold" position="bottom"/>
@@ -157,7 +167,6 @@
                                     <i class="ui-icon ui-icon-create"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                 </p:commandLink>
-
                                 <p:commandLink update="@form msgs"
                                                action="#{tasksBean.deleteEntity}">
                                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
@@ -208,7 +217,14 @@
                                       sortBy="#{task.title}"
                                       filterBy="#{task.title}"
                                       filterMatchMode="contains">
-                                <p:outputLabel id="titleToday" value="#{task.title}"/>
+                                <p:commandLink id="titleToday" value="#{task.title}"
+                                               onclick="PF('updateDialogTask').show();"
+                                               update="@(form) msgs"
+                                               styleClass="boldText"
+                                               action="#{tasksBean.showModalUpdate}"
+                                >
+                                    <f:param name="idEntity" value="#{task.id}"/>
+                                </p:commandLink>
                                 <p:tooltip for="titleToday"
                                            value="#{empty task.description ? '' : bundle['tasks.description'].concat(' : ').concat(task.description)}"
                                            showEffect="clip" hideEffect="fold" position="bottom"/>
@@ -336,7 +352,15 @@
                                       sortBy="#{task.title}"
                                       filterBy="#{task.title}"
                                       filterMatchMode="contains">
-                                <p:outputLabel id="titleToLate" value="#{task.title}"/>
+
+                                <p:commandLink id="titleToLate" value="#{task.title}"
+                                               onclick="PF('updateDialogTask').show();"
+                                               update="@(form) msgs"
+                                               styleClass="boldText"
+                                               action="#{tasksBean.showModalUpdate}"
+                                >
+                                    <f:param name="idEntity" value="#{task.id}"/>
+                                </p:commandLink>
                                 <p:tooltip for="titleToLate"
                                            value="#{empty task.description ? '' : bundle['tasks.description'].concat(' : ').concat(task.description)}"
                                            showEffect="clip" hideEffect="fold" position="bottom"/>
@@ -475,7 +499,14 @@
                                       sortBy="#{task.title}"
                                       filterBy="#{task.title}"
                                       filterMatchMode="contains">
-                                <p:outputLabel id="titleToCome" value="#{task.title}"/>
+                                <p:commandLink id="titleToCome" value="#{task.title}"
+                                               onclick="PF('updateDialogTask').show();"
+                                               update="@(form) msgs"
+                                               styleClass="boldText"
+                                               action="#{tasksBean.showModalUpdate}"
+                                >
+                                    <f:param name="idEntity" value="#{task.id}"/>
+                                </p:commandLink>
                                 <p:tooltip for="titleToCome"
                                            value="#{empty task.description ? '' : bundle['tasks.description'].concat(' : ').concat(task.description)}"
                                            showEffect="clip" hideEffect="fold" position="bottom"/>
@@ -614,7 +645,15 @@
                                       sortBy="#{task.title}"
                                       filterBy="#{task.title}"
                                       filterMatchMode="contains">
-                                <p:outputLabel id="titleFinished" value="#{task.title}"/>
+
+                                <p:commandLink id="titleFinished" value="#{task.title}"
+                                               onclick="PF('updateDialogTask').show();"
+                                               update="@(form) msgs"
+                                               styleClass="boldText"
+                                               action="#{tasksBean.showModalUpdate}"
+                                >
+                                    <f:param name="idEntity" value="#{task.id}"/>
+                                </p:commandLink>
                                 <p:tooltip for="titleFinished"
                                            value="#{empty task.description ? '' : bundle['tasks.description'].concat(' : ').concat(task.description)}"
                                            showEffect="clip" hideEffect="fold" position="bottom"/>

@@ -7,11 +7,14 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.validators.TaskTypesValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -65,7 +68,26 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
     public void showModalUpdate() {
         log.info("method : showModalUpdate()");
         log.info("param : " + getParam("idEntity"));
-        taskTypesEntity = findById(Integer.parseInt(getParam("idEntity")));
+
+        int idEntity;
+        FacesMessage msg;
+        try {
+            idEntity = Integer.parseInt(getParam("idEntity"));
+        } catch (NumberFormatException exception) {
+            log.info(exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "taskTypes.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
+        try {
+            this.taskTypesEntity = findById(idEntity);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "taskTypes.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+
     }
 
     /**
@@ -122,6 +144,8 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
             return;
         }
 
+        FacesMessage msg;
+
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
         try {
@@ -130,9 +154,13 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
             dao.save(em, entity);
             tx.commit();
             log.info("Persist ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "taskTypes.saved"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();
@@ -149,7 +177,10 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
     protected TaskTypesEntity findById(int id) {
         if (id == 0) {
             log.error("TaskType ID is null");
-            return null;
+            throw new EntityNotFoundException(
+                    "L ID du type de tache est incorrect",
+                    ErrorCodes.TASKTYPE_NOT_FOUND
+            );
         }
 
         EntityManager em = EMF.getEM();
@@ -172,7 +203,10 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
     public TaskTypesEntity findByLabel(String label) {
         if (label == null) {
             log.error("TaskType label is null");
-            return null;
+            throw new EntityNotFoundException(
+                    "Le Label du type de tache est incorrect",
+                    ErrorCodes.TASKTYPE_NOT_FOUND
+            );
         }
 
         EntityManager em = EMF.getEM();
@@ -205,10 +239,13 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
             return;
         }
 
+        FacesMessage msg;
         try {
             findById(entity.getId());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "taskTypes.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
 
@@ -220,9 +257,13 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
             dao.update(em, entity);
             tx.commit();
             log.info("Update ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "taskTypes.updated"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Update echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();
