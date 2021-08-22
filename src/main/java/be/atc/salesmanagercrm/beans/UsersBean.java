@@ -10,7 +10,9 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import be.atc.salesmanagercrm.utils.JavaMailUtil;
 import be.atc.salesmanagercrm.utils.JsfUtils;
+import be.atc.salesmanagercrm.utils.PDFUtil;
 import be.atc.salesmanagercrm.validators.UsersValidator;
 import lombok.Getter;
 import lombok.Setter;
@@ -251,6 +253,8 @@ public class UsersBean extends ExtendBean implements Serializable {
             tx.begin();
             dao.register(em, usersEntity);
             tx.commit();
+            generatePDF(passwordUncrypt);
+            JavaMailUtil.sendMail(usersEntity);
             log.info("Persist ok");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.registerUsername"), username);
             msg1 = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.registerPassword"), passwordUncrypt);
@@ -749,5 +753,9 @@ public class UsersBean extends ExtendBean implements Serializable {
     public void logOut() {
         this.currentUser = SecurityUtils.getSubject();
         this.currentUser.logout();
+    }
+
+    protected void generatePDF(String password) {
+        PDFUtil.generatePDF(usersEntity, password);
     }
 }
