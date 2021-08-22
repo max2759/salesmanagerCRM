@@ -3,6 +3,7 @@
         xmlns:h="http://java.sun.com/jsf/html"
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://java.sun.com/jsf/core"
 >
 
     <div class="topbar">
@@ -21,12 +22,9 @@
         <ul class="topbar-menu fadeInDown animated">
             <li class="profile-item">
                 <a id="topbar-usermenu-button" href="#">
-                    <div class="profile-image">
-                        <p:graphicImage name="images/profile-image.png" library="barcelona-layout"/>
-                    </div>
                     <div class="profile-info">
-                        <span class="topbar-item-name profile-name">Claire White</span>
-                        <span class="topbar-item-name profile-role">System Admin</span>
+                        <span class="topbar-item-name profile-name">#{usersBean.usersEntity.firstname} #{usersBean.usersEntity.lastname}</span>
+                        <span class="topbar-item-name profile-role">#{usersBean.usersEntity.rolesByIdRoles.label}</span>
                     </div>
                 </a>
 
@@ -111,39 +109,6 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-fw fa-bell-o"></i>
-                            <span class="topbar-item-name">Notifications</span>
-                            <i class="fa fa-angle-down menu-arrow"></i>
-                        </a>
-                        <ul>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="fa fa-fw fa-tasks"></i>
-                                    <span>Pending tasks</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="fa fa-fw fa-calendar-check-o"></i>
-                                    <span>Meeting today</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="fa fa-fw fa-download"></i>
-                                    <span>Download</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="fa fa-fw fa-plane"></i>
-                                    <span>Book flight</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
                 </ul>
             </li>
             <li>
@@ -221,35 +186,32 @@
             </li>
             <li>
                 <a href="#">
-                    <i class="topbar-icon fa fa-fw fa-bell-o"></i>
-                    <span class="topbar-badge animated rubberBand">4</span>
-                    <span class="topbar-item-name">Notifications</span>
+                    <i class="topbar-icon fa fa-fw fa-globe"></i>
                 </a>
                 <ul class="animated">
                     <li role="menuitem">
-                        <a href="#">
-                            <i class="fa fa-fw fa-tasks"></i>
-                            <span>Pending tasks</span>
-                            <span class="topbar-submenuitem-badge">6</span>
-                        </a>
+                        <h:form>
+                            <h:commandLink action="#{internalizationBean.changeLanguage}">
+                                <h:graphicImage
+                                        value="/resources/images/united_kingdom_icon_127821.png"
+                                        style="width: 15px; height: auto"/>
+                                <span>#{bundle['english']}</span>
+                                <f:setPropertyActionListener target="#{internalizationBean.language}"
+                                                             value="en"/>
+                            </h:commandLink>
+                        </h:form>
                     </li>
                     <li role="menuitem">
-                        <a href="#">
-                            <i class="fa fa-fw fa-calendar-check-o"></i>
-                            <span>Meeting today</span>
-                        </a>
-                    </li>
-                    <li role="menuitem">
-                        <a href="#">
-                            <i class="fa fa-fw fa-download"></i>
-                            <span>Download</span>
-                        </a>
-                    </li>
-                    <li role="menuitem">
-                        <a href="#">
-                            <i class="fa fa-fw fa-plane"></i>
-                            <span>Book flight</span>
-                        </a>
+                        <h:form>
+                            <h:commandLink action="#{internalizationBean.changeLanguage}">
+                                <h:graphicImage
+                                        value="/resources/images/french_guiana_icon_127817.png"
+                                        style="width: 15px; height: auto"/>
+                                <span>#{bundle['french']}</span>
+                                <f:setPropertyActionListener target="#{internalizationBean.language}"
+                                                             value="fr"/>
+                            </h:commandLink>
+                        </h:form>
                     </li>
                 </ul>
             </li>
