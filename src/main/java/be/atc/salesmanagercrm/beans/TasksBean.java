@@ -208,9 +208,19 @@ public class TasksBean extends ExtendBean implements Serializable {
     public void onRowEdit(RowEditEvent<TasksEntity> event) {
         log.info("TasksBean => method : onRowEdit(RowEditEvent<TasksEntity> event)");
 
+        int idEntity;
         FacesMessage msg;
+
         try {
-            findById(event.getObject().getId(), usersBean.getUsersEntity());
+            idEntity = event.getObject().getId();
+        } catch (NumberFormatException exception) {
+            log.info(exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+        try {
+            findById(idEntity, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
@@ -257,12 +267,22 @@ public class TasksBean extends ExtendBean implements Serializable {
      */
     public void showModalUpdate() {
         log.info("TasksBean => method : showModalUpdate()");
+
+        int idEntity;
+        FacesMessage msg;
         try {
-            int idEntity = Integer.parseInt(getParam("idEntity"));
+            idEntity = Integer.parseInt(getParam("idEntity"));
+        } catch (NumberFormatException exception) {
+            log.info(exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+        try {
             tasksEntity = findById(idEntity, usersBean.getUsersEntity());
         } catch (NumberFormatException exception) {
             log.warn(exception.getMessage());
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
@@ -291,15 +311,25 @@ public class TasksBean extends ExtendBean implements Serializable {
     /**
      * Method to change status of task
      *
-     * @param event
+     * @param event AjaxBehaviorEvent
      */
     public void updateStatus(AjaxBehaviorEvent event) {
-        log.info("method : updateStatus()");
+        log.info("TasksBean => method : updateStatus(AjaxBehaviorEvent event)");
 
-        TasksEntity tasksEntityToUpdate;
+        int idEntity;
         FacesMessage msg;
         try {
-            tasksEntityToUpdate = findById((Integer) event.getComponent().getAttributes().get("idTask"), usersBean.getUsersEntity());
+            idEntity = (int) event.getComponent().getAttributes().get("idTask");
+        } catch (NumberFormatException exception) {
+            log.info(exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
+        TasksEntity tasksEntityToUpdate;
+        try {
+            tasksEntityToUpdate = findById(idEntity, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
@@ -486,13 +516,17 @@ public class TasksBean extends ExtendBean implements Serializable {
             log.error("Task ID is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
+            throw new EntityNotFoundException(
+                    "L ID de la tache est incorrect", ErrorCodes.TASK_NOT_FOUND
+            );
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
+            );
         }
 
         EntityManager em = EMF.getEM();
@@ -525,7 +559,7 @@ public class TasksBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -555,7 +589,7 @@ public class TasksBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -579,7 +613,7 @@ public class TasksBean extends ExtendBean implements Serializable {
     protected List<TasksEntity> findAll(UsersEntity usersEntity) {
         FacesMessage msg;
         if (usersEntity == null) {
-            log.error("User ID is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -628,7 +662,7 @@ public class TasksBean extends ExtendBean implements Serializable {
             return;
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;

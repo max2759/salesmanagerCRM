@@ -111,6 +111,14 @@ public class UsersBean extends ExtendBean implements Serializable {
     @Setter
     private List<UsersEntity> usersEntitiesDisable;
 
+    @Getter
+    @Setter
+    private Subject currentUser;
+
+    @Getter
+    @Setter
+    private Session session;
+
 
     public void initialiseDialogUserId(Integer idUser) {
 
@@ -292,16 +300,16 @@ public class UsersBean extends ExtendBean implements Serializable {
         UsernamePasswordToken token = new UsernamePasswordToken(usersEntity.getUsername(), hashPass);
         // log.info(String.valueOf(new UsernamePasswordToken(usersEntity.getUsername(), hashPass)));
         log.info(String.valueOf(token));
-        Subject currentUser = SecurityUtils.getSubject();
+        this.currentUser = SecurityUtils.getSubject();
         log.info(String.valueOf(currentUser));
-        Session session = currentUser.getSession();
+        this.session = currentUser.getSession();
 
-        if (!currentUser.isAuthenticated()) {
+        if (!this.currentUser.isAuthenticated()) {
 
             token.setRememberMe(true);
 
             try {
-                currentUser.login(token);
+                this.currentUser.login(token);
             } catch (UnknownAccountException uae) {
                 log.info("There is no user with username or wrong password of " + token.getPrincipal());
                 return;
@@ -320,47 +328,44 @@ public class UsersBean extends ExtendBean implements Serializable {
         }
 
 
-        log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
+        log.info("User [" + this.currentUser.getPrincipal() + "] logged in successfully.");
 
-        log.info("test role : " + currentUser);
+        log.info("test role : " + this.currentUser);
         //test a role:
-        if (currentUser.hasRole("Admin")) {
+        if (this.currentUser.hasRole("Admin")) {
             log.info("Bravo tu es Admin");
         } else {
             log.info("Hello, mere mortal.");
         }
 
         //test a typed permission (not instance-level)
-        if (currentUser.isPermitted("addUsers")) {
+        if (this.currentUser.isPermitted("addUsers")) {
             log.info("Tu as l'autorisation Test.");
         } else {
             log.info("Sorry, lightsaber1 rings are for schwartz masters only.");
         }
-        if (currentUser.isPermitted("test22")) {
+        if (this.currentUser.isPermitted("test22")) {
             log.info("You may use a lightsaber ring.  Use it wisely.");
         } else {
             log.info("Sorry, lightsaber rings are for schwartz masters only.");
         }
 
-        if (currentUser.isPermitted("test2")) {
+        if (this.currentUser.isPermitted("test2")) {
             log.info("Tu as l'autorisation Test2.");
         } else {
             log.info("Sorry, lightsaber rings are for schwartz masters only.");
         }
 
         //all done - log out!
-        //     currentUser.logout();
+        //     this.currentUser.logout();
 
         //    System.exit(0);
 //no problem
         //faire le truc des roles
         session.setAttribute("idUser", usersEntity.getId());
-        //sessio.setattribut.idUser
+        session.setAttribute("username", usersEntity.getUsername());
+        log.info("usersEntity : " + session.getAttribute("idUser"));
 
-        session.setAttribute("usersEntity", usersEntity);
-        log.info("user entity: " + session.getAttribute("usersEntity"));
-        log.info("user entity id " + session.getAttribute("usersEntity"));
-        log.info("user entity id " + session.getAttribute("idUser"));
         FacesContext ctx = FacesContext.getCurrentInstance();
         ctx.getExternalContext().redirect("userUpdateByUser.xhtml");
     }
@@ -742,9 +747,7 @@ public class UsersBean extends ExtendBean implements Serializable {
     }
 
     public void logOut() {
-        Subject currentUser = SecurityUtils.getSubject();
-        currentUser.logout();
+        this.currentUser = SecurityUtils.getSubject();
+        this.currentUser.logout();
     }
-
-
 }

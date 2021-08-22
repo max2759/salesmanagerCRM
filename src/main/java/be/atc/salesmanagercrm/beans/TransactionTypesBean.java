@@ -56,7 +56,10 @@ public class TransactionTypesBean extends ExtendBean implements Serializable {
     protected TransactionTypesEntity findById(int id) {
         if (id == 0) {
             log.error("TransactionTypes ID is null");
-            return null;
+            throw new EntityNotFoundException(
+                    "L ID de la tansaction est incorrect",
+                    ErrorCodes.TRANSACTIONTYPE_NOT_FOUND
+            );
         }
 
         EntityManager em = EMF.getEM();
@@ -79,7 +82,10 @@ public class TransactionTypesBean extends ExtendBean implements Serializable {
     public TransactionTypesEntity findByLabel(String label) {
         if (label == null) {
             log.error("Transaction type label is null");
-            return null;
+            throw new EntityNotFoundException(
+                    "Le label de la tansaction est incorrect",
+                    ErrorCodes.NOTE_NOT_FOUND
+            );
         }
 
         EntityManager em = EMF.getEM();

@@ -78,7 +78,17 @@ public class NotesBean extends ExtendBean implements Serializable {
 
         log.info("message : " + notesEntity.getMessage());
 
-        notesEntity.setUsersByIdUsers(usersBean.getUsersEntity());
+        try {
+            // TODO A VOIR !!
+            notesEntity.setUsersByIdUsers(returnUsersEntity((Integer) usersBean.getSession().getAttribute("idUser")));
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            FacesMessage msg;
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
         if (getParamType().equalsIgnoreCase("displayByContact")) {
             notesEntity.setContactsByIdContacts(contactsBean.getContactsEntity());
         } else if (getParamType().equalsIgnoreCase("displayByCompany")) {
@@ -350,13 +360,18 @@ public class NotesBean extends ExtendBean implements Serializable {
             log.error("Note ID is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "note.notExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
+            throw new EntityNotFoundException(
+                    "L ID de la note est incorrect",
+                    ErrorCodes.NOTE_NOT_FOUND
+            );
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
+            );
         }
 
         EntityManager em = EMF.getEM();
@@ -390,7 +405,7 @@ public class NotesBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -422,7 +437,7 @@ public class NotesBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -447,7 +462,7 @@ public class NotesBean extends ExtendBean implements Serializable {
         log.info("NotesBean => method : findAll(int idUser)");
         FacesMessage msg;
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -476,7 +491,7 @@ public class NotesBean extends ExtendBean implements Serializable {
             return;
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
