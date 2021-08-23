@@ -540,7 +540,7 @@ public class UsersBean extends ExtendBean implements Serializable {
      * @param usersEntity
      */
     private void userUpdateByUser(UsersEntity usersEntity) {
-
+        FacesMessage msg;
         log.info("begin updateUsrByUser" + usersEntity.getUsername());
 
 //pour les mdp, comparer en db AVANT hashage si il correspondent. Si ils corresepondent pas, on le hash et on le modifie
@@ -566,9 +566,13 @@ public class UsersBean extends ExtendBean implements Serializable {
             dao.update(em, usersEntity);
             tx.commit();
             log.info("Persist ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.updated"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();

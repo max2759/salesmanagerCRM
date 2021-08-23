@@ -60,6 +60,10 @@ public class RolesBean extends ExtendBean implements Serializable {
     @Inject
     private UsersBean usersBean;
 
+    @Getter
+    @Setter
+    private RolesEntity rolesEntityNew = new RolesEntity();
+
     public void initialiseDialogRoleId(Integer idRole) {
         if (idRole == null || idRole < 1) {
             return;
@@ -68,6 +72,9 @@ public class RolesBean extends ExtendBean implements Serializable {
         rolesEntity = dao.findById(EMF.getEM(), idRole);
     }
 
+    public void createNewRoleEntity() {
+        rolesEntityNew = new RolesEntity();
+    }
 
     public RolesEntity findById(EntityManager em, int id) {
         return dao.findById(em, id);
@@ -142,6 +149,8 @@ public class RolesBean extends ExtendBean implements Serializable {
 
     public void addRoles(RolesEntity rolesEntity) {
         //rolesEntity = rolesBean.findById(em, idRole);
+        FacesMessage msg;
+
         try {
             validateRoles(rolesEntity);
         } catch (InvalidEntityException exception) {
@@ -166,9 +175,13 @@ public class RolesBean extends ExtendBean implements Serializable {
             dao.register(em, rolesEntity);
             tx.commit();
             log.info("Persist ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.create"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();

@@ -270,9 +270,13 @@ log.info(String.valueOf(permissionsEntities.size()));
                     dao.addRolePermissions(em, rolesPermissionsEntity);
                     tx.commit();
                     log.info("Persist ok");
+                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "permission.update"), null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
                 } catch (Exception ex) {
                     if (tx != null && tx.isActive()) tx.rollback();
                     log.info("Persist echec");
+                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
                 } finally {
                     em.clear();
                     em.clear();
@@ -336,8 +340,7 @@ log.info(String.valueOf(permissionsEntities.size()));
             dao.delete(em, rolesPermissionsEntity1);
             tx.commit();
             log.info("Delete ok");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "notes.deleted"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.error("Delete Error");

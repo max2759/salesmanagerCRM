@@ -5,6 +5,7 @@ import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidOperationException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
@@ -20,7 +21,8 @@ import java.util.regex.Pattern;
 @Slf4j
 @FacesValidator("userPasswordValidator")
 public class UsersPasswordFrontValidator implements Validator {
-    Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+    @Getter
+    private static final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
@@ -29,11 +31,15 @@ public class UsersPasswordFrontValidator implements Validator {
         UsersEntity usersEntity = new UsersEntity();
         usersEntity.setPassword((String) value);
 
+        String errorMessage = null;
 
         try {
             checkPasswordRegexe(usersEntity);
         } catch (InvalidOperationException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            errorMessage = JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" + JsfUtils.returnMessage(getLocale(), "task.validator.title");
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             throw new ValidatorException(new FacesMessage(getMessageErrorPaswword()));
         }
     }
@@ -56,8 +62,10 @@ public class UsersPasswordFrontValidator implements Validator {
     public void checkPasswordRegexe(UsersEntity entity) {
         if (entity != null) {
             Pattern pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?])[A-Za-z\\d@$!%*?/.^&*_=+>)]{8,}$");
+            log.info(entity.getPassword());
             Matcher matcher = pattern.matcher(entity.getPassword());
             boolean bool = matcher.matches();
+            log.info(String.valueOf(bool));
             if (bool == false) {
                 log.warn("wrong regex password", entity.getPassword());
                 throw new InvalidOperationException(

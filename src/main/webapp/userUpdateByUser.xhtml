@@ -13,37 +13,94 @@
         </f:metadata>
 
         <h:body>
-            <h:form>
-                username, password, email, recup de l'id du gus pour afficher ce formulaire
+            <p:growl id="msg" life="2000"></p:growl>
+            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                <label> #{bundle['firstname']}: #{usersBean.usersEntity.firstname}</label>
+            </h:panelGroup>
+            <br/>
 
-                <div class="p-field p-grid">
-                    <p:outputLabel for="password" value="#{bundle['user.password']}"></p:outputLabel>
-                    <div class="p-col">
-                        <p:password id="password" value="#{usersBean.usersEntity.password}" match="password2">
-                            <f:validator validatorId="userPasswordValidator"></f:validator>
-                        </p:password>
-                    </div>
-                </div>
-                <br/>
-                <div class="p-field p-grid">
-                    <p:outputLabel for="password2" styleClass="p-col-fixed" style="width:100px"
-                                   value="#{bundle['user.password2']}"/>
-                    <div class="p-col">
-                        <p:password id="password2" value="#{usersBean.password2}" label="password2"/>
-                    </div>
-                </div>
+            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                <label style="font-weight: bold">#{bundle['lastname']}: #{usersBean.usersEntity.lastname}</label>
+            </h:panelGroup>
+            <br/>
+
+            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                <label style="font-weight: bold">#{bundle['user.username']}: #{usersBean.usersEntity.username}</label>
+            </h:panelGroup>
+            <br/>
 
 
-                <p:outputLabel for="email" value="#{bundle['email']}"></p:outputLabel>
-                <p:inputText id="email" value="#{usersBean.usersEntity.email}" required="true">
-                    <f:validator validatorId="userEmailValidator"></f:validator>
-                </p:inputText>
+            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                <label style="font-weight: bold">#{bundle['email']}: #{usersBean.usersEntity.email}</label>
+            </h:panelGroup>
+            <br/>
 
 
-                <p:commandButton value="Valider" action="#{usersBean.updateByUser}"/>
+            <p:column colspan="1" width="70">
+                <h:form>
+                    <p:commandLink
+                            actionListener="#{usersBean.initialiseDialogUserId(usersBean.usersEntity.id)}"
+                            update="updateUserDialogForm:updateUserDialog"
+                            value="#{bundle['update']}"
+                            oncomplete="PF('updateUser').show();return false;"
+                            styleClass="NavyButton">
 
+                    </p:commandLink>
+                </h:form>
+            </p:column>
+
+
+            <!-- e*******************update*******************e- -->
+
+            <h:form id="updateUserDialogForm">
+                <p:growl id="msgs" life="2000"></p:growl>
+                <p:dialog header="Modal Dialog" widgetVar="updateUser" modal="true"
+                          responsive="true" id="updateUserDialog">
+
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                            <p:password id="password" value="#{usersBean.usersEntity.password}" match="password2">
+                                <f:validator validatorId="userPasswordValidator"></f:validator>
+                            </p:password>
+                            <p:outputLabel for="password" value="#{bundle['user.password']}"></p:outputLabel>
+                            <p:messages for="password">
+                                <p:autoUpdate/>
+                            </p:messages>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                            <p:password id="password2" value="#{usersBean.password2}" label="password2"/>
+                            <p:outputLabel for="password2" styleClass="p-col-fixed" style="width:100px"
+                                           value="#{bundle['user.password2']}"/>
+                            <p:messages for="password2">
+                                <p:autoUpdate/>
+                            </p:messages>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                            <p:inputText id="email" value="#{usersBean.usersEntity.email}" required="true">
+                                <f:validator validatorId="userEmailValidator"></f:validator>
+                            </p:inputText>
+                            <p:outputLabel for="email" value="#{bundle['email']}"></p:outputLabel>
+                            <p:messages for="email">
+                                <p:autoUpdate/>
+                            </p:messages>
+                        </h:panelGroup>
+
+
+                        <p:commandButton value="Confirmer Valider" action="#{rolesBean.updateEntity}"
+                                         update="@(form)"/>
+                    </p:panelGrid>
+                </p:dialog>
 
             </h:form>
+
+            <p:messages>
+                <p:autoUpdate/>
+            </p:messages>
+
+
         </h:body>
 
     </ui:define>
