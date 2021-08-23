@@ -56,7 +56,10 @@ public class VoucherStatusBean extends ExtendBean implements Serializable {
     protected VoucherStatusEntity findById(int id) {
         if (id == 0) {
             log.error("VoucherStatus ID is null");
-            return null;
+            throw new EntityNotFoundException(
+                    "L ID du statut ticket est incorrect",
+                    ErrorCodes.VOUCHERSTATUS_NOT_FOUND
+            );
         }
 
         EntityManager em = EMF.getEM();
@@ -79,7 +82,10 @@ public class VoucherStatusBean extends ExtendBean implements Serializable {
     public VoucherStatusEntity findByLabel(String label) {
         if (label == null) {
             log.error("VoucherStatus label is null");
-            return null;
+            throw new EntityNotFoundException(
+                    "Le label du statut du ticket est incorrect",
+                    ErrorCodes.VOUCHERSTATUS_NOT_FOUND
+            );
         }
 
         EntityManager em = EMF.getEM();

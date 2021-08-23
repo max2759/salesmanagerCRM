@@ -134,7 +134,6 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return;
         }
     }
 
@@ -322,13 +321,18 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             log.error("Transaction ID is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
+            throw new EntityNotFoundException(
+                    "L ID de la tansaction est incorrect",
+                    ErrorCodes.TRANSACTION_NOT_FOUND
+            );
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
+            );
         }
 
         EntityManager em = EMF.getEM();
@@ -362,7 +366,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -393,7 +397,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -416,7 +420,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     protected List<TransactionsEntity> findAll(UsersEntity usersEntity) {
         FacesMessage msg;
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -438,7 +442,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     protected List<TransactionsEntity> findAllByPhase(UsersEntity usersEntity, String phaseTransaction) {
         FacesMessage msg;
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -591,7 +595,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             return;
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;

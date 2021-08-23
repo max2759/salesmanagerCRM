@@ -56,7 +56,10 @@ public class TransactionPhasesBean extends ExtendBean implements Serializable {
     protected TransactionPhasesEntity findById(int id) {
         if (id == 0) {
             log.error("TransactionPhases ID is null");
-            return null;
+            throw new EntityNotFoundException(
+                    "L ID de la phase tansaction est incorrect",
+                    ErrorCodes.TRANSACTIONPHASE_NOT_FOUND
+            );
         }
 
         EntityManager em = EMF.getEM();
@@ -79,7 +82,10 @@ public class TransactionPhasesBean extends ExtendBean implements Serializable {
     public TransactionPhasesEntity findByLabel(String label) {
         if (label == null) {
             log.error("Transaction Phases label is null");
-            return null;
+            throw new EntityNotFoundException(
+                    "Le label de la phase tansaction est incorrect",
+                    ErrorCodes.TRANSACTIONPHASE_NOT_FOUND
+            );
         }
 
         EntityManager em = EMF.getEM();

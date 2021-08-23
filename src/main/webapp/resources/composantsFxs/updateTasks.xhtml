@@ -15,14 +15,15 @@
 <cc:implementation>
     <f:view>
 
-        <h:form>
-            <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+        <h:form id="formUpdateTask">
+            <p:panelGrid id="panelGridUpdateTasks1" columns="4" layout="grid"
+                         styleClass="ui-panelgrid-blank form-group">
                 <p:outputLabel value="#{bundle['title']} :" for="acTitle" styleClass="boldText"/>
                 <p:inputText id="acTitle" value="#{tasksBean.tasksEntity.title}"
                              required="true"
                              requiredMessage="#{bundle['task.validator.title']}"
                              style="margin-bottom:10px;">
-                    <p:ajax update="msg" event="keyup"/>
+                    <p:ajax update="detailsRight:updateTasks:formUpdateTask:buttonUpdateTask msg" event="keyup"/>
                 </p:inputText>
 
 
@@ -73,7 +74,8 @@
                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
 
             </p:panelGrid>
-            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
+            <p:panelGrid id="panelGridUpdateTasks2" columns="1" layout="grid"
+                         styleClass="ui-panelgrid-blank form-group">
                 <p:outputLabel for="description" value="#{bundle['tasks.description']}:" styleClass="boldText"/>
                 <p:inputTextarea value="#{tasksBean.tasksEntity.description}" id="description"
                                  rows="6" cols="100"
@@ -83,6 +85,8 @@
                 <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
+                                 id="buttonUpdateTask"
+                                 disabled="#{empty tasksBean.tasksEntity.title or tasksBean.tasksEntity.title.length() le 1}"
                                  oncomplete="PF('updateDialogTask').hide()"
                                  value="#{bundle['update']}"
                                  action="#{tasksBean.updateEntity}">

@@ -287,13 +287,18 @@ public class VouchersBean extends ExtendBean implements Serializable {
             log.error("Voucher ID is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "vouchers.notExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
+            throw new EntityNotFoundException(
+                    "L ID du ticket est incorrect",
+                    ErrorCodes.VOUCHER_NOT_FOUND
+            );
         }
         if (usersEntity == null) {
-            log.error("User ID is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
+            );
         }
 
         EntityManager em = EMF.getEM();
@@ -327,7 +332,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -359,7 +364,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
@@ -383,7 +388,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
     protected List<VouchersEntity> findAll(UsersEntity usersEntity) {
         FacesMessage msg;
         if (usersEntity == null) {
-            log.error("User is null");
+            log.error("User Entity is null");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return Collections.emptyList();
