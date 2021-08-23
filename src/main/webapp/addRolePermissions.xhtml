@@ -11,7 +11,7 @@
         }
     </style>
 
-    <ui:define name="title">#{bundle['usersList.title']}</ui:define>
+    <ui:define name="title">#{bundle['manageRolePermissions.title']}</ui:define>
     <ui:define name="content">
 
         <f:metadata>
@@ -21,25 +21,31 @@
         </f:metadata>
 
         <h:body>
-            <h1>#{bundle['addRolePermissions.title']}</h1>
+            <h1>#{bundle['manageRolePermissions.title']}</h1>
 
 
             <h:form id="updateRolePermissionsDialogForm">
+                <p:growl id="msg" life="2000"></p:growl>
+
                 <!-- liste déroulante des roles -->
-                <p:outputLabel for="role" value="#{bundle['role']}"></p:outputLabel>
-                <p:selectOneMenu id="role"
-                                 value="#{rolesPermissionsBean.rolesPermissionsEntity.rolesByIdRoles}"
-                                 converter="rolesConverter"
-                >
-                    <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
-                                   itemValue="#{companyTypes}"
-                                   itemLabel="#{companyTypes.label}"
-                    />
-                    <p:ajax update="@(form)" listener="#{rolesPermissionsBean.findPermissionWhithIdRoleList}"/>
-                </p:selectOneMenu>
+                <div class="ui-fluid p-formgrid p-grid">
+                    <div class="p-field p-col-12 p-md-4">
+                        <h4><p:outputLabel for="role" value="#{bundle['chooseRole']}">: </p:outputLabel></h4>
+                        <p:selectOneMenu id="role"
+                                         value="#{rolesPermissionsBean.rolesPermissionsEntity.rolesByIdRoles}"
+                                         converter="rolesConverter"
+                        >
+                            <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
+                                           itemValue="#{companyTypes}"
+                                           itemLabel="#{companyTypes.label}"
+                            />
+                            <p:ajax update="@(form)" listener="#{rolesPermissionsBean.findPermissionWhithIdRoleList}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
 
                 <!--checkbox des permissions -->
-
+                <h4><p:outputLabel for="role" value="#{bundle['choosePermissions']}">: </p:outputLabel></h4>
                 <p:selectManyCheckbox id="grid2"
                                       value="#{rolesPermissionsBean.permissionsEntitiesRole}"
                                       layout="responsive"

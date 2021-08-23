@@ -133,6 +133,7 @@ public class UsersBean extends ExtendBean implements Serializable {
         log.info(String.valueOf(usersEntity));
         log.info(String.valueOf(rolesEntity));
 
+
         Subject currentUser = SecurityUtils.getSubject();
         //test a typed permission (not instance-level)
         if (currentUser.isPermitted("addUsers")) {
@@ -357,10 +358,10 @@ public class UsersBean extends ExtendBean implements Serializable {
         session.setAttribute("idUser", usersEntity.getId());
         //sessio.setattribut.idUser
 
+
         session.setAttribute("usersEntity", usersEntity);
         log.info("user entity: " + session.getAttribute("usersEntity"));
-        log.info("user entity id " + session.getAttribute("usersEntity"));
-        log.info("user entity id " + session.getAttribute("idUser"));
+
         FacesContext ctx = FacesContext.getCurrentInstance();
         ctx.getExternalContext().redirect("userUpdateByUser.xhtml");
     }
@@ -531,7 +532,7 @@ public class UsersBean extends ExtendBean implements Serializable {
      * @param usersEntity
      */
     private void userUpdateByUser(UsersEntity usersEntity) {
-
+        FacesMessage msg;
         log.info("begin updateUsrByUser" + usersEntity.getUsername());
 
 //pour les mdp, comparer en db AVANT hashage si il correspondent. Si ils corresepondent pas, on le hash et on le modifie
@@ -557,9 +558,13 @@ public class UsersBean extends ExtendBean implements Serializable {
             dao.update(em, usersEntity);
             tx.commit();
             log.info("Persist ok");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.updated"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } finally {
             em.clear();
             em.clear();

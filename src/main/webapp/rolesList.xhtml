@@ -18,16 +18,16 @@
                 <h:form>
                     <p:commandButton
                             value="#{bundle['role.create']}"
-                            actionListener="#{rolesBean.initialiseDialogRoleId(role.id)}"
+                            action="#{rolesBean.createNewRoleEntity}"
                             update="addRoleDialogForm:addRoleDialog"
                             oncomplete="PF('addRole').show();return false;"
                             styleClass="NavyButton marginBottom10">
-
                     </p:commandButton>
-
                 </h:form>
 
+
                 <h:form id="form">
+                    <p:growl id="msg" life="2000"></p:growl>
                     <p:tab id="displayAll" title="#{bundle['all']} (#{rolesBean.rolesEntities.size()})">
                         <p:dataTable paginator="true" rows="10"
                                      selection="#{rolesBean.selectedRoleEntity}" selectionMode="single"
@@ -77,7 +77,7 @@
                                 <h:panelGroup rendered="#{not role.active}">
                                     <p:commandLink update="@form"
                                                    action="#{rolesBean.activate(role.id)}">
-                                        <i class="ui-button-icon-left ui-icon ui-c ui-icon-plusthick"></i>
+                                        <i class="ui-icon ui-icon-update"/>
                                         <f:param name="idEntity" value="#{role.id}"/>
                                         <f:param name="typeEntities" value="all"/>
                                     </p:commandLink>
@@ -125,7 +125,7 @@
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:inputText value="#{rolesBean.rolesEntity.label}"
+                            <p:inputText value="#{rolesBean.rolesEntityNew.label}"
                                          placeholder="#{rolesBean.roleForDialog.label}">
                                 <f:validator validatorId="roleLabelValidator"></f:validator>
                             </p:inputText>
