@@ -5,8 +5,6 @@ import be.atc.salesmanagercrm.beans.UsersBean;
 import be.atc.salesmanagercrm.entities.CompaniesEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.RequestScoped;
@@ -30,8 +28,6 @@ public class CompaniesConverter implements Converter {
     @Inject
     private UsersBean usersBean;
 
-    @Getter
-    @Setter
     private final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Override

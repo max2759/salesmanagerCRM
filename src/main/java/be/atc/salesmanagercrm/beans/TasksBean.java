@@ -388,7 +388,7 @@ public class TasksBean extends ExtendBean implements Serializable {
         eventModel = new DefaultScheduleModel();
 
         for (TasksEntity t : tasksEntities) {
-            if (t.getEndDate() != null && t.isStatus() == false) {
+            if (t.getEndDate() != null && !t.isStatus()) {
                 DefaultScheduleEvent event = DefaultScheduleEvent.builder()
                         .title(t.getTitle())
                         .startDate(t.getCreationDate())

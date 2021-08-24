@@ -4,7 +4,6 @@ import be.atc.salesmanagercrm.beans.VoucherStatusBean;
 import be.atc.salesmanagercrm.entities.VoucherStatusEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
@@ -22,7 +21,6 @@ import java.util.Locale;
 @FacesConverter("voucherStatusConverter")
 public class VoucherStatusConverter implements Converter {
 
-    @Getter
     private final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
     private final VoucherStatusBean voucherStatusBean = new VoucherStatusBean();
 
@@ -33,7 +31,7 @@ public class VoucherStatusConverter implements Converter {
 
         log.info("value:  " + value);
 
-        if (value != null || !value.isEmpty()) {
+        if (value != null) {
             try {
                 voucherStatusEntity = voucherStatusBean.findByLabel(value);
                 return voucherStatusEntity;

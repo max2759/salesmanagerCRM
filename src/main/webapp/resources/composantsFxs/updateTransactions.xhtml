@@ -23,7 +23,6 @@
                     <p:inputText id="titleUpdate" value="#{transactionsBean.transactionsEntity.title}"
                                  required="true"
                                  requiredMessage="#{bundle['transactions.validator.title']}">
-                        <p:ajax update="msg" event="keyup"/>
                     </p:inputText>
                 </p:inplace>
 
@@ -110,7 +109,6 @@
                 </p:inplace>
 
             </p:panelGrid>
-            <p:messages id="msg" closable="true" display="message"/>
             <div align="right" style="padding-top: 10px" class="modalValidateBtn-margin-top"
                  id="divActionUpdateTransaction">
                 <p:menuButton value="#{bundle['actions']}" id="buttonActionUpdateTransaction">

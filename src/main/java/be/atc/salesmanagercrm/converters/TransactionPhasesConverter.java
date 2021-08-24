@@ -4,8 +4,6 @@ import be.atc.salesmanagercrm.beans.TransactionPhasesBean;
 import be.atc.salesmanagercrm.entities.TransactionPhasesEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
@@ -23,8 +21,6 @@ import java.util.Locale;
 @FacesConverter("transactionPhasesConverter")
 public class TransactionPhasesConverter implements Converter {
 
-    @Getter
-    @Setter
     private final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
     private final TransactionPhasesBean transactionPhasesBean = new TransactionPhasesBean();
 
@@ -35,7 +31,7 @@ public class TransactionPhasesConverter implements Converter {
 
         log.info("value:  " + value);
 
-        if (value != null || !value.isEmpty()) {
+        if (value != null) {
             try {
                 transactionPhasesEntity = transactionPhasesBean.findByLabel(value);
                 return transactionPhasesEntity;

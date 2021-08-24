@@ -33,7 +33,7 @@ public class TaskTypesConverter implements Converter {
 
         log.info("value:  " + value);
 
-        if (value != null || !value.isEmpty()) {
+        if (value != null) {
             try {
                 taskTypesEntity = taskTypesBean.findByLabel(value);
                 return taskTypesEntity;

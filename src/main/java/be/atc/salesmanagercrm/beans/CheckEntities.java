@@ -133,7 +133,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
     /**
      * Check if JobTitle already exist in DB
      *
-     * @param jobTitlesEntity
+     * @param jobTitlesEntity JobTitlesEntity
      */
     public void checkJobTitlesLabel(JobTitlesEntity jobTitlesEntity) {
         if (jobTitlesEntity != null) {
@@ -151,7 +151,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
     /**
      * Check if Branch_Activities label already exist in DB
      *
-     * @param branchActivitiesEntity
+     * @param branchActivitiesEntity BranchActivitiesEntity
      */
     public void checkBranchActivitiesLabel(BranchActivitiesEntity branchActivitiesEntity) {
         if (branchActivitiesEntity != null) {
@@ -209,7 +209,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
     /**
      * Check if CompanyTypes exist in DB
      *
-     * @param companyTypesEntity
+     * @param companyTypesEntity CompanyTypesEntity
      */
     public void checkCompanyTypes(CompanyTypesEntity companyTypesEntity) {
         if (companyTypesEntity != null) {
@@ -271,7 +271,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
     /**
      * Check if branch activities exist
      *
-     * @param branchActivitiesEntity
+     * @param branchActivitiesEntity BranchActivitiesEntity
      */
     public void checkBranchActivities(BranchActivitiesEntity branchActivitiesEntity) {
         if (branchActivitiesEntity != null) {
@@ -338,7 +338,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
             EntityManager em = EMF.getEM();
             UsersEntity usersEntity = usersDao.findByUsername(em, entity.getUsername());
             if (usersEntity != null) {
-                log.warn("User exists yet", entity.getUsername());
+                log.warn("User exists yet" + entity.getUsername());
                 throw new InvalidEntityException(
                         "Il y a déjà un utilisateur avec ce pseudo: " + entity.getUsername(), ErrorCodes.USER_NOT_FOUND
                 );
@@ -355,7 +355,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
             if (usersEntity1 != null) {
                 while (usersEntity1 != null) {
                     Random random = new Random();
-                    number = random.nextInt(99 - 01);
+                    number = random.nextInt(99 - 1);
                     log.info(String.valueOf(number));
                     if (number < 10) {
                         number = 0 + number;
@@ -383,7 +383,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
             EntityManager em = EMF.getEM();
             RolesEntity rolesEntity = rolesDao.findById(em, entity.getId());
             if (rolesEntity == null) {
-                log.warn("Roles doesn't exists yet", entity.getId());
+                log.warn("Roles doesn't exists yet" + entity.getId());
                 throw new EntityNotFoundException(
                         "Ce rôle n'existe pas: " + entity.getId(), ErrorCodes.ROLES_NOT_FOUND
                 );
@@ -395,14 +395,14 @@ public class CheckEntities extends ExtendBean implements Serializable {
      * check if role exist in DB
      * use in role
      *
-     * @param entity
+     * @param entity RolesEntity
      */
     public void checkRoleByLabel(RolesEntity entity) {
         if (entity != null) {
             EntityManager em = EMF.getEM();
             RolesEntity rolesEntity = rolesDao.findByLabel(em, entity.getLabel());
             if (rolesEntity != null) {
-                log.warn("Role label exists yet", entity.getLabel());
+                log.warn("Role label exists yet" + entity.getLabel());
                 throw new InvalidEntityException(
                         "Il y a déjà un role avec ce nom: " + entity.getLabel(), ErrorCodes.ROLES_FOUND
                 );
@@ -421,7 +421,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
             EntityManager em = EMF.getEM();
             PermissionsEntity permissionsEntity = permissionsDao.findById(em, entity.getId());
             if (permissionsEntity == null) {
-                log.warn("permission doesn't exists yet", entity.getId());
+                log.warn("permission doesn't exists yet" + entity.getId());
                 throw new EntityNotFoundException(
                         "Cette permission n'existe pas: " + entity.getId(), ErrorCodes.PERMISSION_NOT_FOUND
                 );
@@ -454,7 +454,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
             log.info(String.valueOf(rolesEntity));
             PermissionsEntity permissionsEntity = permissionsDao.findById(em, entity.getId());
             if (permissionsEntity == null) {
-                log.warn("permission doesn't exists yet", entity.getId());
+                log.warn("permission doesn't exists yet" + entity.getId());
                 throw new EntityNotFoundException(
                         "Cette permission n'existe pas: " + entity.getId(), ErrorCodes.PERMISSION_NOT_FOUND
                 );
@@ -469,7 +469,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
             UsersEntity usersEntity = usersDao.findNUserByUsernameAndPassword(em, entity.getUsername(), password);
             log.info(String.valueOf(usersEntity));
             if (usersEntity == null) {
-                log.warn("Wrong username or password", entity.getId());
+                log.warn("Wrong username or password" + entity.getId());
                 throw new EntityNotFoundException(
                         "Votre identifiant ou mot de passe sont inccorects: " + entity.getId(), ErrorCodes.USER_NOT_FOUND
                 );
