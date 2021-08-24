@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:cc="http://java.sun.com/jsf/composite"
 >
-<cc:interface name="listDisableUsers"
+<cc:interface name="listUsers"
               displayName="#{bundle['users.userActive']}"
               shortDescription="#{bundle['users.userActive']}"/>
 <cc:implementation>
@@ -21,8 +21,8 @@
                      rowKey="#{user.id}"
                      emptyMessage="#{bundle['users.notFound']}"
                      rowsPerPageTemplate="10,20,50"
-                     widgetVar="displayAllEntities"
-                     filteredValue="#{usersBean.usersEntitiesFiltered}"
+                     widgetVar="displayAllEntitiesActive"
+                     filteredValue="#{usersBean.usersEntitiesActiveFiltered}"
                      rendered="#{usersBean.usersEntities.size() eq 0 ? false : true}"
                      value="#{usersBean.usersEntitiesActive}"
                      id="dataActive">
@@ -31,14 +31,14 @@
                       sortBy="#{user.username}"
                       filterBy="#{user.username}"
                       filterMatchMode="contains">
-                <h:form>
-                    <p:commandLink id="titleAll" value="#{user.username}"
-                                   onclick="PF('dlg2').show();"
-                                   update="@(form) "
-                    >
-                        <f:param name="idEntity" value="#{user.id}"/>
-                    </p:commandLink>
-                </h:form>
+
+                <p:commandLink id="titleAllActive" value="#{user.username}"
+                               onclick="PF('dlg2').show();"
+                               update="@(form) "
+                >
+                    <f:param name="idEntity" value="#{user.id}"/>
+                </p:commandLink>
+
             </p:column>
 
             <p:column headerText="#{bundle['firstname']}"
@@ -92,8 +92,6 @@
                         <i class="ui-icon ui-icon-delete-forever"></i>
                     </p:commandLink>
                 </h:panelGroup>
-
-
             </p:column>
 
         </p:dataTable>
