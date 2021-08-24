@@ -33,7 +33,9 @@
 
 
                     <h:form id="formUsers">
-                        <p:tabView style="margin-top: 10px" id="tabViewUsers">
+                        <p:tabView id="tabViewUsers">
+
+                            <p:ajax event="tabChange" update="@form msgs"/>
 
                             <p:tab id="displayActiveUsers" title="#{bundle['users.userActive']}">
                                 <fxs:listUsers id="listUsers"/>

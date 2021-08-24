@@ -21,24 +21,22 @@
                      rowKey="#{user.id}"
                      emptyMessage="#{bundle['users.notFound']}"
                      rowsPerPageTemplate="10,20,50"
-                     widgetVar="displayAllEntities"
-                     filteredValue="#{usersBean.usersEntitiesFiltered}"
+                     widgetVar="displayAllEntitiesInactive"
+                     filteredValue="#{usersBean.usersEntitiesDisableFiltered}"
                      rendered="#{usersBean.usersEntities.size() eq 0 ? false : true}"
                      value="#{usersBean.usersEntitiesDisable}"
-                     id="dataActive">
+                     id="dataInactive">
 
             <p:column width="500" headerText="#{bundle['user.username']}"
                       sortBy="#{user.username}"
                       filterBy="#{user.username}"
                       filterMatchMode="contains">
-                <h:form>
-                    <p:commandLink id="titleAll" value="#{user.username}"
-                                   onclick="PF('dlg2').show();"
-                                   update="@(form) "
-                    >
-                        <f:param name="idEntity" value="#{user.id}"/>
-                    </p:commandLink>
-                </h:form>
+                <p:commandLink id="titleAllDesable" value="#{user.username}"
+                               onclick="PF('dlg2').show();"
+                               update="@(form) "
+                >
+                    <f:param name="idEntity" value="#{user.id}"/>
+                </p:commandLink>
             </p:column>
 
             <p:column headerText="#{bundle['firstname']}"
