@@ -23,7 +23,6 @@
                                  placeholder="#{bundle['title']}"
                                  required="true"
                                  requiredMessage="#{bundle['vouchers.validator.title']}">
-                        <p:ajax update="msg" event="keyup"/>
                     </p:inputText>
                 </p:inplace>
 
@@ -96,7 +95,6 @@
                 </p:inplace>
             </p:panelGrid>
 
-            <p:messages id="msg" closable="true" display="message"/>
             <div align="right" style="padding-top: 10px" class="modalValidateBtn-margin-top">
                 <p:menuButton value="#{bundle['actions']}">
                     <p:menuitem icon="ui-icon-check"

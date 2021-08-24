@@ -4,8 +4,6 @@ import be.atc.salesmanagercrm.beans.CompaniesBean;
 import be.atc.salesmanagercrm.entities.CompaniesEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
@@ -24,8 +22,6 @@ public class CompaniesListConverter implements Converter {
 
     private final CompaniesBean companiesBean = new CompaniesBean();
 
-    @Getter
-    @Setter
     private final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     @Override

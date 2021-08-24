@@ -55,7 +55,6 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
     /**
      * Method to show modal in create TaskTypes
      *
-     * @param
      */
     public void showModalCreate() {
         log.info("method : showModalCreate()");

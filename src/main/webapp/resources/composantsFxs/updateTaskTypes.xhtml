@@ -22,15 +22,11 @@
                 <p:inputText id="titleUpdate" value="#{taskTypesBean.taskTypesEntity.label}"
                              required="true"
                              requiredMessage="#{bundle['taskTypes.validator.title']}">
-                    <p:ajax update="listAllTaskTypes:updateTaskTypes:updateTaskTypesForm:buttonUpdateTaskTypes msg "
-                            event="keyup"/>
                 </p:inputText>
 
-                <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  id="buttonUpdateTaskTypes"
                                  update="@(form) msgs"
-                                 disabled="#{empty taskTypesBean.taskTypesEntity.label or taskTypesBean.taskTypesEntity.label.length() le 1}"
                                  oncomplete="PF('dlg2').hide()"
                                  value="#{bundle['save']}"
                                  action="#{taskTypesBean.updateEntity}"

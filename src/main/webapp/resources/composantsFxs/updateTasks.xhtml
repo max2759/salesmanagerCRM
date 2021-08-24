@@ -23,7 +23,6 @@
                              required="true"
                              requiredMessage="#{bundle['task.validator.title']}"
                              style="margin-bottom:10px;">
-                    <p:ajax update="detailsRight:updateTasks:formUpdateTask:buttonUpdateTask msg" event="keyup"/>
                 </p:inputText>
 
 
@@ -82,11 +81,9 @@
                                  placeholder="#{bundle['tasks.description']}"
                                  autoResize="false"/>
 
-                <p:messages id="msg" closable="true" display="message"/>
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
                                  id="buttonUpdateTask"
-                                 disabled="#{empty tasksBean.tasksEntity.title or tasksBean.tasksEntity.title.length() le 1}"
                                  oncomplete="PF('updateDialogTask').hide()"
                                  value="#{bundle['update']}"
                                  action="#{tasksBean.updateEntity}">
