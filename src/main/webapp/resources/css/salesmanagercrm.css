@@ -104,3 +104,10 @@
 .padingRight5Px {
     padding-right: 5px;
 }
+
+
+.title-topBar {
+    vertical-align: middle;
+    display: inline-block;
+    height: 33px;
+}
