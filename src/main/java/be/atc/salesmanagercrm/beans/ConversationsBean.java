@@ -15,9 +15,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 @Slf4j
 @Named(value = "conversationsBean")
-@SessionScoped
+@ViewScoped
 public class ConversationsBean extends ExtendBean implements Serializable {
 
     private static final long serialVersionUID = 829261844584069844L;
@@ -79,6 +79,7 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     public void addEntity() {
         add(this.conversationsEntity);
         conversationsEntityList = find10convers();
+        this.conversationsEntity = new ConversationsEntity();
     }
 
     public void add(ConversationsEntity conversationsEntity) {
