@@ -6,44 +6,53 @@
                 xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
                 template="WEB-INF/templates/template.xhtml">
 
-   <ui:define name="title">#{bundle['contacts.title']}</ui:define>
-   <ui:define name="content">
+    <ui:define name="title">#{bundle['contacts.title']}</ui:define>
+    <ui:define name="content">
 
-      <f:metadata>
-         <f:viewAction action="#{contactsBean.createNewEntity}"/>
-         <f:viewAction action="#{contactsBean.findAllActiveContacts}"/>
-      </f:metadata>
+        <f:metadata>
+            <f:viewAction action="#{contactsBean.createNewEntity}"/>
+            <f:viewAction action="#{contactsBean.findAllActiveContacts}"/>
+        </f:metadata>
 
-      <p:growl id="msgs"/>
+        <p:growl id="msgs"/>
 
-      <div class="ui-g">
-         <div class="ui-g-12">
-            <h:form>
-               <div class="card card-w-title">
-                  <h1>#{bundle['contacts.title']}</h1>
-                  <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
-                                   onclick="PF('companyModal').show();" styleClass="NavyButton">
-                     <f:param name="sendType" value="add"/>
-                  </p:commandButton>
+        <div class="ui-g">
+            <div class="ui-g-12">
 
-                  <p:tabView style="margin-top: 10px">
+                <div class="card card-w-title">
+                    <h1>#{bundle['contacts.title']}</h1>
 
-                     <p:ajax event="tabChange" listener="#{contactsBean.onTabChange}" update="@form msgs"/>
+                    <h:form>
+                        <p:commandButton value="#{bundle['add']}" icon="fa fa-plus"
+                                         action="#{contactsBean.createNewEntity}"
+                                         onclick="PF('contactsWidgetModal').show();" styleClass="NavyButton"
+                                         update="@(form)">
+                        </p:commandButton>
+                    </h:form>
 
-                     <p:tab id="displayActiveContacts" title="#{bundle['contacts.contactsActive']}">
-                        <fxs:listContacts id="listContacts"/>
-                     </p:tab>
+                    <h:form id="displayAllContacts">
+                        <p:tabView style="margin-top: 10px" id="tabViewAllContacts">
 
-                     <p:tab id="displayDisableContacts" title="#{bundle['contacts.contactsDisable']}">
-                        <fxs:listDisableContacts id="listDisableContacts"/>
-                     </p:tab>
+                            <p:ajax event="tabChange" listener="#{contactsBean.onTabChange}" update="@form msgs"/>
 
-                  </p:tabView>
+                            <p:tab id="displayActiveContacts" title="#{bundle['contacts.contactsActive']}">
+                                <fxs:listContacts id="listContacts"/>
+                            </p:tab>
 
-               </div>
-            </h:form>
-         </div>
-         <fxs:createContacts id="createContacts"/>
-      </div>
-   </ui:define>
+                            <p:tab id="displayDisableContacts" title="#{bundle['contacts.contactsDisable']}">
+                                <fxs:listDisableContacts id="listDisableContacts"/>
+                            </p:tab>
+
+                        </p:tabView>
+                    </h:form>
+
+                </div>
+
+                <fxs:createContacts id="createContacts"/>
+
+
+            </div>
+
+        </div>
+    </ui:define>
 </ui:composition>

@@ -140,7 +140,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      */
     public void saveCompany() {
         save(companiesEntity);
-
+        createNewEntity();
         findAllActiveCompanies();
     }
 

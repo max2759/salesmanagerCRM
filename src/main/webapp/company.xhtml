@@ -20,14 +20,17 @@
 
         <div class="ui-g">
             <div class="ui-g-12">
-                <h:form>
-                    <div class="card card-w-title">
-                        <h1>#{bundle['company.title']}</h1>
-                        <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
-                                         onclick="PF('companyModal').show();" styleClass="NavyButton">
-                            <f:param name="sendType" value="add"/>
+                <div class="card card-w-title">
+                    <h1>#{bundle['company.title']}</h1>
+                    <h:form>
+                        <p:commandButton value="#{bundle['add']}" icon="fa fa-plus"
+                                         action="#{companiesBean.createNewEntity}"
+                                         onclick="PF('companyWidgetModal').show();" styleClass="NavyButton"
+                                         update="@(form)">
                         </p:commandButton>
+                    </h:form>
 
+                    <h:form>
                         <p:tabView style="margin-top: 10px">
 
                             <p:ajax event="tabChange" listener="#{companiesBean.onTabChange}" update="@form msgs"/>
@@ -41,12 +44,12 @@
                             </p:tab>
 
                         </p:tabView>
-                    </div>
-                </h:form>
-            </div>
-            <fxs:createCompany id="createCompany"/>
-        </div>
+                    </h:form>
+                </div>
 
+                <fxs:createCompany id="createCompany"/>
+            </div>
+        </div>
 
     </ui:define>
 </ui:composition>

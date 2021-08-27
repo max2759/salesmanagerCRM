@@ -14,14 +14,15 @@
         <p:dialog
                 header="Entreprise"
                 modal="true"
-                id="companyModal" widgetVar="companyModal" responsive="true">
+                id="companyModal" widgetVar="companyWidgetModal" responsive="true">
             <h:form>
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputText id="labelCompany" value="#{companiesBean.companiesEntity.label}"/>
+                        <p:inputText id="labelCompany" value="#{companiesBean.companiesEntity.label}" required="true"
+                                     requiredMessage="#{bundle['company.labelNotValid']}"/>
                         <label>#{bundle['company.labelName']}</label>
-                        <p:ajax update="validateCompany" event="keyup"/>
+                        <p:ajax update="@form validateCompany msg" event="keyup"/>
                     </h:panelGroup>
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
@@ -78,13 +79,14 @@
                 </p:panelGrid>
 
                 <div align="right">
-                    <p:commandButton value="valider"
+                    <p:messages id="msg" closable="true" display="message"/>
+                    <p:commandButton value="#{bundle['validate']}"
                                      id="validateCompany"
                                      action="#{companiesBean.saveCompany}"
-                                     disabled="#{empty companiesBean.companiesEntity.label or companiesBean.companiesEntity.companyTypesByIdCompanyTypes.label eq null }"
+                                     disabled="#{empty companiesBean.companiesEntity.label or companiesBean.companiesEntity.label.length() le 1}"
                                      icon="ui-icon-check"
-                                     update="@(form)" process="@this"
-                                     onclick="PF('companyModal').close();"/>
+                                     update="@(form) msgs"
+                                     oncomplete="PF('companyWidgetModal').hide();"/>
                 </div>
             </h:form>
         </p:dialog>
