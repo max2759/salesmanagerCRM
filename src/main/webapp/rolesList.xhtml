@@ -68,6 +68,8 @@
                                 <h:panelGroup rendered="#{role.active}">
                                     <p:commandLink update="@form"
                                                    action="#{rolesBean.delete(role.id)}">
+                                        <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
+                                                   icon="fa fa-warning"/>
                                         <i class="ui-icon ui-icon-delete-forever"></i>
                                         <f:param name="idEntity" value="#{role.id}"/>
                                         <f:param name="typeEntities" value="all"/>

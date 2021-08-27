@@ -64,28 +64,28 @@
 
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:inputText value="#{usersBean.usersEntity.firstname}"
+                            <p:inputText value="#{usersBean.usersEntityOther.firstname}"
                                          placeholder="#{usersBean.userForDialog.firstname}"
                                          required="true"/>
                             <label>#{bundle['firstname']}</label>
                         </h:panelGroup>
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:inputText value="#{usersBean.usersEntity.lastname}"
+                            <p:inputText value="#{usersBean.usersEntityOther.lastname}"
                                          placeholder="#{usersBean.userForDialog.lastname}"
                                          required="true"/>
                             <label>#{bundle['lastname']}</label>
                         </h:panelGroup>
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:inputText value="#{usersBean.usersEntity.username}"
+                            <p:inputText value="#{usersBean.usersEntityOther.username}"
                                          placeholder="#{usersBean.userForDialog.username}"
                                          required="true"/>
                             <label>#{bundle['user.username']}</label>
                         </h:panelGroup>
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:inputText value="#{usersBean.usersEntity.email}"
+                            <p:inputText value="#{usersBean.usersEntityOther.email}"
                                          placeholder="#{usersBean.userForDialog.email}" required="true">
                                 <f:validator validatorId="userEmailValidator"></f:validator>
                             </p:inputText>
@@ -94,7 +94,7 @@
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                             <p:selectOneMenu id="userRole"
-                                             value="#{usersBean.usersEntity.rolesByIdRoles}"
+                                             value="#{usersBean.usersEntityOther.rolesByIdRoles}"
                                              converter="rolesConverter"
                             >
                                 <f:selectItems value="#{rolesBean.rolesEntityList}" var="roles"
