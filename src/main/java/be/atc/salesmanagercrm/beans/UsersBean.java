@@ -106,6 +106,10 @@ public class UsersBean extends ExtendBean implements Serializable {
     @Setter
     private UsersEntity userEntityNew = new UsersEntity();
 
+
+    @Getter
+    @Setter
+    private UsersEntity usersEntityOther = new UsersEntity();
     @Getter
     @Setter
     private List<UsersEntity> usersEntitiesActive;
@@ -134,7 +138,7 @@ public class UsersBean extends ExtendBean implements Serializable {
             return;
         }
         userForDialog = getDao().findById(EMF.getEM(), idUser);
-        usersEntity = dao.findById(EMF.getEM(), idUser);
+        usersEntityOther = dao.findById(EMF.getEM(), idUser);
     }
 
     public void createNewUserEntity() {
@@ -281,7 +285,7 @@ public class UsersBean extends ExtendBean implements Serializable {
     public void connection() throws IOException {
         //Example using most common scenario of username/password pair:
         //https://shiro.apache.org/authentication.html
-
+        FacesMessage msg;
         log.info(passwordCo);
 
         try {
@@ -321,14 +325,21 @@ public class UsersBean extends ExtendBean implements Serializable {
             try {
                 this.currentUser.login(token);
             } catch (UnknownAccountException uae) {
+                //message ici a chque fois
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 log.info("There is no user with username or wrong password of " + token.getPrincipal());
                 return;
             } catch (IncorrectCredentialsException ice) {
                 log.info("Password for account " + token.getPrincipal() + " was incorrect!");
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             } catch (LockedAccountException lae) {
                 log.info("The account for username " + token.getPrincipal() + " is locked.  " +
                         "Please contact your administrator to unlock it.");
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
             // ... catch more exceptions here (maybe custom ones specific to your application?
@@ -465,14 +476,14 @@ public class UsersBean extends ExtendBean implements Serializable {
 
 
     public void updateByAdmin() {
-        updateUsersAdmin(this.usersEntity);
+        updateUsersAdmin(this.usersEntityOther);
         //usersEntityList = findAll();
         findAllUsers();
     }
 
-    private void updateUsersAdmin(UsersEntity usersEntity) {
+    private void updateUsersAdmin(UsersEntity usersEntityOther) {
         FacesMessage msg;
-        log.info("begin updateUsrAdmin" + usersEntity.getUsername());
+        log.info("begin updateUsrAdmin" + usersEntityOther.getUsername());
         log.info(String.valueOf(usersEntity.getEmail()));
 
 //pour les mdp, comparer en db AVANT hashage si il correspondent. Si ils corresepondent pas, on le hash et on le modifie
@@ -480,35 +491,35 @@ public class UsersBean extends ExtendBean implements Serializable {
         EntityManager em = EMF.getEM();
         CheckEntities checkEntities = new CheckEntities();
 
-        UsersEntity usersEntityOld = dao.findById(em, usersEntity.getId());
+        UsersEntity usersEntityOld = dao.findById(em, usersEntityOther.getId());
         String usernameOld = usersEntityOld.getUsername();
-        if (usernameOld.equals(usersEntity.getUsername())) {
+        if (usernameOld.equals(usersEntityOther.getUsername())) {
             try {
-                validateUsersUpdateByAdminNoChange(usersEntity);
+                validateUsersUpdateByAdminNoChange(usersEntityOther);
             } catch (InvalidEntityException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
                 return;
             }
         } else {
             try {
-                validateUsersUpdateByAdmin(usersEntity);
+                validateUsersUpdateByAdmin(usersEntityOther);
             } catch (InvalidEntityException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
                 return;
             }
 
             try {
-                checkEntities.checkUserByUsername(usersEntity);
+                checkEntities.checkUserByUsername(usersEntityOther);
             } catch (InvalidEntityException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
                 return;
             }
-            usersEntity.setUsername(usersEntity.getUsername());
+            usersEntityOther.setUsername(usersEntityOther.getUsername());
         }
 
 
         try {
-            checkEntities.checkRole(usersEntity.getRolesByIdRoles());
+            checkEntities.checkRole(usersEntityOther.getRolesByIdRoles());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             return;
@@ -518,7 +529,7 @@ public class UsersBean extends ExtendBean implements Serializable {
         try {
             tx = em.getTransaction();
             tx.begin();
-            dao.update(em, usersEntity);
+            dao.update(em, usersEntityOther);
             tx.commit();
             loadListEntities();
             log.info("Persist ok");
@@ -690,6 +701,9 @@ public class UsersBean extends ExtendBean implements Serializable {
     }
 
 
+    /**
+     * use for updateUserByUser
+     */
     public void findUser() {
 
         log.info(String.valueOf(usersEntity.getUsername()));

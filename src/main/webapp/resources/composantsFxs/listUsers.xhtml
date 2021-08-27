@@ -13,7 +13,6 @@
 <cc:implementation>
     <f:view>
 
-
         <p:dataTable paginator="true" rows="10"
                      selection="#{usersBean.selectedUserEntity}" selectionMode="single"
                      paginatorPosition="bottom"
@@ -89,8 +88,27 @@
                 <h:panelGroup rendered="#{user.active}">
                     <p:commandLink update="formUsers:tabViewUsers msgs"
                                    action="#{usersBean.delete(user.id)}">
+                        <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
+                                   icon="fa fa-warning"/>
                         <i class="ui-icon ui-icon-delete-forever"></i>
                     </p:commandLink>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                        <p:commandButton value="#{bundle['yes']}" type="button"
+                                         styleClass="ui-confirmdialog-yes GreenButton"
+                                         icon="ui-icon-check"/>
+                        <p:commandButton value="#{bundle['no']}" type="button"
+                                         styleClass="ui-confirmdialog-no RedButton"
+                                         icon="ui-icon-close"/>
+                    </p:confirmDialog>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                        <p:commandButton value="#{bundle['yes']}" type="button"
+                                         styleClass="ui-confirmdialog-yes GreenButton"
+                                         icon="ui-icon-check"/>
+                        <p:commandButton value="#{bundle['no']}" type="button"
+                                         styleClass="ui-confirmdialog-no RedButton"
+                                         icon="ui-icon-close"/>
+                    </p:confirmDialog>
                 </h:panelGroup>
             </p:column>
 
