@@ -40,12 +40,21 @@
                         <p:message for="message">
                             <p:autoUpdate/>
                         </p:message>
-                        <p:outputLabel for="message" value="#{bundle['WriteAMessage']}"/>
-                        <p:textEditor id="message" value="#{conversationsBean.conversationsEntity.message}"/>
+                        <div class="ui-g new-message">
+                            <div class="ui-g-12 ui-md-6 ui-lg-11 ui-fluid ">
+                                <p:inputText id="message" value="#{conversationsBean.conversationsEntity.message}"
+                                             placeholder="Entrez un message"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                <p:commandLink action="#{conversationsBean.addEntity}"
+                                               update="@(form)"
+                                               process="@form" ajax="=false">
+                                    <i class="fa fa-send fa-lg"/>
+                                </p:commandLink>
+                            </div>
+                        </div>
 
-                        <p:commandButton value="Confirmer Valider" action="#{conversationsBean.addEntity}"
-                                         update="@(form)"
-                                         process="@form" ajax="=false"/>
+
                     </h:form>
 
                 </p:panel>
