@@ -472,6 +472,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      */
     public void addContact() {
         save(contactsEntity);
+        createNewEntity();
         findAllActiveContacts();
     }
 
