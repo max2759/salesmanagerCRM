@@ -44,6 +44,8 @@ public class VoucherStatusBean extends ExtendBean implements Serializable {
      * Fill the list with Task Entities
      */
     public void findAllVoucherStatusEntities() {
+        log.info("VoucherStatusBean => method : findAllVoucherStatusEntities()");
+
         voucherStatusEntities = findAll();
     }
 
@@ -54,6 +56,8 @@ public class VoucherStatusBean extends ExtendBean implements Serializable {
      * @return VoucherStatusEntity
      */
     protected VoucherStatusEntity findById(int id) {
+        log.info("VoucherStatusBean => method : findById(int id)");
+
         if (id == 0) {
             log.error("VoucherStatus ID is null");
             throw new EntityNotFoundException(
@@ -80,6 +84,8 @@ public class VoucherStatusBean extends ExtendBean implements Serializable {
      * @return VoucherStatusEntity
      */
     public VoucherStatusEntity findByLabel(String label) {
+        log.info("VoucherStatusBean => method : findByLabel(String label)");
+
         if (label == null) {
             log.error("VoucherStatus label is null");
             throw new EntityNotFoundException(
@@ -109,6 +115,8 @@ public class VoucherStatusBean extends ExtendBean implements Serializable {
      * @return List VoucherStatusEntity
      */
     protected List<VoucherStatusEntity> findAll() {
+        log.info("VoucherStatusBean => method : findAll()");
+
         return dao.findAll();
     }
 

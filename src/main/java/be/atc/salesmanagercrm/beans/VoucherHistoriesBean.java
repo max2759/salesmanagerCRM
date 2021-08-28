@@ -51,6 +51,8 @@ public class VoucherHistoriesBean extends ExtendBean implements Serializable {
      * @return List VouchersEntities
      */
     protected List<VoucherHistoriesEntity> findAllByIdUserAndByIdVoucher(int idVoucher, UsersEntity usersEntity) {
+        log.info("VoucherHistoriesBean => method : findAllByIdUserAndByIdVoucher(int idVoucher, UsersEntity usersEntity)");
+
         FacesMessage msg;
         if (idVoucher == 0) {
             log.error("Voucher ID is null");

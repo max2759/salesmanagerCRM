@@ -1,20 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
 <h:head>
-    <h:outputStylesheet name="errorPage.css" library="css"/>
-    <title>#{bundle['accessDenied.title']}</title>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+    </f:facet>
+    <title>#{bundle['errorOccured']}</title>
 </h:head>
 
-<f:view>
-    <h:body>
+<h:body styleClass="exception-body accessdenied-body">
+    <f:view locale="#{internalizationBean.locale}">
+        <div class="exception-panel">
+            <p:graphicImage name="images/exception/icon-access.png" library="barcelona-layout"/>
 
-        <h1><h:outputText value="#{bundle['accessDenied.title']}"/></h1>
-        <h:link outcome="/index.xhtml" value="#{bundle['back']}"/>
+            <p:button value="DASHBOARD" outcome="/dashboard" styleClass="error-page-btn"/>
+        </div>
 
-    </h:body>
-</f:view>
+        <div class="exception-band">
+            <div class="exception-content">
+                <h1>#{bundle['accessDenied.title']}</h1>
+                <h:outputText value="#{bundle['accessDenied.label']}"/>
+                <p:graphicImage name="images/logo_salesManager.png" library="barcelona-layout"/>
+            </div>
+        </div>
+
+        <h:outputStylesheet name="css/layout-#{guestPreferences.layout}.css" library="barcelona-layout"/>
+    </f:view>
+</h:body>
+
 </html>

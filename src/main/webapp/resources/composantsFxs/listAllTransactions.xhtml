@@ -29,6 +29,7 @@
             <h1>#{bundle['transactions.title']}</h1>
             <h:form>
                 <p:commandButton value="#{bundle['transactions.create']}"
+                                 rendered="#{usersBean.currentUser.isPermitted('addTransactions')}"
                                  update="@(form) msgs"
                                  onclick="PF('createDialog').show();" styleClass="NavyButton marginBottom15"
                                  action="#{transactionsBean.showModalCreate}"

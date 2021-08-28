@@ -5,6 +5,7 @@ import be.atc.salesmanagercrm.dao.TransactionsDao;
 import be.atc.salesmanagercrm.dao.impl.TransactionHistoriesDaoImpl;
 import be.atc.salesmanagercrm.dao.impl.TransactionsDaoImpl;
 import be.atc.salesmanagercrm.entities.*;
+import be.atc.salesmanagercrm.exceptions.AccessDeniedException;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
@@ -61,12 +62,14 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     private TransactionHistoriesBean transactionHistoriesBean;
     @Inject
     private UsersBean usersBean;
+    @Inject
+    private AccessControlBean accessControlBean;
 
     /**
      * Save entity form
      */
     public void saveEntity() {
-        log.info("method : saveEntity()");
+        log.info("TransactionsBean => method : saveEntity()");
 
         log.info("TransactionsEntity = : " + transactionsEntity);
 
@@ -81,7 +84,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * Update Entity form
      */
     public void updateEntity() {
-        log.info("method : updateEntity()");
+        log.info("TransactionsBean => method : updateEntity()");
+
         log.info("transactionsEntity = : " + this.transactionsEntity);
 
         update(this.transactionsEntity);
@@ -93,7 +97,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * Method for delete entity
      */
     public void deleteEntity() {
-        log.info("method : deleteEntity()");
+        log.info("TransactionsBean => method : deleteEntity()");
+
         log.info("Param : " + getParam("idTransaction"));
         int idTransaction;
         FacesMessage msg;
@@ -114,7 +119,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * Update entity form
      */
     public void showModalUpdate() {
-        log.info("method : showModalUpdate()");
+        log.info("TransactionsBean => method : showModalUpdate()");
+
         log.info("param : " + getParam("idEntity"));
 
         int idTransaction;
@@ -141,7 +147,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * Create New instance
      */
     public void createNewEntity() {
-        log.info("method : createNewEntity()");
+        log.info("TransactionsBean => method : createNewEntity()");
+
         transactionsEntity = new TransactionsEntity();
     }
 
@@ -149,6 +156,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * Find All Transactions and filter
      */
     public void findAllEntitiesAndFilter() {
+        log.info("TransactionsBean => method : findAllEntitiesAndFilter()");
+
         this.transactionsEntities = findAll(usersBean.getUsersEntity());
     }
 
@@ -156,7 +165,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * Call this method in transactionDetails
      */
     public void displayOneTransaction() {
-        log.info("TransactionsBean : displayOneTransaction");
+        log.info("TransactionsBean => method : displayOneTransaction()");
+
         log.info("Param : " + getParam("idTransaction"));
         int idTransaction;
         FacesMessage msg;
@@ -185,7 +195,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * Method to show modal in create transaction
      */
     public void showModalCreate() {
-        log.info("method : showModalCreate()");
+        log.info("TransactionsBean => method : showModalCreate()");
         transactionsEntity = new TransactionsEntity();
     }
 
@@ -195,6 +205,15 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * @param entity TransactionsEntity
      */
     protected void save(TransactionsEntity entity) {
+        log.info("TrasnactionsBean => method : save(TransactionsEntity entity)");
+
+        try {
+            accessControlBean.checkPermission("addTransactions");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
 
         try {
             validateTransaction(entity);
@@ -314,6 +333,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * @return TransactionsEntity
      */
     protected TransactionsEntity findById(int id, UsersEntity usersEntity) {
+        log.info("TransactionsBean => method : findById(int id, UsersEntity usersEntity)");
 
         FacesMessage msg;
 
@@ -358,6 +378,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * @return List TransactionsEntities
      */
     protected List<TransactionsEntity> findTransactionsEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity) {
+        log.info("TransactionsBean => method : findTransactionsEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity)");
+
         FacesMessage msg;
         if (contactsEntity == null) {
             log.error("Contact Entity is null");
@@ -389,6 +411,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * @return List TransactionsEntities
      */
     protected List<TransactionsEntity> findTransactionsEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity) {
+        log.info("TransactionsBean => method : findTransactionsEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity)");
+
         FacesMessage msg;
         if (companiesEntity == null) {
             log.error("Company Entity is null");
@@ -418,6 +442,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * @return List TransactionsEntity
      */
     protected List<TransactionsEntity> findAll(UsersEntity usersEntity) {
+        log.info("TransactionsBean => method : findAll(UsersEntity usersEntity)");
+
         FacesMessage msg;
         if (usersEntity == null) {
             log.error("User Entity is null");
@@ -440,6 +466,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * @return List TransactionsEntity
      */
     protected List<TransactionsEntity> findAllByPhase(UsersEntity usersEntity, String phaseTransaction) {
+        log.info("TransactionsBean => method : findAllByPhase(UsersEntity usersEntity, String phaseTransaction)");
+
         FacesMessage msg;
         if (usersEntity == null) {
             log.error("User Entity is null");
@@ -463,6 +491,15 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * @param entity TransactionsEntity
      */
     protected void update(TransactionsEntity entity) {
+        log.info("TransactionsBean => method : update(TransactionsEntity entity)");
+
+        try {
+            accessControlBean.checkPermission("updateTransactions");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
 
         try {
             validateTransaction(entity);
@@ -587,6 +624,16 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * @param usersEntity UsersEntity
      */
     protected void delete(int id, UsersEntity usersEntity) {
+        log.info("TransactionsBean => method : delete(int id, TransactionsEntity entity)");
+
+        try {
+            accessControlBean.checkPermission("deleteTransactions");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
+
         FacesMessage msg;
         if (id == 0) {
             log.error("Transaction ID is null");
@@ -641,6 +688,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * @param entity TransactionsEntity
      */
     private void validateTransaction(TransactionsEntity entity) {
+        log.info("TransactionsBean => method : validateTransaction(TransactionsEntity entity)");
+
         List<String> errors = TransactionsValidator.validate(entity);
         if (!errors.isEmpty()) {
             log.error("Transaction is not valide {}", entity);
@@ -654,6 +703,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * @param entity TransactionsEntity
      */
     private void validateTransactionDateEnd(TransactionsEntity entity) {
+        log.info("TransactionsBean => method : validateTransactionDateEnd(TransactionsEntity entity)");
+
         if (entity.getEndDate() != null) {
             if (entity.getEndDate().isBefore(entity.getCreationDate())) {
                 log.error("Transaction end date in not valide {}", entity);
@@ -669,6 +720,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
      * @return TransactionHistoriesEntity
      */
     private TransactionHistoriesEntity saveTransactionHistories(TransactionsEntity entity) {
+        log.info("TransactionsBean => method : saveTransactionHistories(TransactionsEntity entity)");
+
         TransactionHistoriesEntity transactionHistoriesEntity = new TransactionHistoriesEntity();
 
         transactionHistoriesEntity.setTransactionsByIdTransactions(entity);

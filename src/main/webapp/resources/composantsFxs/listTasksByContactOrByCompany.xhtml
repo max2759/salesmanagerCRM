@@ -16,6 +16,7 @@
     <f:view>
         <h:form>
             <p:commandButton value="#{bundle['tasks.create']}"
+                             rendered="#{usersBean.currentUser.isPermitted('addTasks')}"
                              update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
                              onclick="PF('createDialogTask').show();" styleClass="NavyButton marginBottom15"
                              action="#{tasksBean.showModalCreate}"/>
@@ -144,11 +145,14 @@
                     </p:cellEditor>
                 </div>
             </p:column>
-            <p:column styleClass="columnEditDelte">
-                <p:rowEditor styleClass="displayInlineBlock"/>
+            <p:column styleClass="columnEditDelte"
+                      rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
+                <p:rowEditor rendered="#{usersBean.currentUser.isPermitted('updateNotes')}"
+                             styleClass="displayInlineBlock"/>
 
                 <p:commandLink
                         update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
+                        rendered="#{usersBean.currentUser.isPermitted('deleteTasks')}"
                         action="#{tasksBean.deleteEntity}">
                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                icon="fa fa-warning"/>

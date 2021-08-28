@@ -29,6 +29,7 @@
             <h1>#{bundle['vouchers.title']}</h1>
             <h:form>
                 <p:commandButton value="#{bundle['vouchers.create']}"
+                                 rendered="#{usersBean.currentUser.isPermitted('addVouchers')}"
                                  update="@(form) msgs"
                                  onclick="PF('createDialog').show();" styleClass="NavyButton marginBottom15"
                                  action="#{vouchersBean.showModalCreate}"
