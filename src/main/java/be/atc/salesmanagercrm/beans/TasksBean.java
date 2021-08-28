@@ -3,6 +3,7 @@ package be.atc.salesmanagercrm.beans;
 import be.atc.salesmanagercrm.dao.TasksDao;
 import be.atc.salesmanagercrm.dao.impl.TasksDaoImpl;
 import be.atc.salesmanagercrm.entities.*;
+import be.atc.salesmanagercrm.exceptions.AccessDeniedException;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
@@ -101,6 +102,8 @@ public class TasksBean extends ExtendBean implements Serializable {
     private CompaniesBean companiesBean;
     @Inject
     private UsersBean usersBean;
+    @Inject
+    private AccessControlBean accessControlBean;
 
     /**
      * Save entity form
@@ -267,12 +270,13 @@ public class TasksBean extends ExtendBean implements Serializable {
      */
     public void showModalUpdate() {
         log.info("TasksBean => method : showModalUpdate()");
+        FacesMessage msg;
 
         int idEntity;
-        FacesMessage msg;
         try {
             idEntity = Integer.parseInt(getParam("idEntity"));
-        } catch (NumberFormatException exception) {
+        } catch (
+                NumberFormatException exception) {
             log.info(exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "tasks.notExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -280,11 +284,13 @@ public class TasksBean extends ExtendBean implements Serializable {
         }
         try {
             tasksEntity = findById(idEntity, usersBean.getUsersEntity());
-        } catch (NumberFormatException exception) {
+        } catch (
+                NumberFormatException exception) {
             log.warn(exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
+
     }
 
     /**
@@ -407,6 +413,17 @@ public class TasksBean extends ExtendBean implements Serializable {
      * @param entity TasksEntity
      */
     protected void save(TasksEntity entity) {
+        log.info("TasksBean => method : save(TasksEntity entity)");
+
+        FacesMessage msg;
+
+        try {
+            accessControlBean.checkPermission("addTasks");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
 
         try {
             validateTask(entity);
@@ -416,8 +433,6 @@ public class TasksBean extends ExtendBean implements Serializable {
         }
 
         entity.setCreationDate(LocalDateTime.now());
-
-        FacesMessage msg;
 
         if (entity.getEndDate() != null) {
             try {
@@ -509,6 +524,7 @@ public class TasksBean extends ExtendBean implements Serializable {
      * @return Task Entity
      */
     protected TasksEntity findById(int id, UsersEntity usersEntity) {
+        log.info("TasksBean => method : findById(int id, UsersEntity usersEntity)");
 
         FacesMessage msg;
 
@@ -551,6 +567,8 @@ public class TasksBean extends ExtendBean implements Serializable {
      * @return List TasksEntities
      */
     protected List<TasksEntity> findTasksEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity) {
+        log.info("TasksBean => method : findTasksEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity)");
+
         FacesMessage msg;
         if (contactsEntity == null) {
             log.error("Contact Entity is null");
@@ -581,6 +599,8 @@ public class TasksBean extends ExtendBean implements Serializable {
      * @return List TasksEntities
      */
     protected List<TasksEntity> findTasksEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity) {
+        log.info("TasksBean => method : findTasksEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity)");
+
         FacesMessage msg;
         if (companiesEntity == null) {
             log.error("Company Entity is null");
@@ -611,6 +631,8 @@ public class TasksBean extends ExtendBean implements Serializable {
      * @return List TasksEntity
      */
     protected List<TasksEntity> findAll(UsersEntity usersEntity) {
+        log.info("TasksBean => method : findAll(UsersEntity usersEntity)");
+
         FacesMessage msg;
         if (usersEntity == null) {
             log.error("User Entity is null");
@@ -631,6 +653,8 @@ public class TasksBean extends ExtendBean implements Serializable {
      * Find all tasks finished
      */
     protected List<TasksEntity> findTasksFinished(UsersEntity usersEntity) {
+        log.info("TasksBean => method : findTasksFinished(UsersEntity usersEntity)");
+
         FacesMessage msg;
         if (usersEntity == null) {
             log.error("User ID is null");
@@ -653,6 +677,16 @@ public class TasksBean extends ExtendBean implements Serializable {
      * @param id Task
      */
     protected void delete(int id, UsersEntity usersEntity) {
+        log.info("TasksBean => method : delete(int id, UsersEntity usersEntity)");
+
+        try {
+            accessControlBean.checkPermission("deleteTasks");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
+
         FacesMessage msg;
 
         if (id == 0) {
@@ -709,7 +743,14 @@ public class TasksBean extends ExtendBean implements Serializable {
      * @param entity TasksEntity
      */
     protected void update(TasksEntity entity) {
-
+        log.info("TasksBean => method : update(TasksEntity entity)");
+        try {
+            accessControlBean.checkPermission("updateTasks");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
         try {
             validateTask(entity);
         } catch (InvalidEntityException exception) {
@@ -816,6 +857,8 @@ public class TasksBean extends ExtendBean implements Serializable {
      * @param entity TasksEntity
      */
     private void validateTask(TasksEntity entity) {
+        log.info("TasksBean => method : validateTask(TasksEntity entity)");
+
         List<String> errors = TasksValidator.validate(entity);
         if (!errors.isEmpty()) {
             log.error("Task is not valide {}", entity);
@@ -829,6 +872,8 @@ public class TasksBean extends ExtendBean implements Serializable {
      * @param entity TasksEntity
      */
     private void validateTaskDateEnd(TasksEntity entity) {
+        log.info("TasksBean => method : validateTaskDateEnd(TasksEntity entity)");
+
         if (entity.getEndDate() != null) {
             if (entity.getEndDate().isBefore(entity.getCreationDate())) {
                 log.error("Task end date in not valide {}", entity);
