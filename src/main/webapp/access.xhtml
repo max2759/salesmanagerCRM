@@ -11,7 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
     </f:facet>
-    <title>PrimeFaces Barcelona - Error</title>
+    <title>#{bundle['errorOccured']}</title>
 </h:head>
 
 <h:body styleClass="exception-body accessdenied-body">
@@ -23,8 +23,8 @@
 
     <div class="exception-band">
         <div class="exception-content">
-            <h1>ACCESS DENIED</h1>
-            <p>You don't have the permissions</p>
+            <h1>#{bundle['accessDenied.title']}</h1>
+            <h:outputText value="#{bundle['accessDenied.title']}"/>
             <p:graphicImage name="images/logo.png" library="barcelona-layout"/>
         </div>
     </div>

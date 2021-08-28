@@ -41,6 +41,7 @@ public class TransactionHistoriesBean extends ExtendBean implements Serializable
 
 
     public void findAllEntities(int idTransaction, UsersEntity usersEntity) {
+        log.info("TransactionPhasesBean => method : findAllEntities(int idTransaction, UsersEntity usersEntity)");
         transactionHistoriesEntities = findAllByIdUserAndByIdTransaction(idTransaction, usersEntity);
     }
 
@@ -51,6 +52,8 @@ public class TransactionHistoriesBean extends ExtendBean implements Serializable
      * @return List TransactionsEntities
      */
     protected List<TransactionHistoriesEntity> findAllByIdUserAndByIdTransaction(int idTransaction, UsersEntity usersEntity) {
+        log.info("TransactionPhasesBean => method : findAllByIdUserAndByIdTransaction(int idTransaction, UsersEntity usersEntity)");
+
         FacesMessage msg;
         if (idTransaction == 0) {
             log.error("Transaction ID is null");

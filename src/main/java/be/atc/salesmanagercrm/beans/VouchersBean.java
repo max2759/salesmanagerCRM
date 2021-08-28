@@ -5,6 +5,7 @@ import be.atc.salesmanagercrm.dao.VouchersDao;
 import be.atc.salesmanagercrm.dao.impl.VoucherHistoriesDaoImpl;
 import be.atc.salesmanagercrm.dao.impl.VouchersDaoImpl;
 import be.atc.salesmanagercrm.entities.*;
+import be.atc.salesmanagercrm.exceptions.AccessDeniedException;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
@@ -59,7 +60,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
     private VoucherHistoriesBean voucherHistoriesBean;
     @Inject
     private UsersBean usersBean;
-
+    @Inject
+    private AccessControlBean accessControlBean;
 
     /**
      * Save entity form
@@ -175,6 +177,15 @@ public class VouchersBean extends ExtendBean implements Serializable {
      * @param entity VouchersEntity
      */
     protected void save(VouchersEntity entity) {
+        log.info("VouchersBean => method : save(VouchersEntity entity)");
+
+        try {
+            accessControlBean.checkPermission("addVouchers");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
 
         try {
             validateVoucher(entity);
@@ -280,6 +291,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
      * @return VouchersEntity
      */
     protected VouchersEntity findById(int id, UsersEntity usersEntity) {
+        log.info("VouchersBean => method : findById(int id, UsersEntity usersEntity)");
 
         FacesMessage msg;
 
@@ -324,6 +336,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
      * @return List VouchersEntities
      */
     protected List<VouchersEntity> findVouchersEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity) {
+        log.info("VouchersBean => method : findVouchersEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity)");
+
         FacesMessage msg;
         if (contactsEntity == null) {
             log.error("Contact Entity is null");
@@ -356,6 +370,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
      * @return List VouchersEntities
      */
     protected List<VouchersEntity> findVouchersEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity) {
+        log.info("VouchersBean => method : findVouchersEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity)");
+
         FacesMessage msg;
         if (companiesEntity == null) {
             log.error("Company Entity is null");
@@ -386,6 +402,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
      * @return List VouchersEntity
      */
     protected List<VouchersEntity> findAll(UsersEntity usersEntity) {
+        log.info("VouchersBean => method : findAll(UsersEntity usersEntity)");
+
         FacesMessage msg;
         if (usersEntity == null) {
             log.error("User Entity is null");
@@ -409,6 +427,15 @@ public class VouchersBean extends ExtendBean implements Serializable {
      * @param entity VouchersEntity
      */
     protected void update(VouchersEntity entity) {
+        log.info("VouchersBean => method : update(VouchersEntity entity)");
+
+        try {
+            accessControlBean.checkPermission("updateVouchers");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
 
         try {
             validateVoucher(entity);
@@ -532,6 +559,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
      * @param entity VouchersEntity
      */
     private void validateVoucher(VouchersEntity entity) {
+        log.info("VouchersBean => method : validateVoucher(VouchersEntity entity)");
+
         List<String> errors = VouchersValidator.validate(entity);
         if (!errors.isEmpty()) {
             log.error("Voucher is not valide {}", entity);
@@ -545,6 +574,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
      * @param entity VouchersEntity
      */
     private void validateVoucherDateEnd(VouchersEntity entity) {
+        log.info("VouchersBean => method : validateVoucherDateEnd(VouchersEntity entity)");
+
         if (entity.getEndDate() != null) {
             if (entity.getEndDate().isBefore(entity.getCreationDate())) {
                 log.error("Voucher end date in not valide {}", entity);
@@ -560,6 +591,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
      * @return VoucherHistoriesEntity
      */
     private VoucherHistoriesEntity saveVoucherHistories(VouchersEntity entity) {
+        log.info("VouchersBean => method : saveVoucherHistories(VouchersEntity entity)");
+
         VoucherHistoriesEntity voucherHistoriesEntity = new VoucherHistoriesEntity();
 
         voucherHistoriesEntity.setVouchersByIdVouchers(entity);
@@ -576,6 +609,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
      * @return VouchersEntity
      */
     private VouchersEntity checkStatusAndSetClosingDate(VouchersEntity entity) {
+        log.info("VouchersBean => method : checkStatusAndSetClosingDate(VouchersEntity entity)");
+
         if (entity != null) {
             if (entity.getVoucherStatusByIdVoucherStatus().getLabel().equalsIgnoreCase("fermé")) {
                 entity.setEndDate(LocalDateTime.now());

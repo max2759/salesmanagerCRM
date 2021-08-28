@@ -3,6 +3,7 @@ package be.atc.salesmanagercrm.beans;
 import be.atc.salesmanagercrm.dao.TaskTypesDao;
 import be.atc.salesmanagercrm.dao.impl.TaskTypesDaoImpl;
 import be.atc.salesmanagercrm.entities.TaskTypesEntity;
+import be.atc.salesmanagercrm.exceptions.AccessDeniedException;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -44,7 +46,6 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private TaskTypesEntity selectedTaskTypeEntity;
-
     @Getter
     @Setter
     private List<TaskTypesEntity> taskTypesEntities;
@@ -52,12 +53,15 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
     @Setter
     private List<TaskTypesEntity> taskTypesEntitiesFiltered;
 
+    @Inject
+    private AccessControlBean accessControlBean;
+
     /**
      * Method to show modal in create TaskTypes
-     *
      */
     public void showModalCreate() {
-        log.info("method : showModalCreate()");
+        log.info("TaskTypesBean => method : showModalCreate()");
+
         taskTypesEntity = new TaskTypesEntity();
     }
 
@@ -65,7 +69,8 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
      * Update entity form
      */
     public void showModalUpdate() {
-        log.info("method : showModalUpdate()");
+        log.info("TaskTypesBean => method : showModalUpdate()");
+
         log.info("param : " + getParam("idEntity"));
 
         int idEntity;
@@ -93,6 +98,8 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
      * Fill the list with Task Entities
      */
     public void findAllTaskTypesEntities() {
+        log.info("TaskTypesBean => method : findAllTaskTypesEntities()");
+
         taskTypesEntities = findAll();
     }
 
@@ -101,7 +108,7 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
      * Save entity form
      */
     public void saveEntity() {
-        log.info("method : saveEntity()");
+        log.info("TaskTypesBean => method : saveEntity()");
 
         log.info("TaskTypesEntity = : " + taskTypesEntity);
 
@@ -115,7 +122,8 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
      * Update Entity form
      */
     public void updateEntity() {
-        log.info("method : updateEntity()");
+        log.info("TaskTypesBean => method : updateEntity()");
+
         log.info("taskTypesEntity = : " + this.taskTypesEntity);
 
         update(this.taskTypesEntity);
@@ -127,6 +135,8 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
      * Find All TaskTypess and filter
      */
     public void findAllEntities() {
+        log.info("TaskTypesBean => method : findAllEntities()");
+
         this.taskTypesEntities = findAll();
     }
 
@@ -136,6 +146,16 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
      * @param entity TaskTypesEntity
      */
     protected void save(TaskTypesEntity entity) {
+        log.info("TaskTypesBean => method : save(TaskTypesEntity entity)");
+
+        try {
+            accessControlBean.checkPermission("addTaskTypes");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
+
         try {
             validateTaskType(entity);
         } catch (InvalidEntityException exception) {
@@ -174,6 +194,8 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
      * @return TaskType Entity
      */
     protected TaskTypesEntity findById(int id) {
+        log.info("TaskTypesBean => method : findById(int id)");
+
         if (id == 0) {
             log.error("TaskType ID is null");
             throw new EntityNotFoundException(
@@ -200,6 +222,8 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
      * @return TaskType Entity
      */
     public TaskTypesEntity findByLabel(String label) {
+        log.info("TaskTypesBean => method : findByLabel(String label)");
+
         if (label == null) {
             log.error("TaskType label is null");
             throw new EntityNotFoundException(
@@ -230,6 +254,15 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
      * @param entity TasksEntity
      */
     protected void update(TaskTypesEntity entity) {
+        log.info("TaskTypesBean => method : update(TaskTypesEntity entity)");
+
+        try {
+            accessControlBean.checkPermission("updateTaskTypes");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
 
         try {
             validateTaskType(entity);
@@ -277,6 +310,8 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
      * @return List TaskTypesEntity
      */
     protected List<TaskTypesEntity> findAll() {
+        log.info("TaskTypesBean => method : findAll()");
+
         return dao.findAll();
     }
 
@@ -286,6 +321,8 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
      * @param entity TaskTypesEntity
      */
     private void validateTaskType(TaskTypesEntity entity) {
+        log.info("TaskTypesBean => method : validateTaskType(TaskTypesEntity entity)");
+
         List<String> errors = TaskTypesValidator.validate(entity);
         if (!errors.isEmpty()) {
             log.error("TaskType is not valide {}", entity);

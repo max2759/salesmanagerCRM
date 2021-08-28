@@ -111,8 +111,10 @@
             </p:panelGrid>
             <div align="right" style="padding-top: 10px" class="modalValidateBtn-margin-top"
                  id="divActionUpdateTransaction">
-                <p:menuButton value="#{bundle['actions']}" id="buttonActionUpdateTransaction">
+                <p:menuButton value="#{bundle['actions']}" id="buttonActionUpdateTransaction"
+                              rendered="#{usersBean.currentUser.isPermitted('showTransactionHistories') or usersBean.currentUser.isPermitted('updateTransactions') or usersBean.currentUser.isPermitted('deleteTransactions')}">
                     <p:menuitem icon="ui-icon-check"
+                                rendered="#{usersBean.currentUser.isPermitted('updateTransactions')}"
                                 id="buttonSaveUpdateTransaction"
                                 value="#{bundle['save']}"
                                 update="@(form) msgs"
@@ -120,6 +122,7 @@
                                 action="#{transactionsBean.updateEntity}"/>
 
                     <p:menuitem icon="ui-icon-delete"
+                                rendered="#{usersBean.currentUser.isPermitted('deleteTransactions')}"
                                 id="buttonDeleteUpdateTransaction"
                                 update="@(form) msgs"
                                 value="#{bundle['delete']}"
@@ -132,6 +135,7 @@
                     </p:menuitem>
 
                     <p:menuitem icon="ui-icon-update"
+                                rendered="#{usersBean.currentUser.isPermitted('showTransactionHistories')}"
                                 id="buttonHistoryUpdateTransaction"
                                 outcome="transactionDetails"
                                 value="#{bundle['viewHistory']}">

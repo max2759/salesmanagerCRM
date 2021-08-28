@@ -96,13 +96,16 @@
             </p:panelGrid>
 
             <div align="right" style="padding-top: 10px" class="modalValidateBtn-margin-top">
-                <p:menuButton value="#{bundle['actions']}">
+                <p:menuButton value="#{bundle['actions']}"
+                              rendered="#{usersBean.currentUser.isPermitted('showVoucherHistories') or usersBean.currentUser.isPermitted('updateVouchers')}">
                     <p:menuitem icon="ui-icon-check"
+                                rendered="#{usersBean.currentUser.isPermitted('updateVouchers')}"
                                 value="#{bundle['save']}"
                                 update="@(form) msgs"
                                 oncomplete="PF('dlg2').hide()"
                                 action="#{vouchersBean.updateEntity}"/>
                     <p:menuitem icon="ui-icon-update"
+                                rendered="#{usersBean.currentUser.isPermitted('showVoucherHistories')}"
                                 outcome="voucherDetails"
                                 value="#{bundle['viewHistory']}">
                         <f:param name="idVoucher" value="#{vouchersBean.vouchersEntity.id}"/>

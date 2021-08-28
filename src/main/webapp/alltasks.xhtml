@@ -10,8 +10,6 @@
     <ui:define name="content">
 
         <f:metadata>
-            <f:event listener="#{accessControlBean.checkPermission}" type="preRenderView"/>
-            <f:attribute name="permRequired" value="showTasks"/>
             <f:viewAction action="#{tasksBean.createNewEntity}"/>
             <f:viewAction action="#{tasksBean.listEntities}"/>
             <f:viewAction action="#{taskTypesBean.findAllTaskTypesEntities}"/>

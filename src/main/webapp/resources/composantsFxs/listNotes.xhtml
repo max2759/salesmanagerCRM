@@ -16,6 +16,7 @@
     <f:view>
         <h:form>
             <p:commandButton value="#{bundle['notes.create']}"
+                             rendered="#{usersBean.currentUser.isPermitted('addNotes')}"
                              update="detailsRight:formTabView detailsRight:createNotes:formCreateNotes msgs"
                              onclick="PF('createDialogNotes').show();" styleClass="NavyButton marginBottom15"
                              action="#{notesBean.showModalCreate}"/>
@@ -70,11 +71,14 @@
                     </p:cellEditor>
                 </div>
             </p:column>
-            <p:column styleClass="columnEditDelte">
-                <p:rowEditor styleClass="displayInlineBlock"/>
+            <p:column styleClass="columnEditDelte"
+                      rendered="#{usersBean.currentUser.isPermitted('updateNotes') or usersBean.currentUser.isPermitted('deleteNotes')}">
+                <p:rowEditor rendered="#{usersBean.currentUser.isPermitted('updateNotes')}"
+                             styleClass="displayInlineBlock"/>
 
                 <p:commandLink
                         update="detailsRight:formTabView detailsRight:createNotes:formCreateNotes msgs"
+                        rendered="#{usersBean.currentUser.isPermitted('deleteNotes')}"
                         action="#{notesBean.deleteEntity}">
                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                icon="fa fa-warning"/>

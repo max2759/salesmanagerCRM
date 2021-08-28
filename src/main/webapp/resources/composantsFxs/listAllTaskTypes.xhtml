@@ -29,6 +29,7 @@
             <h1>#{bundle['taskTypes.title']}</h1>
             <h:form>
                 <p:commandButton value="#{bundle['taskTypes.create']}"
+                                 rendered="#{usersBean.currentUser.isPermitted('addTaskTypes')}"
                                  update="@(form) msgs"
                                  onclick="PF('createDialog').show();" styleClass="NavyButton marginBottom15"
                                  action="#{taskTypesBean.showModalCreate}"
@@ -54,6 +55,7 @@
                     </p:column>
                     <p:column headerText="#{bundle['edit']}">
                         <p:commandButton icon="ui-icon-edit" styleClass="NavyButton"
+                                         rendered="#{usersBean.currentUser.isPermitted('updateTaskTypes')}"
                                          id="labelAll"
                                          onclick="PF('dlg2').show();"
                                          update="@(form) msgs"

@@ -44,6 +44,8 @@ public class TransactionPhasesBean extends ExtendBean implements Serializable {
      * Fill the list with Task Entities
      */
     public void findAllTransactionPhasesEntities() {
+        log.info("TransactionPhasesBean => method : findAllTransactionPhasesEntities()");
+
         transactionPhasesEntities = findAll();
     }
 
@@ -54,6 +56,8 @@ public class TransactionPhasesBean extends ExtendBean implements Serializable {
      * @return TransactionPhasesEntity
      */
     protected TransactionPhasesEntity findById(int id) {
+        log.info("TransactionPhasesBean => method : findById(int id)");
+
         if (id == 0) {
             log.error("TransactionPhases ID is null");
             throw new EntityNotFoundException(
@@ -80,6 +84,8 @@ public class TransactionPhasesBean extends ExtendBean implements Serializable {
      * @return TransactionPhasesEntity
      */
     public TransactionPhasesEntity findByLabel(String label) {
+        log.info("TransactionPhasesBean => method : findByLabel(String label)");
+
         if (label == null) {
             log.error("Transaction Phases label is null");
             throw new EntityNotFoundException(
@@ -109,6 +115,7 @@ public class TransactionPhasesBean extends ExtendBean implements Serializable {
      * @return List TransactionPhasesEntity
      */
     protected List<TransactionPhasesEntity> findAll() {
+        log.info("TransactionPhasesBean => method : findAll() ");
         return dao.findAll();
     }
 

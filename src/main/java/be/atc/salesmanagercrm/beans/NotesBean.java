@@ -6,10 +6,7 @@ import be.atc.salesmanagercrm.entities.CompaniesEntity;
 import be.atc.salesmanagercrm.entities.ContactsEntity;
 import be.atc.salesmanagercrm.entities.NotesEntity;
 import be.atc.salesmanagercrm.entities.UsersEntity;
-import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
-import be.atc.salesmanagercrm.exceptions.ErrorCodes;
-import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
-import be.atc.salesmanagercrm.exceptions.InvalidOperationException;
+import be.atc.salesmanagercrm.exceptions.*;
 import be.atc.salesmanagercrm.utils.EMF;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.validators.NotesValidator;
@@ -69,6 +66,8 @@ public class NotesBean extends ExtendBean implements Serializable {
     private CompaniesBean companiesBean;
     @Inject
     private UsersBean usersBean;
+    @Inject
+    private AccessControlBean accessControlBean;
 
     /**
      * Use this method for save entity note
@@ -276,6 +275,15 @@ public class NotesBean extends ExtendBean implements Serializable {
      */
     protected void save(NotesEntity entity) {
         log.info("NotesBean => method : save(NotesEntity entity)");
+
+        try {
+            accessControlBean.checkPermission("addNotes");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
+
         try {
             validateNote(entity);
         } catch (InvalidEntityException exception) {
@@ -483,6 +491,15 @@ public class NotesBean extends ExtendBean implements Serializable {
      */
     protected void delete(int id, UsersEntity usersEntity) {
         log.info("NotesBean => method : delete(int id, int idUser)");
+
+        try {
+            accessControlBean.checkPermission("deleteNotes");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
+
         FacesMessage msg;
         if (id == 0) {
             log.error("Note ID is null");
@@ -539,6 +556,13 @@ public class NotesBean extends ExtendBean implements Serializable {
     protected void update(NotesEntity entity) {
         log.info("NotesBean => method : update(NotesEntity entity)");
 
+        try {
+            accessControlBean.checkPermission("updateNotes");
+        } catch (AccessDeniedException exception) {
+            log.info(exception.getMessage());
+            accessControlBean.hasNotPermission();
+            return;
+        }
 
         try {
             validateNote(entity);

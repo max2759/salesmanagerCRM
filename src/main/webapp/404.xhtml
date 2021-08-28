@@ -11,7 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
     </f:facet>
-    <title>PrimeFaces Barcelona - Error</title>
+    <title>#{bundle['errorOccured']}</title>
 </h:head>
 
 <h:body styleClass="exception-body pagenotfound-body">
@@ -23,9 +23,9 @@
 
     <div class="exception-band">
         <div class="exception-content">
-            <h1>PAGE NOT FOUND</h1>
-            <p>The page you requested cannot be found</p>
-            <p:graphicImage name="images/logo.png" library="barcelona-layout"/>
+            <h1>#{bundle['access404.title']}</h1>
+            <h:outputText value="#{bundle['access404.label']}"/>
+            <p:graphicImage name="images/logo_salesManager.png" library="barcelona-layout"/>
         </div>
     </div>
 
