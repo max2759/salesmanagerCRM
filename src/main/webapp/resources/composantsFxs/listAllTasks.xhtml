@@ -32,6 +32,7 @@
             <h1>#{bundle['tasks.title']}</h1>
             <h:form>
                 <p:commandButton value="#{bundle['tasks.create']}"
+                                 rendered="#{usersBean.currentUser.isPermitted('addTasks')}"
                                  update="@(form) msgs"
                                  onclick="PF('createDialogTask').show();" styleClass="NavyButton marginBottom10"
                                  action="#{tasksBean.showModalCreate}"
@@ -160,15 +161,20 @@
                                 </h:outputText>
                             </p:column>
 
-                            <p:column colspan="1" width="70">
+                            <p:column colspan="1" width="70"
+                                      rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
                                                onclick="PF('updateDialogTask').show();"
-                                               action="#{tasksBean.showModalUpdate}">
+                                               action="#{tasksBean.showModalUpdate}"
+                                               rendered="#{usersBean.currentUser.isPermitted('updateTasks')}"
+                                >
                                     <i class="ui-icon ui-icon-create"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
-                                               action="#{tasksBean.deleteEntity}">
+                                               action="#{tasksBean.deleteEntity}"
+                                               rendered="#{usersBean.currentUser.isPermitted('deleteTasks')}"
+                                >
                                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                                icon="fa fa-warning"/>
                                     <i class="ui-icon ui-icon-delete-forever"></i>
@@ -296,15 +302,20 @@
                                 </h:outputText>
                             </p:column>
 
-                            <p:column colspan="1" width="70">
+                            <p:column colspan="1" width="70"
+                                      rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
                                                onclick="PF('updateDialogTask').show();"
-                                               action="#{tasksBean.showModalUpdate}">
+                                               action="#{tasksBean.showModalUpdate}"
+                                               rendered="#{usersBean.currentUser.isPermitted('updateTasks')}"
+                                >
                                     <i class="ui-icon ui-icon-create"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
-                                               action="#{tasksBean.deleteEntity}">
+                                               action="#{tasksBean.deleteEntity}"
+                                               rendered="#{usersBean.currentUser.isPermitted('deleteTasks')}"
+                                >
                                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                                icon="fa fa-warning"/>
                                     <i class="ui-icon ui-icon-delete-forever"></i>
@@ -443,15 +454,20 @@
                                 </h:outputText>
                             </p:column>
 
-                            <p:column colspan="1" width="70">
+                            <p:column colspan="1" width="70"
+                                      rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
                                                onclick="PF('updateDialogTask').show();"
-                                               action="#{tasksBean.showModalUpdate}">
+                                               action="#{tasksBean.showModalUpdate}"
+                                               rendered="#{usersBean.currentUser.isPermitted('updateTasks')}"
+                                >
                                     <i class="ui-icon ui-icon-create"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
-                                               action="#{tasksBean.deleteEntity}">
+                                               action="#{tasksBean.deleteEntity}"
+                                               rendered="#{usersBean.currentUser.isPermitted('deleteTasks')}"
+                                >
                                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                                icon="fa fa-warning"/>
                                     <i class="ui-icon ui-icon-delete-forever"></i>
@@ -589,15 +605,20 @@
                                 </h:outputText>
                             </p:column>
 
-                            <p:column colspan="1" width="70">
+                            <p:column colspan="1" width="70"
+                                      rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
                                                onclick="PF('updateDialogTask').show();"
-                                               action="#{tasksBean.showModalUpdate}">
+                                               action="#{tasksBean.showModalUpdate}"
+                                               rendered="#{usersBean.currentUser.isPermitted('updateTasks')}"
+                                >
                                     <i class="ui-icon ui-icon-create"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
-                                               action="#{tasksBean.deleteEntity}">
+                                               action="#{tasksBean.deleteEntity}"
+                                               rendered="#{usersBean.currentUser.isPermitted('deleteTasks')}"
+                                >
                                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                                icon="fa fa-warning"/>
                                     <i class="ui-icon ui-icon-delete-forever"></i>
@@ -731,15 +752,20 @@
                                 </h:outputText>
                             </p:column>
 
-                            <p:column colspan="1" width="70">
+                            <p:column colspan="1" width="70"
+                                      rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
                                                onclick="PF('updateDialogTask').show();"
-                                               action="#{tasksBean.showModalUpdate}">
+                                               action="#{tasksBean.showModalUpdate}"
+                                               rendered="#{usersBean.currentUser.isPermitted('updateTasks')}"
+                                >
                                     <i class="ui-icon ui-icon-create"></i>
                                     <f:param name="idEntity" value="#{task.id}"/>
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
-                                               action="#{tasksBean.deleteEntity}">
+                                               action="#{tasksBean.deleteEntity}"
+                                               rendered="#{usersBean.currentUser.isPermitted('deleteTasks')}"
+                                >
                                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                                icon="fa fa-warning"/>
                                     <i class="ui-icon ui-icon-delete-forever"></i>

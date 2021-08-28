@@ -1,7 +1,10 @@
 package be.atc.salesmanagercrm.beans;
 
+import be.atc.salesmanagercrm.exceptions.AccessDeniedException;
+import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.context.FacesContext;
@@ -10,6 +13,9 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
 
+/**
+ * @author Younes Arifi
+ */
 @Slf4j
 @Named(value = "accessControlBean")
 @ViewScoped
@@ -23,10 +29,8 @@ public class AccessControlBean extends ExtendBean implements Serializable {
      * Check if user isn't Logged
      */
     public void isNotLogged() {
-        log.info("AccessControlBean isNotLogged()");
-        if (!getCurrentUser().isAuthenticated()) {
-            nav.performNavigation("/connection.xhtml");
-        }
+        log.info("AccessControlBean => method : isNotLogged()");
+        nav.performNavigation("/connection.xhtml");
     }
 
     /**
@@ -35,11 +39,14 @@ public class AccessControlBean extends ExtendBean implements Serializable {
      * @param event ComponentSystemEvent
      */
     public void checkPermission(ComponentSystemEvent event) {
-        setCurrentUser(SecurityUtils.getSubject());
-        if (getCurrentUser().isAuthenticated()) {
+        log.info("AccessControlBean => method : checkPermission(ComponentSystemEvent event)");
+
+        Subject currentUser = SecurityUtils.getSubject();
+
+        if (currentUser.isAuthenticated()) {
             String permission = (String) event.getComponent().getAttributes().get("permRequired");
 
-            if (!getCurrentUser().isPermitted(permission)) {
+            if (!currentUser.isPermitted(permission)) {
                 log.info("Vous n'avez la permission : " + permission + ". Accès refusé");
                 hasNotPermission();
             }
@@ -50,20 +57,26 @@ public class AccessControlBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Redirect user to AccessDenied !
+     * Check user access
+     *
+     * @param value String
      */
-    public void hasNotPermission() {
-        nav.performNavigation("/errorPages/accessDenied.xhtml");
+    public void checkPermission(String value) {
+        log.info("AccessControlBean => method : checkPermission(String value)");
+
+        Subject currentUser = SecurityUtils.getSubject();
+
+        if (!currentUser.isPermitted(value)) {
+            log.error("Access denied {}", value);
+            throw new AccessDeniedException("L utilisateur n a pas les droits d acces necessaire", ErrorCodes.USER_ACCESS_DENIED);
+        }
     }
 
     /**
-     * Check permission with String Value
-     * @param permission String
-     * @return boolean
+     * Redirect user to AccessDenied !
      */
-    public boolean checkPermission(String permission) {
-        setCurrentUser(SecurityUtils.getSubject());
-        return getCurrentUser().isPermitted(permission);
+    public void hasNotPermission() {
+        log.info("AccessControlBean => method : hasNotPermission()");
+        nav.performNavigation("/errorPages/accessDenied.xhtml");
     }
-
 }
