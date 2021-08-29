@@ -71,116 +71,12 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#">
-                            <i class="fa fa-fw fa-envelope-o"></i>
-                            <span class="topbar-item-name">Messages</span>
-                            <i class="fa fa-angle-down menu-arrow"></i>
-                        </a>
-                        <ul>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar1.png" library="barcelona-layout" width="25"/>
-                                    <span>Give me a call</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar2.png" library="barcelona-layout" width="25"/>
-                                    <span>Reports attached</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar3.png" library="barcelona-layout" width="25"/>
-                                    <span>About your invoice</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar2.png" library="barcelona-layout" width="25"/>
-                                    <span>Meeting today</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar4.png" library="barcelona-layout" width="25"/>
-                                    <span>Out of office</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="topbar-icon fa fa-fw fa-cog"></i>
-                    <span class="topbar-item-name">Settings</span>
-                </a>
-                <ul class="animated">
-                    <li role="menuitem">
-                        <a href="#">
-                            <i class="fa fa-fw fa-paint-brush"></i>
-                            <span>Change Theme</span>
-                            <span class="topbar-submenuitem-badge">4</span>
-                        </a>
-                    </li>
-                    <li role="menuitem">
-                        <a href="#">
-                            <i class="fa fa-fw fa-star-o"></i>
-                            <span>Favorites</span>
-                        </a>
-                    </li>
-                    <li role="menuitem">
-                        <a href="#">
-                            <i class="fa fa-fw fa-lock"></i>
-                            <span>Lock Screen</span>
-                            <span class="topbar-submenuitem-badge">2</span>
-                        </a>
-                    </li>
-                    <li role="menuitem">
-                        <a href="#">
-                            <i class="fa fa-fw fa-picture-o"></i>
-                            <span>Wallpaper</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="topbar-icon material-icons animated swing fa fa-fw fa-envelope-o"></i>
-                    <span class="topbar-badge animated rubberBand">5</span>
-                    <span class="topbar-item-name">Messages</span>
-                </a>
-                <ul class="animated">
-                    <li role="menuitem">
-                        <a href="#" class="topbar-message">
-                            <p:graphicImage name="images/avatar1.png" library="barcelona-layout" width="35"/>
-                            <span>Give me a call</span>
-                        </a>
-                    </li>
-                    <li role="menuitem">
-                        <a href="#" class="topbar-message">
-                            <p:graphicImage name="images/avatar2.png" library="barcelona-layout" width="35"/>
-                            <span>Reports attached</span>
-                        </a>
-                    </li>
-                    <li role="menuitem">
-                        <a href="#" class="topbar-message">
-                            <p:graphicImage name="images/avatar3.png" library="barcelona-layout" width="35"/>
-                            <span>About your invoice</span>
-                        </a>
-                    </li>
-                    <li role="menuitem">
-                        <a href="#" class="topbar-message">
-                            <p:graphicImage name="images/avatar2.png" library="barcelona-layout" width="35"/>
-                            <span>Meeting today</span>
-                        </a>
-                    </li>
-                    <li role="menuitem">
-                        <a href="#" class="topbar-message">
-                            <p:graphicImage name="images/avatar4.png" library="barcelona-layout" width="35"/>
-                            <span>Out of office</span>
-                        </a>
+                        <h:form>
+                            <h:commandLink action="#{usersBean.logOut}">
+                                <i class="fa fa-fw fa-sign-out"/>
+                                <span class="topbar-item-name">#{bundle['logOut']}</span>
+                            </h:commandLink>
+                        </h:form>
                     </li>
                 </ul>
             </li>
@@ -215,30 +111,6 @@
                     </li>
                 </ul>
             </li>
-            <li>
-                <a href="#">
-                    <i class="ui-icon-exit-to-app"></i>
-                </a>
-                <ul class="animated">
-                    <li role="menuitem">
-                        <h:form>
-                            <h:commandLink action="#{usersBean.logOut}">
-                            </h:commandLink>
-                        </h:form>
-                    </li>
-                </ul>
-            </li>
-            <li class="search-item">
-                <h:form>
-                    <span class="md-inputfield">
-                        <p:inputText/>
-                        <i class="fa fa-search"></i>
-                        <label>Search</label>
-                    </span>
-
-                </h:form>
-            </li>
-
         </ul>
     </div>
 

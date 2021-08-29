@@ -53,7 +53,6 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
     @Setter
     private CompaniesEntity companiesEntity = new CompaniesEntity();
 
-
     @Inject
     private ContactsBean contactsBean;
 
@@ -128,6 +127,90 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
             log.info("Nothing");
             throw new EntityNotFoundException(
                     "Aucun contact avec l ID " + id + " n'a été trouvé dans la DB",
+                    ErrorCodes.CONTACT_NOT_FOUND
+            );
+        } finally {
+            em.clear();
+            em.close();
+        }
+    }
+
+    /**
+     * delete CompaniesContact by id
+     *
+     * @param id CompaniesContact
+     */
+    protected void delete(int id) {
+
+        log.info("CompaniesContactsBean => method : delete(int id, int idUser)");
+
+        FacesMessage msg;
+
+        if (id == 0) {
+            log.error("CompaniesContacts ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contact.error"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
+        CompaniesContactsEntity companiesContactsEntity;
+
+        try {
+            companiesContactsEntity = findById(id);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "note.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
+        EntityManager em = EMF.getEM();
+        em.getTransaction();
+
+        EntityTransaction tx = null;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            companiesContactsDao.delete(em, companiesContactsEntity);
+            tx.commit();
+            log.info("Delete ok");
+        } catch (Exception ex) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            log.error("Delete Error");
+        } finally {
+            em.clear();
+            em.close();
+        }
+    }
+
+    /**
+     * Find CompaniesContacts by ID
+     *
+     * @param id CompaniesContacts
+     * @return CompaniesContact Entity
+     */
+    protected CompaniesContactsEntity findById(int id) {
+        log.info("CompaniesContact => method : findById(int id, int idUser)");
+
+        FacesMessage msg;
+
+        if (id == 0) {
+            log.error("CompaniesContact ID is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "note.notExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            throw new EntityNotFoundException(
+                    "L ID de la note est incorrect",
+                    ErrorCodes.COMPANY_NOT_FOUND
+            );
+        }
+
+        EntityManager em = EMF.getEM();
+        try {
+            return companiesContactsDao.findById(em, id);
+        } catch (Exception ex) {
+            log.info("Nothing");
+            throw new EntityNotFoundException(
+                    "Aucune Note avec l ID " + id + " n a ete trouvee dans la BDD",
                     ErrorCodes.CONTACT_NOT_FOUND
             );
         } finally {

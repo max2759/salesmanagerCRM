@@ -24,10 +24,10 @@
                      rowsPerPageTemplate="10,20,50">
 
             <p:column headerText="#{bundle['branchActivities.title']}" filterBy="#{branchActivities.label}"
-                      filterMatchMode="contains" sortBy="#{branchActivities.label}">
+                      filterMatchMode="contains" sortBy="#{branchActivities.label}" colspan="10">
                 <h:outputText value="#{branchActivities.label}"/>
             </p:column>
-            <p:column headerText="#{bundle['edit']}">
+            <p:column headerText="#{bundle['edit']}" colspan="2">
                 <p:commandLink icon="ui-icon-edit" styleClass="NavyButton" update="@(form)"
                                onclick="PF('updateBranchActivitiesModal').show();"
                                action="#{branchActivitiesBean.showModalUpdate}">

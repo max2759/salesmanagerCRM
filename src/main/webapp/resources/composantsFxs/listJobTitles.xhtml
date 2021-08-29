@@ -22,11 +22,11 @@
 
             <p:column headerText="#{bundle['jobTitles.title']}" filterBy="#{jobtitles.label}"
                       sortBy="#{jobtitles.label}"
-                      filterMatchMode="contains">
+                      filterMatchMode="contains" colspan="10">
                 <h:outputText value="#{jobtitles.label}"/>
             </p:column>
 
-            <p:column headerText="#{bundle['edit']}">
+            <p:column headerText="#{bundle['edit']}" colspan="2">
                 <p:commandLink icon="ui-icon-edit" styleClass="NavyButton" update="@(form)"
                                onclick="PF('updateJobTitlesModal').show();" action="#{jobtitlesBean.showModalUpdate}">
                     <i class="ui-icon ui-icon-create"/>

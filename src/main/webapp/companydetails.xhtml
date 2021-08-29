@@ -27,9 +27,9 @@
             <div class="ui-g-12 ui-md-6 ui-lg-4">
                 <div class="card card-w-title">
                     <h1>#{bundle['company.details']}</h1>
-
-                    <h:form>
+                    <h:form id="companyDetailsUpdateForm">
                         <p:panelGrid columns="4" layout="flex"
+                                     id="companyDetailsUpdatePanelGrid"
                                      columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
                                      contentStyleClass="ui-fluid" styleClass="ui-panelgrid-blank form-group">
 
@@ -291,8 +291,8 @@
                                              id="companyDetailsValidateBtn"
                                              disabled="#{empty companiesBean.companiesEntity.label}"
                                              icon="ui-icon-check"
-                                             update="@(form)" process="@this"
-                                             onclick="PF('companyModal').close();"/>
+                                             update="companyDetailsUpdateForm:companyDetailsUpdatePanelGrid msgs"
+                            />
                         </div>
                     </h:form>
                 </div>

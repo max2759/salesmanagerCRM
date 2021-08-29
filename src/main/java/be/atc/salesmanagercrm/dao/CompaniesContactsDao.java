@@ -10,4 +10,9 @@ public interface CompaniesContactsDao {
     void update(EntityManager em, CompaniesContactsEntity companiesContactsEntity);
 
     List<CompaniesContactsEntity> findByIdContacts(EntityManager em, int idContacts);
+
+    CompaniesContactsEntity findById(EntityManager em, int id);
+
+    void delete(EntityManager em, CompaniesContactsEntity companiesContactsEntity);
+
 }

@@ -24,31 +24,14 @@
                                         actionListener="#{guestPreferences.setOrientationRTL(true)}" ajax="false"/>
                         </p:submenu>
                         <p:submenu id="um_themes" label="Themes" icon="&#xE40A;">
-                            <p:menuitem id="theme1" value="Blue - Amber" icon="&#xE40A;"
-                                        actionListener="#{guestPreferences.setTheme('blue')}" ajax="false"/>
-                            <p:menuitem id="theme2" value="Teal - Amber" icon="&#xE40A;"
-                                        actionListener="#{guestPreferences.setTheme('teal')}" ajax="false"/>
                             <p:menuitem id="theme3" value="Blue Grey - Green" icon="&#xE40A;"
                                         actionListener="#{guestPreferences.setTheme('blue-grey')}" ajax="false"/>
-                            <p:menuitem id="theme4" value="Cyan - Yellow" icon="&#xE40A;"
-                                        actionListener="#{guestPreferences.setTheme('cyan')}" ajax="false"/>
-                            <p:menuitem id="theme5" value="Dark - Blue" icon="&#xE40A;"
-                                        actionListener="#{guestPreferences.setTheme('dark-blue')}" ajax="false"/>
                             <p:menuitem id="theme6" value="Dark - Green" icon="&#xE40A;"
                                         actionListener="#{guestPreferences.setTheme('dark-green')}" ajax="false"/>
-                            <p:menuitem id="theme7" value="Light Blue - Green" icon="&#xE40A;"
-                                        actionListener="#{guestPreferences.setTheme('light-blue')}" ajax="false"/>
-                            <p:menuitem id="theme8" value="Indigo - Cyan" icon="&#xE40A;"
-                                        actionListener="#{guestPreferences.setTheme('indigo')}" ajax="false"/>
-                            <p:menuitem id="theme9" value="Deep Purple - Pink" icon="&#xE40A;"
-                                        actionListener="#{guestPreferences.setTheme('deep-purple')}" ajax="false"/>
-                            <p:menuitem id="theme10" value="Green - Yellow" icon="&#xE40A;"
-                                        actionListener="#{guestPreferences.setTheme('green')}" ajax="false"/>
                         </p:submenu>
                     </pa:menu>
                 </h:form>
             </pa:tab>
-
 
             <pa:tab icon="people" title="Autres pages">
                 <h:form id="menu-others">
@@ -76,15 +59,16 @@
                 <h:form id="menu-ourPage">
                     <pa:menu widgetVar="me">
                         <p:menuitem id="um_allTasks" value="allTasks" icon="&#xE871;" outcome="/alltasks"/>
-                        <p:menuitem id="um_JobTitles" value="JobTitles" icon="&#xE871;" outcome="/jobtitles"/>
+                        <p:menuitem id="um_JobTitles" value="JobTitles" icon="&#xE871;" outcome="/jobtitles"
+                                    rendered="#{usersBean.currentUser.isPermitted('showJobTitles')}"/>
                         <p:menuitem id="um_BranchActivities" value="BranchActivities" icon="&#xE871;"
-                                    outcome="/branchactivities"/>
+                                    outcome="/branchactivities"
+                                    rendered="#{usersBean.currentUser.isPermitted('showBranchActivities')}"/>
                         <p:menuitem id="um_Company" value="Company" icon="&#xE871;" outcome="/company"/>
                         <p:menuitem id="um_Contacts" value="Contacts" icon="&#xE871;" outcome="/contacts"/>
                         <p:menuitem id="um_Transactions" value="Transactions" icon="&#xE871;" outcome="/transactions"/>
                         <p:menuitem id="um_Vouchers" value="Vouchers" icon="&#xE871;" outcome="/vouchers"/>
                         <p:menuitem id="um_TaskTypes" value="TaskTypes" icon="&#xE871;" outcome="/tasktypes"/>
-                        <p:menuitem id="um_Register" value="Register" icon="&#xE871;" outcome="/register"/>
                         <p:menuitem id="um_allRoles" value="allRoles" icon="&#xE871;" outcome="/rolesList"/>
                         <p:menuitem id="um_allUsers" value="allUsers" icon="&#xE871;" outcome="/usersList"/>
                         <p:menuitem id="um_Conversation" value="Conversation" icon="&#xE871;" outcome="/conversations"/>

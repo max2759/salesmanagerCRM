@@ -574,9 +574,9 @@ public class ContactsBean extends ExtendBean implements Serializable {
     protected void update(ContactsEntity contactsEntity) {
 
         FacesMessage facesMessage;
-
         CheckEntities checkEntities = new CheckEntities();
 
+        contactsEntity.setModificationDate(LocalDateTime.now());
 
         try {
             validateContacts(contactsEntity);
@@ -639,6 +639,12 @@ public class ContactsBean extends ExtendBean implements Serializable {
             contactsDao.update(em, contactsEntity);
             addressesBean.getAddressesEntity().setContactsByIdContacts(contactsEntity);
             addressesBean.updateEntity();
+            List<CompaniesContactsEntity> companiesContactsEntityList = companiesContactsBean.findByIdContacts(contactsEntity.getId());
+            if (!companiesContactsEntityList.isEmpty()) {
+                for (CompaniesContactsEntity c : companiesContactsEntityList) {
+                    companiesContactsBean.delete(c.getId());
+                }
+            }
             companiesContactsBean.createCompaniesContacts();
             tx.commit();
             log.info("Update ok");

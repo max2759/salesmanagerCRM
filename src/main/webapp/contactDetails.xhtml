@@ -31,14 +31,27 @@
             <div class="ui-g-12 ui-md-6 ui-lg-4">
                 <div class="card card-w-title">
                     <h1>#{bundle['contact.details']}</h1>
-                    <h:form>
+                    <h:form id="contactDetailsUpdateForm">
                         <p:panelGrid columns="4" layout="flex"
+                                     id="contactDetailsUpdatePanelGrid"
                                      columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
                                      contentStyleClass="ui-fluid" styleClass="ui-panelgrid-blank form-group">
                             <p:accordionPanel multiple="true">
-                                <p:tab title="test">
+                                <p:tab title="#{bundle['contacts.tabTitle1']}">
+                                    <h:panelGroup
+                                            style="margin-top:30px; margin-bottom:10px;">
+                                        <p:outputLabel for="civilities" value="Civilité"/>
+                                        <p:selectOneRadio id="civilities"
+                                                          value="#{contactsBean.contactsEntity.civilitiesByIdCivilities}"
+                                                          unselectable="true">
+                                            <f:selectItems value="#{civilitiesBean.civilitiesEntities}" var="civilities"
+                                                           itemValue="#{civilities}" itemLabel="#{civilities.label}"/>
+                                            <f:converter converterId="civilitiesConverter"/>
+                                        </p:selectOneRadio>
+                                    </h:panelGroup>
+
                                     <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:15px; margin-bottom: 30px">
+                                                  style="margin-top:25px; margin-bottom: 30px">
                                         <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}">
                                             <f:validator validatorId="contactEmailValidator"/>
                                         </p:inputText>
@@ -147,7 +160,9 @@
                                                                pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
                                         </h:outputText>
                                     </h:panelGroup>
+                                </p:tab>
 
+                                <p:tab title="#{bundle['contacts.tabTitle2']}">
                                     <h:panelGroup style="margin-top:30px; margin-bottom:10px;">
                                         <p:selectCheckboxMenu label="#{bundle['contacts.chooseCompany']}" filter="true"
                                                               filterMatchMode="contains" style="width: 100%"
@@ -160,21 +175,8 @@
                                                            itemLabel="#{company.label}"/>
                                         </p:selectCheckboxMenu>
                                     </h:panelGroup>
-
-                                    <h:panelGroup
-                                            style="margin-top:30px; margin-bottom:10px;">
-                                        <p:outputLabel for="civilities" value="Civilité"/>
-                                        <p:selectOneRadio id="civilities"
-                                                          value="#{contactsBean.contactsEntity.civilitiesByIdCivilities}"
-                                                          unselectable="true">
-                                            <f:selectItems value="#{civilitiesBean.civilitiesEntities}" var="civilities"
-                                                           itemValue="#{civilities}" itemLabel="#{civilities.label}"/>
-                                            <f:converter converterId="civilitiesConverter"/>
-                                        </p:selectOneRadio>
-                                    </h:panelGroup>
-
                                 </p:tab>
-                                <p:tab title="adresse">
+                                <p:tab title="#{bundle['contacts.tabTitle3']}">
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:30px; margin-bottom:10px;">
                                         <p:inputText id="contactAddressStreet"
@@ -247,8 +249,7 @@
                             <p:commandButton value="#{bundle['validate']}"
                                              action="#{contactsBean.updateContact}"
                                              icon="ui-icon-check"
-                                             update="@(form)" process="@this"
-                                             onclick="PF('companyModal').close();"/>
+                                             update="contactDetailsUpdateForm:contactDetailsUpdatePanelGrid msgs"/>
                         </div>
                     </h:form>
                 </div>
