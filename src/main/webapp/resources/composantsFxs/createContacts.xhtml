@@ -23,14 +23,14 @@
                         <p:inputText id="contactFirstName" value="#{contactsBean.contactsEntity.firstname}"
                                      required="true" requiredMessage="#{bundle['contacts.firstnameNotValid']}"/>
                         <label>#{bundle['contacts.firstname']}</label>
-                        <p:ajax update="@form validateContacts msg" event="keyup"/>
+                        <p:ajax update="validateContacts msg" event="keyup"/>
                     </h:panelGroup>
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
                         <p:inputText id="contactLastName" value="#{contactsBean.contactsEntity.lastname}"
                                      required="true" requiredMessage="#{bundle['contacts.lastnameNotValid']}"/>
                         <label>#{bundle['contacts.lastname']}</label>
-                        <p:ajax update="@form validateContacts msg" event="keyup"/>
+                        <p:ajax update="validateContacts msg" event="keyup"/>
                     </h:panelGroup>
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
@@ -72,7 +72,7 @@
                                         requiredMessage="#{bundle['contacts.ContactTypeNotValid']}"
                                         scrollHeight="250" placeholder="#{bundle['contacts.chooseContactType']}"
                         />
-                        <p:ajax update="@form validateContacts msg" event="keyup"/>
+                        <p:ajax update="validateContacts msg" event="keyup"/>
                     </h:panelGroup>
                 </p:panelGrid>
 

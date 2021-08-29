@@ -22,7 +22,7 @@
                         <p:inputText id="labelCompany" value="#{companiesBean.companiesEntity.label}" required="true"
                                      requiredMessage="#{bundle['company.labelNotValid']}"/>
                         <label>#{bundle['company.labelName']}</label>
-                        <p:ajax update="@form validateCompany msg" event="keyup"/>
+                        <p:ajax update="validateCompany msg" event="keyup"/>
                     </h:panelGroup>
 
                     <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">

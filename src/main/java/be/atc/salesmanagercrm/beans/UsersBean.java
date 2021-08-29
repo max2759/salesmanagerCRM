@@ -131,6 +131,9 @@ public class UsersBean extends ExtendBean implements Serializable {
     @Setter
     private Session session;
 
+    @Inject
+    AccessControlBean accessControlBean;
+
 
     public void initialiseDialogUserId(Integer idUser) {
 
@@ -798,6 +801,7 @@ public class UsersBean extends ExtendBean implements Serializable {
     public void logOut() {
         this.currentUser = SecurityUtils.getSubject();
         this.currentUser.logout();
+        accessControlBean.isNotLogged();
     }
 
     protected void generatePDF(String password) {

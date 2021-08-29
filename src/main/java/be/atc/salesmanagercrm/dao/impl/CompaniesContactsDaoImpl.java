@@ -21,4 +21,17 @@ public class CompaniesContactsDaoImpl extends EntityFinderImpl<CompaniesContacts
                 .setParameter("idContacts", idContacts)
                 .getResultList();
     }
+
+    @Override
+    public CompaniesContactsEntity findById(EntityManager em, int id) {
+        return em.createNamedQuery("CompaniesContacts.findById",
+                        CompaniesContactsEntity.class)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+
+    @Override
+    public void delete(EntityManager em, CompaniesContactsEntity companiesContactsEntity) {
+        em.remove(em.merge(companiesContactsEntity));
+    }
 }
