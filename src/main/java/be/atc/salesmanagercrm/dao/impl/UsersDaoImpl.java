@@ -94,6 +94,18 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
+    public UsersEntity findActiveUserForConnection(EntityManager em, String username) {
+        try {
+            return em.createNamedQuery("Users.findUserActiveForConnection",
+                    UsersEntity.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
     public List<UsersEntity> findDisableUsers(EntityManager em) {
         return em.createNamedQuery("Users.findDisableUsers",
                 UsersEntity.class)

@@ -25,5 +25,7 @@ public interface UsersDao {
 
     List<UsersEntity> findActiveUsers(EntityManager em);
 
+    UsersEntity findActiveUserForConnection(EntityManager em, String username);
+
     List<UsersEntity> findDisableUsers(EntityManager em);
 }

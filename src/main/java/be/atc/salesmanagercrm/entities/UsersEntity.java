@@ -15,6 +15,7 @@ import java.util.Objects;
         @NamedQuery(name = "Users.findUsername", query = "select u.username from UsersEntity u where u.id = :id"),
         @NamedQuery(name = "Users.findActiveUsers", query = "select u from UsersEntity u where u.active = true"),
         @NamedQuery(name = "Users.findDisableUsers", query = "select u from UsersEntity u where u.active = false"),
+        @NamedQuery(name = "Users.findUserActiveForConnection", query = "select u from UsersEntity u where u.active = false and u.username = :username"),
 })
 public class UsersEntity {
     private int id;

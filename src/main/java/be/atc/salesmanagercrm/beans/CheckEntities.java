@@ -346,6 +346,26 @@ public class CheckEntities extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * Check if user exist in DB
+     * use in user
+     *
+     * @param entity : UsersEntity
+     */
+
+    public void checkUserActiveForConnection(UsersEntity entity) {
+        if (entity != null) {
+            EntityManager em = EMF.getEM();
+            UsersEntity usersEntity = usersDao.findActiveUserForConnection(em, entity.getUsername());
+            if (usersEntity != null) {
+                log.warn("User inactive" + entity.getUsername());
+                throw new InvalidEntityException(
+                        "L'utilisateur est inactif: " + entity.getUsername(), ErrorCodes.USER_NOT_FOUND
+                );
+            }
+        }
+    }
+
 
     public String checkUserByUsernameAuto(String username, int number) {
         if (!username.isEmpty()) {
