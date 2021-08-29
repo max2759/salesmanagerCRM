@@ -30,7 +30,7 @@ public class AccessControlBean extends ExtendBean implements Serializable {
      */
     public void isNotLogged() {
         log.info("AccessControlBean => method : isNotLogged()");
-        nav.performNavigation("/connection.xhtml");
+        nav.performNavigation("/connection.xhtml?faces-redirect=true");
     }
 
     /**

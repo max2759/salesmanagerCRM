@@ -324,7 +324,7 @@ public class UsersBean extends ExtendBean implements Serializable {
 
         try {
             checkEntities.checkUserActiveForConnection(usersEntity);
-        } catch (EntityNotFoundException exception) {
+        } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "user"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -412,7 +412,7 @@ public class UsersBean extends ExtendBean implements Serializable {
         log.info("usersEntity : " + session.getAttribute("idUser"));
 
         FacesContext ctx = FacesContext.getCurrentInstance();
-        ctx.getExternalContext().redirect("userUpdateByUser.xhtml");
+        ctx.getExternalContext().redirect("app/userUpdateByUser.xhtml?faces-redirect=true");
     }
 
 
