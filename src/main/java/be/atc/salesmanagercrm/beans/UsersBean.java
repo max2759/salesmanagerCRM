@@ -10,6 +10,7 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import be.atc.salesmanagercrm.utils.JavaMailUtil;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.utils.PDFUtil;
 import be.atc.salesmanagercrm.validators.UsersValidator;
@@ -158,15 +159,20 @@ public class UsersBean extends ExtendBean implements Serializable {
         return s.toString();
     }
 
-    public void register() {
+    public void registerEntity() {
+        register(userEntityNew);
+        createNewUserEntity();
+    }
+
+    protected void register(UsersEntity entityToAdd) {
 
         FacesMessage msg;
         log.info("in register");
         if (this.currentUser.isPermitted("addUsers")) {
             log.info("Tu as l'autorisation Test.");
 
-            log.info(String.valueOf(userEntityNew));
-            log.info(String.valueOf(userEntityNew));
+            log.info(String.valueOf(entityToAdd));
+            log.info(String.valueOf(entityToAdd));
 
             Subject currentUser = SecurityUtils.getSubject();
             //test a typed permission (not instance-level)
@@ -190,7 +196,7 @@ public class UsersBean extends ExtendBean implements Serializable {
             //mettre dans un try catch + fermer l'em
             //rolesEntity = rolesBean.findById(em, idRole);
             try {
-                validateUsers(userEntityNew);
+                validateUsers(entityToAdd);
             } catch (InvalidEntityException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
                 return;
@@ -198,21 +204,21 @@ public class UsersBean extends ExtendBean implements Serializable {
             String firstName3Cara;
             String lastName3Cara;
 
-            if (userEntityNew.getFirstname().length() >= 3) {
-                firstName3Cara = userEntityNew.getFirstname().substring(0, 3);
+            if (entityToAdd.getFirstname().length() >= 3) {
+                firstName3Cara = entityToAdd.getFirstname().substring(0, 3);
                 log.info(firstName3Cara);
             } else {
                 String randomLetter = getRandomStr(1);
-                firstName3Cara = userEntityNew.getFirstname().substring(0, 2) + randomLetter;
+                firstName3Cara = entityToAdd.getFirstname().substring(0, 2) + randomLetter;
                 log.info(firstName3Cara);
             }
 
-            if (userEntityNew.getLastname().length() >= 3) {
-                lastName3Cara = userEntityNew.getLastname().substring(0, 3);
+            if (entityToAdd.getLastname().length() >= 3) {
+                lastName3Cara = entityToAdd.getLastname().substring(0, 3);
                 log.info(lastName3Cara);
             } else {
                 String randomLetter = getRandomStr(1);
-                lastName3Cara = userEntityNew.getLastname().substring(0, 2) + randomLetter;
+                lastName3Cara = entityToAdd.getLastname().substring(0, 2) + randomLetter;
                 log.info(lastName3Cara);
             }
 
@@ -225,17 +231,17 @@ public class UsersBean extends ExtendBean implements Serializable {
             CheckEntities checkEntities = new CheckEntities();
 
             String username = checkEntities.checkUserByUsernameAuto(usernameWithoutNumber, number);
-            userEntityNew.setUsername(username);
+            entityToAdd.setUsername(username);
 
             try {
-                checkEntities.checkUserByUsername(userEntityNew);
+                checkEntities.checkUserByUsername(entityToAdd);
             } catch (InvalidEntityException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
                 return;
             }
 
             try {
-                checkEntities.checkRole(userEntityNew.getRolesByIdRoles());
+                checkEntities.checkRole(entityToAdd.getRolesByIdRoles());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 return;
@@ -251,10 +257,10 @@ public class UsersBean extends ExtendBean implements Serializable {
             String hashPass = encrypt(passwordUncrypt);
             log.info(hashPass);
 
-            userEntityNew.setPassword(hashPass);
+            entityToAdd.setPassword(hashPass);
 
-            userEntityNew.setActive(true);
-            userEntityNew.setRegisterDate(LocalDateTime.now());
+            entityToAdd.setActive(true);
+            entityToAdd.setRegisterDate(LocalDateTime.now());
 
             //    usersEntity.setRolesByIdRoles(rolesBean.findById(em, idRole));
 //log.info("avant em , le role est: "+usersEntity.getRolesByIdRoles().getId());
@@ -263,10 +269,10 @@ public class UsersBean extends ExtendBean implements Serializable {
             try {
                 tx = em.getTransaction();
                 tx.begin();
-                dao.register(em, userEntityNew);
+                dao.register(em, entityToAdd);
                 tx.commit();
                 generatePDF(passwordUncrypt);
-                //     JavaMailUtil.sendMail(userEntityNew);
+                JavaMailUtil.sendMail(entityToAdd);
                 log.info("Persist ok");
                 loadListEntities();
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.register"), null);

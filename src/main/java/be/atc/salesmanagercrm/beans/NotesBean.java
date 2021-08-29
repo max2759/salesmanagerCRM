@@ -78,8 +78,7 @@ public class NotesBean extends ExtendBean implements Serializable {
         log.info("message : " + notesEntity.getMessage());
 
         try {
-            // TODO A VOIR !!
-            notesEntity.setUsersByIdUsers(returnUsersEntity((Integer) usersBean.getSession().getAttribute("idUser")));
+            notesEntity.setUsersByIdUsers(usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             FacesMessage msg;

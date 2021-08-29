@@ -47,22 +47,23 @@
                              widgetVar="displayAllEntities"
                              filteredValue="#{taskTypesBean.taskTypesEntitiesFiltered}">
 
-                    <p:column headerText="#{bundle['taskTypes.name']}"
+                    <p:column colspan="10" headerText="#{bundle['taskTypes.name']}"
                               sortBy="#{taskType.label}"
                               filterBy="#{taskType.label}"
                               filterMatchMode="contains">
                         <h:outputText value="#{taskType.label}"/>
                     </p:column>
-                    <p:column headerText="#{bundle['edit']}">
-                        <p:commandButton icon="ui-icon-edit" styleClass="NavyButton"
-                                         rendered="#{usersBean.currentUser.isPermitted('updateTaskTypes')}"
-                                         id="labelAll"
-                                         onclick="PF('dlg2').show();"
-                                         update="@(form) msgs"
-                                         action="#{taskTypesBean.showModalUpdate}"
+                    <p:column colspan="2" headerText="#{bundle['edit']}"
+                              rendered="#{usersBean.currentUser.isPermitted('updateTaskTypes')}">
+                        <p:commandLink icon="ui-icon-edit" styleClass="NavyButton"
+                                       id="labelAll"
+                                       onclick="PF('dlg2').show();"
+                                       update="@(form) msgs"
+                                       action="#{taskTypesBean.showModalUpdate}"
                         >
+                            <i class="ui-icon ui-icon-create"/>
                             <f:param name="idEntity" value="#{taskType.id}"/>
-                        </p:commandButton>
+                        </p:commandLink>
                     </p:column>
 
                 </p:dataTable>

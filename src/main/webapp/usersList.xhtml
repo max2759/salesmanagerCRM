@@ -103,8 +103,7 @@
                         </h:panelGroup>
 
                         <p:commandButton value="Confirmer Valider" action="#{usersBean.updateByAdmin}"
-                                         update="@(form)"
-                                         process="@form" ajax="=false"/>
+                                         update="@(form) msgs"/>
                     </p:panelGrid>
                 </p:dialog>
 
@@ -164,7 +163,8 @@
                         </h:panelGroup>
 
 
-                        <p:commandButton value="#{bundle['validate']}" action="#{usersBean.register}" id="validateRole"
+                        <p:commandButton value="#{bundle['validate']}" action="#{usersBean.registerEntity}"
+                                         id="validateRole"
                                          update="@(form)"
                                          process="@form" ajax="=false"/>
 
