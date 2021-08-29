@@ -53,7 +53,6 @@
             </div>
 
 
-
             <!-- ********************************update*********************************- -->
 
 
@@ -114,11 +113,12 @@
             <!-- ********************************add*********************************- -->
 
 
-            <p:dialog header="Modal Dialog" widgetVar="addUser" modal="true"
-                      responsive="true" id="addUserDialog">
-                <h:form id="addUserDialogForm">
+            <h:form id="addUserDialogForm">
+                <p:dialog header="Modal Dialog" widgetVar="addUser" modal="true"
+                          responsive="true" id="addUserDialog">
+
                     <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                        <p:growl id="msg" life="2000"></p:growl>
+
 
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="firstname" value="#{usersBean.userEntityNew.firstname}" required="true"
@@ -164,10 +164,14 @@
                         </h:panelGroup>
 
 
-                        <p:commandButton value="Valider" action="#{usersBean.register}" id="validateRole"/>
+                        <p:commandButton value="#{bundle['validate']}" action="#{usersBean.register}" id="validateRole"
+                                         update="@(form)"
+                                         process="@form" ajax="=false"/>
+
                     </p:panelGrid>
-                </h:form>
-            </p:dialog>
+
+                </p:dialog>
+            </h:form>
 
             <fxs:createContacts id="createContacts"/>
         </div>
