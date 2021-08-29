@@ -415,7 +415,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
                 log.info(exception.getMessage());
                 facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "contact.error"), null);
                 FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-                nav.performNavigation("/contacts.xhtml");
+                nav.performNavigation("contacts");
                 return;
             }
 
@@ -425,7 +425,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "contact.error"), null);
                 FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-                nav.performNavigation("/contacts.xhtml");
+                nav.performNavigation("contacts");
                 return;
             }
         }
