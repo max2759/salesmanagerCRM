@@ -80,9 +80,7 @@ public class JavaMailUtil {
 
             message.setContent(emailContent);
             return message;
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (MessagingException | IOException e) {
             e.printStackTrace();
         }
         return null;
