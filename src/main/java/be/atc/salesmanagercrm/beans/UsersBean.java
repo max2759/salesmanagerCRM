@@ -344,7 +344,7 @@ public class UsersBean extends ExtendBean implements Serializable {
 
         if (!this.currentUser.isAuthenticated()) {
 
-            token.setRememberMe(true);
+//            token.setRememberMe(true);
 
             try {
                 this.currentUser.login(token);

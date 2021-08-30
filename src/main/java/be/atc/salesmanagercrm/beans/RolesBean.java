@@ -143,7 +143,7 @@ public class RolesBean extends ExtendBean implements Serializable {
     }
 
     public void addEntity() {
-        addRoles(this.rolesEntity);
+        addRoles(this.rolesEntityNew);
         rolesEntityList = findAll();
     }
 
