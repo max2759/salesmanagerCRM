@@ -27,7 +27,7 @@
 
 
                 <h:form id="form">
-                    <p:growl id="msg" life="2000"></p:growl>
+                    <p:growl id="msg" life="2000"/>
                     <p:tab id="displayAll" title="#{bundle['all']} (#{rolesBean.rolesEntities.size()})">
                         <p:dataTable paginator="true" rows="10"
                                      selection="#{rolesBean.selectedRoleEntity}" selectionMode="single"
@@ -41,7 +41,7 @@
                                      rendered="#{rolesBean.rolesEntities.size eq 0 ? false : true}"
                                      value="#{rolesBean.rolesEntityList}">
 
-                            <p:column width="500" headerText="#{bundle['role.label']}"
+                            <p:column colspan="10" headerText="#{bundle['role.label']}"
                                       sortBy="#{role.label}"
                                       filterBy="#{role.label}"
                                       filterMatchMode="contains">
@@ -54,7 +54,7 @@
                             </p:column>
 
 
-                            <p:column colspan="1" width="70">
+                            <p:column colspan="2">
                                 <p:commandLink
                                         actionListener="#{rolesBean.initialiseDialogRoleId(role.id)}"
                                         update="updateRoleDialogForm:updateRoleDialog"
@@ -62,11 +62,8 @@
                                         styleClass="NavyButton">
                                     <i class="ui-icon ui-icon-create"></i>
                                 </p:commandLink>
-                            </p:column>
-
-                            <p:column>
                                 <h:panelGroup rendered="#{role.active}">
-                                    <p:commandLink update="@form"
+                                    <p:commandLink update="@(form)"
                                                    action="#{rolesBean.delete(role.id)}">
                                         <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                                    icon="fa fa-warning"/>
@@ -74,6 +71,15 @@
                                         <f:param name="idEntity" value="#{role.id}"/>
                                         <f:param name="typeEntities" value="all"/>
                                     </p:commandLink>
+
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                                        <p:commandButton value="#{bundle['yes']}" type="button"
+                                                         styleClass="ui-confirmdialog-yes GreenButton"
+                                                         icon="ui-icon-check"/>
+                                        <p:commandButton value="#{bundle['no']}" type="button"
+                                                         styleClass="ui-confirmdialog-no RedButton"
+                                                         icon="ui-icon-close"/>
+                                    </p:confirmDialog>
                                 </h:panelGroup>
 
                                 <h:panelGroup rendered="#{not role.active}">
@@ -127,8 +133,7 @@
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:inputText value="#{rolesBean.rolesEntityNew.label}"
-                                         placeholder="#{rolesBean.roleForDialog.label}">
+                            <p:inputText value="#{rolesBean.rolesEntityNew.label}">
                                 <f:validator validatorId="roleLabelValidator"></f:validator>
                             </p:inputText>
 
@@ -143,7 +148,7 @@
 
             </h:form>
 
-            <p:messages id="messages" showDetail="true">
+            <p:messages id="messages" showDetail="false">
                 <p:autoUpdate/>
             </p:messages>
 
