@@ -7,7 +7,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "conversations", schema = "salesmanagercrm")
 @NamedQueries({
-        @NamedQuery(name = "Conversations.findAll", query = "select c from ConversationsEntity c order by c.creationDate asc"),
+        @NamedQuery(name = "Conversations.findAll", query = "select c from ConversationsEntity c order by c.creationDate desc "),
 
 })
 public class ConversationsEntity {

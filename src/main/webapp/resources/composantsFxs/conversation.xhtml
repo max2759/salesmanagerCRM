@@ -30,7 +30,9 @@
                             <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
                                     </p:outputLabel>
                                     <h:outputText
-                                            value="    #{convers.usersByIdUsers.lastname} #{convers.usersByIdUsers.firstname} #{bundle['say']}: #{convers.message}"/>
+                                            value="#{convers.usersByIdUsers.lastname} #{convers.usersByIdUsers.firstname} #{bundle['say']}:"/>
+                                    <h:outputText styleClass="displayInlineBlock"
+                                                  value="#{convers.message}"/>
                                 </span>
                             </li>
                         </ui:repeat>
