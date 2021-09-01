@@ -147,6 +147,11 @@ public class TasksBean extends ExtendBean implements Serializable {
         loadListEntities("displayByCompany");
     }
 
+    public void listEntitiesDueToday() {
+        log.info("TasksBean => method : listEntitiesCompanies()");
+        loadListEntities("displayToday");
+    }
+
     /**
      * Create new instance for objects
      */
@@ -364,7 +369,7 @@ public class TasksBean extends ExtendBean implements Serializable {
             log.info("id company : " + companiesBean.getCompaniesEntity().getId());
             log.info("id User : " + usersBean.getUsersEntity().getId());
 
-            tasksEntities = findTasksEntityByCompaniesByIdCompanies(companiesBean.getCompaniesEntity(), usersBean.getUsersEntity());
+            this.tasksEntities = findTasksEntityByCompaniesByIdCompanies(companiesBean.getCompaniesEntity(), usersBean.getUsersEntity());
         } else if (typeLoad.equalsIgnoreCase("displayByContact")) {
             if (contactsBean.getContactsEntity() == null) {
                 return;
@@ -372,18 +377,23 @@ public class TasksBean extends ExtendBean implements Serializable {
             log.info("id contact : " + contactsBean.getContactsEntity().getId());
             log.info("id User : " + usersBean.getUsersEntity().getId());
 
-            tasksEntities = findTasksEntityByContactsByIdContacts(contactsBean.getContactsEntity(), usersBean.getUsersEntity());
+            this.tasksEntities = findTasksEntityByContactsByIdContacts(contactsBean.getContactsEntity(), usersBean.getUsersEntity());
+        } else if (typeLoad.equalsIgnoreCase("displayToday")) {
+            LocalDateTime dateTime = LocalDate.now().atTime(0, 0, 0, 0).plusDays(1);
+
+            this.tasksEntities = findAll(usersBean.getUsersEntity());
+            this.tasksEntitiesDueToday = this.tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isBefore(dateTime) && t.getEndDate().isAfter(LocalDateTime.now())).collect(Collectors.toList());
         } else if (typeLoad.equalsIgnoreCase("all")) {
 
             LocalDateTime dateTime = LocalDate.now().atTime(0, 0, 0, 0).plusDays(1);
 
-            tasksEntities = findAll(usersBean.getUsersEntity());
+            this.tasksEntities = findAll(usersBean.getUsersEntity());
 
             this.tasksEntitiesToCome = tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isAfter(LocalDateTime.now())).collect(Collectors.toList());
             this.tasksEntitiesDueToday = tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isBefore(dateTime) && t.getEndDate().isAfter(LocalDateTime.now())).collect(Collectors.toList());
             this.tasksEntitiesToLate = tasksEntities.stream().filter(t -> t.getEndDate() != null && t.getEndDate().isBefore(LocalDateTime.now())).collect(Collectors.toList());
 
-            tasksEntitiesFinished = findTasksFinished(usersBean.getUsersEntity());
+            this.tasksEntitiesFinished = findTasksFinished(usersBean.getUsersEntity());
         }
     }
 
