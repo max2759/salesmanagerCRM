@@ -411,6 +411,15 @@ public class UsersBean extends ExtendBean implements Serializable {
         session.setAttribute("username", usersEntity.getUsername());
         log.info("usersEntity : " + session.getAttribute("idUser"));
 
+        try {
+            usersEntity = findByUsername(usersEntity.getUsername());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
         FacesContext ctx = FacesContext.getCurrentInstance();
         ctx.getExternalContext().redirect("app/dashboard.xhtml?faces-redirect=true");
     }
@@ -504,8 +513,63 @@ public class UsersBean extends ExtendBean implements Serializable {
         return usersEntities;
     }
 
-    private UsersEntity findById(EntityManager em, int id) {
-        return dao.findById(em, id);
+    protected UsersEntity findById(int id) {
+        log.info("UsersBean => method : findById(int id)");
+
+        FacesMessage msg;
+
+        if (id == 0) {
+            log.error("ID User is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            throw new EntityNotFoundException(
+                    "L ID de l utilisateur est incorrect", ErrorCodes.USER_NOT_FOUND
+            );
+        }
+
+        EntityManager em = EMF.getEM();
+        try {
+            return dao.findById(em, id);
+        } catch (Exception ex) {
+            log.info("Nothing");
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur avec l ID " + id + " n a ete trouve dans la BDD",
+                    ErrorCodes.USER_NOT_FOUND
+            );
+        } finally {
+            em.clear();
+            em.close();
+        }
+    }
+
+
+    protected UsersEntity findByUsername(String label) {
+        log.info("UsersBean => method : findByUsername(String label)");
+
+        FacesMessage msg;
+
+        if (label == null || label.isEmpty()) {
+            log.error("Username is null");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            throw new EntityNotFoundException(
+                    "Le nom d utilisateur est incorrect", ErrorCodes.USER_NOT_FOUND
+            );
+        }
+
+        EntityManager em = EMF.getEM();
+        try {
+            return dao.findByUsername(em, label);
+        } catch (Exception ex) {
+            log.info("Nothing");
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur avec le label " + label + " n a ete trouve dans la BDD",
+                    ErrorCodes.USER_NOT_FOUND
+            );
+        } finally {
+            em.clear();
+            em.close();
+        }
     }
 
 
@@ -522,10 +586,19 @@ public class UsersBean extends ExtendBean implements Serializable {
 
 //pour les mdp, comparer en db AVANT hashage si il correspondent. Si ils corresepondent pas, on le hash et on le modifie
         // !!! verifier avant d'"hasher le mdp si la regex est ok et si ce n'est pas un mdp deja hashé
-        EntityManager em = EMF.getEM();
-        CheckEntities checkEntities = new CheckEntities();
 
-        UsersEntity usersEntityOld = dao.findById(em, usersEntityOther.getId());
+        CheckEntities checkEntities = new CheckEntities();
+        UsersEntity usersEntityOld;
+        try {
+            usersEntityOld = findById(usersEntityOther.getId());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
+
         String usernameOld = usersEntityOld.getUsername();
         if (usernameOld.equals(usersEntityOther.getUsername())) {
             try {
@@ -559,6 +632,7 @@ public class UsersBean extends ExtendBean implements Serializable {
             return;
         }
 
+        EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
         try {
             tx = em.getTransaction();
@@ -581,14 +655,8 @@ public class UsersBean extends ExtendBean implements Serializable {
 
     }
 
-    public void updateByUser() {
-        userUpdateByUser(this.usersEntity);
-        EntityManager em = EMF.getEM();
-        findById(em, usersEntity.getId());
-    }
-
     /**
-     * @param usersEntity
+     * @param usersEntity UsersEntity
      */
     private void userUpdateByUser(UsersEntity usersEntity) {
         FacesMessage msg;
@@ -732,22 +800,6 @@ public class UsersBean extends ExtendBean implements Serializable {
         em.close();
 
         return rolesEntities;
-    }
-
-
-    /**
-     * use for updateUserByUser
-     */
-    public void findUser() {
-
-        log.info(String.valueOf(usersEntity.getUsername()));
-        String username = usersEntity.getUsername();
-        //rechercher par pseudo
-        EntityManager em = EMF.getEM();
-        usersEntity = dao.findByUsername(em, username);
-        log.info(String.valueOf(usersEntity));
-        usersEntity = findById(em, usersEntity.getId());
-        log.info(String.valueOf(usersEntity));
     }
 
     /* private void findByUsernameAndPass(UsersEntity entity) {
