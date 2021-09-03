@@ -12,13 +12,13 @@
         <f:metadata>
             <f:viewAction action="#{contactsBean.createNewEntity}"/>
             <f:viewAction action="#{contactsBean.findAllActiveContacts}"/>
+            <f:viewAction action="#{contactTypesBean.findAllContactTypes}"/>
         </f:metadata>
 
         <p:growl id="msgs"/>
 
         <div class="ui-g">
             <div class="ui-g-12">
-
                 <div class="card card-w-title">
                     <h1>#{bundle['contacts.title']}</h1>
 
@@ -45,14 +45,10 @@
 
                         </p:tabView>
                     </h:form>
-
                 </div>
-
                 <fxs:createContacts id="createContacts"/>
-
-
             </div>
-
         </div>
+
     </ui:define>
 </ui:composition>

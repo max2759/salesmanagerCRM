@@ -16,66 +16,60 @@
                 modal="true"
                 id="companyModal" widgetVar="companyWidgetModal" responsive="true">
             <h:form>
+
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputText id="labelCompany" value="#{companiesBean.companiesEntity.label}" required="true"
-                                     requiredMessage="#{bundle['company.labelNotValid']}"/>
-                        <label>#{bundle['company.labelName']}</label>
+                    <p:outputLabel value="#{bundle['company.labelName']}" for="labelCompany"/>
+                    <p:inputText id="labelCompany" value="#{companiesBean.companiesEntity.label}" required="true"
+                                 requiredMessage="#{bundle['company.labelNotValid']}">
                         <p:ajax update="validateCompany msg" event="keyup"/>
-                    </h:panelGroup>
+                    </p:inputText>
 
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputText id="domainName" value="#{companiesBean.companiesEntity.domainName}">
-                            <f:validator validatorId="companyDomainValidator"/>
-                        </p:inputText>
-                        <label>#{bundle['company.domainName']}</label>
-                    </h:panelGroup>
+                    <p:outputLabel value="#{bundle['company.chooseCompanyType']}" for="companyTypesDisplay"/>
+                    <p:selectOneMenu id="companyTypesDisplay"
+                                     value="#{companiesBean.companiesEntity.companyTypesByIdCompanyTypes}"
+                                     converter="companyTypesConverter" required="true"
+                                     requiredMessage="#{bundle['company.companiesTypeNotValid']}">
+                        <f:selectItems value="#{companyTypesBean.companyTypesEntities}" var="companyTypes"
+                                       itemValue="#{companyTypes}" itemLabel="#{companyTypes.label}"/>
+                        <p:ajax update="validateCompany msg" event="keyup"/>
+                    </p:selectOneMenu>
 
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:autoComplete id="branchActivitiesDisplay" dropdown="true"
-                                        value="#{companiesBean.companiesEntity.branchActivitiesByIdBranchActivities}"
-                                        completeMethod="#{branchActivitiesBean.completeBranchActivities}"
-                                        var="branchActivities"
-                                        itemLabel="#{branchActivities.label}"
-                                        itemValue="#{branchActivities}"
-                                        converter="branchActivitiesConverter"
-                                        scrollHeight="250" placeholder="#{bundle['company.chooseBranchActivity']}"/>
-                    </h:panelGroup>
+                    <p:outputLabel value="#{bundle['company.domainName']}" for="domainName"/>
+                    <p:inputText id="domainName" value="#{companiesBean.companiesEntity.domainName}">
+                        <f:validator validatorId="companyDomainValidator"/>
+                    </p:inputText>
 
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:autoComplete id="companyTypesDisplay" dropdown="true"
-                                        value="#{companiesBean.companiesEntity.companyTypesByIdCompanyTypes}"
-                                        completeMethod="#{companyTypesBean.completeCompanyTypes}" var="companyTypes"
-                                        itemLabel="#{companyTypes.label}"
-                                        itemValue="#{companyTypes}"
-                                        converter="companyTypesConverter"
-                                        scrollHeight="250" placeholder="#{bundle['company.chooseCompanyType']}"/>
-                        <p:ajax update="validateCompany" event="keyup"/>
-                    </h:panelGroup>
+                    <p:outputLabel value="#{bundle['company.chooseBranchActivity']}" for="branchActivitiesDisplay"/>
+                    <p:autoComplete id="branchActivitiesDisplay" dropdown="true"
+                                    value="#{companiesBean.companiesEntity.branchActivitiesByIdBranchActivities}"
+                                    completeMethod="#{branchActivitiesBean.completeBranchActivities}"
+                                    var="branchActivities"
+                                    itemLabel="#{branchActivities.label}"
+                                    itemValue="#{branchActivities}"
+                                    converter="branchActivitiesConverter"
+                                    scrollHeight="250" placeholder="#{bundle['company.chooseBranchActivity']}"/>
 
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputNumber id="employeesNumber" value="#{companiesBean.companiesEntity.employeesNumber}"
-                                       validatorMessage="#{bundle['company.employeesNumberNotValid']}">
-                            <f:validateLongRange minimum="0"/>
-                        </p:inputNumber>
-                        <label>#{bundle['company.employessNumber']}</label>
-                    </h:panelGroup>
 
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputNumber id="revenue" value="#{companiesBean.companiesEntity.revenue}"
-                                       validatorMessage="#{bundle['company.employeesNumberNotValid']}">
-                            <f:validateLongRange minimum="0"/>
-                        </p:inputNumber>
-                        <label>#{bundle['company.revenue']}</label>
-                    </h:panelGroup>
+                    <p:outputLabel value="#{bundle['company.employessNumber']}" for="employeesNumber"/>
+                    <p:inputNumber id="employeesNumber" value="#{companiesBean.companiesEntity.employeesNumber}"
+                                   validatorMessage="#{bundle['company.employeesNumberNotValid']}">
+                        <f:validateLongRange minimum="0"/>
+                    </p:inputNumber>
 
-                    <h:panelGroup styleClass="md-inputfield">
-                        <p:inputText id="linkedinPage" value="#{companiesBean.companiesEntity.linkedInPage}">
-                            <f:validator validatorId="linkedinPageValidator"/>
-                        </p:inputText>
-                        <label>#{bundle['company.linkedInPage']}</label>
-                    </h:panelGroup>
+
+                    <p:outputLabel value="#{bundle['company.revenue']}" for="revenue"/>
+                    <p:inputNumber id="revenue" value="#{companiesBean.companiesEntity.revenue}"
+                                   validatorMessage="#{bundle['company.employeesNumberNotValid']}">
+                        <f:validateLongRange minimum="0"/>
+                    </p:inputNumber>
+
+
+                    <p:outputLabel value="#{bundle['company.linkedInPage']}" for="linkedinPage"/>
+                    <p:inputText id="linkedinPage" value="#{companiesBean.companiesEntity.linkedInPage}">
+                        <f:validator validatorId="linkedinPageValidator"/>
+                    </p:inputText>
+
                 </p:panelGrid>
 
                 <div align="right">

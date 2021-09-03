@@ -33,6 +33,10 @@ public class ContactTypesBean extends ExtendBean implements Serializable {
     @Setter
     private ContactTypesDao contactTypesDao = new ContactTypesDaoImpl();
 
+    @Getter
+    @Setter
+    private List<ContactTypesEntity> contactTypesEntities;
+
     /**
      * Find ContactType by ID
      *
@@ -67,11 +71,18 @@ public class ContactTypesBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * Public method that call findAll
+     */
+    public void findAllContactTypes() {
+        contactTypesEntities = findAll();
+    }
+
+    /**
      * Find all ContactTypes entities
      *
      * @return List of Contact Types
      */
-    public List<ContactTypesEntity> findAll() {
+    protected List<ContactTypesEntity> findAll() {
 
         EntityManager em = EMF.getEM();
 

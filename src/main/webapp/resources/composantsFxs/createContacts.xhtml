@@ -19,61 +19,49 @@
             <h:form>
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputText id="contactFirstName" value="#{contactsBean.contactsEntity.firstname}"
-                                     required="true" requiredMessage="#{bundle['contacts.firstnameNotValid']}"/>
-                        <label>#{bundle['contacts.firstname']}</label>
+                    <p:outputLabel value="#{bundle['contacts.firstname']}" for="contactFirstName"/>
+                    <p:inputText id="contactFirstName" value="#{contactsBean.contactsEntity.firstname}"
+                                 required="true" requiredMessage="#{bundle['contacts.firstnameNotValid']}">
                         <p:ajax update="validateContacts msg" event="keyup"/>
-                    </h:panelGroup>
+                    </p:inputText>
 
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputText id="contactLastName" value="#{contactsBean.contactsEntity.lastname}"
-                                     required="true" requiredMessage="#{bundle['contacts.lastnameNotValid']}"/>
-                        <label>#{bundle['contacts.lastname']}</label>
+                    <p:outputLabel value="#{bundle['contacts.lastname']}" for="contactLastName"/>
+                    <p:inputText id="contactLastName" value="#{contactsBean.contactsEntity.lastname}"
+                                 required="true" requiredMessage="#{bundle['contacts.lastnameNotValid']}">
                         <p:ajax update="validateContacts msg" event="keyup"/>
-                    </h:panelGroup>
+                    </p:inputText>
 
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}">
-                            <f:validator validatorId="contactEmailValidator"/>
-                        </p:inputText>
-                        <label>#{bundle['contacts.emailLabel']}</label>
-                    </h:panelGroup>
-
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:autoComplete id="jobTitlesDisplay" dropdown="true"
-                                        value="#{contactsBean.contactsEntity.jobTitlesByIdJobTitles}"
-                                        completeMethod="#{jobtitlesBean.completeJobTitles}"
-                                        var="jobtitles"
-                                        itemLabel="#{jobtitles.label}"
-                                        itemValue="#{jobtitles}"
-                                        converter="jobTitlesConverter"
-                                        scrollHeight="250" placeholder="#{bundle['contacts.chooseJobTitles']}"/>
-                    </h:panelGroup>
-
-
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:inputMask id="phoneNumber" value="#{contactsBean.contactsEntity.phoneNumber}"
-                                     mask="+32 999999999">
-                            <f:validator validatorId="contactPhoneNumberValidator"/>
-                        </p:inputMask>
-                        <label>#{bundle['contacts.phoneNumberLabel']}</label>
-                    </h:panelGroup>
-
-                    <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                        <p:autoComplete id="contactTypeDisplay" dropdown="true"
-                                        value="#{contactsBean.contactsEntity.contactTypesByIdContactTypes}"
-                                        completeMethod="#{contactTypesBean.completeContactType}"
-                                        var="contactType"
-                                        itemLabel="#{contactType.label}"
-                                        itemValue="#{contactType}"
-                                        converter="contactTypesConverter"
-                                        required="true"
-                                        requiredMessage="#{bundle['contacts.ContactTypeNotValid']}"
-                                        scrollHeight="250" placeholder="#{bundle['contacts.chooseContactType']}"
-                        />
+                    <p:outputLabel for="contactTypeDisplay" value="#{bundle['contacts.chooseContactType']}"/>
+                    <p:selectOneMenu id="contactTypeDisplay"
+                                     value="#{contactsBean.contactsEntity.contactTypesByIdContactTypes}"
+                                     converter="contactTypesConverter" required="true"
+                                     requiredMessage="#{bundle['contacts.ContactTypeNotValid']}">
+                        <f:selectItems value="#{contactTypesBean.contactTypesEntities}" var="contactType"
+                                       itemValue="#{contactType}" itemLabel="#{contactType.label}"/>
                         <p:ajax update="validateContacts msg" event="keyup"/>
-                    </h:panelGroup>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="contactEmail" value="#{bundle['contacts.emailLabel']}"/>
+                    <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}">
+                        <f:validator validatorId="contactEmailValidator"/>
+                    </p:inputText>
+
+                    <p:outputLabel for="jobTitlesDisplay" value="#{bundle['contacts.chooseJobTitles']}"/>
+                    <p:autoComplete id="jobTitlesDisplay" dropdown="true"
+                                    value="#{contactsBean.contactsEntity.jobTitlesByIdJobTitles}"
+                                    completeMethod="#{jobtitlesBean.completeJobTitles}"
+                                    var="jobtitles"
+                                    itemLabel="#{jobtitles.label}"
+                                    itemValue="#{jobtitles}"
+                                    converter="jobTitlesConverter"
+                                    scrollHeight="250" placeholder="#{bundle['contacts.chooseJobTitles']}"/>
+
+                    <p:outputLabel for="phoneNumber" value="#{bundle['contacts.phoneNumberLabel']}"/>
+                    <p:inputMask id="phoneNumber" value="#{contactsBean.contactsEntity.phoneNumber}"
+                                 mask="+32 999999999">
+                        <f:validator validatorId="contactPhoneNumberValidator"/>
+                    </p:inputMask>
+
                 </p:panelGrid>
 
                 <div align="right">
