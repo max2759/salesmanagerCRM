@@ -64,4 +64,29 @@ public class RolesDaoImpl implements RolesDao {
     }
 
 
+    @Override
+    public RolesEntity findRoleForConnection(EntityManager em, String label) {
+        try {
+            return em.createNamedQuery("Roles.checkRoleForConnection",
+                    RolesEntity.class)
+                    .setParameter("label", label)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public RolesEntity findActiveById(EntityManager em, RolesEntity rolesEntity) {
+        try {
+            return em.createNamedQuery("Roles.checkRoleActive",
+                    RolesEntity.class)
+                    .setParameter("id", rolesEntity.getId())
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+
 }

@@ -58,7 +58,7 @@
 
             <h:form id="updateUserDialogForm">
 
-                <p:dialog header="Modal Dialog" widgetVar="updateUser" modal="true"
+                <p:dialog header="#{bundle['users.update']}" widgetVar="updateUser" modal="true"
                           responsive="true" id="updateUserDialog">
 
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
@@ -74,13 +74,6 @@
                                          placeholder="#{usersBean.userForDialog.lastname}"
                                          required="true"/>
                             <label>#{bundle['lastname']}</label>
-                        </h:panelGroup>
-
-                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:inputText value="#{usersBean.usersEntityOther.username}"
-                                         placeholder="#{usersBean.userForDialog.username}"
-                                         required="true"/>
-                            <label>#{bundle['user.username']}</label>
                         </h:panelGroup>
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
@@ -102,7 +95,7 @@
                             </p:selectOneMenu>
                         </h:panelGroup>
 
-                        <p:commandButton value="Confirmer Valider" action="#{usersBean.updateByAdmin}"
+                        <p:commandButton value="#{bundle['confirmation']}" action="#{usersBean.updateByAdmin}"
                                          update="@(form) msgs"/>
                     </p:panelGrid>
                 </p:dialog>
@@ -113,7 +106,7 @@
 
 
             <h:form id="addUserDialogForm">
-                <p:dialog header="Modal Dialog" widgetVar="addUser" modal="true"
+                <p:dialog header="#{bundle['register.register']}" widgetVar="addUser" modal="true"
                           responsive="true" id="addUserDialog">
 
                     <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
@@ -165,8 +158,8 @@
 
                         <p:commandButton value="#{bundle['validate']}" action="#{usersBean.registerEntity}"
                                          id="validateRole"
-                                         update="@(form)"
-                                         process="@form" ajax="=false"/>
+                                         update="@(form) msgs"
+                                         process="@form"/>
 
                     </p:panelGrid>
 

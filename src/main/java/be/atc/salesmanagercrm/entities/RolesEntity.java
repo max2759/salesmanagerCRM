@@ -11,6 +11,8 @@ import java.util.Objects;
         @NamedQuery(name = "Roles.findByLabel", query = "select r from RolesEntity r where r.label = :label"),
         @NamedQuery(name = "Roles.findForDeleteSafe", query = "select r from RolesEntity r join UsersEntity u on u.rolesByIdRoles.id = r.id where r.id = :id and u.active = true"),
         @NamedQuery(name = "Roles.findAllActiveRoles", query = "select r from RolesEntity r where r.active = true"),
+        @NamedQuery(name = "Roles.checkRoleForConnection", query = "select r from RolesEntity r where r.active = true and r.label = :label"),
+        @NamedQuery(name = "Roles.checkRoleActive", query = "select r from RolesEntity r where r.active = true and r.id = :id"),
 })
 public class RolesEntity {
     private int id;

@@ -408,6 +408,13 @@ public class CheckEntities extends ExtendBean implements Serializable {
                         "Ce rôle n'existe pas: " + entity.getId(), ErrorCodes.ROLES_NOT_FOUND
                 );
             }
+            rolesEntity = rolesDao.findActiveById(em, entity);
+            if (rolesEntity == null) {
+                log.warn("Roles doesn't exists yet" + entity.getId());
+                throw new EntityNotFoundException(
+                        "Ce rôle est inactif: " + entity.getId(), ErrorCodes.ROLES_NOT_FOUND
+                );
+            }
         }
     }
 
@@ -481,6 +488,21 @@ public class CheckEntities extends ExtendBean implements Serializable {
             }
         }
     }
+
+
+    public void checkRoleForConnection(UsersEntity entity) {
+        if (entity != null) {
+            EntityManager em = EMF.getEM();
+            RolesEntity entityActive = rolesDao.findRoleForConnection(em, entity.getRolesByIdRoles().getLabel());
+            if (entityActive == null) {
+                log.warn("role is inactive" + entity.getId());
+                throw new EntityNotFoundException(
+                        "Le role est inactif " + entity.getId(), ErrorCodes.ROLES_NOT_VALID
+                );
+            }
+        }
+    }
+
 
     public void checkUserByUsernameAndPassword(UsersEntity entity, String password) {
         if (entity != null) {
