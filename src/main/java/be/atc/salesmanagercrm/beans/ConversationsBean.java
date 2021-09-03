@@ -237,7 +237,6 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     }
 
 
-
     public void get10convers() {
         conversationsEntityList = find10convers();
         log.info("avant modif :" + conversationsEntityList);
