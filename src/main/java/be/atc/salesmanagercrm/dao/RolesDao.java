@@ -21,4 +21,9 @@ public interface RolesDao {
 
     List<RolesEntity> findForDeleteSafe(EntityManager em, int id);
 
+    RolesEntity findRoleForConnection(EntityManager em, String label);
+
+    RolesEntity findActiveById(EntityManager em, RolesEntity rolesEntity);
+
+
 }

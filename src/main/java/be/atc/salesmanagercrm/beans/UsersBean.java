@@ -10,7 +10,6 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
-import be.atc.salesmanagercrm.utils.JavaMailUtil;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.utils.PDFUtil;
 import be.atc.salesmanagercrm.validators.UsersValidator;
@@ -136,7 +135,8 @@ public class UsersBean extends ExtendBean implements Serializable {
 
 
     public void initialiseDialogUserId(Integer idUser) {
-
+        //  userForDialog = new UsersEntity();
+        log.info(String.valueOf(idUser));
         if (idUser == null || idUser < 1) {
             return;
         }
@@ -275,7 +275,7 @@ public class UsersBean extends ExtendBean implements Serializable {
                 dao.register(em, entityToAdd);
                 tx.commit();
                 generatePDF(passwordUncrypt);
-                JavaMailUtil.sendMail(entityToAdd);
+                //           JavaMailUtil.sendMail(entityToAdd);
                 log.info("Persist ok");
                 loadListEntities();
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.register"), null);
@@ -377,7 +377,7 @@ public class UsersBean extends ExtendBean implements Serializable {
 
         log.info("test role : " + this.currentUser);
         //test a role:
-        if (this.currentUser.hasRole("Admin")) {
+       /* if (this.currentUser.hasRole("Admin")) {
             log.info("Bravo tu es Admin");
         } else {
             log.info("Hello, mere mortal.");
@@ -400,7 +400,7 @@ public class UsersBean extends ExtendBean implements Serializable {
         } else {
             log.info("Sorry, lightsaber rings are for schwartz masters only.");
         }
-
+*/
         //all done - log out!
         //     this.currentUser.logout();
 
@@ -412,7 +412,7 @@ public class UsersBean extends ExtendBean implements Serializable {
         log.info("usersEntity : " + session.getAttribute("idUser"));
 
         FacesContext ctx = FacesContext.getCurrentInstance();
-        ctx.getExternalContext().redirect("app/userUpdateByUser.xhtml?faces-redirect=true");
+        ctx.getExternalContext().redirect("app/dashboard.xhtml?faces-redirect=true");
     }
 
 
@@ -450,7 +450,17 @@ public class UsersBean extends ExtendBean implements Serializable {
         FacesMessage msg;
 
         EntityManager em = EMF.getEM();
+        CheckEntities checkEntities = new CheckEntities();
         UsersEntity usersEntity1 = dao.findById(em, id);
+
+        try {
+            checkEntities.checkRoleForConnection(usersEntity1);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roleInactive"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
 
         usersEntity1.setActive(true);
 
@@ -532,13 +542,13 @@ public class UsersBean extends ExtendBean implements Serializable {
                 return;
             }
 
-            try {
+         /*   try {
                 checkEntities.checkUserByUsername(usersEntityOther);
             } catch (InvalidEntityException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
                 return;
             }
-            usersEntityOther.setUsername(usersEntityOther.getUsername());
+            usersEntityOther.setUsername(usersEntityOther.getUsername());*/
         }
 
 
@@ -754,6 +764,20 @@ public class UsersBean extends ExtendBean implements Serializable {
             log.error("Register is not valide {}", entity);
             throw new InvalidEntityException("L'inscription n est pas valide", ErrorCodes.USER_NOT_VALID, errors);
         }
+    }
+
+    private void validateRole(UsersEntity entity) {
+        FacesMessage msg;
+        CheckEntities checkEntities = new CheckEntities();
+        try {
+            checkEntities.checkRoleForConnection(entity);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "user"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
     }
 
     /**

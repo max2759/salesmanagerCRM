@@ -73,10 +73,12 @@
             </p:column>
 
 
+
             <p:column colspan="1" width="70">
                 <p:commandLink
                         actionListener="#{usersBean.initialiseDialogUserId(user.id)}"
                         oncomplete="PF('updateUser').show();return false;"
+                        update="@(form) msgs"
                         styleClass="NavyButton">
                     <i class="ui-icon ui-icon-create"></i>
                 </p:commandLink>
