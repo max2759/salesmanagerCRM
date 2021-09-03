@@ -17,7 +17,7 @@
         <h:form>
 
             <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                <p:outputLabel value="#{bundle['title']} :" for="titleUpdate" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['title']} :" for="titleUpdate"/>
                 <p:inplace>
                     <p:inputText id="titleUpdate" value="#{vouchersBean.vouchersEntity.title}"
                                  placeholder="#{bundle['title']}"
@@ -26,7 +26,7 @@
                     </p:inputText>
                 </p:inplace>
 
-                <p:outputLabel value="#{bundle['vouchers.status']}:" for="voucherStatus" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['vouchers.status']}:" for="voucherStatus"/>
                 <p:inplace emptyLabel="..."
                            label="#{vouchersBean.vouchersEntity.voucherStatusByIdVoucherStatus.label}"
                            effectSpeed="fast" event="click">
@@ -40,7 +40,7 @@
                     </p:selectOneMenu>
                 </p:inplace>
 
-                <p:outputLabel value="#{bundle['priority']}:" for="voucherPriority" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['priority']}:" for="voucherPriority"/>
                 <p:inplace emptyLabel="..."
                            label="#{vouchersBean.vouchersEntity.priority.label}"
                            effectSpeed="fast" event="click">
@@ -56,7 +56,7 @@
             </p:panelGrid>
             <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
-                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
                 <p:inplace emptyLabel="..."
                            label="#{vouchersBean.vouchersEntity.contactsByIdContacts.lastname.concat(' '.concat(vouchersBean.vouchersEntity.contactsByIdContacts.firstname))}">
                     <p:autoComplete id="Contact" value="#{vouchersBean.vouchersEntity.contactsByIdContacts}"
@@ -70,7 +70,7 @@
                                     groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
                 </p:inplace>
 
-                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
                 <p:inplace emptyLabel="..." label="#{vouchersBean.vouchersEntity.companiesByIdCompanies.label}">
                     <p:autoComplete id="Company" value="#{vouchersBean.vouchersEntity.companiesByIdCompanies}"
                                     completeMethod="#{companiesBean.completeCompaniesContains}"
@@ -86,7 +86,7 @@
 
             <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
-                <p:outputLabel value="#{bundle['vouchers.description']} :" for="description" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['vouchers.description']} :" for="description"/>
                 <p:inplace emptyLabel="..." label="#{vouchersBean.vouchersEntity.description}">
                     <p:inputTextarea id="description" value="#{vouchersBean.vouchersEntity.description}"
                                      rows="4" cols="70"

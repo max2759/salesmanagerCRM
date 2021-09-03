@@ -18,7 +18,7 @@
 
             <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
-                <p:outputLabel value="#{bundle['title']} :" for="titleUpdate" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['title']} :" for="titleUpdate"/>
                 <p:inputText id="titleUpdate" value="#{taskTypesBean.taskTypesEntity.label}"
                              required="true"
                              requiredMessage="#{bundle['taskTypes.validator.title']}">

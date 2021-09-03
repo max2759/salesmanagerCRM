@@ -18,7 +18,7 @@
         <h:form id="createTaskTypesForm">
             <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
-                <p:outputLabel value="#{bundle['title']} :" for="title" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['title']} :" for="title"/>
                 <p:inputText id="title" value="#{taskTypesBean.taskTypesEntity.label}"
                              placeholder="#{bundle['title']}"
                              required="true"

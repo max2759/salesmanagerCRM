@@ -18,7 +18,7 @@
         <h:form id="formCreateNotes">
             <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
-                <p:outputLabel value="#{bundle['notes.title']} :" for="titleNote" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['notes.title']} :" for="titleNote"/>
                 <p:inputTextarea id="titleNote" value="#{notesBean.notesEntity.message}"
                                  rows="4" cols="100"
                                  required="true"

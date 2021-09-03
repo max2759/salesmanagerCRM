@@ -18,7 +18,7 @@
 
             <p:panelGrid id="panelGridUpdateTransaction" columns="2" layout="grid"
                          styleClass="ui-panelgrid-blank form-group">
-                <p:outputLabel value="#{bundle['title']} :" for="titleUpdate" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['title']} :" for="titleUpdate"/>
                 <p:inplace>
                     <p:inputText id="titleUpdate" value="#{transactionsBean.transactionsEntity.title}"
                                  required="true"
@@ -26,7 +26,7 @@
                     </p:inputText>
                 </p:inplace>
 
-                <p:outputLabel value="#{bundle['transactions.phase']}:" for="phase" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['transactions.phase']}:" for="phase"/>
                 <p:inplace emptyLabel="..."
                            label="#{transactionsBean.transactionsEntity.transactionPhasesByIdTransactionPhases.label}"
                            effectSpeed="fast" event="click">
@@ -40,7 +40,7 @@
                     </p:selectOneMenu>
                 </p:inplace>
 
-                <p:outputLabel value="#{bundle['amount']} :" for="amount" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['amount']} :" for="amount"/>
                 <p:inplace emptyLabel="..." label="#{transactionsBean.transactionsEntity.amount}">
                     <p:inputNumber id="amount" value="#{transactionsBean.transactionsEntity.amount}" symbol=" €"
                                    symbolPosition="s" placeholder="9.999,99 €"
@@ -50,13 +50,13 @@
                 </p:inplace>
 
                 <p:outputLabel for="datetimeCreation" value="#{bundle['transactions.creationDate']}:"
-                               styleClass="boldText"/>
+                />
                 <h:outputText id="datetimeCreation" value="#{transactionsBean.transactionsEntity.creationDate}">
                     <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
                 </h:outputText>
 
 
-                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:" styleClass="boldText"/>
+                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"/>
                 <p:inplace emptyLabel="..."
                            label="#{transactionsBean.transactionsEntity.endDate.dayOfMonth}/#{transactionsBean.transactionsEntity.endDate.monthValue}/#{transactionsBean.transactionsEntity.endDate.year}">
                     <p:calendar placeholder="#{bundle['dueDate']}:"
@@ -66,7 +66,7 @@
                     </p:calendar>
                 </p:inplace>
 
-                <p:outputLabel value="#{bundle['transactions.type']}:" for="type" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['transactions.type']}:" for="type"/>
                 <p:inplace emptyLabel="..."
                            label="#{transactionsBean.transactionsEntity.transactionTypesByIdTransactionTypes.label}"
                            effectSpeed="fast" event="click">
@@ -80,7 +80,7 @@
                     </p:selectOneMenu>
                 </p:inplace>
 
-                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
                 <p:inplace emptyLabel="..."
                            label="#{transactionsBean.transactionsEntity.contactsByIdContacts.lastname.concat(' '.concat(transactionsBean.transactionsEntity.contactsByIdContacts.firstname))}">
                     <p:autoComplete id="Contact" value="#{transactionsBean.transactionsEntity.contactsByIdContacts}"
@@ -95,7 +95,7 @@
                 </p:inplace>
 
 
-                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
                 <p:inplace emptyLabel="..." label="#{transactionsBean.transactionsEntity.companiesByIdCompanies.label}">
                     <p:autoComplete id="Company" value="#{transactionsBean.transactionsEntity.companiesByIdCompanies}"
                                     completeMethod="#{companiesBean.completeCompaniesContains}"

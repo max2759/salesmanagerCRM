@@ -19,7 +19,7 @@
 
             <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
-                <p:outputLabel value="#{bundle['title']} :" for="title" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['title']} :" for="title"/>
                 <p:inputText id="title" value="#{vouchersBean.vouchersEntity.title}"
                              placeholder="#{bundle['title']}"
                              required="true"
@@ -30,7 +30,7 @@
             </p:panelGrid>
             <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
-                <p:outputLabel value="#{bundle['vouchers.status']}:" for="voucherStatus" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['vouchers.status']}:" for="voucherStatus"/>
                 <p:selectOneMenu id="voucherStatus"
                                  value="#{vouchersBean.vouchersEntity.voucherStatusByIdVoucherStatus}"
                                  converter="voucherStatusConverter">
@@ -40,7 +40,7 @@
                                    itemLabel="#{voucherStatusEntities.label}"/>
                 </p:selectOneMenu>
 
-                <p:outputLabel value="#{bundle['priority']}:" for="voucherPriority" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['priority']}:" for="voucherPriority"/>
                 <p:selectOneMenu id="voucherPriority"
                                  value="#{vouchersBean.vouchersEntity.priority}">
                     <f:selectItems value="#{enumPriorityBean.enumPriority}"
@@ -49,7 +49,7 @@
                     <f:validator validatorId="enumPriorityValidator"/>
                 </p:selectOneMenu>
 
-                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
                 <p:autoComplete id="Contact" value="#{vouchersBean.vouchersEntity.contactsByIdContacts}"
                                 completeMethod="#{contactsBean.completeContactsContains}"
                                 var="Contact"
@@ -60,7 +60,7 @@
                                 converter="#{contactsConverter}"
                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
 
-                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
                 <p:autoComplete id="Company" value="#{vouchersBean.vouchersEntity.companiesByIdCompanies}"
                                 completeMethod="#{companiesBean.completeCompaniesContains}"
                                 var="Company"
@@ -75,7 +75,7 @@
             </p:panelGrid>
 
             <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
-                <p:outputLabel value="#{bundle['vouchers.description']} :" for="description" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['vouchers.description']} :" for="description"/>
                 <p:inputTextarea id="description" value="#{vouchersBean.vouchersEntity.description}"
                                  rows="4" cols="100"
                                  autoResize="false"

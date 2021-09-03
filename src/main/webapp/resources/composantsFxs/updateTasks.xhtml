@@ -18,7 +18,7 @@
         <h:form id="formUpdateTask">
             <p:panelGrid id="panelGridUpdateTasks1" columns="4" layout="grid"
                          styleClass="ui-panelgrid-blank form-group">
-                <p:outputLabel value="#{bundle['title']} :" for="acTitle" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['title']} :" for="acTitle"/>
                 <p:inputText id="acTitle" value="#{tasksBean.tasksEntity.title}"
                              required="true"
                              requiredMessage="#{bundle['task.validator.title']}"
@@ -26,7 +26,7 @@
                 </p:inputText>
 
 
-                <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskType" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskType"/>
                 <p:selectOneMenu id="taskType"
                                  value="#{tasksBean.tasksEntity.taskTypesByIdTaskTypes}"
                                  converter="taskTypeConverter">
@@ -36,7 +36,7 @@
                                    itemLabel="#{taskTypesEntities.label}"/>
                 </p:selectOneMenu>
 
-                <p:outputLabel value="#{bundle['priority']}:" for="taskPriority" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['priority']}:" for="taskPriority"/>
                 <p:selectOneMenu id="taskPriority"
                                  value="#{tasksBean.tasksEntity.priority}">
                     <f:selectItems value="#{enumPriorityBean.enumPriority}"
@@ -45,12 +45,12 @@
                     <f:validator validatorId="enumPriorityValidator"/>
                 </p:selectOneMenu>
 
-                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:" styleClass="boldText"/>
+                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"/>
                 <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
                             id="datetime" pattern="dd/MM/yyyy HH:mm"
                             mindate="#{tasksBean.tasksEntity.creationDate.plusMinutes(1)}"/>
 
-                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
                 <p:autoComplete id="Contact" value="#{tasksBean.tasksEntity.contactsByIdContacts}"
                                 completeMethod="#{contactsBean.completeContactsContains}"
                                 var="Contact"
@@ -61,7 +61,7 @@
                                 converter="#{contactsConverter}"
                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
 
-                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
                 <p:autoComplete id="Company" value="#{tasksBean.tasksEntity.companiesByIdCompanies}"
                                 completeMethod="#{companiesBean.completeCompaniesContains}"
                                 var="Company"
@@ -75,7 +75,7 @@
             </p:panelGrid>
             <p:panelGrid id="panelGridUpdateTasks2" columns="1" layout="grid"
                          styleClass="ui-panelgrid-blank form-group">
-                <p:outputLabel for="description" value="#{bundle['tasks.description']}:" styleClass="boldText"/>
+                <p:outputLabel for="description" value="#{bundle['tasks.description']}:"/>
                 <p:inputTextarea value="#{tasksBean.tasksEntity.description}" id="description"
                                  rows="6" cols="100"
                                  placeholder="#{bundle['tasks.description']}"

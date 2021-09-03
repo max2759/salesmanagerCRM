@@ -18,7 +18,7 @@
         <h:form id="createTransactionForm">
             <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
-                <p:outputLabel value="#{bundle['title']} :" for="title" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['title']} :" for="title"/>
                 <p:inputText id="title" value="#{transactionsBean.transactionsEntity.title}"
                              placeholder="#{bundle['title']}"
                              required="true"
@@ -27,7 +27,7 @@
                             event="keyup"/>
                 </p:inputText>
 
-                <p:outputLabel value="#{bundle['transactions.phase']}:" for="phase" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['transactions.phase']}:" for="phase"/>
                 <p:selectOneMenu id="phase"
                                  value="#{transactionsBean.transactionsEntity.transactionPhasesByIdTransactionPhases}"
                                  converter="transactionPhasesConverter">
@@ -37,18 +37,18 @@
                                    itemLabel="#{transactionPhasesEntities.label}"/>
                 </p:selectOneMenu>
 
-                <p:outputLabel value="#{bundle['amount']} :" for="amount" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['amount']} :" for="amount"/>
                 <p:inputNumber id="amount" value="#{transactionsBean.transactionsEntity.amount}" symbol=" €"
                                symbolPosition="s" placeholder="9.999,99 €"
                                decimalSeparator="," thousandSeparator=".">
                     <p:ajax update="amount"/>
                 </p:inputNumber>
 
-                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:" styleClass="boldText"/>
+                <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"/>
                 <p:calendar placeholder="#{bundle['dueDate']}:" value="#{transactionsBean.transactionsEntity.endDate}"
                             id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{transactionsBean.now}"/>
 
-                <p:outputLabel value="#{bundle['transactions.type']}:" for="type" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['transactions.type']}:" for="type"/>
                 <p:selectOneMenu id="type"
                                  value="#{transactionsBean.transactionsEntity.transactionTypesByIdTransactionTypes}"
                                  converter="transactionTypesConverter">
@@ -58,7 +58,7 @@
                                    itemLabel="#{transactionTypesEntities.label}"/>
                 </p:selectOneMenu>
 
-                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
                 <p:autoComplete id="Contact" value="#{transactionsBean.transactionsEntity.contactsByIdContacts}"
                                 completeMethod="#{contactsBean.completeContactsContains}"
                                 var="Contact"
@@ -69,7 +69,7 @@
                                 converter="#{contactsConverter}"
                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
 
-                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company" styleClass="boldText"/>
+                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
                 <p:autoComplete id="Company" value="#{transactionsBean.transactionsEntity.companiesByIdCompanies}"
                                 completeMethod="#{companiesBean.completeCompaniesContains}"
                                 var="Company"
