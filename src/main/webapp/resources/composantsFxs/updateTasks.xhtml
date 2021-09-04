@@ -80,7 +80,8 @@
                                  rows="6" cols="100"
                                  placeholder="#{bundle['tasks.description']}"
                                  autoResize="false"/>
-
+            </p:panelGrid>
+            <div align="right" class="mgin-top">
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
                                  id="buttonUpdateTask"
@@ -89,7 +90,7 @@
                                  action="#{tasksBean.updateEntity}">
                     <f:param name="typeEntities" value="all"/>
                 </p:commandButton>
-            </p:panelGrid>
+            </div>
         </h:form>
 
     </f:view>

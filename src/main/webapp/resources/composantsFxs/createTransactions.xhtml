@@ -80,8 +80,8 @@
                                 converter="#{companiesConverter}"
                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
             </p:panelGrid>
-            <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
-                <p:messages id="msg" closable="true" display="message"/>
+            <p:messages id="msg" closable="true" display="message"/>
+            <div align="right" class="mgin-top">
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
                                  id="buttonCreateTransaction"
@@ -91,7 +91,7 @@
                                  action="#{transactionsBean.saveEntity}"
                 >
                 </p:commandButton>
-            </p:panelGrid>
+            </div>
 
         </h:form>
 

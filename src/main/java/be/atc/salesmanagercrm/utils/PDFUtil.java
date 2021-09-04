@@ -16,7 +16,10 @@ import java.util.Locale;
  * @author Younes Arifi
  * This class is for generate PDF
  */
-public class PDFUtil {
+public final class PDFUtil {
+
+    private PDFUtil() {
+    }
 
     public static void generatePDF(UsersEntity usersEntity, String password) {
         String namePDF = usersEntity.getFirstname() + "-" + usersEntity.getLastname() + "_" + "Account" + usersEntity.getId() + "_SalesManager.pdf";
