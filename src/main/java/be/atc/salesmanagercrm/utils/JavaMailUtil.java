@@ -18,7 +18,10 @@ import java.util.Properties;
  * for send email
  */
 @Slf4j
-public class JavaMailUtil {
+public final class JavaMailUtil {
+
+    private JavaMailUtil() {
+    }
 
     public static void sendMail(UsersEntity usersEntity) {
 

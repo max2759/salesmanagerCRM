@@ -24,6 +24,8 @@
                              requiredMessage="#{bundle['taskTypes.validator.title']}">
                 </p:inputText>
 
+            </p:panelGrid>
+            <div align="right" class="mgin-top">
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  id="buttonUpdateTaskTypes"
                                  update="@(form) msgs"
@@ -32,7 +34,7 @@
                                  action="#{taskTypesBean.updateEntity}"
                 >
                 </p:commandButton>
-            </p:panelGrid>
+            </div>
 
         </h:form>
 

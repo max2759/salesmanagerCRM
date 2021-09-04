@@ -1,4 +1,4 @@
-package be.atc.salesmanagercrm.utils;
+package be.atc.salesmanagercrm.entities;
 
 import lombok.Getter;
 import lombok.Setter;

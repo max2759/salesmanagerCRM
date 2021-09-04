@@ -109,7 +109,7 @@
                 </p:inplace>
 
             </p:panelGrid>
-            <div align="right" style="padding-top: 10px" class="modalValidateBtn-margin-top"
+            <div align="right" class="mgin-top"
                  id="divActionUpdateTransaction">
                 <p:menuButton value="#{bundle['actions']}" id="buttonActionUpdateTransaction"
                               rendered="#{usersBean.currentUser.isPermitted('showTransactionHistories') or usersBean.currentUser.isPermitted('updateTransactions') or usersBean.currentUser.isPermitted('deleteTransactions')}">
@@ -152,9 +152,7 @@
                                  styleClass="ui-confirmdialog-no RedButton"
                                  icon="ui-icon-close"/>
             </p:confirmDialog>
-
         </h:form>
-
     </f:view>
 </cc:implementation>
 </html>

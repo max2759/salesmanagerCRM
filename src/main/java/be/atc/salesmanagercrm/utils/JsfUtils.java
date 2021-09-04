@@ -6,7 +6,10 @@ import java.util.ResourceBundle;
 /**
  * Class for internalization in class and bean...
  */
-public class JsfUtils {
+public final class JsfUtils {
+
+    private JsfUtils() {
+    }
 
     /**
      * This method return messages translated
