@@ -17,7 +17,7 @@
 
 
             <div class="card card-w-title">
-                <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
+                <p:growl id="msg" life="2000"/>
                 <h:form id="form">
                     <p:tab id="displayAll" title="#{bundle['all']} (#{conversationsBean.conversationsEntities.size()})">
                         <p:dataTable paginator="true" rows="10"
@@ -85,7 +85,7 @@
 
                             <p:column>
                                 <h:panelGroup rendered="#{convers.active}">
-                                    <p:commandLink update="@form"
+                                    <p:commandLink update="@form msg"
                                                    action="#{conversationsBean.delete(convers)}">
                                         <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                                    icon="fa fa-warning"/>
@@ -106,7 +106,7 @@
                                 <h:panelGroup rendered="#{not convers.active}">
                                     <p:commandButton value="#{bundle['activate']}"
                                                      action="#{conversationsBean.activate(convers)}"
-                                                     update="@(form)"/>
+                                                     update="@(form) msg"/>
                                 </h:panelGroup>
                             </p:column>
 
@@ -148,7 +148,7 @@
 
 
                         <p:commandButton value="Confirmer Valider" action="#{conversationsBean.updateEntity}"
-                                         update="@(form)"/>
+                                         update="@(form) msg"/>
                     </p:panelGrid>
                 </p:dialog>
 
