@@ -225,21 +225,18 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * Method that call findActiveCompanies and fill companiesEntityList
      */
     public void findAllActiveCompanies() {
-        loadListEntities("displayActiveCompany");
+        loadListEntities();
     }
 
     /**
      * method to know which entity to reload
-     *
-     * @param typeLoad String
      */
-    public void loadListEntities(String typeLoad) {
+    public void loadListEntities() {
 
-        if (typeLoad.equalsIgnoreCase("displayActiveCompany")) {
-            companiesEntityList = findActiveCompanies(usersBean.getUsersEntity());
-        } else if (typeLoad.equalsIgnoreCase("displayDisableCompany")) {
-            companiesEntitiesDisableList = findDisableCompanies(usersBean.getUsersEntity());
-        }
+        List<CompaniesEntity> companiesEntities = findAllCompaniesByIdUser(usersBean.getUsersEntity().getId());
+
+        this.companiesEntityList = companiesEntities.stream().filter(CompaniesEntity::isActive).collect(Collectors.toList());
+        this.companiesEntitiesDisableList = companiesEntities.stream().filter(c -> !c.isActive()).collect(Collectors.toList());
     }
 
     /**
@@ -251,7 +248,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         log.info("method : onTabChange()");
         log.info("event : " + event.getTab().getId());
 
-        loadListEntities(event.getTab().getId());
+//        loadListEntities();
     }
 
     /**
@@ -282,20 +279,15 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     /**
      * Find all Companies entities by userID
      *
-     * @param usersEntity UsersEntity
+     * @param id id
      * @return List CompaniesEntities
      */
-    protected List<CompaniesEntity> findAll(UsersEntity usersEntity) {
+    protected List<CompaniesEntity> findAllCompaniesByIdUser(int id) {
 
         log.info("Start method findAll");
 
-        if (usersEntity == null) {
-            log.error("User Entity is null");
-            return Collections.emptyList();
-        }
-
         EntityManager em = EMF.getEM();
-        List<CompaniesEntity> companiesEntities = companiesDao.findAll(em, usersEntity.getId());
+        List<CompaniesEntity> companiesEntities = companiesDao.findAllCompaniesByIdUser(em, id);
 
         em.clear();
         em.close();
@@ -665,7 +657,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         activeCompany(Integer.parseInt(getParam("companiesID")));
 
-        loadListEntities("displayDisableCompany");
+        loadListEntities();
 
     }
 
@@ -780,7 +772,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         delete(Integer.parseInt(getParam("companiesID")));
 
-        loadListEntities("displayActiveCompany");
+        loadListEntities();
     }
 
 

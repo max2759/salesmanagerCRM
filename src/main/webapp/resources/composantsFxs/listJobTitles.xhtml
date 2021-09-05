@@ -12,7 +12,9 @@
 <cc:implementation>
     <f:view>
         <p:dataTable var="jobtitles" value="#{jobtitlesBean.jobTitlesEntityList}" rows="10"
+                     selectionMode="single" reflow="true"
                      id="jobtitlesDatatable"
+                     rowKey="#{jobtitles.id}"
                      paginatorPosition="bottom"
                      selection="#{jobtitlesBean.selectedJobTitlesEntity}"
                      filteredValue="#{jobtitlesBean.jobTitlesEntitiesFiltered}"

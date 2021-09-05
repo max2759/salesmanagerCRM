@@ -137,7 +137,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
     }
 
     public void findAllActiveContacts() {
-        loadListEntities("displayActiveContacts");
+        loadListEntities();
     }
 
     /**
@@ -172,21 +172,19 @@ public class ContactsBean extends ExtendBean implements Serializable {
         log.info("method : onTabChange()");
         log.info("event : " + event.getTab().getId());
 
-        loadListEntities(event.getTab().getId());
+//        loadListEntities(event.getTab().getId());
     }
 
     /**
      * method to know which entity to reload
-     *
-     * @param typeLoad String
      */
-    public void loadListEntities(String typeLoad) {
+    public void loadListEntities() {
 
-        if (typeLoad.equalsIgnoreCase("displayActiveContacts")) {
-            contactsEntityList = findContactsEntityByIdUser(usersBean.getUsersEntity());
-        } else if (typeLoad.equalsIgnoreCase("displayDisableContacts")) {
-            contactsEntityDisableList = findDisableContacts(usersBean.getUsersEntity());
-        }
+        List<ContactsEntity> contactsEntities = findAllContactsEntityByIdUser(usersBean.getUsersEntity().getId());
+
+        this.contactsEntityList = contactsEntities.stream().filter(ContactsEntity::isActive).collect(Collectors.toList());
+        this.contactsEntityDisableList = contactsEntities.stream().filter(c -> !c.isActive()).collect(Collectors.toList());
+
     }
 
     /**
@@ -197,7 +195,19 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
         delete(Integer.parseInt(getParam("contactsID")));
 
-        loadListEntities("displayActiveContacts");
+        loadListEntities();
+    }
+
+    protected List<ContactsEntity> findAllContactsEntityByIdUser(int id) {
+
+        EntityManager em = EMF.getEM();
+
+        List<ContactsEntity> contactsEntityList1 = contactsDao.findAllContactsEntityByIdUser(em, id);
+
+        em.clear();
+        em.close();
+
+        return contactsEntityList1;
     }
 
     /**
@@ -209,7 +219,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
         activateContact(Integer.parseInt(getParam("contactsID")));
 
-        loadListEntities("displayDisableContacts");
+        loadListEntities();
     }
 
     /**

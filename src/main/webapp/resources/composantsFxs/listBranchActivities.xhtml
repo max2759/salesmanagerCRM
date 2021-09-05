@@ -13,8 +13,9 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
-
         <p:dataTable var="branchActivities" value="#{branchActivitiesBean.branchActivitiesEntityList}" rows="10"
+                     selectionMode="single" reflow="true"
+                     rowKey="#{branchActivities.id}"
                      id="branchActivitiesDatatable"
                      paginatorPosition="bottom"
                      selection="#{branchActivitiesBean.selectedBranchActivitiesEntity}"
