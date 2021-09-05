@@ -10,7 +10,6 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
-import be.atc.salesmanagercrm.utils.JavaMailUtil;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.utils.PDFUtil;
 import be.atc.salesmanagercrm.validators.UsersValidator;
@@ -170,6 +169,7 @@ public class UsersBean extends ExtendBean implements Serializable {
 
     protected void register(UsersEntity entityToAdd) {
 
+        String username;
         FacesMessage msg;
         log.info("in register");
         if (this.currentUser.isPermitted("addUsers")) {
@@ -234,12 +234,17 @@ public class UsersBean extends ExtendBean implements Serializable {
 
             CheckEntities checkEntities = new CheckEntities();
 
-            String username = checkEntities.checkUserByUsernameAuto(usernameWithoutNumber, number);
+
+            username = checkEntities.checkUserByUsernameAuto(usernameWithoutNumber, number);
+
+
             entityToAdd.setUsername(username);
 
             try {
                 checkEntities.checkUserByUsername(entityToAdd);
             } catch (InvalidEntityException exception) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorRegister"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
                 return;
             }
@@ -247,11 +252,13 @@ public class UsersBean extends ExtendBean implements Serializable {
             try {
                 checkEntities.checkRole(entityToAdd.getRolesByIdRoles());
             } catch (EntityNotFoundException exception) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorRegister"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 return;
             }
 
-
+            log.info("username final " + username);
             char[] passwordUncrypted = aleaPassword();
 
 
@@ -276,7 +283,7 @@ public class UsersBean extends ExtendBean implements Serializable {
                 dao.register(em, entityToAdd);
                 tx.commit();
                 generatePDF(passwordUncrypt);
-                JavaMailUtil.sendMail(entityToAdd);
+                //    JavaMailUtil.sendMail(entityToAdd);
                 log.info("Persist ok");
                 loadListEntities();
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.register"), null);
@@ -430,11 +437,13 @@ public class UsersBean extends ExtendBean implements Serializable {
         FacesMessage msg;
         log.info(String.valueOf(id));
 
-        EntityManager em = EMF.getEM();
-        UsersEntity usersEntity1 = dao.findById(em, id);
+
+        // UsersEntity usersEntity1 = dao.findById(em, id);
+        UsersEntity usersEntity1 = findById(id);
 
         usersEntity1.setActive(false);
 
+        EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
         try {
             tx = em.getTransaction();
@@ -459,9 +468,9 @@ public class UsersBean extends ExtendBean implements Serializable {
     public void activate(int id) {
         FacesMessage msg;
 
-        EntityManager em = EMF.getEM();
         CheckEntities checkEntities = new CheckEntities();
-        UsersEntity usersEntity1 = dao.findById(em, id);
+        //UsersEntity usersEntity1 = dao.findById(em, id);
+        UsersEntity usersEntity1 = findById(id);
 
         try {
             checkEntities.checkRoleForConnection(usersEntity1);
@@ -474,6 +483,7 @@ public class UsersBean extends ExtendBean implements Serializable {
 
         usersEntity1.setActive(true);
 
+        EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
         try {
             tx = em.getTransaction();
