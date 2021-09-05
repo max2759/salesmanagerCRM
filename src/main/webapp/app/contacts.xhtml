@@ -23,7 +23,7 @@
                     <h1>#{bundle['contacts.title']}</h1>
 
                     <h:form>
-                        <p:commandButton value="#{bundle['add']}" icon="fa fa-plus"
+                        <p:commandButton value="#{bundle['contacts.create']}"
                                          action="#{contactsBean.createNewEntity}"
                                          onclick="PF('contactsWidgetModal').show();" styleClass="NavyButton"
                                          update="@(form)">
@@ -35,11 +35,13 @@
 
                             <p:ajax event="tabChange" listener="#{contactsBean.onTabChange}" update="@form msgs"/>
 
-                            <p:tab id="displayActiveContacts" title="#{bundle['contacts.contactsActive']}">
+                            <p:tab id="displayActiveContacts"
+                                   title="#{bundle['contacts.contactsActive']} (#{contactsBean.contactsEntityList.size()})">
                                 <fxs:listContacts id="listContacts"/>
                             </p:tab>
 
-                            <p:tab id="displayDisableContacts" title="#{bundle['contacts.contactsDisable']}">
+                            <p:tab id="displayDisableContacts"
+                                   title="#{bundle['contacts.contactsDisable']} #{contactsBean.contactsEntityDisableList.size() eq 0 ? '' : '('.concat(contactsBean.contactsEntityDisableList.size()).concat(')')}">
                                 <fxs:listDisableContacts id="listDisableContacts"/>
                             </p:tab>
 

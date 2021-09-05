@@ -23,10 +23,10 @@
                 <div class="card card-w-title">
                     <h1>#{bundle['company.title']}</h1>
                     <h:form>
-                        <p:commandButton value="#{bundle['add']}" icon="fa fa-plus"
+                        <p:commandButton value="#{bundle['company.create']}"
                                          action="#{companiesBean.createNewEntity}"
                                          onclick="PF('companyWidgetModal').show();" styleClass="NavyButton"
-                                         update="@(form)">
+                                         update="@(form) msgs">
                         </p:commandButton>
                     </h:form>
 
@@ -35,11 +35,13 @@
 
                             <p:ajax event="tabChange" listener="#{companiesBean.onTabChange}" update="@form msgs"/>
 
-                            <p:tab id="displayActiveCompany" title="#{bundle['company.companyActive']}">
+                            <p:tab id="displayActiveCompany"
+                                   title="#{bundle['company.companyActive']} (#{companiesBean.companiesEntityList.size()})">
                                 <fxs:listCompany id="listCompany"/>
                             </p:tab>
 
-                            <p:tab id="displayDisableCompany" title="#{bundle['company.companyDisable']}">
+                            <p:tab id="displayDisableCompany"
+                                   title="#{bundle['company.companyDisable']} #{companiesBean.companiesEntitiesDisableList.size() eq 0 ? '' : '('.concat(companiesBean.companiesEntitiesDisableList.size()).concat(')')}">
                                 <fxs:listDisableCompany id="listDisableCompany"/>
                             </p:tab>
 

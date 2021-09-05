@@ -12,7 +12,7 @@
               shortDescription="#{bundle['contacts.contactsDisable']}"/>
 <cc:implementation>
    <f:view>
-      <p:dataTable var="contacts" value="#{contactsBean.contactsEntityList}" rows="10"
+      <p:dataTable var="contacts" value="#{contactsBean.contactsEntityDisableList}" rows="10"
                    selectionMode="single" reflow="true"
                    id="contactsDisableDatatable" rowKey="#{contacts.id}"
                    widgetVar="displayAllDisableContacts"

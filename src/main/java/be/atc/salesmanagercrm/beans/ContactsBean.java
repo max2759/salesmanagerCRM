@@ -51,6 +51,10 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
+    private List<ContactsEntity> contactsEntityDisableList;
+
+    @Getter
+    @Setter
     private ContactsDao contactsDao = new ContactsDaoImpl();
 
     @Getter
@@ -181,7 +185,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
         if (typeLoad.equalsIgnoreCase("displayActiveContacts")) {
             contactsEntityList = findContactsEntityByIdUser(usersBean.getUsersEntity());
         } else if (typeLoad.equalsIgnoreCase("displayDisableContacts")) {
-            contactsEntityList = findDisableContacts(usersBean.getUsersEntity());
+            contactsEntityDisableList = findDisableContacts(usersBean.getUsersEntity());
         }
     }
 

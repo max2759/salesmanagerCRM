@@ -94,9 +94,20 @@
             <p:column>
                 <p:commandLink update="@(form) msgs"
                                action="#{companiesBean.deleteCompany}">
+                    <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
+                               icon="fa fa-warning"/>
                     <i class="ui-icon ui-icon-delete-forever"/>
                     <f:param name="companiesID" value="#{companies.id}"/>
                 </p:commandLink>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                    <p:commandButton value="#{bundle['yes']}" type="button"
+                                     styleClass="ui-confirmdialog-yes GreenButton"
+                                     icon="ui-icon-check" update="@(form) msgs"/>
+                    <p:commandButton value="#{bundle['no']}" type="button"
+                                     styleClass="ui-confirmdialog-no RedButton"
+                                     icon="ui-icon-close"/>
+                </p:confirmDialog>
             </p:column>
 
         </p:dataTable>

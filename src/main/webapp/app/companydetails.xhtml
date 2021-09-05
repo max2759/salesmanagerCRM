@@ -55,7 +55,8 @@
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:30px; margin-bottom:10px;">
                                         <p:inputTextarea id="companyDescription"
-                                                         value="#{companiesBean.companiesEntity.description}"/>
+                                                         value="#{companiesBean.companiesEntity.description}"
+                                                         maxlength="255"/>
                                         <label>#{bundle['company.description']}</label>
                                     </h:panelGroup>
 
