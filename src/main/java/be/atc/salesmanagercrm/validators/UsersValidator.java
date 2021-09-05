@@ -38,6 +38,9 @@ public class UsersValidator {
         if (entity == null) {
             errors.add("La reception des données à échouée");
             errors.add("Veuillez recommencer votre inscription");
+            errorMessage = JsfUtils.returnMessage(getLocale(), "userNotExist");
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return errors;
         }
         if (entity.getRolesByIdRoles() == null) {

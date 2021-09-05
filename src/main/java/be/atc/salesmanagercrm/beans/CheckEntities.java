@@ -369,25 +369,81 @@ public class CheckEntities extends ExtendBean implements Serializable {
 
     public String checkUserByUsernameAuto(String username, int number) {
         if (!username.isEmpty()) {
+            UsersEntity usersEntity1 = new UsersEntity();
             EntityManager em = EMF.getEM();
             log.info(username);
-            UsersEntity usersEntity1 = usersDao.findByUsername(em, username + number);
+            String username1 = username + number;
+            log.info(username1);
+            if (number < 10) {
+                username1 = username + "0";
+                usersEntity1 = usersDao.findByUsername(em, username1 + number);
+                log.info(username + "0" + number);
+            } else {
+                usersEntity1 = usersDao.findByUsername(em, username + number);
+            }
+
             if (usersEntity1 != null) {
                 while (usersEntity1 != null) {
+
                     Random random = new Random();
                     number = random.nextInt(99 - 1);
                     log.info(String.valueOf(number));
                     if (number < 10) {
-                        number = 0 + number;
-                        log.info(String.valueOf(number));
+                        log.info("dans - de 10: " + number);
+                        int number1 = number;
+                        log.info(String.valueOf(number1));
+
+                        username1 = username + "0" + number1;
+                        log.info(username1);
+                        usersEntity1 = usersDao.findByUsername(em, username1);
+                    } else {
+                        username1 = username + number;
+                        log.info("je suis dans le else");
                     }
-                    usersEntity1 = usersDao.findByUsername(em, username + number);
+
                 }
 
             }
-
+            log.info(username1);
+            return username1;
+        } else {
+            throw new InvalidEntityException(
+                    "L'utilisateur est vide: ", ErrorCodes.USER_NOT_FOUND
+            );
         }
-        return username + number;
+
+     /*   if (!username.isEmpty()) {
+            EntityManager em = EMF.getEM();
+            log.info(username);
+            String username1 = username;
+            log.info(username1);
+            UsersEntity usersEntity1 = usersDao.findByUsername(em, username + number);
+            if (usersEntity1 != null) {
+                while (usersEntity1 != null) {
+
+                    Random random = new Random();
+                    number = random.nextInt(9 - 1);
+                    log.info(String.valueOf(number));
+                    if (number < 10) {
+                        log.info("dans - de 10: "+number);
+                        number = 0 + number;
+                        log.info(String.valueOf(number));
+                        log.info(String.valueOf(number));
+                        username1 = username + "0" + number;
+                        log.info(username1);
+                        usersEntity1 = usersDao.findByUsername(em, username1 + number);
+                    }
+
+                }
+
+            }
+            return username1 + number;
+        }else{
+            throw new InvalidEntityException(
+                    "L'utilisateur est vide: ", ErrorCodes.USER_NOT_FOUND
+            );
+        }*/
+
     }
 
 

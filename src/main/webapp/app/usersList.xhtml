@@ -61,43 +61,53 @@
                 <p:dialog header="#{bundle['users.update']}" widgetVar="updateUser" modal="true"
                           responsive="true" id="updateUserDialog">
 
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:inputText value="#{usersBean.usersEntityOther.firstname}"
-                                         placeholder="#{usersBean.userForDialog.firstname}"
-                                         required="true"/>
-                            <label>#{bundle['firstname']}</label>
-                        </h:panelGroup>
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
-                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:inputText value="#{usersBean.usersEntityOther.lastname}"
-                                         placeholder="#{usersBean.userForDialog.lastname}"
-                                         required="true"/>
-                            <label>#{bundle['lastname']}</label>
-                        </h:panelGroup>
+                        <p:outputLabel for="firstnameUpdate" value="#{bundle['firstname']}:"/>
+                        <p:inputText value="#{usersBean.usersEntityOther.firstname}"
+                                     placeholder="#{usersBean.userForDialog.firstname}"
+                                     required="true" id="firstnameUpdate">
+                            <p:ajax update="updateUserDialogForm:updateUser"
+                                    event="keyup"/>
+                        </p:inputText>
 
-                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:inputText value="#{usersBean.usersEntityOther.email}"
-                                         placeholder="#{usersBean.userForDialog.email}" required="true">
-                                <f:validator validatorId="userEmailValidator"></f:validator>
-                            </p:inputText>
-                            <label>#{bundle['email']}</label>
-                        </h:panelGroup>
 
-                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:selectOneMenu id="userRole"
-                                             value="#{usersBean.usersEntityOther.rolesByIdRoles}"
-                                             converter="rolesConverter"
-                            >
-                                <f:selectItems value="#{rolesBean.rolesEntityList}" var="roles"
-                                               itemValue="#{roles}"
-                                               itemLabel="#{roles.label}"/>
-                            </p:selectOneMenu>
-                        </h:panelGroup>
+                        <p:outputLabel for="lastnameUpdate" value="#{bundle['lastname']}: "/>
+                        <p:inputText value="#{usersBean.usersEntityOther.lastname}"
+                                     placeholder="#{usersBean.userForDialog.lastname}"
+                                     required="true" id="lastnameUpdate">
+                            <p:ajax update="updateUserDialogForm:updateUser"
+                                    event="keyup"/>
+                        </p:inputText>
 
-                        <p:commandButton value="#{bundle['confirmation']}" action="#{usersBean.updateByAdmin}"
-                                         update="@(form) msgs"/>
+                        <p:outputLabel for="emailUpdate" value="#{bundle['email']}:"></p:outputLabel>
+                        <p:inputText value="#{usersBean.usersEntityOther.email}"
+                                     placeholder="#{usersBean.userForDialog.email}" required="true" id="emailUpdate">
+                            <p:ajax update="updateUserDialogForm:updateUser"
+                                    event="keyup"/>
+                            <f:validator validatorId="userEmailValidator"></f:validator>
+                        </p:inputText>
+
+                        <p:outputLabel for="rolesByUsersUpdate" value="#{bundle['role']}"></p:outputLabel>
+                        <p:selectOneMenu id="rolesByUsersUpdate"
+                                         value="#{usersBean.usersEntityOther.rolesByIdRoles}"
+                                         converter="rolesConverter" required="true" feedback="false"
+                        >
+                            <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
+                                           itemValue="#{companyTypes}"
+                                           itemLabel="#{companyTypes.label}"/>
+                        </p:selectOneMenu>
+
                     </p:panelGrid>
+
+                    <div align="right" class="mgin-top">
+                        <p:commandButton value="#{bundle['confirmation']}" action="#{usersBean.updateByAdmin}"
+                                         id="updateUser"
+                                         disabled="#{empty usersBean.usersEntityOther.email or usersBean.usersEntityOther.email.length() le 1
+                                         or empty usersBean.usersEntityOther.firstname or usersBean.usersEntityOther.firstname.length() le 1
+                                         or empty usersBean.usersEntityOther.lastname or usersBean.usersEntityOther.lastname.length() le 1}"
+                                         update="@(form) msgs"/>
+                    </div>
                 </p:dialog>
 
             </h:form>
@@ -111,21 +121,27 @@
 
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" id="addUserD">
 
-                        <p:outputLabel for="firstname" value="#{bundle['firstname']} :"/>
+                        <p:outputLabel for="firstname" value="#{bundle['firstname']}:"/>
                         <p:inputText id="firstname" value="#{usersBean.userEntityNew.firstname}" required="true"
-                                     feedback="false"/>
+                                     feedback="false">
+                            <p:ajax update="addUserDialogForm:addUser"
+                                    event="keyup"/>
+                        </p:inputText>
 
 
-                        <p:outputLabel for="lastname" value="#{bundle['lastname']}"/>
+                        <p:outputLabel for="lastname" value="#{bundle['lastname']}: "/>
                         <p:inputText id="lastname" value="#{usersBean.userEntityNew.lastname}" required="true"
-                                     feedback="false"/>
+                                     feedback="false">
+                            <p:ajax update="addUserDialogForm:addUser"
+                                    event="keyup"/>
+                        </p:inputText>
 
 
-                        <p:outputLabel for="email" value="#{bundle['email']}"></p:outputLabel>
+                        <p:outputLabel for="email" value="#{bundle['email']}:"></p:outputLabel>
                         <p:inputText id="email" value="#{usersBean.userEntityNew.email}" required="true"
                                      type="email"
                                      feedback="false">
-                            <p:ajax update="addUserDialogForm:validateRole"
+                            <p:ajax update="addUserDialogForm:addUser"
                                     event="keyup"/>
                             <f:validator validatorId="userEmailValidator"></f:validator>
                         </p:inputText>
@@ -142,10 +158,12 @@
 
                     </p:panelGrid>
 
-                    <div align="right">
+                    <div align="right" class="mgin-top">
                         <p:commandButton value="#{bundle['validate']}" action="#{usersBean.registerEntity}"
-                                         id="validateRole"
-                                         disabled="#{empty usersBean.userEntityNew.email or usersBean.userEntityNew.email.length() le 1}"
+                                         id="addUser"
+                                         disabled="#{empty usersBean.userEntityNew.email or usersBean.userEntityNew.email.length() le 1
+                                         or empty usersBean.userEntityNew.firstname or usersBean.userEntityNew.firstname.length() le 1
+                                         or empty usersBean.userEntityNew.lastname or usersBean.userEntityNew.lastname.length() le 1}"
                                          update="@(form) msgs"
                                          process="@form"/>
                     </div>
