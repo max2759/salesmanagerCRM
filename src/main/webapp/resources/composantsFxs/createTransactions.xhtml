@@ -22,6 +22,7 @@
                 <p:inputText id="title" value="#{transactionsBean.transactionsEntity.title}"
                              placeholder="#{bundle['title']}"
                              required="true"
+                             maxlength="255"
                              requiredMessage="#{bundle['transactions.validator.title']}">
                     <p:ajax update="msg listAllTransactions:createTransactions:createTransactionForm:buttonCreateTransaction"
                             event="keyup"/>

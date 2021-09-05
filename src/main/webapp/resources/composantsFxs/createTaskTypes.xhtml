@@ -22,11 +22,14 @@
                 <p:inputText id="title" value="#{taskTypesBean.taskTypesEntity.label}"
                              placeholder="#{bundle['title']}"
                              required="true"
+                             maxlength="255"
                              requiredMessage="#{bundle['taskTypes.validator.title']}">
                     <p:ajax update="msg listAllTaskTypes:createTaskTypes:createTaskTypesForm:buttonCreateTaskTypes"
                             event="keyup"/>
                 </p:inputText>
-                <p:messages id="msg" closable="true" display="message"/>
+            </p:panelGrid>
+            <p:messages id="msg" closable="true" display="message"/>
+            <div align="right">
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  id="buttonCreateTaskTypes"
                                  update="@(form) msgs"
@@ -36,7 +39,7 @@
                                  action="#{taskTypesBean.saveEntity}"
                 >
                 </p:commandButton>
-            </p:panelGrid>
+            </div>
 
         </h:form>
 

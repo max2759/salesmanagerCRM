@@ -22,6 +22,7 @@
                 <p:inplace>
                     <p:inputText id="titleUpdate" value="#{transactionsBean.transactionsEntity.title}"
                                  required="true"
+                                 maxlength="255"
                                  requiredMessage="#{bundle['transactions.validator.title']}">
                     </p:inputText>
                 </p:inplace>

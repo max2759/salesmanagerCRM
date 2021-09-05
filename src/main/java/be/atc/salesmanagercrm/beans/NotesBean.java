@@ -100,7 +100,6 @@ public class NotesBean extends ExtendBean implements Serializable {
         createNewEntity();
 
         checkTypeParamAndFindNotesEntitiesByContactOrByCompany();
-
     }
 
     /**

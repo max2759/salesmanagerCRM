@@ -48,6 +48,12 @@ public class NotesValidator {
             errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "notes.validator.message") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "notes.validator.message") + "\n";
         }
 
+        if (entity.getMessage().length() > 255) {
+            errors.add("Le nombre de caractere du message doit etre inferieur ou egale a 255");
+
+            errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "notes.validator.messageLength") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "notes.validator.messageLength") + "\n";
+        }
+
         if (errorMessage != null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
             FacesContext.getCurrentInstance().addMessage(null, msg);

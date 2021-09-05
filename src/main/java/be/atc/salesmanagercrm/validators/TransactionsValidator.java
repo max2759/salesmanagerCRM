@@ -41,7 +41,11 @@ public class TransactionsValidator {
             errors.add("Veuillez renseigner un titre dans votre transaction");
 
             errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "transactions.validator.title") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "transactions.validator.title") + "\n";
+        }
+        if (entity.getTitle().length() > 255) {
+            errors.add("Le nombre de caractere du titre doit etre inferieur ou egale a 255");
 
+            errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "validator.titleLength") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "validator.titleLength") + "\n";
         }
         if (entity.getAmount() != null) {
             if (entity.getAmount() < 0) {

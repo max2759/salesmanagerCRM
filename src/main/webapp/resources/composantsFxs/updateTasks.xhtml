@@ -21,6 +21,7 @@
                 <p:outputLabel value="#{bundle['title']} :" for="acTitle"/>
                 <p:inputText id="acTitle" value="#{tasksBean.tasksEntity.title}"
                              required="true"
+                             maxlength="255"
                              requiredMessage="#{bundle['task.validator.title']}"
                              style="margin-bottom:10px;">
                 </p:inputText>
@@ -78,7 +79,8 @@
                 <p:outputLabel for="description" value="#{bundle['tasks.description']}:"/>
                 <p:inputTextarea value="#{tasksBean.tasksEntity.description}" id="description"
                                  rows="6" cols="100"
-                                 placeholder="#{bundle['tasks.description']}"
+                                 maxlength="255"
+                                 placeholder="#{bundle['descriptionHolder']}"
                                  autoResize="false"/>
             </p:panelGrid>
             <div align="right" class="mgin-top">

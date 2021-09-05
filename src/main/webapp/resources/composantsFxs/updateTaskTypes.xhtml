@@ -21,6 +21,8 @@
                 <p:outputLabel value="#{bundle['title']} :" for="titleUpdate"/>
                 <p:inputText id="titleUpdate" value="#{taskTypesBean.taskTypesEntity.label}"
                              required="true"
+                             maxlength="255"
+                             placeholder="#{bundle['title']}"
                              requiredMessage="#{bundle['taskTypes.validator.title']}">
                 </p:inputText>
 

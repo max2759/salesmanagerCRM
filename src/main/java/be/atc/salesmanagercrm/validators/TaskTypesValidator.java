@@ -24,14 +24,20 @@ public class TaskTypesValidator {
         if (entity == null) {
             errors.add("Veuillez renseigner un label dans votre type tache");
 
-            errorMessage = JsfUtils.returnMessage(getLocale(), "taskTypeNotExist") + "\n" + JsfUtils.returnMessage(getLocale(), "taskTypes.title");
+            errorMessage = JsfUtils.returnMessage(getLocale(), "taskTypes.validator.title") + "\n" + JsfUtils.returnMessage(getLocale(), "taskTypes.validator.title");
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return errors;
         }
         if (entity.getLabel() == null) {
             errors.add("Veuillez renseigner un label dans votre type tache !");
-            errorMessage = JsfUtils.returnMessage(getLocale(), "taskTypeNotExist") + "\n" + JsfUtils.returnMessage(getLocale(), "taskTypes.title");
+
+            errorMessage = JsfUtils.returnMessage(getLocale(), "taskTypes.validator.title") + "\n";
+        }
+        if (entity.getLabel().length() > 255) {
+            errors.add("Le nombre de caractere du label doit etre inferieur ou egale a 255");
+
+            errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "taskTypes.validator.titleLength") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "taskTypes.validator.titleLength") + "\n";
         }
         if (errorMessage != null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);

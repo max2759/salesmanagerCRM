@@ -43,6 +43,11 @@ public class VouchersValidator {
 
             errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "vouchers.validator.title") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "voucher.validator.title") + "\n";
         }
+        if (entity.getTitle().length() > 255) {
+            errors.add("Le nombre de caractere du titre doit etre inferieur ou egale a 255");
+
+            errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "validator.titleLength") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "validator.titleLength") + "\n";
+        }
         if (entity.getVoucherStatusByIdVoucherStatus() == null) {
             errors.add("Le statut du ticket n existe pas !");
 
@@ -59,6 +64,11 @@ public class VouchersValidator {
 
                 errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "vouchers.validator.priority") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "vouchers.validator.priority") + "\n";
             }
+        }
+        if (entity.getDescription().length() > 255) {
+            errors.add("Le nombre de caractere de la description doit etre inferieur ou egale a 255");
+
+            errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "validator.descriptionLength") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "validator.descriptionLength") + "\n";
         }
         if (errorMessage != null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);

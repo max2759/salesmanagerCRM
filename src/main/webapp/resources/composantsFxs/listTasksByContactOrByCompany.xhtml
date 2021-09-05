@@ -64,6 +64,7 @@
                                            styleClass="boldText outputTextCellEditor"/>
                             <p:inputText id="acTitleUpdate" value="#{task.title}"
                                          required="true"
+                                         maxlength="255"
                                          placeholder="#{bundle['title']}"
                                          requiredMessage="#{bundle['task.validator.title']}"
                                          label="#{bundle['title']}">
@@ -134,9 +135,10 @@
                         </f:facet>
                         <f:facet name="input">
                             <p:outputLabel for="descriptionUpdate" value="#{bundle['tasks.description']}:"
-                                           styleClass="boldText outputTextCellEditor"/>
+                                           styleClass="boldText outputTextCellEditor descriptionTask"/>
                             <p:inputTextarea id="descriptionUpdate"
                                              rows="6"
+                                             maxlength="255"
                                              cols="100"
                                              autoResize="false"
                                              value="#{task.description}"
