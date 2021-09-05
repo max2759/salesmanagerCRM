@@ -21,13 +21,15 @@
 
                     <p:outputLabel value="#{bundle['contacts.firstname']}" for="contactFirstName"/>
                     <p:inputText id="contactFirstName" value="#{contactsBean.contactsEntity.firstname}"
-                                 required="true" requiredMessage="#{bundle['contacts.firstnameNotValid']}">
+                                 required="true" requiredMessage="#{bundle['contacts.firstnameNotValid']}"
+                                 placeholder="#{bundle['contacts.firstname']}">
                         <p:ajax update="validateContacts msg" event="keyup"/>
                     </p:inputText>
 
                     <p:outputLabel value="#{bundle['contacts.lastname']}" for="contactLastName"/>
                     <p:inputText id="contactLastName" value="#{contactsBean.contactsEntity.lastname}"
-                                 required="true" requiredMessage="#{bundle['contacts.lastnameNotValid']}">
+                                 required="true" requiredMessage="#{bundle['contacts.lastnameNotValid']}"
+                                 placeholder="#{bundle['contacts.lastname']}">
                         <p:ajax update="validateContacts msg" event="keyup"/>
                     </p:inputText>
 
@@ -42,7 +44,8 @@
                     </p:selectOneMenu>
 
                     <p:outputLabel for="contactEmail" value="#{bundle['contacts.emailLabel']}"/>
-                    <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}">
+                    <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}"
+                                 placeholder="#{bundle['contacts.emailLabel']}">
                         <f:validator validatorId="contactEmailValidator"/>
                     </p:inputText>
 
@@ -58,7 +61,7 @@
 
                     <p:outputLabel for="phoneNumber" value="#{bundle['contacts.phoneNumberLabel']}"/>
                     <p:inputMask id="phoneNumber" value="#{contactsBean.contactsEntity.phoneNumber}"
-                                 mask="+32 999999999">
+                                 mask="+32 999999999" placeholder="#{bundle['contacts.phoneNumberLabel']}">
                         <f:validator validatorId="contactPhoneNumberValidator"/>
                     </p:inputMask>
 

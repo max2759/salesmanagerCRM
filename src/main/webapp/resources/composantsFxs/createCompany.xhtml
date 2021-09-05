@@ -21,7 +21,8 @@
 
                     <p:outputLabel value="#{bundle['company.labelName']}" for="labelCompany"/>
                     <p:inputText id="labelCompany" value="#{companiesBean.companiesEntity.label}" required="true"
-                                 requiredMessage="#{bundle['company.labelNotValid']}">
+                                 requiredMessage="#{bundle['company.labelNotValid']}"
+                                 placeholder="#{bundle['company.labelName']}">
                         <p:ajax update="validateCompany msg" event="keyup"/>
                     </p:inputText>
 
@@ -29,14 +30,16 @@
                     <p:selectOneMenu id="companyTypesDisplay"
                                      value="#{companiesBean.companiesEntity.companyTypesByIdCompanyTypes}"
                                      converter="companyTypesConverter" required="true"
-                                     requiredMessage="#{bundle['company.companiesTypeNotValid']}">
+                                     requiredMessage="#{bundle['company.companiesTypeNotValid']}"
+                                     placeholder="#{bundle['company.chooseCompanyType']}">
                         <f:selectItems value="#{companyTypesBean.companyTypesEntities}" var="companyTypes"
                                        itemValue="#{companyTypes}" itemLabel="#{companyTypes.label}"/>
                         <p:ajax update="validateCompany msg" event="keyup"/>
                     </p:selectOneMenu>
 
                     <p:outputLabel value="#{bundle['company.domainName']}" for="domainName"/>
-                    <p:inputText id="domainName" value="#{companiesBean.companiesEntity.domainName}">
+                    <p:inputText id="domainName" value="#{companiesBean.companiesEntity.domainName}"
+                                 placeholder="#{bundle['company.domainName']}">
                         <f:validator validatorId="companyDomainValidator"/>
                     </p:inputText>
 
@@ -53,20 +56,23 @@
 
                     <p:outputLabel value="#{bundle['company.employessNumber']}" for="employeesNumber"/>
                     <p:inputNumber id="employeesNumber" value="#{companiesBean.companiesEntity.employeesNumber}"
-                                   validatorMessage="#{bundle['company.employeesNumberNotValid']}">
+                                   validatorMessage="#{bundle['company.employeesNumberNotValid']}"
+                                   placeholder="#{bundle['company.numberLabelPlaceHolder']}">
                         <f:validateLongRange minimum="0"/>
                     </p:inputNumber>
 
 
                     <p:outputLabel value="#{bundle['company.revenue']}" for="revenue"/>
                     <p:inputNumber id="revenue" value="#{companiesBean.companiesEntity.revenue}"
-                                   validatorMessage="#{bundle['company.employeesNumberNotValid']}">
+                                   validatorMessage="#{bundle['company.employeesNumberNotValid']}"
+                                   placeholder="#{bundle['company.numberLabelPlaceHolder']}">
                         <f:validateLongRange minimum="0"/>
                     </p:inputNumber>
 
 
                     <p:outputLabel value="#{bundle['company.linkedInPage']}" for="linkedinPage"/>
-                    <p:inputText id="linkedinPage" value="#{companiesBean.companiesEntity.linkedInPage}">
+                    <p:inputText id="linkedinPage" value="#{companiesBean.companiesEntity.linkedInPage}"
+                                 placeholder="#{bundle['company.linkedInPage']}">
                         <f:validator validatorId="linkedinPageValidator"/>
                     </p:inputText>
 

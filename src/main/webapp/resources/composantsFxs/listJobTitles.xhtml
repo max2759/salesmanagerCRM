@@ -22,8 +22,9 @@
 
             <p:column headerText="#{bundle['jobTitles.title']}" filterBy="#{jobtitles.label}"
                       sortBy="#{jobtitles.label}"
-                      filterMatchMode="contains" colspan="10">
+                      filterMatchMode="contains" colspan="10" styleClass="jobTitlesLabel">
                 <h:outputText value="#{jobtitles.label}"/>
+                <p:watermark value="#{bundle['jobTitles.search']}" for="@(.jobTitlesLabel)"/>
             </p:column>
 
             <p:column headerText="#{bundle['edit']}" colspan="2">

@@ -54,6 +54,10 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
+    private List<CompaniesEntity> companiesEntitiesDisableList;
+
+    @Getter
+    @Setter
     private String sendType = "";
 
     @Getter
@@ -234,7 +238,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         if (typeLoad.equalsIgnoreCase("displayActiveCompany")) {
             companiesEntityList = findActiveCompanies(usersBean.getUsersEntity());
         } else if (typeLoad.equalsIgnoreCase("displayDisableCompany")) {
-            companiesEntityList = findDisableCompanies(usersBean.getUsersEntity());
+            companiesEntitiesDisableList = findDisableCompanies(usersBean.getUsersEntity());
         }
     }
 

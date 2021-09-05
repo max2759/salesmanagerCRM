@@ -18,7 +18,7 @@
                 <h:form>
                     <div class="card card-w-title">
                         <h1>#{bundle['branchActivities.title']}</h1>
-                        <p:commandButton value="Ajouter" icon="fa fa-plus" update="@(form)"
+                        <p:commandButton value="#{bundle['branchActivities.create']}" update="@(form)"
                                          onclick="PF('branchActivitiesModal').show();" styleClass="NavyButton"
                                          action="#{branchActivitiesBean.showModalCreate}">
                             <f:param name="sendType" value="add"/>
