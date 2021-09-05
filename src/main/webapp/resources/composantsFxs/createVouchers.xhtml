@@ -23,6 +23,7 @@
                 <p:inputText id="title" value="#{vouchersBean.vouchersEntity.title}"
                              placeholder="#{bundle['title']}"
                              required="true"
+                             maxlength="255"
                              requiredMessage="#{bundle['vouchers.validator.title']}">
                     <p:ajax update="msg listAllVouchers:createVouchers:createVoucherForm:buttonCreateVoucher"
                             event="keyup"/>
@@ -79,11 +80,12 @@
                 <p:inputTextarea id="description" value="#{vouchersBean.vouchersEntity.description}"
                                  rows="4" cols="100"
                                  autoResize="false"
-                                 placeholder="#{bundle['vouchers.description']}"/>
+                                 maxlength="255"
+                                 placeholder="#{bundle['descriptionHolder']}"/>
 
             </p:panelGrid>
-            <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
-                <p:messages id="msg" closable="true" display="message"/>
+            <p:messages id="msg" closable="true" display="message"/>
+            <div align="right" class="mgin-top">
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  id="buttonCreateVoucher"
                                  update="@(form) msgs"
@@ -93,7 +95,7 @@
                                  disabled="#{empty vouchersBean.vouchersEntity.title or vouchersBean.vouchersEntity.title.length() le 1}"
                 >
                 </p:commandButton>
-            </p:panelGrid>
+            </div>
         </h:form>
 
     </f:view>

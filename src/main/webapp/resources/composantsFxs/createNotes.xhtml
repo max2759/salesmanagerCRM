@@ -24,10 +24,13 @@
                                  required="true"
                                  requiredMessage="#{bundle['notes.validator.message']}"
                                  placeholder="#{bundle['notes.messageHolder']}"
+                                 maxlength="255"
                                  autoResize="false">
                     <p:ajax update="detailsRight:createNotes:msg detailsRight:createNotes:formCreateNotes:buttonSaveEntityNotes"
                             global="false" event="keyup"/>
                 </p:inputTextarea>
+            </p:panelGrid>
+            <div align="right" class="mgin-top">
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  id="buttonSaveEntityNotes"
                                  disabled="#{empty notesBean.notesEntity.message or notesBean.notesEntity.message.length() le 1}"
@@ -35,7 +38,7 @@
                                  oncomplete="PF('createDialogNotes').hide()"
                                  update="detailsRight:formTabView detailsRight:createNotes:formCreateNotes msgs"
                                  action="#{notesBean.saveEntity}"/>
-            </p:panelGrid>
+            </div>
         </h:form>
         <p:messages id="msg" closable="true" display="message"/>
 

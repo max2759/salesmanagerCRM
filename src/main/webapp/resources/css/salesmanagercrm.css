@@ -115,3 +115,8 @@
 .mgin-top {
     margin-top: 15px;
 }
+
+.descriptionTask {
+    display: block;
+    padding-bottom: 10px;
+}
