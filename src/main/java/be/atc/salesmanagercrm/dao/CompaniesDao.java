@@ -11,7 +11,7 @@ public interface CompaniesDao {
 
     CompaniesEntity findById(EntityManager em, int id);
 
-    List<CompaniesEntity> findAll(EntityManager em, int idUser);
+    List<CompaniesEntity> findAllCompaniesByIdUser(EntityManager em, int idUser);
 
     void update(EntityManager em, CompaniesEntity companiesEntity);
 

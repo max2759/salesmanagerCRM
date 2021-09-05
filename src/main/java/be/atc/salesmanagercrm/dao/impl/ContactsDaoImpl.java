@@ -48,6 +48,15 @@ public class ContactsDaoImpl extends EntityFinderImpl<ContactsEntity> implements
     }
 
     @Override
+    public List<ContactsEntity> findAllContactsEntityByIdUser(EntityManager em, int idUser) {
+        return em.createNamedQuery("Contacts.findAllContactsEntityByIdUser",
+                        ContactsEntity.class)
+                .setParameter("idUser", idUser)
+                .getResultList();
+    }
+
+
+    @Override
     public List<ContactsEntity> findAll() {
         return this.findByNamedQuery("Contacts.findAll", new ContactsEntity());
     }

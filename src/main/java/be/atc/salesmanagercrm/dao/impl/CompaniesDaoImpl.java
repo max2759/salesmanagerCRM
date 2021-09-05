@@ -23,8 +23,11 @@ public class CompaniesDaoImpl extends EntityFinderImpl<CompaniesEntity> implemen
     }
 
     @Override
-    public List<CompaniesEntity> findAll(EntityManager em, int idUser) {
-        return this.findByNamedQuery("Companies.findAll", new CompaniesEntity());
+    public List<CompaniesEntity> findAllCompaniesByIdUser(EntityManager em, int idUser) {
+        return em.createNamedQuery("Companies.findAllCompaniesByIdUser",
+                        CompaniesEntity.class)
+                .setParameter("idUser", idUser)
+                .getResultList();
     }
 
     @Override
