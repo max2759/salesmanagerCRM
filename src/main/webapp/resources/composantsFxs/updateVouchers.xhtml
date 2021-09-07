@@ -104,7 +104,7 @@
                                 rendered="#{usersBean.currentUser.isPermitted('updateVouchers')}"
                                 value="#{bundle['save']}"
                                 update="@(form) msgs"
-                                oncomplete="PF('dlg2').hide()"
+                                oncomplete="PF('displayAllEntities').filter(); PF('dlg2').hide()"
                                 action="#{vouchersBean.updateEntity}"/>
                     <p:menuitem icon="ui-icon-update"
                                 rendered="#{usersBean.currentUser.isPermitted('showVoucherHistories')}"

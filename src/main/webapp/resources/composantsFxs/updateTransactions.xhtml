@@ -119,7 +119,7 @@
                                 id="buttonSaveUpdateTransaction"
                                 value="#{bundle['save']}"
                                 update="@(form) msgs"
-                                oncomplete="PF('dlg2').hide()"
+                                oncomplete="PF('displayAllEntities').filter(); PF('dlg2').hide()"
                                 action="#{transactionsBean.updateEntity}"/>
 
                     <p:menuitem icon="ui-icon-delete"
@@ -128,7 +128,7 @@
                                 update="@(form) msgs"
                                 value="#{bundle['delete']}"
                                 action="#{transactionsBean.deleteEntity}"
-                                oncomplete="PF('dlg2').hide()"
+                                oncomplete="PF('displayAllEntities').filter(); PF('dlg2').hide()"
                     >
                         <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                    icon="fa fa-warning"/>

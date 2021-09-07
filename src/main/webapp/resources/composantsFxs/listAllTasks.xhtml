@@ -39,7 +39,7 @@
                 />
             </h:form>
             <h:form id="formTabView">
-                <p:tabView>
+                <p:tabView id="tabViewListAllTasks">
                     <p:ajax event="tabChange" update="@form msgs"/>
 
                     <p:tab id="displayAll" title="#{bundle['all']} (#{tasksBean.tasksEntities.size()})">
@@ -57,6 +57,7 @@
                             <p:column colspan="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusAll" value="#{task.status}">
                                     <p:ajax event="change" update="@form msgs"
+                                            oncomplete="PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
                                             listener="#{tasksBean.updateStatus}"/>
                                     <f:attribute name="idTask" value="#{task.id}"/>
                                     <p:tooltip for="statusAll" value="#{bundle['tasks.markFinished']}"
@@ -173,6 +174,7 @@
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
                                                action="#{tasksBean.deleteEntity}"
+                                               oncomplete="PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
                                                rendered="#{usersBean.currentUser.isPermitted('deleteTasks')}"
                                 >
                                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
@@ -314,6 +316,7 @@
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
                                                action="#{tasksBean.deleteEntity}"
+                                               oncomplete="PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
                                                rendered="#{usersBean.currentUser.isPermitted('deleteTasks')}"
                                 >
                                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
@@ -466,6 +469,7 @@
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
                                                action="#{tasksBean.deleteEntity}"
+                                               oncomplete="PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
                                                rendered="#{usersBean.currentUser.isPermitted('deleteTasks')}"
                                 >
                                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
@@ -617,6 +621,7 @@
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
                                                action="#{tasksBean.deleteEntity}"
+                                               oncomplete="PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
                                                rendered="#{usersBean.currentUser.isPermitted('deleteTasks')}"
                                 >
                                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
@@ -654,6 +659,7 @@
                             <p:column colspan="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusFinished" value="#{task.status}">
                                     <p:ajax event="change" update="@form msgs"
+                                            oncomplete="PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
                                             listener="#{tasksBean.updateStatus}"/>
                                     <f:attribute name="idTask" value="#{task.id}"/>
                                     <p:tooltip for="statusFinished" value="#{bundle['tasks.markNotFinished']}"
@@ -764,6 +770,7 @@
                                 </p:commandLink>
                                 <p:commandLink update="@form msgs"
                                                action="#{tasksBean.deleteEntity}"
+                                               oncomplete="PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
                                                rendered="#{usersBean.currentUser.isPermitted('deleteTasks')}"
                                 >
                                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"

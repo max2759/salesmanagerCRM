@@ -24,6 +24,9 @@
                              maxlength="255"
                              requiredMessage="#{bundle['task.validator.title']}"
                              style="margin-bottom:10px;">
+                    <p:ajax update="detailsRight:updateTasks:msg " event="keyup"
+
+                    />
                 </p:inputText>
 
 
@@ -87,14 +90,14 @@
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="@(form) msgs"
                                  id="buttonUpdateTask"
-                                 oncomplete="PF('updateDialogTask').hide()"
+                                 oncomplete="PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter(); PF('updateDialogTask').hide()"
                                  value="#{bundle['update']}"
                                  action="#{tasksBean.updateEntity}">
                     <f:param name="typeEntities" value="all"/>
                 </p:commandButton>
             </div>
         </h:form>
-
+        <p:messages id="msg" closable="true" display="message"/>
     </f:view>
 </cc:implementation>
 </html>
