@@ -33,7 +33,7 @@
                     <h:form id="displayAllContacts">
                         <p:tabView style="margin-top: 10px" id="tabViewAllContacts">
 
-                            <p:ajax event="tabChange" listener="#{contactsBean.onTabChange}" update="@form msgs"/>
+                            <p:ajax event="tabChange" update="@form msgs"/>
 
                             <p:tab id="displayActiveContacts"
                                    title="#{bundle['contacts.contactsActive']} (#{contactsBean.contactsEntityList.size()})">
