@@ -86,7 +86,7 @@
             <div align="right" class="mgin-top">
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
-                                 oncomplete="PF('createDialogTask').hide()"
+                                 oncomplete="PF('createDialogTask').hide(); PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
                                  id="buttonSaveEntityTasks"
                                  disabled="#{empty tasksBean.tasksEntity.title or tasksBean.tasksEntity.title.length() le 1}"
                                  value="#{bundle['save']}"

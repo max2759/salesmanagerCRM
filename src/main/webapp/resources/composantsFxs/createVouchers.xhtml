@@ -89,7 +89,7 @@
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  id="buttonCreateVoucher"
                                  update="@(form) msgs"
-                                 oncomplete="PF('createDialog').hide()"
+                                 oncomplete="PF('displayAllEntities').filter(); PF('createDialog').hide()"
                                  value="#{bundle['save']}"
                                  action="#{vouchersBean.saveEntity}"
                                  disabled="#{empty vouchersBean.vouchersEntity.title or vouchersBean.vouchersEntity.title.length() le 1}"
