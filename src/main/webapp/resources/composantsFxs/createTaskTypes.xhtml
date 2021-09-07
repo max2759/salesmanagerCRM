@@ -34,7 +34,7 @@
                                  id="buttonCreateTaskTypes"
                                  update="@(form) msgs"
                                  disabled="#{empty taskTypesBean.taskTypesEntity.label or taskTypesBean.taskTypesEntity.label.length() le 1}"
-                                 oncomplete="PF('createDialog').hide()"
+                                 oncomplete="PF('displayAllEntities').filter(); PF('createDialog').hide()"
                                  value="#{bundle['save']}"
                                  action="#{taskTypesBean.saveEntity}"
                 >

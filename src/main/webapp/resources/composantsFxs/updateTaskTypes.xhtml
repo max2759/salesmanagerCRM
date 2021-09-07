@@ -31,7 +31,7 @@
                 <p:commandButton style="width:auto;margin-bottom:10px;"
                                  id="buttonUpdateTaskTypes"
                                  update="@(form) msgs"
-                                 oncomplete="PF('dlg2').hide()"
+                                 oncomplete="PF('displayAllEntities').filter(); PF('dlg2').hide()"
                                  value="#{bundle['save']}"
                                  action="#{taskTypesBean.updateEntity}"
                 >
