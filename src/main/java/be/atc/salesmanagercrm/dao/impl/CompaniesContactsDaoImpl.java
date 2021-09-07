@@ -23,6 +23,14 @@ public class CompaniesContactsDaoImpl extends EntityFinderImpl<CompaniesContacts
     }
 
     @Override
+    public List<CompaniesContactsEntity> findByIdCompany(EntityManager em, int idCompany) {
+        return em.createNamedQuery("CompaniesContacts.findByIdCompany",
+                        CompaniesContactsEntity.class)
+                .setParameter("idCompany", idCompany)
+                .getResultList();
+    }
+
+    @Override
     public CompaniesContactsEntity findById(EntityManager em, int id) {
         return em.createNamedQuery("CompaniesContacts.findById",
                         CompaniesContactsEntity.class)

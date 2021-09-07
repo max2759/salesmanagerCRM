@@ -12,7 +12,6 @@ import be.atc.salesmanagercrm.validators.CompanyValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.primefaces.event.TabChangeEvent;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.ConfigurableNavigationHandler;
@@ -240,18 +239,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Load loadListEntities when Tab Change !
-     *
-     * @param event TabChangeEvent
-     */
-    public void onTabChange(TabChangeEvent event) {
-        log.info("method : onTabChange()");
-        log.info("event : " + event.getTab().getId());
-
-//        loadListEntities();
-    }
-
-    /**
      * Auto Complete for companies in form
      *
      * @param query String
@@ -288,64 +275,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
         List<CompaniesEntity> companiesEntities = companiesDao.findAllCompaniesByIdUser(em, id);
-
-        em.clear();
-        em.close();
-
-        return companiesEntities;
-    }
-
-    /**
-     * Find all active companies
-     *
-     * @param usersEntity UsersEntity
-     * @return List Active CompaniesEntity
-     */
-    protected List<CompaniesEntity> findActiveCompanies(UsersEntity usersEntity) {
-
-        log.info("Start method findActiveCompanies");
-
-        FacesMessage facesMessage;
-
-        if (usersEntity == null) {
-            log.error("User Entity is null");
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            return Collections.emptyList();
-        }
-
-        EntityManager em = EMF.getEM();
-
-        List<CompaniesEntity> companiesEntities = companiesDao.findActiveCompany(em, usersEntity.getId());
-
-        em.clear();
-        em.close();
-
-        return companiesEntities;
-    }
-
-    /**
-     * Find all disable companies
-     *
-     * @param usersEntity UsersEntity
-     * @return List disable CompaniesEntity
-     */
-    protected List<CompaniesEntity> findDisableCompanies(UsersEntity usersEntity) {
-
-        log.info("Start method findDisableCompanies");
-
-        FacesMessage facesMessage;
-
-        if (usersEntity == null) {
-            log.error("User Entity is null");
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            return Collections.emptyList();
-        }
-
-        EntityManager em = EMF.getEM();
-
-        List<CompaniesEntity> companiesEntities = companiesDao.findDisableCompany(em, usersEntity.getId());
 
         em.clear();
         em.close();
@@ -485,7 +414,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      */
     public void displayCompanyDetails() {
         displayOneCompany();
-
     }
 
     /**
@@ -773,20 +701,5 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         delete(Integer.parseInt(getParam("companiesID")));
 
         loadListEntities();
-    }
-
-
-    /**
-     * Auto complete for CompaniesEntity
-     *
-     * @param search search
-     * @return List of label Companies Entity
-     */
-    public List<CompaniesEntity> completeCompanies(String search) {
-        String searchLowerCase = search.toLowerCase();
-
-        List<CompaniesEntity> companiesEntitiesDropdown = findActiveCompanies(usersBean.getUsersEntity());
-
-        return companiesEntitiesDropdown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
     }
 }

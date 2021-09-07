@@ -19,6 +19,7 @@
             <f:viewAction action="#{notesBean.createNewEntity}"/>
             <f:viewAction action="#{notesBean.listEntitiesCompanies}"/>
             <f:viewAction action="#{companiesBean.activityThread}"/>
+            <f:viewAction action="#{companiesContactsBean.getFindByIdCompany}"/>
         </f:metadata>
 
         <p:growl id="msgs" skipDetailIfEqualsSummary="true" life="10000"/>
@@ -281,6 +282,23 @@
                                                                pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
                                         </h:outputText>
                                     </h:panelGroup>
+                                </p:tab>
+
+                                <p:tab title="#{bundle['company.tabTitle4']}">
+                                    <p:dataTable var="companiesContact"
+                                                 value="#{companiesContactsBean.companiesContactsEntityList}" rows="5"
+                                                 id="companiesDatatable"
+                                                 widgetVar="displayAllCompaniesContact"
+                                                 paginatorPosition="bottom"
+                                                 emptyMessage="#{bundle['companiesContacts.notFound']}"
+                                                 paginator="true" styleClass="dataTable-margin-top"
+                                                 rowsPerPageTemplate="10,20,50">
+                                        <p:column headerText="#{bundle['companiesContacts.employees']}">
+                                            <h:outputText
+                                                    value="#{companiesContact.contactsByIdContacts.firstname} #{companiesContact.contactsByIdContacts.lastname}">
+                                            </h:outputText>
+                                        </p:column>
+                                    </p:dataTable>
                                 </p:tab>
                             </p:accordionPanel>
 

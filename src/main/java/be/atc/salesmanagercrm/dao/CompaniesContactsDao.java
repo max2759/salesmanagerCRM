@@ -11,6 +11,8 @@ public interface CompaniesContactsDao {
 
     List<CompaniesContactsEntity> findByIdContacts(EntityManager em, int idContacts);
 
+    List<CompaniesContactsEntity> findByIdCompany(EntityManager em, int idCompany);
+
     CompaniesContactsEntity findById(EntityManager em, int id);
 
     void delete(EntityManager em, CompaniesContactsEntity companiesContactsEntity);

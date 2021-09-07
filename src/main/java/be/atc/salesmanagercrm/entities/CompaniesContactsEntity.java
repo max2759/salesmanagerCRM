@@ -7,7 +7,8 @@ import java.util.Objects;
 @Table(name = "companies_contacts", schema = "salesmanagercrm")
 @NamedQueries({
         @NamedQuery(name = "CompaniesContacts.findByIdContacts", query = "SELECT cc from CompaniesContactsEntity cc where cc.contactsByIdContacts.id = :idContacts"),
-        @NamedQuery(name = "CompaniesContacts.findById", query = "SELECT c from CompaniesContactsEntity c where (c.id = :id)")
+        @NamedQuery(name = "CompaniesContacts.findById", query = "SELECT c from CompaniesContactsEntity c where (c.id = :id)"),
+        @NamedQuery(name = "CompaniesContacts.findByIdCompany", query = "SELECT c from CompaniesContactsEntity c where c.companiesByIdCompanies.id = :idCompany"),
 })
 public class CompaniesContactsEntity {
     private int id;

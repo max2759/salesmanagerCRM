@@ -12,7 +12,6 @@ import be.atc.salesmanagercrm.validators.ContactValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.primefaces.event.TabChangeEvent;
 import org.primefaces.event.UnselectEvent;
 
 import javax.enterprise.context.SessionScoped;
@@ -161,18 +160,6 @@ public class ContactsBean extends ExtendBean implements Serializable {
         em.close();
 
         return contactsEntities;
-    }
-
-    /**
-     * Load loadListEntities when Tab Change !
-     *
-     * @param event TabChangeEvent
-     */
-    public void onTabChange(TabChangeEvent event) {
-        log.info("method : onTabChange()");
-        log.info("event : " + event.getTab().getId());
-
-//        loadListEntities(event.getTab().getId());
     }
 
     /**
@@ -332,35 +319,6 @@ public class ContactsBean extends ExtendBean implements Serializable {
         em.close();
 
         return contactsEntityList1;
-    }
-
-    /**
-     * Find all disable Contacts
-     *
-     * @param usersEntity UsersEntity
-     * @return List disable ContactsEntity
-     */
-    protected List<ContactsEntity> findDisableContacts(UsersEntity usersEntity) {
-
-        log.info("Start method findDisableContacts");
-
-        FacesMessage facesMessage;
-
-        if (usersEntity == null) {
-            log.error("User Entity is null");
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            return Collections.emptyList();
-        }
-
-        EntityManager em = EMF.getEM();
-
-        List<ContactsEntity> contactsEntities = contactsDao.findDisableContactsEntityByIdUser(em, usersEntity.getId());
-
-        em.clear();
-        em.close();
-
-        return contactsEntities;
     }
 
     /**

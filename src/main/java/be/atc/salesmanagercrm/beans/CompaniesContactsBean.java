@@ -32,9 +32,14 @@ import java.util.List;
 public class CompaniesContactsBean extends ExtendBean implements Serializable {
 
     private static final long serialVersionUID = -1631508572484407774L;
+
     @Getter
     @Setter
     private CompaniesContactsEntity companiesContactsEntity = new CompaniesContactsEntity();
+
+    @Getter
+    @Setter
+    private List<CompaniesContactsEntity> companiesContactsEntityList;
 
     @Getter
     @Setter
@@ -48,7 +53,6 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
     @Setter
     private List<CompaniesEntity> selectedCompaniesContactsTemp = new ArrayList<>();
 
-
     @Getter
     @Setter
     private CompaniesEntity companiesEntity = new CompaniesEntity();
@@ -56,13 +60,15 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
     @Inject
     private ContactsBean contactsBean;
 
+    @Inject
+    private CompaniesBean companiesBean;
+
 
     /**
      * Save companies and contacts in CompaniesContacts
      */
     protected void createCompaniesContacts() {
 
-        FacesMessage facesMessage;
         log.info("Start of createCompaniesContacts");
 
         EntityManager em = EMF.getEM();
@@ -217,5 +223,39 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
             em.clear();
             em.close();
         }
+    }
+
+    public void getFindByIdCompany() {
+        log.info("ID company" + companiesBean.getCompaniesEntity().getId());
+        this.companiesContactsEntityList = findByIdCompany(companiesBean.getCompaniesEntity());
+    }
+
+    /**
+     * Return list of CompaniesContacts by compan id
+     *
+     * @param companiesEntity CompaniesEntity
+     * @return companiesContactsEntities
+     */
+    protected List<CompaniesContactsEntity> findByIdCompany(CompaniesEntity companiesEntity) {
+
+        log.info("CompaniesContactsBean => method : findByIdCompany(int id)");
+
+        FacesMessage facesMessage;
+
+        if (companiesContactsEntity == null) {
+            log.error("Companies entity is null");
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "company.error"), null);
+            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            return null;
+        }
+
+        EntityManager em = EMF.getEM();
+
+        List<CompaniesContactsEntity> companiesContactsEntities = companiesContactsDao.findByIdCompany(em, companiesEntity.getId());
+
+        em.clear();
+        em.close();
+
+        return companiesContactsEntities;
     }
 }
