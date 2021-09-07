@@ -29,7 +29,7 @@ public class TaskTypesValidator {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return errors;
         }
-        if (entity.getLabel() == null) {
+        if (entity.getLabel() == null || entity.getLabel().isEmpty()) {
             errors.add("Veuillez renseigner un label dans votre type tache !");
 
             errorMessage = JsfUtils.returnMessage(getLocale(), "taskTypes.validator.title") + "\n";

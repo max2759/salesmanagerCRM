@@ -14,32 +14,33 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
-        <h:form id="updateTaskTypesForm">
+        <div class="ui-g ui-fluid">
+            <h:form id="updateTaskTypesForm">
 
-            <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
-                <p:outputLabel value="#{bundle['title']} :" for="titleUpdate"/>
-                <p:inputText id="titleUpdate" value="#{taskTypesBean.taskTypesEntity.label}"
-                             required="true"
-                             maxlength="255"
-                             placeholder="#{bundle['title']}"
-                             requiredMessage="#{bundle['taskTypes.validator.title']}">
-                </p:inputText>
+                    <p:outputLabel value="#{bundle['title']} :" for="titleUpdate"/>
+                    <p:inputText id="titleUpdate" value="#{taskTypesBean.taskTypesEntity.label}"
+                                 required="true"
+                                 maxlength="255"
+                                 placeholder="#{bundle['title']}"
+                                 requiredMessage="#{bundle['taskTypes.validator.title']}">
+                    </p:inputText>
 
-            </p:panelGrid>
-            <div align="right" class="mgin-top">
-                <p:commandButton style="width:auto;margin-bottom:10px;"
-                                 id="buttonUpdateTaskTypes"
-                                 update="@(form) msgs"
-                                 oncomplete="PF('displayAllEntities').filter(); PF('dlg2').hide()"
-                                 value="#{bundle['save']}"
-                                 action="#{taskTypesBean.updateEntity}"
-                >
-                </p:commandButton>
-            </div>
-
-        </h:form>
-
+                </p:panelGrid>
+                <div align="right" class="mgin-top">
+                    <p:commandButton style="width:auto;margin-bottom:10px;"
+                                     id="buttonUpdateTaskTypes"
+                                     update="@(form) msgs"
+                                     oncomplete="PF('displayAllEntities').filter(); PF('dlg2').hide()"
+                                     value="#{bundle['save']}"
+                                     action="#{taskTypesBean.updateEntity}"
+                    >
+                    </p:commandButton>
+                </div>
+                <p:hotkey bind="esc" handler="PF('dlg2').hide()"/>
+            </h:form>
+        </div>
     </f:view>
 </cc:implementation>
 </html>

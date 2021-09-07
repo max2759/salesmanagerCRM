@@ -15,84 +15,87 @@
 <cc:implementation>
     <f:view>
 
-        <h:form id="formCreateTask">
-            <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                <p:outputLabel value="#{bundle['title']} :" for="acTitleCreate"/>
-                <p:inputText id="acTitleCreate" value="#{tasksBean.tasksEntity.title}"
-                             required="true"
-                             placeholder="#{bundle['title']}"
-                             requiredMessage="#{bundle['task.validator.title']}"
-                             maxlength="255"
-                             style="margin-bottom:10px;">
-                    <p:ajax update="detailsRight:createTasks:msg detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
-                            global="false" event="keyup"/>
-                </p:inputText>
-
-                <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskTypeCreate"/>
-                <p:selectOneMenu id="taskTypeCreate"
-                                 value="#{tasksBean.tasksEntity.taskTypesByIdTaskTypes}"
-                                 converter="taskTypeConverter">
-
-                    <f:selectItems value="#{taskTypesBean.taskTypesEntities}"
-                                   var="taskTypesEntities" itemValue="#{taskTypesEntities}"
-                                   itemLabel="#{taskTypesEntities.label}"/>
-                </p:selectOneMenu>
-
-                <p:outputLabel value="#{bundle['priority']}:" for="taskPriorityCreate"/>
-                <p:selectOneMenu id="taskPriorityCreate"
-                                 value="#{tasksBean.tasksEntity.priority}">
-                    <f:selectItems value="#{enumPriorityBean.enumPriority}"
-                                   var="enumPriority" itemValue="#{enumPriority}"
-                                   itemLabel="#{enumPriority.label}"/>
-                    <f:validator validatorId="enumPriorityValidator"/>
-                </p:selectOneMenu>
-
-                <p:outputLabel for="datetimeCreate" value="#{bundle['dueDate']}:"/>
-                <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
-                            id="datetimeCreate" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
-
-                <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
-                <p:autoComplete id="Contact" value="#{tasksBean.tasksEntity.contactsByIdContacts}"
-                                completeMethod="#{contactsBean.completeContactsContains}"
-                                var="Contact"
-                                itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
-                                itemValue="#{Contact}"
-                                dropdown="true"
-                                placeholder="#{bundle['contact']}"
-                                converter="#{contactsConverter}"
-                                groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
-
-                <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
-                <p:autoComplete id="Company" value="#{tasksBean.tasksEntity.companiesByIdCompanies}"
-                                completeMethod="#{companiesBean.completeCompaniesContains}"
-                                var="Company"
-                                itemLabel="#{Company.label}"
-                                itemValue="#{Company}"
-                                dropdown="true"
-                                placeholder="#{bundle['company']}"
-                                converter="#{companiesConverter}"
-                                groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
-
-
-            </p:panelGrid>
-            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                <p:outputLabel for="descriptionCreate" value="#{bundle['tasks.description']}:"/>
-                <p:inputTextarea value="#{tasksBean.tasksEntity.description}" id="descriptionCreate"
-                                 rows="4" cols="100"
+        <div class="ui-g ui-fluid">
+            <h:form id="formCreateTask">
+                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                    <p:outputLabel value="#{bundle['title']} :" for="acTitleCreate"/>
+                    <p:inputText id="acTitleCreate" value="#{tasksBean.tasksEntity.title}"
+                                 required="true"
+                                 placeholder="#{bundle['title']}"
+                                 requiredMessage="#{bundle['task.validator.title']}"
                                  maxlength="255"
-                                 placeholder="#{bundle['descriptionHolder']}"
-                                 autoResize="false"/>
-            </p:panelGrid>
-            <div align="right" class="mgin-top">
-                <p:commandButton style="width:auto;margin-bottom:10px;"
-                                 update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
-                                 oncomplete="PF('createDialogTask').hide(); PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
-                                 id="buttonSaveEntityTasks"
-                                 disabled="#{empty tasksBean.tasksEntity.title or tasksBean.tasksEntity.title.length() le 1}"
-                                 value="#{bundle['save']}"
-                                 action="#{tasksBean.saveEntity}"/>
-            </div>
-        </h:form>
+                                 style="margin-bottom:10px;">
+                        <p:ajax update="detailsRight:createTasks:msg detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                global="false" event="keyup"/>
+                    </p:inputText>
+
+                    <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskTypeCreate"/>
+                    <p:selectOneMenu id="taskTypeCreate"
+                                     value="#{tasksBean.tasksEntity.taskTypesByIdTaskTypes}"
+                                     converter="taskTypeConverter">
+
+                        <f:selectItems value="#{taskTypesBean.taskTypesEntities}"
+                                       var="taskTypesEntities" itemValue="#{taskTypesEntities}"
+                                       itemLabel="#{taskTypesEntities.label}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="#{bundle['priority']}:" for="taskPriorityCreate"/>
+                    <p:selectOneMenu id="taskPriorityCreate"
+                                     value="#{tasksBean.tasksEntity.priority}">
+                        <f:selectItems value="#{enumPriorityBean.enumPriority}"
+                                       var="enumPriority" itemValue="#{enumPriority}"
+                                       itemLabel="#{enumPriority.label}"/>
+                        <f:validator validatorId="enumPriorityValidator"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="datetimeCreate" value="#{bundle['dueDate']}:"/>
+                    <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
+                                id="datetimeCreate" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
+
+                    <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
+                    <p:autoComplete id="Contact" value="#{tasksBean.tasksEntity.contactsByIdContacts}"
+                                    completeMethod="#{contactsBean.completeContactsContains}"
+                                    var="Contact"
+                                    itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
+                                    itemValue="#{Contact}"
+                                    dropdown="true"
+                                    placeholder="#{bundle['contact']}"
+                                    converter="#{contactsConverter}"
+                                    groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
+
+                    <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
+                    <p:autoComplete id="Company" value="#{tasksBean.tasksEntity.companiesByIdCompanies}"
+                                    completeMethod="#{companiesBean.completeCompaniesContains}"
+                                    var="Company"
+                                    itemLabel="#{Company.label}"
+                                    itemValue="#{Company}"
+                                    dropdown="true"
+                                    placeholder="#{bundle['company']}"
+                                    converter="#{companiesConverter}"
+                                    groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
+
+
+                </p:panelGrid>
+                <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                    <p:outputLabel for="descriptionCreate" value="#{bundle['tasks.description']}:"/>
+                    <p:inputTextarea value="#{tasksBean.tasksEntity.description}" id="descriptionCreate"
+                                     rows="4"
+                                     maxlength="255"
+                                     placeholder="#{bundle['descriptionHolder']}"
+                                     autoResize="false"/>
+                </p:panelGrid>
+                <div align="right" class="mgin-top">
+                    <p:commandButton style="width:auto;margin-bottom:10px;"
+                                     update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
+                                     oncomplete="PF('createDialogTask').hide(); PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
+                                     id="buttonSaveEntityTasks"
+                                     disabled="#{empty tasksBean.tasksEntity.title or tasksBean.tasksEntity.title.length() le 1}"
+                                     value="#{bundle['save']}"
+                                     action="#{tasksBean.saveEntity}"/>
+                </div>
+                <p:hotkey bind="esc" handler="PF('createDialogTask').hide()"/>
+            </h:form>
+        </div>
         <p:messages id="msg" closable="true" display="message"/>
     </f:view>
 </cc:implementation>
