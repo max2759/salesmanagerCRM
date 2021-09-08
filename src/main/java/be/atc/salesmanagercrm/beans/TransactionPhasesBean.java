@@ -67,9 +67,13 @@ public class TransactionPhasesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        Optional<TransactionPhasesEntity> optionalTransactionPhasesEntity = Optional.ofNullable(dao.findById(em, id));
-        em.clear();
-        em.close();
+        Optional<TransactionPhasesEntity> optionalTransactionPhasesEntity;
+        try {
+            optionalTransactionPhasesEntity = Optional.ofNullable(dao.findById(em, id));
+        } finally {
+            em.clear();
+            em.close();
+        }
         return optionalTransactionPhasesEntity.orElseThrow(() ->
                 new EntityNotFoundException(
                         "Aucune phase de transaction avec l'ID " + id + " n a ete trouve dans la BDD",

@@ -69,11 +69,14 @@ public class TransactionHistoriesBean extends ExtendBean implements Serializable
         }
 
         EntityManager em = EMF.getEM();
-        List<TransactionHistoriesEntity> TransactionHistoriesEntity = dao.findAllByIdUserAndByIdTransaction(em, idTransaction, usersEntity.getId());
+        List<TransactionHistoriesEntity> transactionHistoriesEntities;
+        try {
+            transactionHistoriesEntities = dao.findAllByIdUserAndByIdTransaction(em, idTransaction, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
-        em.clear();
-        em.close();
-
-        return TransactionHistoriesEntity;
+        return transactionHistoriesEntities;
     }
 }

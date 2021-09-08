@@ -67,9 +67,13 @@ public class VoucherStatusBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        Optional<VoucherStatusEntity> optionalVoucherStatusEntity = Optional.ofNullable(dao.findById(em, id));
-        em.clear();
-        em.close();
+        Optional<VoucherStatusEntity> optionalVoucherStatusEntity;
+        try {
+            optionalVoucherStatusEntity = Optional.ofNullable(dao.findById(em, id));
+        } finally {
+            em.clear();
+            em.close();
+        }
         return optionalVoucherStatusEntity.orElseThrow(() ->
                 new EntityNotFoundException(
                         "Aucun status de ticket avec l'ID " + id + " n a ete trouve dans la BDD",

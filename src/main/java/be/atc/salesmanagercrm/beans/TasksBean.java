@@ -594,10 +594,13 @@ public class TasksBean extends ExtendBean implements Serializable {
         }
         EntityManager em = EMF.getEM();
 
-        List<TasksEntity> tasksEntities = dao.findTasksEntityByContactsByIdContacts(em, contactsEntity.getId(), usersEntity.getId());
-
-        em.clear();
-        em.close();
+        List<TasksEntity> tasksEntities;
+        try {
+            tasksEntities = dao.findTasksEntityByContactsByIdContacts(em, contactsEntity.getId(), usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return tasksEntities;
     }
@@ -626,10 +629,13 @@ public class TasksBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        List<TasksEntity> tasksEntities = dao.findTasksEntityByCompaniesByIdCompanies(em, companiesEntity.getId(), usersEntity.getId());
-
-        em.clear();
-        em.close();
+        List<TasksEntity> tasksEntities;
+        try {
+            tasksEntities = dao.findTasksEntityByCompaniesByIdCompanies(em, companiesEntity.getId(), usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return tasksEntities;
     }
@@ -651,10 +657,13 @@ public class TasksBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
-        List<TasksEntity> tasksEntities = dao.findAll(em, usersEntity.getId());
-
-        em.clear();
-        em.close();
+        List<TasksEntity> tasksEntities;
+        try {
+            tasksEntities = dao.findAll(em, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return tasksEntities;
     }
@@ -673,10 +682,13 @@ public class TasksBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
-        List<TasksEntity> tasksEntities = dao.findTasksFinished(em, usersEntity.getId());
-
-        em.clear();
-        em.close();
+        List<TasksEntity> tasksEntities;
+        try {
+            tasksEntities = dao.findTasksFinished(em, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return tasksEntities;
     }

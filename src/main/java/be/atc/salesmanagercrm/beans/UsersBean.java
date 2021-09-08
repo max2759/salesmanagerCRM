@@ -542,7 +542,7 @@ public class UsersBean extends ExtendBean implements Serializable {
         try {
             return dao.findById(em, id);
         } catch (Exception ex) {
-            log.info("Nothing");
+            log.warn("User with ID {} was not found in the DB", id);
             throw new EntityNotFoundException(
                     "Aucun utilisateur avec l ID " + id + " n a ete trouve dans la BDD",
                     ErrorCodes.USER_NOT_FOUND

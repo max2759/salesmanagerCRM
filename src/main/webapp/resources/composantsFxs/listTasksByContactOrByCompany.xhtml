@@ -149,7 +149,7 @@
             </p:column>
             <p:column styleClass="columnEditDelte"
                       rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
-                <p:rowEditor rendered="#{usersBean.currentUser.isPermitted('updateNotes')}"
+                <p:rowEditor rendered="#{usersBean.currentUser.isPermitted('updateTasks')}"
                              styleClass="displayInlineBlock"/>
 
                 <p:commandLink

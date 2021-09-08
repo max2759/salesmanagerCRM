@@ -27,7 +27,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author Younes Arifi
@@ -47,9 +46,6 @@ public class NotesBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private NotesEntity notesEntity;
-    @Getter
-    @Setter
-    private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
     @Getter
     @Setter
     private List<NotesEntity> notesEntities;
@@ -273,7 +269,6 @@ public class NotesBean extends ExtendBean implements Serializable {
      */
     protected void save(NotesEntity entity) {
         log.info("NotesBean => method : save(NotesEntity entity)");
-
         try {
             accessControlBean.checkPermission("addNotes");
         } catch (AccessDeniedException exception) {
@@ -418,12 +413,13 @@ public class NotesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-
-        List<NotesEntity> notesEntities = dao.findNotesEntityByContactsByIdContacts(em, contactsEntity.getId(), usersEntity.getId());
-
-        em.clear();
-        em.close();
-
+        List<NotesEntity> notesEntities;
+        try {
+            notesEntities = dao.findNotesEntityByContactsByIdContacts(em, contactsEntity.getId(), usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
         return notesEntities;
     }
 
@@ -451,10 +447,13 @@ public class NotesBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
 
-        List<NotesEntity> notesEntities = dao.findNotesEntityByCompaniesByIdCompanies(em, companiesEntity.getId(), usersEntity.getId());
-
-        em.clear();
-        em.close();
+        List<NotesEntity> notesEntities;
+        try {
+            notesEntities = dao.findNotesEntityByCompaniesByIdCompanies(em, companiesEntity.getId(), usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return notesEntities;
     }
@@ -474,10 +473,13 @@ public class NotesBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
-        List<NotesEntity> notesEntities = dao.findAll(em, usersEntity.getId());
-
-        em.clear();
-        em.close();
+        List<NotesEntity> notesEntities;
+        try {
+            notesEntities = dao.findAll(em, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return notesEntities;
     }

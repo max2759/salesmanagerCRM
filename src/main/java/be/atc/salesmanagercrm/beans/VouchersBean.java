@@ -353,10 +353,13 @@ public class VouchersBean extends ExtendBean implements Serializable {
         }
         EntityManager em = EMF.getEM();
 
-        List<VouchersEntity> vouchersEntities = dao.findVouchersEntityByContactsByIdContacts(em, contactsEntity.getId(), usersEntity.getId());
-
-        em.clear();
-        em.close();
+        List<VouchersEntity> vouchersEntities;
+        try {
+            vouchersEntities = dao.findVouchersEntityByContactsByIdContacts(em, contactsEntity.getId(), usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return vouchersEntities;
     }
@@ -387,10 +390,13 @@ public class VouchersBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        List<VouchersEntity> vouchersEntities = dao.findVouchersEntityByCompaniesByIdCompanies(em, companiesEntity.getId(), usersEntity.getId());
-
-        em.clear();
-        em.close();
+        List<VouchersEntity> vouchersEntities;
+        try {
+            vouchersEntities = dao.findVouchersEntityByCompaniesByIdCompanies(em, companiesEntity.getId(), usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return vouchersEntities;
     }
@@ -412,10 +418,13 @@ public class VouchersBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
-        List<VouchersEntity> vouchersEntities = dao.findAll(em, usersEntity.getId());
-
-        em.clear();
-        em.close();
+        List<VouchersEntity> vouchersEntities;
+        try {
+            vouchersEntities = dao.findAll(em, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return vouchersEntities;
     }

@@ -17,7 +17,7 @@
     <f:view>
         <p:dialog header="#{bundle['tasks.create']}" widgetVar="createDialogTask" modal="true" responsive="true"
                   showEffect="fade">
-            <fxs:createTasks id="createTasks"/>
+            <fxs:createTasksForContactCompany id="createTasks"/>
         </p:dialog>
         <p:dialog header="#{bundle['notes.create']}" widgetVar="createDialogNotes" modal="true" responsive="true"
                   showEffect="fade">
@@ -28,7 +28,7 @@
         <div class="card card-w-title">
 
             <h:form id="formTabView">
-                <p:tabView id="tabViewRight">
+                <p:tabView id="tabViewRight" widgetVar="tabViewWidgetVar">
                     <p:ajax event="tabChange" listener="#{contactsBean.activityThread}" update="tabViewRight msgs"/>
                     <p:tab id="activityContactTab" title="#{bundle['activity.title']}">
                         <fxs:activityContact id="activityContact"/>

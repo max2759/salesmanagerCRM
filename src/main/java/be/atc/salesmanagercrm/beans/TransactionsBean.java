@@ -395,10 +395,13 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         }
         EntityManager em = EMF.getEM();
 
-        List<TransactionsEntity> transactionsEntities = dao.findTransactionsEntityByContactsByIdContacts(em, contactsEntity.getId(), usersEntity.getId());
-
-        em.clear();
-        em.close();
+        List<TransactionsEntity> transactionsEntities;
+        try {
+            transactionsEntities = dao.findTransactionsEntityByContactsByIdContacts(em, contactsEntity.getId(), usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return transactionsEntities;
     }
@@ -428,10 +431,13 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        List<TransactionsEntity> transactionsEntities = dao.findTransactionsEntityByCompaniesByIdCompanies(em, companiesEntity.getId(), usersEntity.getId());
-
-        em.clear();
-        em.close();
+        List<TransactionsEntity> transactionsEntities;
+        try {
+            transactionsEntities = dao.findTransactionsEntityByCompaniesByIdCompanies(em, companiesEntity.getId(), usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return transactionsEntities;
     }
@@ -452,10 +458,13 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
-        List<TransactionsEntity> transactionsEntities = dao.findAll(em, usersEntity.getId());
-
-        em.clear();
-        em.close();
+        List<TransactionsEntity> transactionsEntities;
+        try {
+            transactionsEntities = dao.findAll(em, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return transactionsEntities;
     }
@@ -476,10 +485,13 @@ public class TransactionsBean extends ExtendBean implements Serializable {
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
-        List<TransactionsEntity> transactionsEntitiesToFind = dao.findAllByPhase(em, usersEntity.getId(), phaseTransaction);
-
-        em.clear();
-        em.close();
+        List<TransactionsEntity> transactionsEntitiesToFind;
+        try {
+            transactionsEntitiesToFind = dao.findAllByPhase(em, usersEntity.getId(), phaseTransaction);
+        } finally {
+            em.clear();
+            em.close();
+        }
 
         return transactionsEntitiesToFind;
     }
