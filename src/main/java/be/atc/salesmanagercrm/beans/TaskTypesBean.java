@@ -205,9 +205,13 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        Optional<TaskTypesEntity> optionalTasksEntity = Optional.ofNullable(dao.findById(em, id));
-        em.clear();
-        em.close();
+        Optional<TaskTypesEntity> optionalTasksEntity;
+        try {
+            optionalTasksEntity = Optional.ofNullable(dao.findById(em, id));
+        } finally {
+            em.clear();
+            em.close();
+        }
         return optionalTasksEntity.orElseThrow(() ->
                 new EntityNotFoundException(
                         "Aucun type de tâche avec l'ID " + id + " n a ete trouve dans la BDD",

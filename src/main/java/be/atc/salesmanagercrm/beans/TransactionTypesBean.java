@@ -66,9 +66,13 @@ public class TransactionTypesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        Optional<TransactionTypesEntity> optionalTransactionTypesEntity = Optional.ofNullable(dao.findById(em, id));
-        em.clear();
-        em.close();
+        Optional<TransactionTypesEntity> optionalTransactionTypesEntity;
+        try {
+            optionalTransactionTypesEntity = Optional.ofNullable(dao.findById(em, id));
+        } finally {
+            em.clear();
+            em.close();
+        }
         return optionalTransactionTypesEntity.orElseThrow(() ->
                 new EntityNotFoundException(
                         "Aucun type de transaction avec l'ID " + id + " n a ete trouve dans la BDD",

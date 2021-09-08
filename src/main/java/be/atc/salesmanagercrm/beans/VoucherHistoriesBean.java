@@ -68,11 +68,14 @@ public class VoucherHistoriesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        List<VoucherHistoriesEntity> VoucherHistoriesEntity = dao.findAllByIdUserAndByIdVoucher(em, idVoucher, usersEntity.getId());
+        List<VoucherHistoriesEntity> voucherHistoriesEntities;
+        try {
+            voucherHistoriesEntities = dao.findAllByIdUserAndByIdVoucher(em, idVoucher, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
 
-        em.clear();
-        em.close();
-
-        return VoucherHistoriesEntity;
+        return voucherHistoriesEntities;
     }
 }

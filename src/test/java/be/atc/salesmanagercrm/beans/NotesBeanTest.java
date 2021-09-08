@@ -36,7 +36,7 @@ class NotesBeanTest {
 
         UsersEntity usersEntity = new UsersEntity();
 
-        usersEntity.setId(1);
+        usersEntity.setId(1055);
 
         NotesEntity entity = new NotesEntity();
 
