@@ -25,7 +25,7 @@
                     <h1>#{bundle['usersList.title']}</h1>
                     <h:form>
                         <p:commandButton
-                                value="#{bundle['register.register']}"
+                                value="#{bundle['user.create']}"
                                 oncomplete="PF('addUser').show();return false;"
                                 styleClass="NavyButton marginBottom10"
                                 action="#{usersBean.createNewUserEntity}">
@@ -69,6 +69,9 @@
                                      required="true" id="firstnameUpdate">
                             <p:ajax update="updateUserDialogForm:updateUser"
                                     event="keyup"/>
+                            <p:ajax update="firstUp"
+                                    global="false" event="keyup"/>
+                            <f:validator validatorId="userNameFrontValidator"></f:validator>
                         </p:inputText>
 
 
@@ -78,6 +81,9 @@
                                      required="true" id="lastnameUpdate">
                             <p:ajax update="updateUserDialogForm:updateUser"
                                     event="keyup"/>
+                            <p:ajax update="lastUp"
+                                    global="false" event="keyup"/>
+                            <f:validator validatorId="userLastnameFrontValidator"></f:validator>
                         </p:inputText>
 
                         <p:outputLabel for="emailUpdate" value="#{bundle['email']}:"></p:outputLabel>
@@ -85,6 +91,8 @@
                                      placeholder="#{usersBean.userForDialog.email}" required="true" id="emailUpdate">
                             <p:ajax update="updateUserDialogForm:updateUser"
                                     event="keyup"/>
+                            <p:ajax update="mailUp"
+                                    global="false" event="keyup"/>
                             <f:validator validatorId="userEmailValidator"></f:validator>
                         </p:inputText>
 
@@ -108,6 +116,10 @@
                                          or empty usersBean.usersEntityOther.lastname or usersBean.usersEntityOther.lastname.length() le 1}"
                                          update="@(form) msgs"/>
                     </div>
+
+                    <p:messages id="firstUp" closable="true" display="message"/>
+                    <p:messages id="lastUp" closable="true" display="message"/>
+                    <p:messages id="mailUp" closable="true" display="message"/>
                 </p:dialog>
 
             </h:form>
@@ -126,7 +138,11 @@
                                      feedback="false">
                             <p:ajax update="addUserDialogForm:addUser"
                                     event="keyup"/>
+                            <p:ajax update="first"
+                                    global="false" event="keyup"/>
+                            <f:validator validatorId="userNameFrontValidator"></f:validator>
                         </p:inputText>
+
 
 
                         <p:outputLabel for="lastname" value="#{bundle['lastname']}: "/>
@@ -134,6 +150,9 @@
                                      feedback="false">
                             <p:ajax update="addUserDialogForm:addUser"
                                     event="keyup"/>
+                            <p:ajax update="last"
+                                    global="false" event="keyup"/>
+                            <f:validator validatorId="userLastnameFrontValidator"></f:validator>
                         </p:inputText>
 
 
@@ -143,6 +162,8 @@
                                      feedback="false">
                             <p:ajax update="addUserDialogForm:addUser"
                                     event="keyup"/>
+                            <p:ajax update="mail" listener="#{usersBean.validateLength}"
+                                    global="false" event="keyup"/>
                             <f:validator validatorId="userEmailValidator"></f:validator>
                         </p:inputText>
 
@@ -168,7 +189,9 @@
                                          process="@form"/>
                     </div>
 
-
+                    <p:messages id="first" closable="true" display="message"/>
+                    <p:messages id="last" closable="true" display="message"/>
+                    <p:messages id="mail" closable="true" display="message"/>
                 </p:dialog>
             </h:form>
 

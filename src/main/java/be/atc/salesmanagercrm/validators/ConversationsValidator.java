@@ -3,6 +3,7 @@ package be.atc.salesmanagercrm.validators;
 
 import be.atc.salesmanagercrm.entities.ConversationsEntity;
 import be.atc.salesmanagercrm.utils.JsfUtils;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
@@ -17,22 +18,34 @@ import java.util.Locale;
  */
 @Slf4j
 public class ConversationsValidator {
+    @Getter
+    private static final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     public static List<String> validate(ConversationsEntity entity) {
         Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
         FacesMessage msg;
+        String errorMessage = null;
 
         List<String> errors = new ArrayList<>();
 
         log.info(String.valueOf(entity));
         if (entity == null) {
             errors.add("La reception des données à échouée");
-            errors.add("Veuillez recommencer votre inscription");
+            errors.add("Veuillez recommencer votre message");
+            errorMessage = JsfUtils.returnMessage(getLocale(), "message.empty") + "\n" + JsfUtils.returnMessage(getLocale(), "message.empty");
             return errors;
         }
         if (entity.getMessage() == null || entity.getMessage().isEmpty()) {
             errors.add("Le message est vide");
-            msg = new FacesMessage(JsfUtils.returnMessage(locale, "message.empty"), null);
+            errorMessage = JsfUtils.returnMessage(getLocale(), "message.empty");
+        }
+        if (entity.getMessage().length() > 255) {
+            errors.add("Le nombre de caractere de la description doit etre inferieur ou egale a 255");
+
+            errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "validator.conversationLength") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "validator.conversationLength") + "\n";
+        }
+        if (errorMessage != null) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
 

@@ -73,7 +73,8 @@
                                              value="#{rolesPermissionsBean.rolesPermissionsEntity.permissionsByIdPermissions}"
                                              converter="permissionsConverter"
                             >
-                                <f:selectItems value="#{permissionsBean.permissionsEntityList}" var="permissions"
+
+                            <f:selectItems value="#{permissionsBean.permissionsEntityList}" var="permissions"
                                                itemValue="#{permissions}"
                                                itemLabel="#{permissions.label}"/>
                             </p:selectOneMenu>

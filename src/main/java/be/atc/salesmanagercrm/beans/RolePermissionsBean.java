@@ -81,6 +81,9 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private List<PermissionsEntity> permissionsEntitiesRole = new ArrayList<>();
+    @Getter
+    @Setter
+    private boolean all;
 
 
     public void initialiseDialogRolePermissionsId(Integer idRolePermission) {
@@ -172,6 +175,9 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
 
+        log.info(String.valueOf(all));
+
+
         log.info(String.valueOf(rolesPermissionsEntity.getRolesByIdRoles().getId())); // je recoit mon role la c'est bon
         RolesEntity roleEntityId = rdao.findById(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
 
@@ -248,7 +254,7 @@ log.info(String.valueOf(permissionsEntities.size()));
             deleteRolesPermissions(rolesPermissionsEntity.getRolesByIdRoles().getId());
         }
 
-
+        boolean com = false;
         for (PermissionsEntity permissionsEntity : permissionsEntitiesRole) {
             String idRoles = String.valueOf(rolesPermissionsEntity.getRolesByIdRoles().getId());
             int idRole = Integer.parseInt(idRoles);
@@ -270,8 +276,8 @@ log.info(String.valueOf(permissionsEntities.size()));
                     dao.addRolePermissions(em, rolesPermissionsEntity);
                     tx.commit();
                     log.info("Persist ok");
-                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "permission.update"), null);
-                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    com = true;
+
                 } catch (Exception ex) {
                     if (tx != null && tx.isActive()) tx.rollback();
                     log.info("Persist echec");
@@ -281,6 +287,11 @@ log.info(String.valueOf(permissionsEntities.size()));
                     em.clear();
                     em.clear();
                 }
+            }
+
+            if (com) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "permission.update"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
             }
 
             //faire un add du combo

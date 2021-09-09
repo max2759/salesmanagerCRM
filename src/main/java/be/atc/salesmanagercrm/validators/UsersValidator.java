@@ -202,6 +202,7 @@ public class UsersValidator {
         return errors;
     }
 
+
     public static boolean validatePassword(String password) {
         String regex = "^^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?])[A-Za-z\\d@$!%*?/.^&*_=+>)]{8,}$";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
