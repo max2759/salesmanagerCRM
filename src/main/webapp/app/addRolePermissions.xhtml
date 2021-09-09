@@ -46,6 +46,8 @@
 
                 <!--checkbox des permissions -->
                 <h4><p:outputLabel for="role" value="#{bundle['choosePermissions']}">: </p:outputLabel></h4>
+
+                <h:selectBooleanCheckbox value="#{rolesPermissionsBean.all}"/> all
                 <p:selectManyCheckbox id="grid2"
                                       value="#{rolesPermissionsBean.permissionsEntitiesRole}"
                                       layout="responsive"

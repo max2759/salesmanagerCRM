@@ -518,9 +518,9 @@ public class CheckEntities extends ExtendBean implements Serializable {
             String username1 = username + number;
             log.info(username1);
             if (number < 10) {
-                username1 = username + "0";
-                usersEntity1 = usersDao.findByUsername(em, username1 + number);
-                log.info(username + "0" + number);
+                username1 = username + "0" + number;
+                usersEntity1 = usersDao.findByUsername(em, username1);
+
             } else {
                 usersEntity1 = usersDao.findByUsername(em, username + number);
             }
@@ -532,15 +532,15 @@ public class CheckEntities extends ExtendBean implements Serializable {
                     number = random.nextInt(99 - 1);
                     log.info(String.valueOf(number));
                     if (number < 10) {
-                        log.info("dans - de 10: " + number);
                         int number1 = number;
-                        log.info(String.valueOf(number1));
+
 
                         username1 = username + "0" + number1;
-                        log.info(username1);
+
                         usersEntity1 = usersDao.findByUsername(em, username1);
                     } else {
                         username1 = username + number;
+                        usersEntity1 = usersDao.findByUsername(em, username1);
                         log.info("je suis dans le else");
                     }
 

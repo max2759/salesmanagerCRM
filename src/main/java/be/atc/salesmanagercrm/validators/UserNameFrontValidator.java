@@ -1,6 +1,5 @@
 package be.atc.salesmanagercrm.validators;
 
-import be.atc.salesmanagercrm.beans.CheckEntities;
 import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidOperationException;
@@ -16,15 +15,13 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Larche Marie-Élise
  */
 @Slf4j
-@FacesValidator("userEmailValidator")
-public class UsersEmailFrontValidator implements Validator {
+@FacesValidator("userNameFrontValidator")
+public class UserNameFrontValidator implements Validator {
 
     @Getter
     @Setter
@@ -33,21 +30,12 @@ public class UsersEmailFrontValidator implements Validator {
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
 
-        CheckEntities checkEntities = new CheckEntities();
-
         UsersEntity usersEntity = new UsersEntity();
-        usersEntity.setEmail((String) value);
+        usersEntity.setFirstname((String) value);
 
 
         try {
             validateLength(usersEntity);
-        } catch (InvalidOperationException exception) {
-            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            throw new ValidatorException(new FacesMessage(getMessageEmailError()));
-        }
-
-        try {
-            checkEmailRegexe(usersEntity);
         } catch (InvalidOperationException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             throw new ValidatorException(new FacesMessage(getMessageEmailError()));
@@ -61,37 +49,15 @@ public class UsersEmailFrontValidator implements Validator {
      * @return jsf utils message
      */
     private String getMessageEmailError() {
-        return JsfUtils.returnMessage(locale, "users.errorEmailRegex");
-    }
-
-    /**
-     * Check if user exist in DB
-     *
-     * @param entity : UsersEntity
-     */
-    public void checkEmailRegexe(UsersEntity entity) {
-
-        if (entity != null) {
-            Pattern pattern = Pattern.compile("^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\\.[a-z]{2,4}$");
-            Matcher matcher = pattern.matcher(entity.getEmail());
-            boolean bool = matcher.matches();
-
-            if (bool == false) {
-                log.warn("wrong regex email", entity.getEmail());
-                throw new InvalidOperationException(
-                        "Votre adresse mail n'est pas valide " + entity.getEmail(), ErrorCodes.USER_BAD_EMAIL_REGEX
-                );
-            }
-        }
+        return JsfUtils.returnMessage(locale, "error.notEnoughChar");
     }
 
     public void validateLength(UsersEntity entity) {
-        String errorMessage;
 
-        if (entity.getEmail() != null && entity.getEmail().length() < 2) {
-            log.warn("longueur trop courte", entity.getEmail());
+        if (entity.getFirstname() != null && entity.getFirstname().length() < 2) {
+            log.warn("longueur trop courte", entity.getFirstname());
             throw new InvalidOperationException(
-                    "longueur trop courte " + entity.getEmail(), ErrorCodes.USER_BAD_EMAIL_REGEX
+                    "longueur trop courte " + entity.getFirstname(), ErrorCodes.USER_NOT_VALID
             );
           /*  errorMessage = JsfUtils.returnMessage(getLocale(), "error.notEnoughChar");
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);

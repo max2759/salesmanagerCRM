@@ -22,14 +22,14 @@
                      rowsPerPageTemplate="10,20,50"
                      widgetVar="displayAllEntitiesActive"
                      filteredValue="#{usersBean.usersEntitiesActiveFiltered}"
-                     rendered="#{usersBean.usersEntities.size() eq 0 ? false : true}"
                      value="#{usersBean.usersEntitiesActive}"
                      id="dataActive">
 
             <p:column width="500" headerText="#{bundle['user.username']}"
                       sortBy="#{user.username}"
                       filterBy="#{user.username}"
-                      filterMatchMode="contains">
+                      filterMatchMode="contains"
+            >
 
                 <p:commandLink id="titleAllActive" value="#{user.username}"
                                onclick="PF('dlg2').show();"
@@ -69,7 +69,6 @@
                       filterBy="#{user.rolesByIdRoles.label}"
                       filterMatchMode="contains">
                 <h:outputText value="#{user.rolesByIdRoles.label}">
-                    <f:convertNumber currencySymbol="€" type="currency"/>
                 </h:outputText>
             </p:column>
 
@@ -90,7 +89,7 @@
                             action="#{usersBean.delete(user.id)}"
                             update="@(form) msgs"
                     >
-                        <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
+                        <p:confirm header="#{bundle['confirmation']}" message="#{bundle['user.delete']}"
                                    icon="fa fa-warning"/>
                         <i class="ui-icon ui-icon-delete-forever"></i>
                     </p:commandLink>
@@ -103,15 +102,7 @@
                                          icon="ui-icon-close"/>
                     </p:confirmDialog>
 
-                    <!--  <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
-                          <p:commandButton value="#{bundle['yes']}" type="button"
-                                           styleClass="ui-confirmdialog-yes GreenButton"
-                                           icon="ui-icon-check"/>
-                          <p:commandButton value="#{bundle['no']}" type="button"
-                                           styleClass="ui-confirmdialog-no RedButton"
-                                           icon="ui-icon-close"/>
-                      </p:confirmDialog>
-                      -->
+
                 </h:panelGroup>
             </p:column>
 

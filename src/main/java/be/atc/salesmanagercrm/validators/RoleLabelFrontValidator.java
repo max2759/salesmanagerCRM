@@ -3,7 +3,9 @@ package be.atc.salesmanagercrm.validators;
 import be.atc.salesmanagercrm.beans.CheckEntities;
 import be.atc.salesmanagercrm.beans.ExtendBean;
 import be.atc.salesmanagercrm.entities.RolesEntity;
+import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
+import be.atc.salesmanagercrm.exceptions.InvalidOperationException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +35,13 @@ public class RoleLabelFrontValidator extends ExtendBean implements Validator {
         rolesEntity.setLabel((String) value);
 
         try {
+            validateLength(rolesEntity);
+        } catch (InvalidOperationException exception) {
+            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            throw new ValidatorException(new FacesMessage(getMessageTooShort()));
+        }
+
+        try {
             checkEntities.checkRoleByLabel(rolesEntity);
         } catch (InvalidEntityException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
@@ -47,6 +56,20 @@ public class RoleLabelFrontValidator extends ExtendBean implements Validator {
      */
     private String getMessageErrorLabelAlreadyExist() {
         return JsfUtils.returnMessage(locale, "roles.labelExist");
+    }
+
+    private String getMessageTooShort() {
+        return JsfUtils.returnMessage(locale, "error.notEnoughChar");
+    }
+
+    public void validateLength(RolesEntity entity) {
+
+        if (entity.getLabel() != null && entity.getLabel().length() < 2) {
+            log.warn("longueur trop courte", entity.getLabel());
+            throw new InvalidOperationException(
+                    "longueur trop courte " + entity.getLabel(), ErrorCodes.ROLES_NOT_VALID
+            );
+        }
     }
 
 }

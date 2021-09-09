@@ -133,6 +133,11 @@ public class UsersBean extends ExtendBean implements Serializable {
     @Inject
     AccessControlBean accessControlBean;
 
+    public void validateLength() {
+        if (userEntityNew.getEmail() != null && userEntityNew.getEmail().length() < 2) {
+            FacesContext.getCurrentInstance().addMessage("mail", new FacesMessage(FacesMessage.SEVERITY_INFO, "error.notEnoughChar", "2"));
+        }
+    }
 
     public void initialiseDialogUserId(Integer idUser) {
         //  userForDialog = new UsersEntity();
@@ -508,8 +513,7 @@ public class UsersBean extends ExtendBean implements Serializable {
 
     public void findAllUsers() {
         log.info("bgin findallusers");
-        usersEntityList = findAll();
-        log.info(String.valueOf(usersEntityList));
+        loadListEntities();
 
     }
 

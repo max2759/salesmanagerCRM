@@ -65,7 +65,8 @@
                                 <h:panelGroup rendered="#{role.active}">
                                     <p:commandLink update="@(form)"
                                                    action="#{rolesBean.delete(role.id)}">
-                                        <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
+                                        <p:confirm header="#{bundle['confirmation']}"
+                                                   message="#{bundle['role.confirmeDelete']}"
                                                    icon="fa fa-warning"/>
                                         <i class="ui-icon ui-icon-delete-forever"></i>
                                         <f:param name="idEntity" value="#{role.id}"/>
@@ -103,7 +104,7 @@
 
             <h:form id="updateRoleDialogForm">
 
-                <p:dialog header="Modal Dialog" widgetVar="updateRole" modal="true"
+                <p:dialog header="#{bundle['role.update']}" widgetVar="updateRole" modal="true"
                           responsive="true" id="updateRoleDialog">
 
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
@@ -131,11 +132,11 @@
             <!-- e*******************add*******************e- -->
             <h:form id="addRoleDialogForm">
 
-                <p:dialog header="Modal Dialog" widgetVar="addRole" modal="true"
+                <p:dialog header="#{bundle['role.create']}" widgetVar="addRole" modal="true"
                           responsive="true" id="addRoleDialog">
 
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" id="addRoleD">
-                        <p:outputLabel for="roleLabel" value="#{bundle['role.label']}"/>
+                        <p:outputLabel for="roleLabel" value="#{bundle['role.create']}"/>
                         <p:inputText value="#{rolesBean.rolesEntityNew.label}" id="roleLabel" required="true">
                             <p:ajax update="addRoleDialogForm:addRole"
                                     event="keyup"/>
