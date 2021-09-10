@@ -63,6 +63,7 @@
                                label="#{transactionsBean.transactionsEntity.endDate.dayOfMonth}/#{transactionsBean.transactionsEntity.endDate.monthValue}/#{transactionsBean.transactionsEntity.endDate.year}">
                         <p:calendar placeholder="#{bundle['dueDate']}:"
                                     value="#{transactionsBean.transactionsEntity.endDate}"
+                                    converterMessage="#{bundle['converter.dateTime']}"
                                     id="datetime" pattern="dd/MM/yyyy HH:mm"
                                     mindate="#{transactionsBean.transactionsEntity.creationDate}">
                         </p:calendar>
@@ -98,8 +99,10 @@
 
 
                     <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
-                    <p:inplace emptyLabel="..." label="#{transactionsBean.transactionsEntity.companiesByIdCompanies.label}">
-                        <p:autoComplete id="Company" value="#{transactionsBean.transactionsEntity.companiesByIdCompanies}"
+                    <p:inplace emptyLabel="..."
+                               label="#{transactionsBean.transactionsEntity.companiesByIdCompanies.label}">
+                        <p:autoComplete id="Company"
+                                        value="#{transactionsBean.transactionsEntity.companiesByIdCompanies}"
                                         completeMethod="#{companiesBean.completeCompaniesContains}"
                                         var="Company"
                                         itemLabel="#{Company.label}"
@@ -109,7 +112,9 @@
                                         converter="#{companiesConverter}"
                                         groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
                     </p:inplace>
-
+                </p:panelGrid>
+                <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                    <p:message for="titleUpdate" id="msg" closable="true" display="message"/>
                 </p:panelGrid>
                 <div align="right" class="mgin-top"
                      id="divActionUpdateTransaction">
@@ -120,7 +125,8 @@
                                     id="buttonSaveUpdateTransaction"
                                     value="#{bundle['save']}"
                                     update="@(form) msgs"
-                                    oncomplete="PF('displayAllEntities').filter(); PF('dlg2').hide()"
+                                    resetValues="true"
+                                    oncomplete="if (!args.validationFailed){PF('dlg2').hide()}; PF('displayAllEntities').filter();"
                                     action="#{transactionsBean.updateEntity}"/>
 
                         <p:menuitem icon="ui-icon-delete"

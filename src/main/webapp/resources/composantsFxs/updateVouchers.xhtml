@@ -96,6 +96,7 @@
                                          autoResize="false"
                                          placeholder="#{bundle['descriptionHolder']}"/>
                     </p:inplace>
+                    <p:message for="titleUpdate" id="msg" closable="true" display="message"/>
                 </p:panelGrid>
 
                 <div align="right" class="mgin-top">
@@ -105,7 +106,8 @@
                                     rendered="#{usersBean.currentUser.isPermitted('updateVouchers')}"
                                     value="#{bundle['save']}"
                                     update="@(form) msgs"
-                                    oncomplete="PF('displayAllEntities').filter(); PF('dlg2').hide()"
+                                    resetValues="true"
+                                    oncomplete="if (!args.validationFailed){PF('dlg2').hide()}; PF('displayAllEntities').filter();"
                                     action="#{vouchersBean.updateEntity}"/>
                         <p:menuitem icon="ui-icon-update"
                                     rendered="#{usersBean.currentUser.isPermitted('showVoucherHistories')}"

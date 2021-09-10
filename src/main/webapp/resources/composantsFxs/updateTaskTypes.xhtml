@@ -17,24 +17,26 @@
         <div class="ui-g ui-fluid">
             <h:form id="updateTaskTypesForm">
 
-                <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                    <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
 
-                    <p:outputLabel value="#{bundle['title']} :" for="titleUpdate"/>
-                    <p:inputText id="titleUpdate" value="#{taskTypesBean.taskTypesEntity.label}"
-                                 required="true"
-                                 maxlength="255"
-                                 placeholder="#{bundle['title']}"
-                                 requiredMessage="#{bundle['taskTypes.validator.title']}">
-                    </p:inputText>
-
-                </p:panelGrid>
+                        <p:outputLabel value="#{bundle['title']} :" for="titleUpdate"/>
+                        <p:inputText id="titleUpdate" value="#{taskTypesBean.taskTypesEntity.label}"
+                                     required="true"
+                                     maxlength="255"
+                                     requiredMessage="#{bundle['taskTypes.validator.title']}"
+                                     placeholder="#{bundle['title']}">
+                        </p:inputText>
+                        <p:message for="titleUpdate" id="msg" closable="true" display="message"/>
+                    </p:panelGrid>
                 <div align="right" class="mgin-top">
                     <p:commandButton style="width:auto;margin-bottom:10px;"
                                      id="buttonUpdateTaskTypes"
                                      update="@(form) msgs"
-                                     oncomplete="PF('displayAllEntities').filter(); PF('dlg2').hide()"
+                                     oncomplete="if (!args.validationFailed){PF('dlg2').hide()}; PF('displayAllEntities').filter();"
+                                     disabled="#{empty taskTypesBean.taskTypesEntity.label}"
                                      value="#{bundle['save']}"
                                      action="#{taskTypesBean.updateEntity}"
+                                     resetValues="true"
                     >
                     </p:commandButton>
                 </div>

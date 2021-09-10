@@ -14,13 +14,11 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
-        <h:form>
-            <p:commandButton value="#{bundle['tasks.create']}"
-                             rendered="#{usersBean.currentUser.isPermitted('addTasks')}"
-                             update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
-                             onclick="PF('createDialogTask').show();" styleClass="NavyButton marginBottom15"
-                             action="#{tasksBean.showModalCreate}"/>
-        </h:form>
+        <p:commandButton value="#{bundle['tasks.create']}"
+                         rendered="#{usersBean.currentUser.isPermitted('addTasks')}"
+                         update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
+                         onclick="PF('createDialogTask').show();" styleClass="NavyButton marginBottom15"
+                         action="#{tasksBean.showModalCreate}"/>
 
         <p:dataTable id="task1" var="task"
                      value="#{tasksBean.tasksEntities}"

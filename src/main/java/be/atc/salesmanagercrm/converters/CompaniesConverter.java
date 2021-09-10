@@ -38,12 +38,12 @@ public class CompaniesConverter implements Converter {
 
         int id;
         if (value == null) {
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyNotExist")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "companyNotExist"), null));
         }
         try {
             id = Integer.parseInt(value);
         } catch (NumberFormatException nfe) {
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyNotExist")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "companyNotExist"), null));
         }
 
 
@@ -53,11 +53,11 @@ public class CompaniesConverter implements Converter {
                 return companiesEntity;
             } catch (EntityNotFoundException exception) {
                 log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyNotExist")));
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "companyNotExist"), null));
             }
         } else {
             log.warn("Erreur Converter Contact");
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyNotExist")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "companyNotExist"), null));
         }
     }
 

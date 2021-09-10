@@ -26,7 +26,7 @@
                                  maxlength="255"
                                  requiredMessage="#{bundle['transactions.validator.title']}">
                         <p:ajax update="msg listAllTransactions:createTransactions:createTransactionForm:buttonCreateTransaction"
-                                event="keyup"/>
+                                resetValues="true" event="keyup"/>
                     </p:inputText>
 
                     <p:outputLabel value="#{bundle['transactions.phase']}:" for="phase"/>
@@ -49,6 +49,7 @@
                     <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"/>
                     <p:calendar placeholder="#{bundle['dueDate']}:"
                                 value="#{transactionsBean.transactionsEntity.endDate}"
+                                converterMessage="#{bundle['converter.dateTime']}"
                                 id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{transactionsBean.now}"/>
 
                     <p:outputLabel value="#{bundle['transactions.type']}:" for="type"/>
@@ -83,13 +84,16 @@
                                     converter="#{companiesConverter}"
                                     groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
                 </p:panelGrid>
-                <p:messages id="msg" closable="true" display="message"/>
+                <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                    <p:message for="title" id="msg" closable="true" display="message"/>
+                </p:panelGrid>
                 <div align="right" class="mgin-top">
                     <p:commandButton style="width:auto;margin-bottom:10px;"
                                      update="@(form) msgs"
                                      id="buttonCreateTransaction"
                                      disabled="#{empty transactionsBean.transactionsEntity.title or transactionsBean.transactionsEntity.title.length() le 1}"
-                                     oncomplete="PF('displayAllEntities').filter(); PF('createDialog').hide()"
+                                     resetValues="true"
+                                     oncomplete="if (!args.validationFailed){PF('createDialog').hide()}; PF('displayAllEntities').filter();"
                                      value="#{bundle['save']}"
                                      action="#{transactionsBean.saveEntity}"
                     >
