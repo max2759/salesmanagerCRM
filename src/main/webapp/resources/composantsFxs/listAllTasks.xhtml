@@ -54,7 +54,7 @@
                                      widgetVar="displayAllEntities"
                                      filteredValue="#{tasksBean.tasksEntitiesFiltered}">
 
-                            <p:column colspan="1" width="55" headerText="#{bundle['status']}">
+                            <p:column colspan="1" priority="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusAll" value="#{task.status}">
                                     <p:ajax event="change" update="@form msgs"
                                             oncomplete="PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
@@ -66,7 +66,7 @@
                                 </p:selectBooleanCheckbox>
                             </p:column>
 
-                            <p:column colspan="5" width="500" headerText="#{bundle['tasks.title']}"
+                            <p:column colspan="3" priority="1" headerText="#{bundle['tasks.title']}"
                                       sortBy="#{task.title}"
                                       filterBy="#{task.title}"
                                       filterMatchMode="contains">
@@ -85,7 +85,7 @@
                                            showEffect="clip" hideEffect="fold" position="bottom"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
+                            <p:column colspan="2" priority="4" headerText="#{bundle['tasks.contact']}"
                                       sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterMatchMode="contains">
@@ -95,7 +95,7 @@
                                 />
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.company']}"
+                            <p:column colspan="2" priority="4" headerText="#{bundle['tasks.company']}"
                                       sortBy="#{task.companiesByIdCompanies.label}"
                                       filterBy="#{task.companiesByIdCompanies.label}"
                                       filterMatchMode="contains">
@@ -104,7 +104,7 @@
                                         outcome="companydetails.xhtml?companyID=#{task.companiesByIdCompanies.id}"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.taskType']}"
+                            <p:column colspan="1" priority="5" headerText="#{bundle['tasks.taskType']}"
                                       filterBy="#{task.taskTypesByIdTaskTypes.label}" filterMatchMode="exact">
                                 <f:facet name="filter">
                                     <p:selectOneMenu onchange="PF('displayAllEntities').filter()"
@@ -121,7 +121,7 @@
                                 <h:outputText value="#{task.taskTypesByIdTaskTypes.label}"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['priority']}"
+                            <p:column colspan="1" priority="5" headerText="#{bundle['priority']}"
                                       filterBy="#{task.priority.label}" filterMatchMode="exact">
                                 <f:facet name="filter">
                                     <p:selectOneMenu onchange="PF('displayAllEntities').filter()"
@@ -138,7 +138,7 @@
                                 <h:outputText value="#{task.priority.label}"/>
                             </p:column>
 
-                            <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
+                            <p:column colspan="1" priority="3" headerText="#{bundle['tasks.endDate']}"
                                       filterBy="#{task.endDate}"
                                       sortBy="#{task.endDate}"
                                       filterable="true"
@@ -162,7 +162,7 @@
                                 </h:outputText>
                             </p:column>
 
-                            <p:column colspan="1" width="70"
+                            <p:column colspan="1" width="70" priority="1"
                                       rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
                                                onclick="PF('updateDialogTask').show();"
@@ -210,7 +210,7 @@
                                      widgetVar="displayEntitiesDueToday"
                                      filteredValue="#{tasksBean.tasksEntitiesDueTodayFiltered}">
 
-                            <p:column colspan="1" width="55" headerText="#{bundle['status']}">
+                            <p:column colspan="1" priority="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusToday" value="#{task.status}">
                                     <p:ajax event="change" update="@form msgs"
                                             listener="#{tasksBean.updateStatus}"/>
@@ -221,7 +221,7 @@
                                 </p:selectBooleanCheckbox>
                             </p:column>
 
-                            <p:column colspan="5" width="500" headerText="#{bundle['tasks.title']}"
+                            <p:column colspan="3" priority="1" headerText="#{bundle['tasks.title']}"
                                       sortBy="#{task.title}"
                                       filterBy="#{task.title}"
                                       filterMatchMode="contains">
@@ -238,7 +238,7 @@
                                            showEffect="clip" hideEffect="fold" position="bottom"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
+                            <p:column colspan="2" priority="4" headerText="#{bundle['tasks.contact']}"
                                       sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterMatchMode="contains">
@@ -248,7 +248,7 @@
                                 />
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.company']}"
+                            <p:column colspan="2" priority="4" headerText="#{bundle['tasks.company']}"
                                       sortBy="#{task.companiesByIdCompanies.label}"
                                       filterBy="#{task.companiesByIdCompanies.label}"
                                       filterMatchMode="contains">
@@ -257,7 +257,7 @@
                                         outcome="companydetails.xhtml?companyID=#{task.companiesByIdCompanies.id}"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.taskType']}"
+                            <p:column colspan="1" priority="5" headerText="#{bundle['tasks.taskType']}"
                                       filterBy="#{task.taskTypesByIdTaskTypes.label}" filterMatchMode="exact">
                                 <f:facet name="filter">
                                     <p:selectOneMenu onchange="PF('displayEntitiesDueToday').filter()"
@@ -274,7 +274,7 @@
                                 <h:outputText value="#{task.taskTypesByIdTaskTypes.label}"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['priority']}"
+                            <p:column colspan="1" priority="5" headerText="#{bundle['priority']}"
                                       filterBy="#{task.priority.label}" filterMatchMode="exact">
                                 <f:facet name="filter">
                                     <p:selectOneMenu onchange="PF('displayEntitiesDueToday').filter()"
@@ -291,7 +291,7 @@
                                 <h:outputText value="#{task.priority.label}"/>
                             </p:column>
 
-                            <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
+                            <p:column colspan="1" priority="3" headerText="#{bundle['tasks.endDate']}"
                                       sortBy="#{task.endDate}">
                                 <h:outputText rendered="#{task.endDate gt tasksBean.now}" value="#{task.endDate}">
                                     <f:convertDateTime type="localDate"
@@ -304,7 +304,7 @@
                                 </h:outputText>
                             </p:column>
 
-                            <p:column colspan="1" width="70"
+                            <p:column colspan="1" width="70" priority="1"
                                       rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
                                                onclick="PF('updateDialogTask').show();"
@@ -351,7 +351,7 @@
                                      widgetVar="displayEntitiesToLate"
                                      filteredValue="#{tasksBean.tasksEntitiesToLateFiltered}">
 
-                            <p:column colspan="1" width="55" headerText="#{bundle['status']}">
+                            <p:column colspan="1" priority="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusToLate" value="#{task.status}">
                                     <p:ajax event="change" update="@form msgs"
                                             listener="#{tasksBean.updateStatus}"/>
@@ -362,7 +362,7 @@
                                 </p:selectBooleanCheckbox>
                             </p:column>
 
-                            <p:column colspan="5" width="500" headerText="#{bundle['tasks.title']}"
+                            <p:column colspan="3" priority="1" headerText="#{bundle['tasks.title']}"
                                       sortBy="#{task.title}"
                                       filterBy="#{task.title}"
                                       filterMatchMode="contains">
@@ -380,7 +380,7 @@
                                            showEffect="clip" hideEffect="fold" position="bottom"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
+                            <p:column colspan="2" priority="4" headerText="#{bundle['tasks.contact']}"
                                       sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterMatchMode="contains">
@@ -390,7 +390,7 @@
                                 />
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.company']}"
+                            <p:column colspan="2" priority="4" headerText="#{bundle['tasks.company']}"
                                       sortBy="#{task.companiesByIdCompanies.label}"
                                       filterBy="#{task.companiesByIdCompanies.label}"
                                       filterMatchMode="contains">
@@ -399,7 +399,7 @@
                                         outcome="companydetails.xhtml?companyID=#{task.companiesByIdCompanies.id}"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.taskType']}"
+                            <p:column colspan="1" priority="5" headerText="#{bundle['tasks.taskType']}"
                                       filterBy="#{task.taskTypesByIdTaskTypes.label}" filterMatchMode="exact">
                                 <f:facet name="filter">
                                     <p:selectOneMenu onchange="PF('displayEntitiesToLate').filter()"
@@ -416,7 +416,7 @@
                                 <h:outputText value="#{task.taskTypesByIdTaskTypes.label}"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['priority']}"
+                            <p:column colspan="1" priority="5" headerText="#{bundle['priority']}"
                                       filterBy="#{task.priority.label}" filterMatchMode="exact">
                                 <f:facet name="filter">
                                     <p:selectOneMenu onchange="PF('displayEntitiesToLate').filter()"
@@ -433,7 +433,7 @@
                                 <h:outputText value="#{task.priority.label}"/>
                             </p:column>
 
-                            <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
+                            <p:column colspan="1" priority="3" headerText="#{bundle['tasks.endDate']}"
                                       filterBy="#{task.endDate}"
                                       sortBy="#{task.endDate}"
                                       filterable="true"
@@ -457,7 +457,7 @@
                                 </h:outputText>
                             </p:column>
 
-                            <p:column colspan="1" width="70"
+                            <p:column colspan="1" width="70" priority="1"
                                       rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
                                                onclick="PF('updateDialogTask').show();"
@@ -504,7 +504,7 @@
                                      widgetVar="displayEntitiesToCome"
                                      filteredValue="#{tasksBean.tasksEntitiesToComeFiltered}">
 
-                            <p:column colspan="1" width="55" headerText="#{bundle['status']}">
+                            <p:column colspan="1" priority="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusToCome" value="#{task.status}">
                                     <p:ajax event="change" update="@form msgs"
                                             listener="#{tasksBean.updateStatus}"/>
@@ -515,7 +515,7 @@
                                 </p:selectBooleanCheckbox>
                             </p:column>
 
-                            <p:column colspan="5" width="500" headerText="#{bundle['tasks.title']}"
+                            <p:column colspan="3" priority="1" headerText="#{bundle['tasks.title']}"
                                       sortBy="#{task.title}"
                                       filterBy="#{task.title}"
                                       filterMatchMode="contains">
@@ -532,7 +532,7 @@
                                            showEffect="clip" hideEffect="fold" position="bottom"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
+                            <p:column colspan="2" priority="4" headerText="#{bundle['tasks.contact']}"
                                       sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterMatchMode="contains">
@@ -542,7 +542,7 @@
                                 />
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.company']}"
+                            <p:column colspan="2" priority="4" headerText="#{bundle['tasks.company']}"
                                       sortBy="#{task.companiesByIdCompanies.label}"
                                       filterBy="#{task.companiesByIdCompanies.label}"
                                       filterMatchMode="contains">
@@ -551,7 +551,7 @@
                                         outcome="companydetails.xhtml?companyID=#{task.companiesByIdCompanies.id}"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.taskType']}"
+                            <p:column colspan="1" priority="5" headerText="#{bundle['tasks.taskType']}"
                                       filterBy="#{task.taskTypesByIdTaskTypes.label}" filterMatchMode="exact">
                                 <f:facet name="filter">
                                     <p:selectOneMenu onchange="PF('displayEntitiesToCome').filter()"
@@ -568,7 +568,7 @@
                                 <h:outputText value="#{task.taskTypesByIdTaskTypes.label}"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['priority']}"
+                            <p:column colspan="1" priority="5" headerText="#{bundle['priority']}"
                                       filterBy="#{task.priority.label}" filterMatchMode="exact">
                                 <f:facet name="filter">
                                     <p:selectOneMenu onchange="PF('displayEntitiesToCome').filter()"
@@ -585,7 +585,7 @@
                                 <h:outputText value="#{task.priority.label}"/>
                             </p:column>
 
-                            <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
+                            <p:column colspan="1" priority="3" headerText="#{bundle['tasks.endDate']}"
                                       filterBy="#{task.endDate}"
                                       sortBy="#{task.endDate}"
                                       filterable="true"
@@ -609,7 +609,7 @@
                                 </h:outputText>
                             </p:column>
 
-                            <p:column colspan="1" width="70"
+                            <p:column colspan="1" width="70" priority="1"
                                       rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
                                                onclick="PF('updateDialogTask').show();"
@@ -656,7 +656,7 @@
                                      widgetVar="displayEntitiesFinished"
                                      filteredValue="#{tasksBean.tasksEntitiesFinishedFiltered}">
 
-                            <p:column colspan="1" width="55" headerText="#{bundle['status']}">
+                            <p:column colspan="1" priority="1" width="55" headerText="#{bundle['status']}">
                                 <p:selectBooleanCheckbox id="statusFinished" value="#{task.status}">
                                     <p:ajax event="change" update="@form msgs"
                                             oncomplete="PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
@@ -668,7 +668,7 @@
                                 </p:selectBooleanCheckbox>
                             </p:column>
 
-                            <p:column colspan="5" width="500" headerText="#{bundle['tasks.title']}"
+                            <p:column colspan="3" priority="1" headerText="#{bundle['tasks.title']}"
                                       sortBy="#{task.title}"
                                       filterBy="#{task.title}"
                                       filterMatchMode="contains">
@@ -686,7 +686,7 @@
                                            showEffect="clip" hideEffect="fold" position="bottom"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.contact']}"
+                            <p:column colspan="2" priority="4" headerText="#{bundle['tasks.contact']}"
                                       sortBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterBy="#{task.contactsByIdContacts.lastname.concat(task.contactsByIdContacts.firstname)}"
                                       filterMatchMode="contains">
@@ -696,7 +696,7 @@
                                 />
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.company']}"
+                            <p:column colspan="2" priority="4" headerText="#{bundle['tasks.company']}"
                                       sortBy="#{task.companiesByIdCompanies.label}"
                                       filterBy="#{task.companiesByIdCompanies.label}"
                                       filterMatchMode="contains">
@@ -705,7 +705,7 @@
                                         outcome="companydetails.xhtml?companyID=#{task.companiesByIdCompanies.id}"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['tasks.taskType']}"
+                            <p:column colspan="1" priority="5" headerText="#{bundle['tasks.taskType']}"
                                       filterBy="#{task.taskTypesByIdTaskTypes.label}" filterMatchMode="exact">
                                 <f:facet name="filter">
                                     <p:selectOneMenu onchange="PF('displayEntitiesFinished').filter()"
@@ -722,7 +722,7 @@
                                 <h:outputText value="#{task.taskTypesByIdTaskTypes.label}"/>
                             </p:column>
 
-                            <p:column colspan="1" headerText="#{bundle['priority']}"
+                            <p:column colspan="1" priority="5" headerText="#{bundle['priority']}"
                                       filterBy="#{task.priority.label}" filterMatchMode="exact">
                                 <f:facet name="filter">
                                     <p:selectOneMenu onchange="PF('displayEntitiesFinished').filter()"
@@ -739,7 +739,7 @@
                                 <h:outputText value="#{task.priority.label}"/>
                             </p:column>
 
-                            <p:column colspan="1" width="190" headerText="#{bundle['tasks.endDate']}"
+                            <p:column colspan="1" priority="3" headerText="#{bundle['tasks.endDate']}"
                                       filterBy="#{task.endDate}"
                                       sortBy="#{task.endDate}"
                                       filterable="true"
@@ -758,7 +758,7 @@
                                 </h:outputText>
                             </p:column>
 
-                            <p:column colspan="1" width="70"
+                            <p:column colspan="1" width="70" priority="1"
                                       rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
                                                onclick="PF('updateDialogTask').show();"
