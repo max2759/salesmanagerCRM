@@ -27,7 +27,7 @@
                                  maxlength="255"
                                  requiredMessage="#{bundle['vouchers.validator.title']}">
                         <p:ajax update="msg listAllVouchers:createVouchers:createVoucherForm:buttonCreateVoucher"
-                                event="keyup"/>
+                                resetValues="true" event="keyup"/>
                     </p:inputText>
                 </p:panelGrid>
                 <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
@@ -84,13 +84,14 @@
                                      maxlength="255"
                                      placeholder="#{bundle['descriptionHolder']}"/>
 
+                    <p:message for="title" id="msg" display="message"/>
                 </p:panelGrid>
-                <p:messages id="msg" closable="true" display="message"/>
                 <div align="right" class="mgin-top">
                     <p:commandButton style="width:auto;margin-bottom:10px;"
                                      id="buttonCreateVoucher"
                                      update="@(form) msgs"
-                                     oncomplete="PF('displayAllEntities').filter(); PF('createDialog').hide()"
+                                     oncomplete="if (!args.validationFailed){PF('createDialog').hide()}; PF('displayAllEntities').filter();"
+                                     resetValues="true"
                                      value="#{bundle['save']}"
                                      action="#{vouchersBean.saveEntity}"
                                      disabled="#{empty vouchersBean.vouchersEntity.title or vouchersBean.vouchersEntity.title.length() le 1}"

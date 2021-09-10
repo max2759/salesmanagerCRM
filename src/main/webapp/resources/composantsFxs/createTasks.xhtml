@@ -25,8 +25,8 @@
                                  requiredMessage="#{bundle['task.validator.title']}"
                                  maxlength="255"
                                  style="margin-bottom:10px;">
-                        <p:ajax update="detailsRight:createTasks:msg detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
-                                global="false" event="keyup"/>
+                        <p:ajax update="msg detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                event="keyup" resetValues="true"/>
                     </p:inputText>
 
                     <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskTypeCreate"/>
@@ -50,6 +50,7 @@
 
                     <p:outputLabel for="datetimeCreate" value="#{bundle['dueDate']}:"/>
                     <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
+                                converterMessage="#{bundle['converter.dateTime']}"
                                 id="datetimeCreate" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
 
                     <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
@@ -84,19 +85,20 @@
                                      placeholder="#{bundle['descriptionHolder']}"
                                      autoResize="false"/>
                 </p:panelGrid>
+                <p:message id="msg" for="acTitleCreate" closable="true" display="message"/>
                 <div align="right" class="mgin-top">
                     <p:commandButton style="width:auto;margin-bottom:10px;"
                                      update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
-                                     oncomplete="PF('createDialogTask').hide(); PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
+                                     oncomplete="if (!args.validationFailed){PF('createDialogTask').hide()}; PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
                                      id="buttonSaveEntityTasks"
                                      disabled="#{empty tasksBean.tasksEntity.title or tasksBean.tasksEntity.title.length() le 1}"
                                      value="#{bundle['save']}"
+                                     resetValues="true"
                                      action="#{tasksBean.saveEntity}"/>
                 </div>
                 <p:hotkey bind="esc" handler="PF('createDialogTask').hide()"/>
             </h:form>
         </div>
-        <p:messages id="msg" closable="true" display="message"/>
     </f:view>
 </cc:implementation>
 </html>

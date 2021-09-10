@@ -20,14 +20,12 @@
                 <p:panelGrid id="panelGridUpdateTasks1" columns="4" layout="grid"
                              styleClass="ui-panelgrid-blank form-group">
                     <p:outputLabel value="#{bundle['title']} :" for="acTitle"/>
+
                     <p:inputText id="acTitle" value="#{tasksBean.tasksEntity.title}"
-                                 required="true"
                                  maxlength="255"
+                                 required="true"
                                  requiredMessage="#{bundle['task.validator.title']}"
                                  style="margin-bottom:10px;">
-                        <p:ajax update="detailsRight:updateTasks:msg " event="keyup"
-
-                        />
                     </p:inputText>
 
 
@@ -40,7 +38,6 @@
                                        var="taskTypesEntities" itemValue="#{taskTypesEntities}"
                                        itemLabel="#{taskTypesEntities.label}"/>
                     </p:selectOneMenu>
-
                     <p:outputLabel value="#{bundle['priority']}:" for="taskPriority"/>
                     <p:selectOneMenu id="taskPriority"
                                      value="#{tasksBean.tasksEntity.priority}">
@@ -53,6 +50,7 @@
                     <p:outputLabel for="datetime" value="#{bundle['dueDate']}:"/>
                     <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
                                 id="datetime" pattern="dd/MM/yyyy HH:mm"
+                                converterMessage="#{bundle['converter.dateTime']}"
                                 mindate="#{tasksBean.tasksEntity.creationDate.plusMinutes(1)}"/>
 
                     <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
@@ -85,14 +83,18 @@
                                      rows="6"
                                      maxlength="255"
                                      placeholder="#{bundle['descriptionHolder']}"
+                                     autofocus="true"
                                      autoResize="false"/>
+
+                    <p:message id="msg" for="acTitle" closable="true" display="message"/>
                 </p:panelGrid>
                 <div align="right" class="mgin-top">
                     <p:commandButton style="width:auto;margin-bottom:10px;"
                                      update="@(form) msgs"
                                      id="buttonUpdateTask"
-                                     oncomplete="PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter(); PF('updateDialogTask').hide()"
+                                     oncomplete="if (!args.validationFailed){PF('updateDialogTask').hide()}; PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
                                      value="#{bundle['update']}"
+                                     resetValues="true"
                                      action="#{tasksBean.updateEntity}">
                         <f:param name="typeEntities" value="all"/>
                     </p:commandButton>
@@ -100,7 +102,6 @@
                 <p:hotkey bind="esc" handler="PF('updateDialogTask').hide()"/>
             </h:form>
         </div>
-        <p:messages id="msg" closable="true" display="message"/>
     </f:view>
 </cc:implementation>
 </html>
