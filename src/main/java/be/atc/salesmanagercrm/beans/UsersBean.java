@@ -135,7 +135,7 @@ public class UsersBean extends ExtendBean implements Serializable {
 
     public void validateLength() {
         if (userEntityNew.getEmail() != null && userEntityNew.getEmail().length() < 2) {
-            FacesContext.getCurrentInstance().addMessage("mail", new FacesMessage(FacesMessage.SEVERITY_INFO, "error.notEnoughChar", "2"));
+            FacesContext.getCurrentInstance().addMessage("mail", new FacesMessage(FacesMessage.SEVERITY_ERROR, "error.notEnoughChar", "2"));
         }
     }
 

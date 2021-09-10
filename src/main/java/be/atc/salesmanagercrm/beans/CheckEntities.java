@@ -533,8 +533,6 @@ public class CheckEntities extends ExtendBean implements Serializable {
                     log.info(String.valueOf(number));
                     if (number < 10) {
                         int number1 = number;
-
-
                         username1 = username + "0" + number1;
 
                         usersEntity1 = usersDao.findByUsername(em, username1);

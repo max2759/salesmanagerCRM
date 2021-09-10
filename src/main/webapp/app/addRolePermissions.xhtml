@@ -47,7 +47,8 @@
                 <!--checkbox des permissions -->
                 <h4><p:outputLabel for="role" value="#{bundle['choosePermissions']}">: </p:outputLabel></h4>
 
-                <h:selectBooleanCheckbox value="#{rolesPermissionsBean.all}"/> all
+                <h:selectBooleanCheckbox value="#{rolesPermissionsBean.all}"/> #{bundle['selectAll']}
+                <h:selectBooleanCheckbox value="#{rolesPermissionsBean.delete}"/> #{bundle['deleteAll']}
                 <p:selectManyCheckbox id="grid2"
                                       value="#{rolesPermissionsBean.permissionsEntitiesRole}"
                                       layout="responsive"
@@ -57,7 +58,8 @@
                 </p:selectManyCheckbox>
 
                 <p:commandButton value="Confirmer Valider" action="#{rolesPermissionsBean.manageRolesPermissions}"
-                                 process="@form"/>
+                                 process="@(form)"
+                                 update="@(form)"/>
 
             </h:form>
 
