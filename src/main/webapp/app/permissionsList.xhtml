@@ -18,8 +18,8 @@
 
                 <h:form id="form">
                     <p:tab id="displayAll"
-                           title="#{bundle['all']} (#{conversationsBean.conversationsEntityList.size()})">
-                        <p:dataTable paginator="true" rows="10"
+                           title="#{bundle['all']} ">
+                        <p:dataTable paginator="true" rows="15"
                                      selection="#{permissionsBean.selectedPermissionsEntity}" selectionMode="single"
                                      paginatorPosition="bottom"
                                      var="perm"
@@ -28,7 +28,7 @@
                                      rowsPerPageTemplate="10,20,50"
                                      widgetVar="displayAllEntities"
                                      filteredValue="#{permissionsBean.permissionsEntitiesFiltered}"
-                                     rendered="#{permissionsBean.permissionsEntityList.size eq 0 ? false : true}"
+
                                      value="#{permissionsBean.permissionsEntityList}">
 
                             <p:column width="500" headerText="#{bundle['permissions.label']}"
@@ -45,8 +45,7 @@
 
                         </p:dataTable>
                     </p:tab>
-                    <p:staticMessage severity="info" detail="#{bundle['users.notFound']}"
-                                     rendered="#{transactionsBean.transactionsEntities.size() eq 0 ? true : false}"/>
+
                 </h:form>
             </div>
 

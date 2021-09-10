@@ -18,6 +18,7 @@
                 <h:form>
                     <p:commandButton
                             value="#{bundle['role.create']}"
+                            rendered="#{usersBean.currentUser.isPermitted('addRoles')}"
                             action="#{rolesBean.createNewRoleEntity}"
                             update="addRoleDialogForm:addRoleDialog"
                             oncomplete="PF('addRole').show();return false;"
@@ -56,6 +57,7 @@
 
                             <p:column colspan="2">
                                 <p:commandLink
+                                        rendered="#{usersBean.currentUser.isPermitted('updateRoles')}"
                                         actionListener="#{rolesBean.initialiseDialogRoleId(role.id)}"
                                         update="updateRoleDialogForm:updateRoleDialog"
                                         oncomplete="PF('updateRole').show();return false;"
@@ -64,7 +66,9 @@
                                 </p:commandLink>
                                 <h:panelGroup rendered="#{role.active}">
                                     <p:commandLink update="@(form)"
-                                                   action="#{rolesBean.delete(role.id)}">
+                                                   action="#{rolesBean.delete(role.id)}"
+                                                   rendered="#{usersBean.currentUser.isPermitted('deleteRoles')}">
+
                                         <p:confirm header="#{bundle['confirmation']}"
                                                    message="#{bundle['role.confirmeDelete']}"
                                                    icon="fa fa-warning"/>
@@ -116,6 +120,8 @@
                                      id="roleLabelUpdate">
                             <p:ajax update="updateRoleDialogForm:updateRole"
                                     event="keyup"/>
+                            <p:ajax update="roleLabelUp"
+                                    global="false" event="keyup"/>
                             <f:validator validatorId="roleLabelValidator"></f:validator>
                         </p:inputText>
 
@@ -126,6 +132,7 @@
                                          disabled="#{empty rolesBean.rolesEntityNew.label or rolesBean.rolesEntityNew.label.length() le 1}"
                                          update="@(form)"/>
                     </div>
+                    <p:messages id="roleLabelUp" closable="true" display="message"/>
                 </p:dialog>
 
             </h:form>
@@ -140,6 +147,8 @@
                         <p:inputText value="#{rolesBean.rolesEntityNew.label}" id="roleLabel" required="true">
                             <p:ajax update="addRoleDialogForm:addRole"
                                     event="keyup"/>
+                            <p:ajax update="roleLabelAdd"
+                                    global="false" event="keyup"/>
                             <f:validator validatorId="roleLabelValidator"></f:validator>
                         </p:inputText>
 
@@ -149,13 +158,10 @@
                                          disabled="#{empty rolesBean.rolesEntityNew.label or rolesBean.rolesEntityNew.label.length() le 1}"
                                          update="@(form)"/>
                     </div>
+                    <p:messages id="roleLabelAdd" closable="true" display="message"/>
                 </p:dialog>
 
             </h:form>
-
-            <p:messages id="messages" showDetail="false">
-                <p:autoUpdate/>
-            </p:messages>
 
 
         </h:body>
