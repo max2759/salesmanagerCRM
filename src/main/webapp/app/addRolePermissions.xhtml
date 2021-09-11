@@ -18,6 +18,7 @@
             <f:viewAction action="#{rolesBean.findAllActiveRoles}"/>
             <f:viewAction action="#{permissionsBean.findAllPermissions}"/>
             <f:viewAction action="#{rolesPermissionsBean.findPermissionWhithIdRole}"/>
+            <f:viewAction action="#{rolesPermissionsBean.createNewEntitiy}"/>
         </f:metadata>
 
         <h:body>
@@ -39,7 +40,8 @@
                                            itemValue="#{companyTypes}"
                                            itemLabel="#{companyTypes.label}"
                             />
-                            <p:ajax update="@(form)" listener="#{rolesPermissionsBean.findPermissionWhithIdRoleList}"/>
+                            <p:ajax update="@(form)" resetValues="true"
+                                    listener="#{rolesPermissionsBean.findPermissionWhithIdRoleList}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>
@@ -47,8 +49,13 @@
                 <!--checkbox des permissions -->
                 <h4><p:outputLabel for="role" value="#{bundle['choosePermissions']}">: </p:outputLabel></h4>
 
-                <h:selectBooleanCheckbox value="#{rolesPermissionsBean.all}"/> #{bundle['selectAll']}
-                <h:selectBooleanCheckbox value="#{rolesPermissionsBean.delete}"/> #{bundle['deleteAll']}
+                <p:selectOneRadio id="permissionsSelection" unselectable="true">
+                    <p:ajax event="click" listener="#{rolesPermissionsBean.selectOrUnselectAllPermissions}"
+                            update="grid2"/>
+                    <f:selectItem itemLabel="#{bundle['selectAll']}" itemValue="select"/>
+                    <f:selectItem itemLabel="#{bundle['deleteAll']}" itemValue="unselect"/>
+                </p:selectOneRadio>
+
                 <p:selectManyCheckbox id="grid2"
                                       value="#{rolesPermissionsBean.permissionsEntitiesRole}"
                                       layout="responsive"
@@ -57,9 +64,12 @@
                                    itemLabel="#{rolesPermissions.label}" itemValue="#{rolesPermissions}"/>
                 </p:selectManyCheckbox>
 
-                <p:commandButton value="Confirmer Valider" action="#{rolesPermissionsBean.manageRolesPermissions}"
-                                 process="@(form)"
-                                 update="@(form)"/>
+                <div align="right" class="mgin-top">
+                    <p:commandButton value="#{bundle['validate']}"
+                                     action="#{rolesPermissionsBean.manageRolesPermissions}"
+                                     process="@(form)"
+                                     update="@(form)"/>
+                </div>
 
             </h:form>
 

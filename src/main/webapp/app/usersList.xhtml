@@ -69,8 +69,8 @@
                         <p:inputText value="#{usersBean.usersEntityOther.firstname}"
                                      placeholder="#{bundle['firstname']}"
                                      required="true" id="firstnameUpdate"
-                                     requiredMessage="au - 2 caracétres siouplait"
-                                     validatorMessage="chouette le jsf">
+                                     requiredMessage="#{bundle['fieldEmpt']}"
+                                     validatorMessage="#{bundle['error.notEnoughChar']}">
 
                             <f:validator validatorId="userNameFrontValidator"></f:validator>
                         </p:inputText>
@@ -79,8 +79,8 @@
                         <p:outputLabel for="lastnameUpdate" value="#{bundle['lastname']}: "/>
                         <p:inputText value="#{usersBean.usersEntityOther.lastname}"
                                      placeholder="#{bundle['lastname']}"
-                                     requiredMessage="au - 2 caracétres siouplait"
-                                     validatorMessage="chouette le jsf"
+                                     requiredMessage="#{bundle['fieldEmpt']}"
+                                     validatorMessage="e#{bundle['error.notEnoughChar']}"
                                      required="true" id="lastnameUpdate">
 
                             <f:validator validatorId="userLastnameFrontValidator"></f:validator>
@@ -89,8 +89,8 @@
                         <p:outputLabel for="emailUpdate" value="#{bundle['email']}:"></p:outputLabel>
                         <p:inputText value="#{usersBean.usersEntityOther.email}"
                                      placeholder="#{bundle['email']}" required="true"
-                                     requiredMessage="au - 2 caracétres siouplait"
-                                     validatorMessage="chouette le jsf"
+                                     requiredMessage="#{bundle['fieldEmpt']}"
+                                     validatorMessage="#{bundle['error.notEnoughChar']}"
                                      id="emailUpdate">
 
                             <f:validator validatorId="userEmailValidator"></f:validator>

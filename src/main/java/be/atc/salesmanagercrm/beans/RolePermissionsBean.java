@@ -20,10 +20,12 @@ import be.atc.salesmanagercrm.validators.RolesValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.primefaces.component.selectoneradio.SelectOneRadio;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -97,6 +99,20 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
         rolesPermissionsEntity = dao.findById(EMF.getEM(), idRolePermission);
     }
 
+    public void selectOrUnselectAllPermissions(AjaxBehaviorEvent event) {
+        log.info("RolePermissionsBean : Method => selectAllPermission()");
+
+        SelectOneRadio test = (SelectOneRadio) event.getSource();
+        String value = (String) test.getValue();
+
+        if (value.equalsIgnoreCase("select")) {
+            permissionsEntitiesRole.addAll(permissionsBean.getPermissionsEntityList());
+        }
+        if (value.equalsIgnoreCase("unselect")) {
+            permissionsEntitiesRole = new ArrayList<>();
+        }
+    }
+
 
     public RolesPermissionsEntity findById(EntityManager em, int id) {
         return dao.findById(em, id);
@@ -133,6 +149,9 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
 
     }
 
+    public void createNewEntitiy() {
+        this.rolesPermissionsEntity = new RolesPermissionsEntity();
+    }
 
     public void findPermissionWhithIdRoleList() {
         List<RolesPermissionsEntity> rp1 = findAll();
@@ -145,6 +164,9 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
             permissionsEntitiesRole.add(rp.getPermissionsByIdPermissions());
         }
 
+        log.info("PermissionsEntitiesRole : " + permissionsEntitiesRole.size());
+
+        log.info("list des permissions : " + permissionsBean.getPermissionsEntityList().size());
     }
 
     //findallwithrole
