@@ -15,6 +15,7 @@
 
         <div class="ui-g">
             <div class="ui-g-12">
+                <p:growl id="facesMessage" skipDetailIfEqualsSummary="true"/>
                 <h:form>
                     <div class="card card-w-title">
                         <h1>#{bundle['jobTitles.title']}</h1>
@@ -22,7 +23,6 @@
                         <p:commandButton value="#{bundle['jobTitles.create']}" update="@(form)"
                                          onclick="PF('jobTitlesModal').show();" styleClass="NavyButton"
                                          action="#{jobtitlesBean.showModalCreate}">
-                            <f:param name="sendType" value="add"/>
                         </p:commandButton>
 
                         <fxs:listJobTitles id="listJobTitles"/>

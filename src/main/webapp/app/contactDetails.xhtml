@@ -38,6 +38,7 @@
                                      contentStyleClass="ui-fluid" styleClass="ui-panelgrid-blank form-group">
                             <p:accordionPanel multiple="true">
                                 <p:tab title="#{bundle['contacts.tabTitle1']}">
+
                                     <h:panelGroup
                                             style="margin-top:30px; margin-bottom:10px;">
                                         <p:outputLabel for="civilities" value="Civilité"/>
@@ -63,8 +64,7 @@
                                         <p:inputText id="contactFirstName"
                                                      value="#{contactsBean.contactsEntity.firstname}"
                                                      required="true"
-                                                     requiredMessage="#{bundle['contacts.firstnameNotValid']}"
-                                        />
+                                                     requiredMessage="#{bundle['contacts.firstnameNotValid']}"/>
                                         <label>#{bundle['contacts.firstname']}</label>
                                     </h:panelGroup>
 

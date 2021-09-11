@@ -14,6 +14,7 @@
         <p:dataTable var="jobtitles" value="#{jobtitlesBean.jobTitlesEntityList}" rows="10"
                      selectionMode="single" reflow="true"
                      id="jobtitlesDatatable"
+                     widgetVar="displayAllJobTitles"
                      rowKey="#{jobtitles.id}"
                      paginatorPosition="bottom"
                      selection="#{jobtitlesBean.selectedJobTitlesEntity}"

@@ -15,6 +15,7 @@
     <f:view>
         <p:dataTable var="branchActivities" value="#{branchActivitiesBean.branchActivitiesEntityList}" rows="10"
                      selectionMode="single" reflow="true"
+                     widgetVar="displayAllBranchActivities"
                      rowKey="#{branchActivities.id}"
                      id="branchActivitiesDatatable"
                      paginatorPosition="bottom"

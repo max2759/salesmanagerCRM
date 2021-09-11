@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite">
+<cc:interface name="updateUserModal"
+              displayName=""
+              shortDescription=""/>
+<cc:implementation>
+    <f:view>
+        <div class="ui-g ui-fluid">
+            <h:form id="updateUserDialogForm">
+                <p:dialog header="#{bundle['user.updateByUser']}" widgetVar="updateUser" modal="true"
+                          responsive="true" id="updateUserDialog">
+
+                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:password id="password" value="#{usersBean.usersEntity.password}" match="password2">
+                                <f:validator validatorId="userPasswordValidator"></f:validator>
+                            </p:password>
+                            <label>#{bundle['user.password']}</label>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="md-inputfield mgin-top">
+                            <p:password id="password2" value="#{usersBean.password2}" label="password2"/>
+                            <label>#{bundle['user.password2']}</label>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="md-inputfield mgin-top">
+                            <p:inputText id="email" value="#{usersBean.usersEntity.email}" required="true">
+                                <f:validator validatorId="userEmailValidator"></f:validator>
+                            </p:inputText>
+                            <label>#{bundle['email']}</label>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <div align="right" class="mgin-top">
+                        <p:commandButton value="#{bundle['save']}" action="#{rolesBean.updateEntity}"
+                                         resetValues="true"
+                                         update="@(form)"/>
+                    </div>
+                    <p:hotkey bind="esc" handler="PF('updateUser').hide()"/>
+                </p:dialog>
+            </h:form>
+        </div>
+    </f:view>
+</cc:implementation>
+</html>

@@ -43,9 +43,7 @@
                 <p:watermark for="@(.companyNameColumn)" value="#{bundle['company.searchByCompanies']}"/>
             </p:column>
 
-            <p:column headerText="#{bundle['company.ownership']}" sortBy="#{companies.usersByIdUsers.firstname}"
-                      filterBy="#{companies.usersByIdUsers.firstname} #{companies.usersByIdUsers.lastname}"
-                      filterMatchMode="exact">
+            <p:column headerText="#{bundle['company.ownership']}" sortBy="#{companies.usersByIdUsers.firstname}">
                 <f:facet name="filter">
                     <p:selectOneMenu onchange="PF('displayAllCompanies').filter()"
                                      style="width:100%; box-sizing: border-box;">

@@ -293,11 +293,16 @@
                                                  emptyMessage="#{bundle['companiesContacts.notFound']}"
                                                  paginator="true" styleClass="dataTable-margin-top"
                                                  rowsPerPageTemplate="10,20,50">
+
                                         <p:column headerText="#{bundle['companiesContacts.employees']}">
-                                            <h:outputText
-                                                    value="#{companiesContact.contactsByIdContacts.firstname} #{companiesContact.contactsByIdContacts.lastname}">
-                                            </h:outputText>
+                                            <p:link outcome="contactDetails">
+                                                <h:outputText
+                                                        value="#{companiesContact.contactsByIdContacts.firstname} #{companiesContact.contactsByIdContacts.lastname}"/>
+                                                <f:param name="contactID"
+                                                         value="#{companiesContact.contactsByIdContacts.id}"/>
+                                            </p:link>
                                         </p:column>
+
                                     </p:dataTable>
                                 </p:tab>
                             </p:accordionPanel>
