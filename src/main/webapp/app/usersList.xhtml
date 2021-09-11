@@ -16,7 +16,7 @@
         </f:metadata>
 
 
-        <p:growl id="msgs"/>
+        <p:growl id="msgs" skipDetailIfEqualsSummary="true" life="10000"/>
 
         <div class="ui-g">
             <div class="ui-g-12">
@@ -26,7 +26,8 @@
                     <h:form>
                         <p:commandButton
                                 value="#{bundle['user.create']}"
-                                oncomplete="PF('addUser').show();return false;"
+                                onclick="PF('addUser').show();"
+                                update="@(form) msgs"
                                 styleClass="NavyButton marginBottom10"
                                 action="#{usersBean.createNewUserEntity}">
                         </p:commandButton>
@@ -52,81 +53,84 @@
 
             </div>
 
+        </div>
 
-            <!-- ********************************update*********************************- -->
+        <!-- ********************************update*********************************- -->
 
-
-            <h:form id="updateUserDialogForm">
-
-                <p:dialog header="#{bundle['users.update']}" widgetVar="updateUser" modal="true"
-                          responsive="true" id="updateUserDialog">
-
-                    <div class="ui-g ui-fluid">
-                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
-
-                            <p:outputLabel for="firstnameUpdate" value="#{bundle['firstname']}:"/>
-                            <p:inputText value="#{usersBean.usersEntityOther.firstname}"
-                                         placeholder="#{usersBean.userForDialog.firstname}"
-                                         required="true" id="firstnameUpdate"
-                                         requiredMessage="au - 2 caracétres siouplait"
-                                         validatorMessage="chouette le jsf">
-
-                                <f:validator validatorId="userNameFrontValidator"></f:validator>
-                            </p:inputText>
+        <div class="ui-g ui-fluid">
+            <p:dialog header="#{bundle['users.update']}" widgetVar="updateUser" modal="true"
+                      responsive="true" id="updateUserDialog">
+                <h:form id="updateUserDialogForm">
 
 
-                            <p:outputLabel for="lastnameUpdate" value="#{bundle['lastname']}: "/>
-                            <p:inputText value="#{usersBean.usersEntityOther.lastname}"
-                                         placeholder="#{usersBean.userForDialog.lastname}"
-                                         requiredMessage="au - 2 caracétres siouplait"
-                                         validatorMessage="chouette le jsf"
-                                         required="true" id="lastnameUpdate">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
-                                <f:validator validatorId="userLastnameFrontValidator"></f:validator>
-                            </p:inputText>
+                        <p:outputLabel for="firstnameUpdate" value="#{bundle['firstname']}:"/>
+                        <p:inputText value="#{usersBean.usersEntityOther.firstname}"
+                                     placeholder="#{bundle['firstname']}"
+                                     required="true" id="firstnameUpdate"
+                                     requiredMessage="au - 2 caracétres siouplait"
+                                     validatorMessage="chouette le jsf">
 
-                            <p:outputLabel for="emailUpdate" value="#{bundle['email']}:"></p:outputLabel>
-                            <p:inputText value="#{usersBean.usersEntityOther.email}"
-                                         placeholder="#{usersBean.userForDialog.email}" required="true"
-                                         requiredMessage="au - 2 caracétres siouplait"
-                                         validatorMessage="chouette le jsf"
-                                         id="emailUpdate">
+                            <f:validator validatorId="userNameFrontValidator"></f:validator>
+                        </p:inputText>
 
-                                <f:validator validatorId="userEmailValidator"></f:validator>
-                            </p:inputText>
 
-                            <p:outputLabel for="rolesByUsersUpdate" value="#{bundle['role']}"></p:outputLabel>
-                            <p:selectOneMenu id="rolesByUsersUpdate"
-                                             value="#{usersBean.usersEntityOther.rolesByIdRoles}"
-                                             converter="rolesConverter" required="true" feedback="false"
-                            >
-                                <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
-                                               itemValue="#{companyTypes}"
-                                               itemLabel="#{companyTypes.label}"/>
-                            </p:selectOneMenu>
+                        <p:outputLabel for="lastnameUpdate" value="#{bundle['lastname']}: "/>
+                        <p:inputText value="#{usersBean.usersEntityOther.lastname}"
+                                     placeholder="#{bundle['lastname']}"
+                                     requiredMessage="au - 2 caracétres siouplait"
+                                     validatorMessage="chouette le jsf"
+                                     required="true" id="lastnameUpdate">
 
-                        </p:panelGrid>
-                    </div>
+                            <f:validator validatorId="userLastnameFrontValidator"></f:validator>
+                        </p:inputText>
+
+                        <p:outputLabel for="emailUpdate" value="#{bundle['email']}:"></p:outputLabel>
+                        <p:inputText value="#{usersBean.usersEntityOther.email}"
+                                     placeholder="#{bundle['email']}" required="true"
+                                     requiredMessage="au - 2 caracétres siouplait"
+                                     validatorMessage="chouette le jsf"
+                                     id="emailUpdate">
+
+                            <f:validator validatorId="userEmailValidator"></f:validator>
+                        </p:inputText>
+
+                        <p:outputLabel for="rolesByUsersUpdate" value="#{bundle['role']}"></p:outputLabel>
+                        <p:selectOneMenu id="rolesByUsersUpdate"
+                                         value="#{usersBean.usersEntityOther.rolesByIdRoles}"
+                                         converter="rolesConverter" required="true" feedback="false"
+                        >
+                            <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
+                                           itemValue="#{companyTypes}"
+                                           itemLabel="#{companyTypes.label}"/>
+                        </p:selectOneMenu>
+
+                    </p:panelGrid>
                     <!-- update user = p:dialog; displayAllEntitiesActive = widgetVar du datatable  ON COMPLETE
                     reset value = true pour l'update -->
                     <div align="right" class="mgin-top">
-                        <p:commandButton value="#{bundle['confirmation']}" action="#{usersBean.updateByAdmin}"
+                        <p:commandButton style="width:auto;margin-bottom:10px;"
+                                         value="#{bundle['confirmation']}" action="#{usersBean.updateByAdmin}"
                                          id="updateUserID"
                                          oncomplete="if (!args.validationFailed){PF('updateUser').hide()}; PF('displayAllEntitiesActive').filter(); PF('displayAllEntitiesInactive').filter();"
                                          resetValues="true"
                                          update="@(form) msgs"/>
                     </div>
 
-                </p:dialog>
-                <p:hotkey bind="esc" handler="PF('updateUser').hide()"/>
-            </h:form>
+                    <p:hotkey bind="esc" handler="PF('updateUser').hide()"/>
+                </h:form>
 
-            <!-- ********************************add*********************************- -->
+            </p:dialog>
+        </div>
+        <!-- ********************************add*********************************- -->
 
 
-            <h:form id="addUserDialogForm">
-                <p:dialog header="#{bundle['register.register']}" widgetVar="addUser" modal="true"
-                          responsive="true" id="addUserDialog">
+        <div class="ui-g ui-fluid">
+            <p:dialog header="#{bundle['register.register']}" widgetVar="addUser" modal="true"
+                      responsive="true" id="addUserDialog">
+                <h:form id="addUserDialogForm">
+
 
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" id="addUserD">
 
@@ -166,11 +170,16 @@
                                            itemValue="#{companyTypes}"
                                            itemLabel="#{companyTypes.label}"/>
                         </p:selectOneMenu>
-
+                    </p:panelGrid>
+                    <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                        <p:message for="firstname" id="first" closable="true" display="message"/>
+                        <p:message for="lastname" id="last" closable="true" display="message"/>
+                        <p:message for="email" id="mail" closable="true" display="message"/>
                     </p:panelGrid>
 
                     <div align="right" class="mgin-top">
-                        <p:commandButton value="#{bundle['validate']}" action="#{usersBean.registerEntity}"
+                        <p:commandButton style="width:auto;margin-bottom:10px;"
+                                         value="#{bundle['validate']}" action="#{usersBean.registerEntity}"
                                          id="addUserID"
                                          oncomplete="if (!args.validationFailed){PF('addUser').hide()}; PF('displayAllEntitiesActive').filter(); PF('displayAllEntitiesInactive').filter();"
                                          resetValues="true"
@@ -181,14 +190,10 @@
                                          process="@form"/>
                     </div>
 
-                    <p:messages id="first" closable="true" display="message"/>
-                    <p:messages id="last" closable="true" display="message"/>
-                    <p:messages id="mail" closable="true" display="message"/>
-                </p:dialog>
-                <p:hotkey bind="esc" handler="PF('addUser').hide()"/>
-            </h:form>
 
-
+                    <p:hotkey bind="esc" handler="PF('addUser').hide()"/>
+                </h:form>
+            </p:dialog>
         </div>
     </ui:define>
 </ui:composition>
