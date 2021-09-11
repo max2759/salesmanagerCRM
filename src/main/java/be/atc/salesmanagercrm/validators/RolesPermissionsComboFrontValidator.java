@@ -36,7 +36,8 @@ public class RolesPermissionsComboFrontValidator implements Validator {
         log.info((String) value);
         PermissionsEntity permissionsEntity = pdao.findByLabel(em, (String) value);
 
-
+        em.clear();
+        em.close();
 
 /*
         try {
