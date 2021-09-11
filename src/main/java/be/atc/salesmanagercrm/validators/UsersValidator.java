@@ -182,15 +182,14 @@ public class UsersValidator {
             errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "mailRegex") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "mailRegex") + "\n";
         }
 
-        if (entity.getPassword() == null || entity.getPassword().isEmpty() || pass2 == null || pass2.isEmpty()) {
-            errors.add("Votre mot de passe ne peut pas être vide");
-            errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "passwordEmpty") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "passwordEmpty") + "\n";
-        } else if (!validatePassword(entity.getPassword()) || !validatePassword(pass2)) {
-            errors.add("Votre mot de passe doit faire 8 caractéres, posséder une majuscule et un chiffre ou un caractére spécial");
-            errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n";
-        } else if (!vaidateMatchPassword(entity.getPassword(), pass2)) {
-            errors.add("Vos mots de passe doivent être identique");
-            errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n";
+        if (entity.getPassword() != null || !entity.getPassword().isEmpty() || pass2 != null || !pass2.isEmpty()) {
+            if (!validatePassword(entity.getPassword()) || !validatePassword(pass2)) {
+                errors.add("Votre mot de passe doit faire 8 caractéres, posséder une majuscule et un chiffre ou un caractére spécial");
+                errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n";
+            } else if (!vaidateMatchPassword(entity.getPassword(), pass2)) {
+                errors.add("Vos mots de passe doivent être identique");
+                errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n";
+            }
         }
 
         if (errorMessage != null) {

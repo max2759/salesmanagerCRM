@@ -673,7 +673,7 @@ public class UsersBean extends ExtendBean implements Serializable {
     /**
      * @param usersEntity UsersEntity
      */
-    private void userUpdateByUser(UsersEntity usersEntity) {
+    public void userUpdateByUser(UsersEntity usersEntity) {
         FacesMessage msg;
         log.info("begin updateUsrByUser" + usersEntity.getUsername());
 
@@ -687,9 +687,10 @@ public class UsersBean extends ExtendBean implements Serializable {
             return;
         }
 
-        String password = encrypt(usersEntity.getPassword());
-
-        usersEntity.setPassword(password);
+        if (password2 != null || password2.isEmpty() || password2 == "") {
+            String password = encrypt(usersEntity.getPassword());
+            usersEntity.setPassword(password);
+        }
 
         EntityManager em = EMF.getEM();
 
