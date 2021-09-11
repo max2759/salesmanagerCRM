@@ -88,6 +88,8 @@
                     <p:commandLink
                             action="#{usersBean.delete(user.id)}"
                             update="@(form) msgs"
+                            oncomplete="PF('displayAllEntitiesActive').filter(); PF('displayAllEntitiesInactive').filter();"
+
                     >
                         <p:confirm header="#{bundle['confirmation']}" message="#{bundle['user.delete']}"
                                    icon="fa fa-warning"/>

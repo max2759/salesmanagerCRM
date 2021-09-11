@@ -129,12 +129,13 @@
                     </p:panelGrid>
                     <div align="right" class="mgin-top">
                         <p:commandButton value="Confirmer Valider" action="#{rolesBean.updateEntity}" id="updateRole"
-                                         disabled="#{empty rolesBean.rolesEntityNew.label or rolesBean.rolesEntityNew.label.length() le 1}"
+                                         oncomplete="if (!args.validationFailed){PF('updateRole').hide()}; PF('displayAllEntities').filter();"
+                                         resetValues="true"
                                          update="@(form)"/>
                     </div>
                     <p:messages id="roleLabelUp" closable="true" display="message"/>
                 </p:dialog>
-
+                <p:hotkey bind="esc" handler="PF('updateRole').hide()"/>
             </h:form>
             <!-- e*******************add*******************e- -->
             <h:form id="addRoleDialogForm">
@@ -156,11 +157,13 @@
                     <div align="right" class="mgin-top">
                         <p:commandButton value="Confirmer Valider" action="#{rolesBean.addEntity}" id="addRole"
                                          disabled="#{empty rolesBean.rolesEntityNew.label or rolesBean.rolesEntityNew.label.length() le 1}"
+                                         oncomplete="if (!args.validationFailed){PF('addRole').hide()}; PF('displayAllEntities').filter();"
+                                         resetValues="true"
                                          update="@(form)"/>
                     </div>
                     <p:messages id="roleLabelAdd" closable="true" display="message"/>
                 </p:dialog>
-
+                <p:hotkey bind="esc" handler="PF('addRole').hide()"/>
             </h:form>
 
 

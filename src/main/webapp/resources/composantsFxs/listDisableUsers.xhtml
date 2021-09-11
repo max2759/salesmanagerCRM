@@ -87,6 +87,7 @@
             <p:column>
 
                 <p:commandLink update="formUsers:tabViewUsers msgs"
+                               oncomplete="PF('displayAllEntitiesActive').filter(); PF('displayAllEntitiesInactive').filter();"
                                action="#{usersBean.activate(user.id)}">
                     <i class="ui-icon ui-icon-update"/>
                     <f:param name="idEntity" value="#{user.id}"/>
