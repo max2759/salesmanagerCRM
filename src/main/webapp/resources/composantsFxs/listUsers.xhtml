@@ -82,31 +82,27 @@
                         styleClass="NavyButton">
                     <i class="ui-icon ui-icon-create"></i>
                 </p:commandLink>
-            </p:column>
 
-            <p:column>
-                <h:panelGroup rendered="#{user.active}">
-                    <p:commandLink
-                            action="#{usersBean.delete(user.id)}"
-                            update="@(form) msgs"
-                            oncomplete="PF('displayAllEntitiesActive').filter(); PF('displayAllEntitiesInactive').filter();"
-
-                    >
-                        <p:confirm header="#{bundle['confirmation']}" message="#{bundle['user.delete']}"
-                                   icon="fa fa-warning"/>
-                        <i class="ui-icon ui-icon-delete-forever"></i>
-                    </p:commandLink>
-                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
-                        <p:commandButton value="#{bundle['yes']}" type="button"
-                                         styleClass="ui-confirmdialog-yes GreenButton"
-                                         icon="ui-icon-check"/>
-                        <p:commandButton value="#{bundle['no']}" type="button"
-                                         styleClass="ui-confirmdialog-no RedButton"
-                                         icon="ui-icon-close"/>
-                    </p:confirmDialog>
+                <p:commandLink
+                        rendered="#{user.active}"
+                        action="#{usersBean.delete(user.id)}"
+                        update="@(form) msgs"
+                        oncomplete="PF('displayAllEntitiesActive').filter(); PF('displayAllEntitiesInactive').filter();"
+                >
+                    <p:confirm header="#{bundle['confirmation']}" message="#{bundle['user.delete']}"
+                               icon="fa fa-warning"/>
+                    <i class="ui-icon ui-icon-delete-forever"></i>
+                </p:commandLink>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                    <p:commandButton value="#{bundle['yes']}" type="button"
+                                     styleClass="ui-confirmdialog-yes GreenButton"
+                                     icon="ui-icon-check"/>
+                    <p:commandButton value="#{bundle['no']}" type="button"
+                                     styleClass="ui-confirmdialog-no RedButton"
+                                     icon="ui-icon-close"/>
+                </p:confirmDialog>
 
 
-                </h:panelGroup>
             </p:column>
 
         </p:dataTable>
