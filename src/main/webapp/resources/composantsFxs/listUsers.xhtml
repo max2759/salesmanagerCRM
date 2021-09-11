@@ -32,8 +32,9 @@
             >
 
                 <p:commandLink id="titleAllActive" value="#{user.username}"
-                               onclick="PF('dlg2').show();"
-                               update="@(form) "
+                               onclick="PF('updateUser').show();"
+                               actionListener="#{usersBean.initialiseDialogUserId(user.id)}"
+                               update="@(form) msgs"
                 >
                     <f:param name="idEntity" value="#{user.id}"/>
                 </p:commandLink>
