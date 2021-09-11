@@ -55,7 +55,7 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
 
 
     /**
-     * Public method that call either addJobTitle if sendType=add or update if sendType=edit
+     * Public method that call addJobTitle
      */
     public void saveJobTitles() {
 

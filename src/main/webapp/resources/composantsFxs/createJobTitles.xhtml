@@ -18,13 +18,13 @@
          <h:form>
             <p:outputPanel id="jobtitlesManageContent" class="ui-fluid">
                <h:panelGroup styleClass="md-inputfield jobtitlesFullDisplay">
-                  <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
-                  <p:inputText id="jobTitlesLabel" value="#{jobtitlesBean.jobTitlesEntity.label}">
-                      <f:validator validatorId="jobTitlesLabelValidator"/>
-                      <p:ajax event="keyup" update="validateJobTitlesBtn"/>
+                  <p:inputText id="jobTitlesLabel" value="#{jobtitlesBean.jobTitlesEntity.label}" required="true"
+                               requiredMessage="#{bundle['jobTitles.labelError']}" maxlength="255">
+                     <f:validator validatorId="jobTitlesLabelValidator"/>
+                     <p:ajax event="keyup" update="jobTitlesLabelMsgError validateJobTitlesBtn" resetValues="true"/>
                   </p:inputText>
                   <label>#{bundle['jobTitles.modalLabel']}</label>
-                  <p:message for="jobTitlesLabel"/>
+                  <p:message for="jobTitlesLabel" id="jobTitlesLabelMsgError" redisplay="message"/>
                </h:panelGroup>
             </p:outputPanel>
 
@@ -32,10 +32,12 @@
                <p:commandButton value="#{bundle['save']}"
                                 id="validateJobTitlesBtn"
                                 icon="ui-icon-check"
+                                resetValues="true"
                                 disabled="#{empty jobtitlesBean.jobTitlesEntity.label}"
                                 update="@(form) facesMessage" action="#{jobtitlesBean.saveJobTitles}"
-                                onclick="PF('jobTitlesModal').close();"/>
+                                oncomplete="PF('jobTitlesModal').hide(); PF('displayAllJobTitles').filter()"/>
             </div>
+            <p:hotkey bind="esc" handler="PF('jobTitlesModal').hide()"/>
          </h:form>
       </p:dialog>
    </f:view>

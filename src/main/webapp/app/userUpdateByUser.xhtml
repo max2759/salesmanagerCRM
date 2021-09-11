@@ -1,103 +1,54 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs"
                 template="../WEB-INF/templates/template.xhtml">
 
     <ui:define name="title">#{bundle['user.updateByUser']}</ui:define>
     <ui:define name="content">
-
-        <h:body>
-            <p:growl id="msg" life="2000"></p:growl>
-            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                <label> #{bundle['firstname']}: #{usersBean.usersEntity.firstname}</label>
-            </h:panelGroup>
-            <br/>
-
-            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                <label style="font-weight: bold">#{bundle['lastname']}: #{usersBean.usersEntity.lastname}</label>
-            </h:panelGroup>
-            <br/>
-
-            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                <label style="font-weight: bold">#{bundle['user.username']}: #{usersBean.usersEntity.username}</label>
-            </h:panelGroup>
-            <br/>
-
-
-            <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                <label style="font-weight: bold">#{bundle['email']}: #{usersBean.usersEntity.email}</label>
-            </h:panelGroup>
-            <br/>
-
-
-            <p:column colspan="1" width="70">
-                <h:form>
-                    <p:commandLink
-                            actionListener="#{usersBean.initialiseDialogUserId(usersBean.usersEntity.id)}"
-                            update="updateUserDialogForm:updateUserDialog"
-                            value="#{bundle['update']}"
-                            oncomplete="PF('updateUser').show();return false;"
-                            styleClass="NavyButton">
-
-                    </p:commandLink>
-                </h:form>
-            </p:column>
-
-
-            <!-- e*******************update*******************e- -->
-
-            <h:form id="updateUserDialogForm">
-                <p:growl id="msgs" life="2000"></p:growl>
-                <p:dialog header="Modal Dialog" widgetVar="updateUser" modal="true"
-                          responsive="true" id="updateUserDialog">
-
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>#{bundle['user.userUpdateByUserTitle']}</h1>
+                    <div>
+                        <p:growl id="msgs" life="2000"/>
+                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
+                            <label> #{bundle['firstname']}: #{usersBean.usersEntity.firstname}</label>
+                        </h:panelGroup>
+                        <br/>
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:password id="password" value="#{usersBean.usersEntity.password}" match="password2">
-                                <f:validator validatorId="userPasswordValidator"></f:validator>
-                            </p:password>
-                            <p:outputLabel for="password" value="#{bundle['user.password']}"></p:outputLabel>
-                            <p:messages for="password">
-                                <p:autoUpdate/>
-                            </p:messages>
+                            <label style="font-weight: bold">#{bundle['lastname']}: #{usersBean.usersEntity.lastname}</label>
                         </h:panelGroup>
+                        <br/>
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:password id="password2" value="#{usersBean.password2}" label="password2"/>
-                            <p:outputLabel for="password2" styleClass="p-col-fixed" style="width:100px"
-                                           value="#{bundle['user.password2']}"/>
-                            <p:messages for="password2">
-                                <p:autoUpdate/>
-                            </p:messages>
+                            <label style="font-weight: bold">#{bundle['user.username']}: #{usersBean.usersEntity.username}</label>
                         </h:panelGroup>
+                        <br/>
+
 
                         <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:inputText id="email" value="#{usersBean.usersEntity.email}" required="true">
-                                <f:validator validatorId="userEmailValidator"></f:validator>
-                            </p:inputText>
-                            <p:outputLabel for="email" value="#{bundle['email']}"></p:outputLabel>
-                            <p:messages for="email">
-                                <p:autoUpdate/>
-                            </p:messages>
+                            <label style="font-weight: bold">#{bundle['email']}: #{usersBean.usersEntity.email}</label>
                         </h:panelGroup>
+                        <br/>
 
-
-                        <p:commandButton value="Confirmer Valider" action="#{rolesBean.updateEntity}"
-                                         update="@(form)"/>
-                    </p:panelGrid>
-                </p:dialog>
-
-            </h:form>
-
-            <p:messages>
-                <p:autoUpdate/>
-            </p:messages>
-
-
-        </h:body>
-
+                        <p:column colspan="1" width="70">
+                            <h:form>
+                                <p:commandLink
+                                        actionListener="#{usersBean.initialiseDialogUserId(usersBean.usersEntity.id)}"
+                                        update="updateUserModal:updateUserDialogForm:updateUserDialog"
+                                        value="#{bundle['update']}"
+                                        oncomplete="PF('updateUser').show();return false;"
+                                        styleClass="NavyButton">
+                                </p:commandLink>
+                            </h:form>
+                        </p:column>
+                    </div>
+                </div>
+                <fxs:userUpdateByUserModal id="updateUserModal"/>
+            </div>
+        </div>
     </ui:define>
 </ui:composition>

@@ -8,7 +8,7 @@ import java.util.Objects;
 @Table(name = "job_titles", schema = "salesmanagercrm")
 @NamedQueries({
         @NamedQuery(name = "JobTitles.findAll", query = "SELECT j from JobTitlesEntity j order by j.id DESC"),
-        @NamedQuery(name = "JobTitles.findByLabel", query = "select j from JobTitlesEntity j where ( lower(j.label) like lower(concat('%', :label ,'%')))")
+        @NamedQuery(name = "JobTitles.findByLabel", query = "select j from JobTitlesEntity j where ( lower(j.label) like lower(:label ))")
 })
 public class JobTitlesEntity {
     private int id;

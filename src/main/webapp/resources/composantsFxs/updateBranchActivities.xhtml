@@ -14,20 +14,20 @@
 <cc:implementation>
     <f:view>
         <p:dialog
-                header="#{bundle['jobTitles.modalHeaderEdit']}"
+                header="#{bundle['branchActivities.updateModalHeader']}"
                 modal="true"
                 id="updateBranchActivitiesModal" widgetVar="updateBranchActivitiesModal" responsive="true">
             <h:form>
                 <p:outputPanel id="branchActivitiesManageContent" class="ui-fluid">
                     <h:panelGroup styleClass="md-inputfield jobtitlesFullDisplay">
-                        <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
+
                         <p:inputText id="branchActivitiesLabelUpdate"
-                                     value="#{branchActivitiesBean.branchActivitiesEntity.label}">
+                                     value="#{branchActivitiesBean.branchActivitiesEntity.label}" required="true"
+                                     requiredMessage="#{bundle['branchActivities.labelExist']}" maxlength="255">
                             <f:validator validatorId="branchActivitiesLabelValidator"/>
-                            <p:ajax event="keyup" update="validateUpdateBranchActivitiesBtn"/>
                         </p:inputText>
                         <label>#{bundle['branchActivities.title']}</label>
-                        <p:message for="branchActivitiesLabelUpdate"/>
+                        <p:message for="branchActivitiesLabelUpdate" closable="true"/>
                     </h:panelGroup>
                 </p:outputPanel>
 
@@ -37,9 +37,11 @@
                                      id="validateUpdateBranchActivitiesBtn"
                                      disabled="#{empty branchActivitiesBean.branchActivitiesEntity.label or branchActivitiesBean.branchActivitiesEntity.label eq null}"
                                      update="@(form) facesMessage"
+                                     resetValues="true"
                                      action="#{branchActivitiesBean.updateBranchActivities}"
-                                     onclick="PF('updateBranchActivitiesModal').close();"/>
+                                     oncomplete="if(!args.validationFailed) {PF('updateBranchActivitiesModal').hide()}; PF('displayAllBranchActivities').filter()"/>
                 </div>
+                <p:hotkey bind="esc" handler="PF('updateBranchActivitiesModal').hide()"/>
             </h:form>
         </p:dialog>
     </f:view>

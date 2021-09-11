@@ -19,24 +19,27 @@
                 <p:outputPanel id="jobtitlesManageContent" class="ui-fluid">
                     <h:panelGroup styleClass="md-inputfield jobtitlesFullDisplay">
                         <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
-                        <p:inputText id="jobTitlesLabelUpdate" value="#{jobtitlesBean.jobTitlesEntity.label}">
+                        <p:inputText id="jobTitlesLabelUpdate" value="#{jobtitlesBean.jobTitlesEntity.label}"
+                                     maxlength="255" required="true"
+                                     requiredMessage="#{bundle['jobTitles.labelExist']}">
                             <f:validator validatorId="jobTitlesLabelValidator"/>
-                            <p:ajax event="keyup" update="validateUpdateJobTitlesBtn"/>
                         </p:inputText>
                         <label>#{bundle['jobTitles.modalLabel']}</label>
-                        <p:message for="jobTitlesLabelUpdate"/>
+                        <p:message for="jobTitlesLabelUpdate" closable="true"/>
                     </h:panelGroup>
                 </p:outputPanel>
 
                 <div align="right" class="modalValidateBtn-margin-top">
                     <p:commandButton value="#{bundle['update']}"
                                      id="validateUpdateJobTitlesBtn"
+                                     resetValues="true"
                                      icon="ui-icon-check"
                                      disabled="#{empty jobtitlesBean.jobTitlesEntity.label}"
                                      update="@(form) facesMessage"
                                      action="#{jobtitlesBean.updateJobTitles}"
-                                     onclick="PF('updateJobTitlesModal').close();"/>
+                                     oncomplete="if (!args.validationFailed) {PF('jobTitlesModal').hide()}; PF('displayAllJobTitles').filter();"/>
                 </div>
+                <p:hotkey bind="esc" handler="PF('updateJobTitlesModal').hide()"/>
             </h:form>
         </p:dialog>
     </f:view>

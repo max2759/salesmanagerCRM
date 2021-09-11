@@ -14,31 +14,35 @@
 <cc:implementation>
     <f:view>
         <p:dialog
-                header="#{bundle['jobTitles.modalHeader']}"
+                header="#{bundle['branchActivities.modalHeader']}"
                 modal="true"
                 id="branchActivitiesModal" widgetVar="branchActivitiesModal" responsive="true">
             <h:form>
                 <p:outputPanel id="branchActivitiesManageContent" class="ui-fluid">
                     <h:panelGroup styleClass="md-inputfield jobtitlesFullDisplay">
-                        <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
                         <p:inputText id="branchActivitiesLabel"
-                                     value="#{branchActivitiesBean.branchActivitiesEntity.label}">
+                                     value="#{branchActivitiesBean.branchActivitiesEntity.label}" required="true"
+                                     requiredMessage="#{bundle['branchActivities.labelExist']}" maxlength="255">
                             <f:validator validatorId="branchActivitiesLabelValidator"/>
-                            <p:ajax event="keyup" update="validateBranchActivitiesBtn"/>
+                            <p:ajax event="keyup"
+                                    update="branchActivitesLabelMsgError validateBranchActivitiesBtn"
+                                    resetValues="true"/>
                         </p:inputText>
                         <label>#{bundle['branchActivities.title']}</label>
-                        <p:message for="branchActivitiesLabel"/>
+                        <p:message for="branchActivitiesLabel" id="branchActivitesLabelMsgError" redisplay="message"/>
                     </h:panelGroup>
                 </p:outputPanel>
 
                 <div align="right" class="modalValidateBtn-margin-top">
                     <p:commandButton value="#{bundle['save']}"
                                      icon="ui-icon-check"
+                                     resetValues="true"
                                      id="validateBranchActivitiesBtn"
                                      disabled="#{empty branchActivitiesBean.branchActivitiesEntity.label or branchActivitiesBean.branchActivitiesEntity.label eq null}"
                                      update="@(form) facesMessage" action="#{branchActivitiesBean.saveBranchActivities}"
-                                     onclick="PF('branchActivitiesModal').close();"/>
+                                     oncomplete="PF('branchActivitiesModal').hide(); PF('displayAllBranchActivities').filter()"/>
                 </div>
+                <p:hotkey bind="esc" handler="PF('branchActivitiesModal').hide()"/>
             </h:form>
         </p:dialog>
     </f:view>
