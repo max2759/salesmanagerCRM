@@ -14,20 +14,20 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
-        <div class="ui-g ui-fluid">
             <h:form id="updateTaskTypesForm">
 
-                    <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
-
-                        <p:outputLabel value="#{bundle['title']} :" for="titleUpdate"/>
+                <p:outputPanel id="taskTypeManageContent" class="ui-fluid">
+                    <h:panelGroup styleClass="md-inputfield jobtitlesFullDisplay">
                         <p:inputText id="titleUpdate" value="#{taskTypesBean.taskTypesEntity.label}"
                                      required="true"
                                      maxlength="255"
                                      requiredMessage="#{bundle['taskTypes.validator.title']}"
-                                     placeholder="#{bundle['title']}">
+                        >
                         </p:inputText>
+                        <label>#{bundle['title']} :</label>
                         <p:message for="titleUpdate" id="msg" closable="true" display="message"/>
-                    </p:panelGrid>
+                    </h:panelGroup>
+                </p:outputPanel>
                 <div align="right" class="mgin-top">
                     <p:commandButton style="width:auto;margin-bottom:10px;"
                                      id="buttonUpdateTaskTypes"
@@ -42,7 +42,6 @@
                 </div>
                 <p:hotkey bind="esc" handler="PF('dlg2').hide()"/>
             </h:form>
-        </div>
     </f:view>
 </cc:implementation>
 </html>

@@ -17,84 +17,126 @@
 
         <div class="ui-g ui-fluid">
             <h:form id="formCreateTask">
-                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                    <p:outputLabel value="#{bundle['title']} :" for="acTitleCreate"/>
-                    <p:inputText id="acTitleCreate" value="#{tasksBean.tasksEntity.title}"
-                                 required="true"
-                                 placeholder="#{bundle['title']}"
-                                 requiredMessage="#{bundle['task.validator.title']}"
-                                 maxlength="255"
-                                 style="margin-bottom:10px;">
-                        <p:ajax update="msg detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
-                                event="keyup" resetValues="true"/>
-                    </p:inputText>
 
-                    <p:outputLabel value="#{bundle['tasks.taskType']}:" for="taskTypeCreate"/>
-                    <p:selectOneMenu id="taskTypeCreate"
-                                     value="#{tasksBean.tasksEntity.taskTypesByIdTaskTypes}"
-                                     converter="taskTypeConverter">
+                <div class="ui-g form-group" style="margin-top:10px;">
 
-                        <f:selectItems value="#{taskTypesBean.taskTypesEntities}"
-                                       var="taskTypesEntities" itemValue="#{taskTypesEntities}"
-                                       itemLabel="#{taskTypesEntities.label}"/>
-                    </p:selectOneMenu>
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="acTitleCreate" value="#{bundle['title']} :"/></div>
+                    <div class="ui-g-12 ui-lg-4">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText value="#{tasksBean.tasksEntity.title}"
+                                         id="acTitleCreate"
+                                         required="true"
+                                         requiredMessage="#{bundle['task.validator.title']}"
+                                         maxlength="255">
+                                <p:ajax update="msg detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                        event="keyup" resetValues="true"/>
+                            </p:inputText>
+                            <label>#{bundle['title']}</label>
+                            <p:message id="msg" for="acTitleCreate"/>
+                        </h:panelGroup>
+                    </div>
 
-                    <p:outputLabel value="#{bundle['priority']}:" for="taskPriorityCreate"/>
-                    <p:selectOneMenu id="taskPriorityCreate"
-                                     value="#{tasksBean.tasksEntity.priority}">
-                        <f:selectItems value="#{enumPriorityBean.enumPriority}"
-                                       var="enumPriority" itemValue="#{enumPriority}"
-                                       itemLabel="#{enumPriority.label}"/>
-                        <f:validator validatorId="enumPriorityValidator"/>
-                    </p:selectOneMenu>
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="taskTypeCreate"
+                                                                value="#{bundle['tasks.taskType']}:"/></div>
+                    <div class="ui-g-12 ui-lg-4">
+                        <p:selectOneMenu id="taskTypeCreate"
+                                         value="#{tasksBean.tasksEntity.taskTypesByIdTaskTypes}"
+                                         converter="taskTypeConverter">
 
-                    <p:outputLabel for="datetimeCreate" value="#{bundle['dueDate']}:"/>
-                    <p:calendar placeholder="#{bundle['dueDate']}:" value="#{tasksBean.tasksEntity.endDate}"
-                                converterMessage="#{bundle['converter.dateTime']}"
-                                id="datetimeCreate" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
-
-                    <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
-                    <p:autoComplete id="Contact" value="#{tasksBean.tasksEntity.contactsByIdContacts}"
-                                    completeMethod="#{contactsBean.completeContactsContains}"
-                                    var="Contact"
-                                    itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
-                                    itemValue="#{Contact}"
-                                    dropdown="true"
-                                    placeholder="#{bundle['contact']}"
-                                    converter="#{contactsConverter}"
-                                    groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
-
-                    <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
-                    <p:autoComplete id="Company" value="#{tasksBean.tasksEntity.companiesByIdCompanies}"
-                                    completeMethod="#{companiesBean.completeCompaniesContains}"
-                                    var="Company"
-                                    itemLabel="#{Company.label}"
-                                    itemValue="#{Company}"
-                                    dropdown="true"
-                                    placeholder="#{bundle['company']}"
-                                    converter="#{companiesConverter}"
-                                    groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
+                            <f:selectItems value="#{taskTypesBean.taskTypesEntities}"
+                                           var="taskTypesEntities" itemValue="#{taskTypesEntities}"
+                                           itemLabel="#{taskTypesEntities.label}"/>
+                        </p:selectOneMenu>
+                    </div>
 
 
-                </p:panelGrid>
-                <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                    <p:outputLabel for="descriptionCreate" value="#{bundle['tasks.description']}:"/>
-                    <p:inputTextarea value="#{tasksBean.tasksEntity.description}" id="descriptionCreate"
-                                     rows="4"
-                                     maxlength="255"
-                                     placeholder="#{bundle['descriptionHolder']}"
-                                     autoResize="false"/>
-                </p:panelGrid>
-                <p:message id="msg" for="acTitleCreate" closable="true" display="message"/>
-                <div align="right" class="mgin-top">
-                    <p:commandButton style="width:auto;margin-bottom:10px;"
-                                     update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
-                                     oncomplete="if (!args.validationFailed){PF('createDialogTask').hide()}; PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
-                                     id="buttonSaveEntityTasks"
-                                     disabled="#{empty tasksBean.tasksEntity.title or tasksBean.tasksEntity.title.length() le 1}"
-                                     value="#{bundle['save']}"
-                                     resetValues="true"
-                                     action="#{tasksBean.saveEntity}"/>
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="taskPriorityCreate"
+                                                                value="#{bundle['priority']}:"/></div>
+                    <div class="ui-g-12 ui-lg-4">
+                        <p:selectOneMenu id="taskPriorityCreate"
+                                         value="#{tasksBean.tasksEntity.priority}">
+                            <f:selectItems value="#{enumPriorityBean.enumPriority}"
+                                           var="enumPriority" itemValue="#{enumPriority}"
+                                           itemLabel="#{enumPriority.label}"/>
+                            <f:validator validatorId="enumPriorityValidator"/>
+                        </p:selectOneMenu>
+                    </div>
+
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="datetimeCreate" value="#{bundle['dueDate']}:"/>
+                    </div>
+                    <div class="ui-g-12 ui-lg-4">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar value="#{tasksBean.tasksEntity.endDate}"
+                                        converterMessage="#{bundle['converter.dateTime']}"
+                                        id="datetimeCreate" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
+                            <label>#{bundle['dueDate']}:</label>
+                            <p:message id="msgDateTime" for="datetimeCreate"/>
+                        </h:panelGroup>
+                    </div>
+
+
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="Contact"
+                                                                value="#{bundle['associateWithContact']}:"/></div>
+                    <div class="ui-g-12 ui-lg-4">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:autoComplete id="Contact" value="#{tasksBean.tasksEntity.contactsByIdContacts}"
+                                            completeMethod="#{contactsBean.completeContactsContains}"
+                                            var="Contact"
+                                            itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
+                                            itemValue="#{Contact}"
+                                            dropdown="true"
+                                            converter="#{contactsConverter}"
+                                            groupBy="#{contactsBean.getContactsEntityGroup(Contact)}"
+                                            scrollHeight="250"/>
+                            <label>#{bundle['associateWithContact']}:</label>
+                            <p:message id="msgContact" for="Contact"/>
+                        </h:panelGroup>
+                    </div>
+
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="Company"
+                                                                value="#{bundle['associateWithCompany']}:"/></div>
+                    <div class="ui-g-12 ui-lg-4">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:autoComplete id="Company" value="#{tasksBean.tasksEntity.companiesByIdCompanies}"
+                                            completeMethod="#{companiesBean.completeCompaniesContains}"
+                                            var="Company"
+                                            itemLabel="#{Company.label}"
+                                            itemValue="#{Company}"
+                                            dropdown="true"
+                                            converter="#{companiesConverter}"
+                                            groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}"
+                                            scrollHeight="250"/>
+                            <label>#{bundle['associateWithCompany']}:</label>
+                            <p:message id="msgCompany" for="Company"/>
+                        </h:panelGroup>
+                    </div>
+
+
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="descriptionCreate"
+                                                                value="#{bundle['tasks.description']}:"/></div>
+                    <div class="ui-g-12 ui-lg-10">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputTextarea value="#{tasksBean.tasksEntity.description}" id="descriptionCreate"
+                                             rows="4"
+                                             maxlength="255"
+                                             autoResize="false"/>
+                            <label>#{bundle['descriptionHolder']}:</label>
+                            <p:message id="msgDescriptionCreate" for="descriptionCreate"/>
+                        </h:panelGroup>
+                    </div>
+
+                </div>
+                <div class="ui-g-12 ui-lg-12">
+                    <div align="right" class="mgin-top">
+                        <p:commandButton style="width:auto;margin-bottom:10px;"
+                                         update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
+                                         oncomplete="if (!args.validationFailed){PF('createDialogTask').hide()}; PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
+                                         id="buttonSaveEntityTasks"
+                                         disabled="#{empty tasksBean.tasksEntity.title or tasksBean.tasksEntity.title.length() le 1}"
+                                         value="#{bundle['save']}"
+                                         resetValues="true"
+                                         action="#{tasksBean.saveEntity}"/>
+                    </div>
                 </div>
                 <p:hotkey bind="esc" handler="PF('createDialogTask').hide()"/>
             </h:form>

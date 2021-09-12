@@ -16,13 +16,15 @@
 <cc:implementation>
     <f:view>
 
-        <p:dialog header="#{bundle['tasks.update']}" id="updateDialogTaskID" widgetVar="updateDialogTask" modal="true"
+        <p:dialog header="#{bundle['tasks.update']}" width="55%" id="updateDialogTaskID" widgetVar="updateDialogTask"
+                  modal="true"
                   responsive="true"
                   showEffect="fade">
             <fxs:updateTasks id="updateTasks"/>
         </p:dialog>
 
-        <p:dialog header="#{bundle['tasks.create']}" widgetVar="createDialogTask" modal="true" responsive="true"
+        <p:dialog header="#{bundle['tasks.create']}" width="55%" widgetVar="createDialogTask" modal="true"
+                  responsive="true"
                   showEffect="fade">
             <fxs:createTasks id="createTasks"/>
         </p:dialog>

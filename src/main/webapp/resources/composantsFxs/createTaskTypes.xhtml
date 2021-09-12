@@ -15,36 +15,35 @@
 <cc:implementation>
     <f:view>
 
-        <div class="ui-g ui-fluid">
-            <h:form id="createTaskTypesForm">
-                <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+        <h:form id="createTaskTypesForm">
 
-                    <p:outputLabel value="#{bundle['title']} :" for="title"/>
+            <p:outputPanel id="taskTypeManageContent" class="ui-fluid">
+                <h:panelGroup styleClass="md-inputfield jobtitlesFullDisplay">
                     <p:inputText id="title" value="#{taskTypesBean.taskTypesEntity.label}"
-                                 placeholder="#{bundle['title']}"
                                  required="true"
                                  maxlength="255"
                                  requiredMessage="#{bundle['taskTypes.validator.title']}">
                         <p:ajax update="msg listAllTaskTypes:createTaskTypes:createTaskTypesForm:buttonCreateTaskTypes"
                                 event="keyup" resetValues="true"/>
                     </p:inputText>
+                    <label>#{bundle['title']} :</label>
                     <p:message for="title" id="msg" closable="true" display="message"/>
-                </p:panelGrid>
-                <div align="right">
-                    <p:commandButton style="width:auto;margin-bottom:10px;"
-                                     id="buttonCreateTaskTypes"
-                                     update="@(form) msgs"
-                                     disabled="#{empty taskTypesBean.taskTypesEntity.label or taskTypesBean.taskTypesEntity.label.length() le 1}"
-                                     oncomplete="if (!args.validationFailed){PF('createDialog').hide()}; PF('displayAllEntities').filter(); "
-                                     value="#{bundle['save']}"
-                                     resetValues="true"
-                                     action="#{taskTypesBean.saveEntity}"
-                    >
-                    </p:commandButton>
-                </div>
-                <p:hotkey bind="esc" handler="PF('createDialog').hide()"/>
-            </h:form>
-        </div>
+                </h:panelGroup>
+            </p:outputPanel>
+            <div align="right" class="mgin-top">
+                <p:commandButton style="width:auto;"
+                                 id="buttonCreateTaskTypes"
+                                 update="@(form) msgs"
+                                 disabled="#{empty taskTypesBean.taskTypesEntity.label or taskTypesBean.taskTypesEntity.label.length() le 1}"
+                                 oncomplete="if (!args.validationFailed){PF('createDialog').hide()}; PF('displayAllEntities').filter(); "
+                                 value="#{bundle['save']}"
+                                 resetValues="true"
+                                 action="#{taskTypesBean.saveEntity}"
+                >
+                </p:commandButton>
+            </div>
+            <p:hotkey bind="esc" handler="PF('createDialog').hide()"/>
+        </h:form>
     </f:view>
 </cc:implementation>
 </html>
