@@ -19,14 +19,13 @@
             <h:form id="formUpdateTask">
 
                 <div class="ui-g form-group" style="margin-top:10px;">
-                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="acTitle" value="#{bundle['title']} :"/></div>
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="acTitle" value="#{bundle['title']}:"/></div>
                     <div class="ui-g-12 ui-lg-4">
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="acTitle" value="#{tasksBean.tasksEntity.title}"
                                          maxlength="255"
                                          required="true"
-                                         requiredMessage="#{bundle['task.validator.title']}"
-                                         style="margin-bottom:10px;"/>
+                                         requiredMessage="#{bundle['task.validator.title']}"/>
                             <label>#{bundle['title']}</label>
                             <p:message id="msg" for="acTitle"/>
                         </h:panelGroup>

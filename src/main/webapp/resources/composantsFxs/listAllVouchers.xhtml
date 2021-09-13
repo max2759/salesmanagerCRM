@@ -15,12 +15,14 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
-        <p:dialog header="#{bundle['vouchers.details']}" id="dlg2" widgetVar="dlg2" modal="true" responsive="true"
+        <p:dialog header="#{bundle['vouchers.details']}" width="55%" id="dlg2" widgetVar="dlg2" modal="true"
+                  responsive="true"
                   showEffect="fade">
             <fxs:updateVouchers id="updateVouchers"/>
         </p:dialog>
 
-        <p:dialog header="#{bundle['vouchers.create']}" widgetVar="createDialog" modal="true" responsive="true"
+        <p:dialog header="#{bundle['vouchers.create']}" width="55%" widgetVar="createDialog" modal="true"
+                  responsive="true"
                   showEffect="fade">
             <fxs:createVouchers id="createVouchers"/>
         </p:dialog>
