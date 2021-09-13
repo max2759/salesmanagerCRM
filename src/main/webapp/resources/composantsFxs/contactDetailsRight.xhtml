@@ -15,11 +15,13 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
-        <p:dialog header="#{bundle['tasks.create']}" widgetVar="createDialogTask" modal="true" responsive="true"
+        <p:dialog header="#{bundle['tasks.create']}" width="55%" widgetVar="createDialogTask" modal="true"
+                  responsive="true"
                   showEffect="fade">
             <fxs:createTasksForContactCompany id="createTasks"/>
         </p:dialog>
-        <p:dialog header="#{bundle['notes.create']}" widgetVar="createDialogNotes" modal="true" responsive="true"
+        <p:dialog header="#{bundle['notes.create']}" width="45%" widgetVar="createDialogNotes" modal="true"
+                  responsive="true"
                   showEffect="fade">
             <fxs:createNotes id="createNotes"/>
         </p:dialog>

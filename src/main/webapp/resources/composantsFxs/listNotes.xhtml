@@ -55,17 +55,24 @@
                         <f:facet name="output">
                             <h:outputText escape="false" value="#{note.message}"/>
                         </f:facet>
+
                         <f:facet name="input">
-                            <p:inputTextarea widgetVar="editor1" value="#{note.message}"
-                                             required="true"
-                                             requiredMessage="#{bundle['notes.validator.message']}"
-                                             placeholder="#{bundle['notes.messageHolder']}"
-                                             rows="6"
-                                             cols="100"
-                                             maxlength="255"
-                                             autoResize="false" label="Name">
-                                <p:ajax update="msgs" global="false" event="keyup"/>
-                            </p:inputTextarea>
+                            <div class="ui-g-12 ui-lg-12">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputTextarea widgetVar="editor1" value="#{note.message}"
+                                                     id="acTitleNote"
+                                                     required="true"
+                                                     requiredMessage="#{bundle['notes.validator.message']}"
+                                                     rows="6"
+                                                     cols="100"
+                                                     maxlength="255"
+                                                     autoResize="false" label="Name">
+                                        <p:ajax update="msg" global="false" event="keyup"/>
+                                    </p:inputTextarea>
+                                    <label>#{bundle['notes.messageHolder']}</label>
+                                    <p:message id="msg" for="acTitleNote"/>
+                                </h:panelGroup>
+                            </div>
                         </f:facet>
                     </p:cellEditor>
                 </div>

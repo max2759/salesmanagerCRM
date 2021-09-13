@@ -16,108 +16,138 @@
     <f:view>
         <div class="ui-g ui-fluid">
             <h:form>
+                <div class="ui-g form-group" style="margin-top:10px;">
 
-                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                    <p:outputLabel value="#{bundle['title']} :" for="titleUpdate"/>
-                    <p:inplace>
-                        <p:inputText id="titleUpdate" value="#{vouchersBean.vouchersEntity.title}"
-                                     placeholder="#{bundle['title']}"
-                                     required="true"
-                                     maxlength="255"
-                                     requiredMessage="#{bundle['vouchers.validator.title']}">
-                        </p:inputText>
-                    </p:inplace>
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="titleUpdate" value="#{bundle['title']}:"/></div>
+                    <div class="ui-g-12 ui-lg-4">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inplace>
+                                <p:inputText id="titleUpdate" value="#{vouchersBean.vouchersEntity.title}"
+                                             required="true"
+                                             maxlength="255"
+                                             requiredMessage="#{bundle['vouchers.validator.title']}">
+                                </p:inputText>
+                                <label>#{bundle['title']} :</label>
+                            </p:inplace>
+                            <p:message id="msg" for="titleUpdate"/>
+                        </h:panelGroup>
+                    </div>
 
-                    <p:outputLabel value="#{bundle['vouchers.status']}:" for="voucherStatus"/>
-                    <p:inplace emptyLabel="..."
-                               label="#{vouchersBean.vouchersEntity.voucherStatusByIdVoucherStatus.label}"
-                               effectSpeed="fast" event="click">
-                        <p:selectOneMenu id="voucherStatus"
-                                         value="#{vouchersBean.vouchersEntity.voucherStatusByIdVoucherStatus}"
-                                         converter="voucherStatusConverter">
+                    <div class="ui-g-12 ui-lg-6"><p:spacer/></div>
 
-                            <f:selectItems value="#{voucherStatusBean.voucherStatusEntities}"
-                                           var="voucherStatusEntities" itemValue="#{voucherStatusEntities}"
-                                           itemLabel="#{voucherStatusEntities.label}"/>
-                        </p:selectOneMenu>
-                    </p:inplace>
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="voucherStatus"
+                                                                value="#{bundle['vouchers.status']}:"/>
+                    </div>
+                    <div class="ui-g-12 ui-lg-4">
+                        <p:inplace emptyLabel="..."
+                                   label="#{vouchersBean.vouchersEntity.voucherStatusByIdVoucherStatus.label}"
+                                   effectSpeed="fast" event="click">
+                            <p:selectOneMenu id="voucherStatus"
+                                             value="#{vouchersBean.vouchersEntity.voucherStatusByIdVoucherStatus}"
+                                             converter="voucherStatusConverter">
 
-                    <p:outputLabel value="#{bundle['priority']}:" for="voucherPriority"/>
-                    <p:inplace emptyLabel="..."
-                               label="#{vouchersBean.vouchersEntity.priority.label}"
-                               effectSpeed="fast" event="click">
-                        <p:selectOneMenu id="voucherPriority"
-                                         value="#{vouchersBean.vouchersEntity.priority}">
-                            <f:selectItems value="#{enumPriorityBean.enumPriority}"
-                                           var="enumPriority" itemValue="#{enumPriority}"
-                                           itemLabel="#{enumPriority.label}"/>
-                            <f:validator validatorId="enumPriorityValidator"/>
-                        </p:selectOneMenu>
-                    </p:inplace>
+                                <f:selectItems value="#{voucherStatusBean.voucherStatusEntities}"
+                                               var="voucherStatusEntities" itemValue="#{voucherStatusEntities}"
+                                               itemLabel="#{voucherStatusEntities.label}"/>
+                            </p:selectOneMenu>
+                        </p:inplace>
+                    </div>
 
-                </p:panelGrid>
-                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="voucherPriority" value="#{bundle['priority']}:"/>
+                    </div>
+                    <div class="ui-g-12 ui-lg-4">
+                        <p:inplace emptyLabel="..."
+                                   label="#{vouchersBean.vouchersEntity.priority.label}"
+                                   effectSpeed="fast" event="click">
+                            <p:selectOneMenu id="voucherPriority"
+                                             value="#{vouchersBean.vouchersEntity.priority}">
+                                <f:selectItems value="#{enumPriorityBean.enumPriority}"
+                                               var="enumPriority" itemValue="#{enumPriority}"
+                                               itemLabel="#{enumPriority.label}"/>
+                                <f:validator validatorId="enumPriorityValidator"/>
+                            </p:selectOneMenu>
+                        </p:inplace>
+                    </div>
 
-                    <p:outputLabel value="#{bundle['associateWithContact']}:" for="Contact"/>
-                    <p:inplace emptyLabel="..."
-                               label="#{vouchersBean.vouchersEntity.contactsByIdContacts.lastname.concat(' '.concat(vouchersBean.vouchersEntity.contactsByIdContacts.firstname))}">
-                        <p:autoComplete id="Contact" value="#{vouchersBean.vouchersEntity.contactsByIdContacts}"
-                                        completeMethod="#{contactsBean.completeContactsContains}"
-                                        var="Contact"
-                                        itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
-                                        itemValue="#{Contact}"
-                                        dropdown="true"
-                                        placeholder="#{bundle['contact']}"
-                                        converter="#{contactsConverter}"
-                                        groupBy="#{contactsBean.getContactsEntityGroup(Contact)}" scrollHeight="250"/>
-                    </p:inplace>
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="Contact"
+                                                                value="#{bundle['associateWithContact']}:"/></div>
+                    <div class="ui-g-12 ui-lg-4">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inplace emptyLabel="..."
+                                       label="#{vouchersBean.vouchersEntity.contactsByIdContacts.lastname.concat(' '.concat(vouchersBean.vouchersEntity.contactsByIdContacts.firstname))}">
+                                <p:autoComplete id="Contact" value="#{vouchersBean.vouchersEntity.contactsByIdContacts}"
+                                                completeMethod="#{contactsBean.completeContactsContains}"
+                                                var="Contact"
+                                                itemLabel="#{Contact.lastname.concat(' '.concat(Contact.firstname))}"
+                                                itemValue="#{Contact}"
+                                                dropdown="true"
+                                                converter="#{contactsConverter}"
+                                                groupBy="#{contactsBean.getContactsEntityGroup(Contact)}"
+                                                scrollHeight="250"/>
+                                <label>#{bundle['contact']}:</label>
+                            </p:inplace>
+                            <p:message id="msgContact" for="Contact"/>
+                        </h:panelGroup>
+                    </div>
 
-                    <p:outputLabel value="#{bundle['associateWithCompany']}:" for="Company"/>
-                    <p:inplace emptyLabel="..." label="#{vouchersBean.vouchersEntity.companiesByIdCompanies.label}">
-                        <p:autoComplete id="Company" value="#{vouchersBean.vouchersEntity.companiesByIdCompanies}"
-                                        completeMethod="#{companiesBean.completeCompaniesContains}"
-                                        var="Company"
-                                        itemLabel="#{Company.label}"
-                                        itemValue="#{Company}"
-                                        dropdown="true"
-                                        placeholder="#{bundle['company']}"
-                                        converter="#{companiesConverter}"
-                                        groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}" scrollHeight="250"/>
-                    </p:inplace>
-                </p:panelGrid>
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="Company"
+                                                                value="#{bundle['associateWithCompany']}:"/></div>
+                    <div class="ui-g-12 ui-lg-4">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inplace emptyLabel="..."
+                                       label="#{vouchersBean.vouchersEntity.companiesByIdCompanies.label}">
+                                <p:autoComplete id="Company"
+                                                value="#{vouchersBean.vouchersEntity.companiesByIdCompanies}"
+                                                completeMethod="#{companiesBean.completeCompaniesContains}"
+                                                var="Company"
+                                                itemLabel="#{Company.label}"
+                                                itemValue="#{Company}"
+                                                dropdown="true"
+                                                converter="#{companiesConverter}"
+                                                groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}"
+                                                scrollHeight="250"/>
+                                <label>#{bundle['company']}:</label>
+                            </p:inplace>
+                            <p:message id="msgCompany" for="Company"/>
+                        </h:panelGroup>
+                    </div>
 
-                <p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
-
-                    <p:outputLabel value="#{bundle['vouchers.description']} :" for="description"/>
-                    <p:inplace emptyLabel="..." label="#{vouchersBean.vouchersEntity.description}">
-                        <p:inputTextarea id="description" value="#{vouchersBean.vouchersEntity.description}"
-                                         rows="4"
-                                         maxlength="255"
-                                         autoResize="false"
-                                         placeholder="#{bundle['descriptionHolder']}"/>
-                    </p:inplace>
-                    <p:message for="titleUpdate" id="msg" closable="true" display="message"/>
-                </p:panelGrid>
-
-                <div align="right" class="mgin-top">
-                    <p:menuButton value="#{bundle['actions']}"
-                                  rendered="#{usersBean.currentUser.isPermitted('showVoucherHistories') or usersBean.currentUser.isPermitted('updateVouchers')}">
-                        <p:menuitem icon="ui-icon-check"
-                                    rendered="#{usersBean.currentUser.isPermitted('updateVouchers')}"
-                                    value="#{bundle['save']}"
-                                    update="@(form) msgs"
-                                    resetValues="true"
-                                    oncomplete="if (!args.validationFailed){PF('dlg2').hide()}; PF('displayAllEntities').filter();"
-                                    action="#{vouchersBean.updateEntity}"/>
-                        <p:menuitem icon="ui-icon-update"
-                                    rendered="#{usersBean.currentUser.isPermitted('showVoucherHistories')}"
-                                    outcome="voucherDetails"
-                                    value="#{bundle['viewHistory']}">
-                            <f:param name="idVoucher" value="#{vouchersBean.vouchersEntity.id}"/>
-                        </p:menuitem>
-                    </p:menuButton>
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="description"
+                                                                value="#{bundle['tasks.description']}:"/></div>
+                    <div class="ui-g-12 ui-lg-10">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inplace emptyLabel="..." label="#{vouchersBean.vouchersEntity.description}">
+                                <p:inputTextarea id="description" value="#{vouchersBean.vouchersEntity.description}"
+                                                 rows="4"
+                                                 maxlength="255"
+                                                 autoResize="false"/>
+                                <label>#{bundle['descriptionHolder']}:</label>
+                            </p:inplace>
+                            <p:message id="msgDescriptionCreate" for="description"/>
+                        </h:panelGroup>
+                    </div>
                 </div>
-                <p:hotkey bind="esc" handler="PF('dlg2').hide()"/>
+                <div class="ui-g-12 ui-lg-12">
+                    <div align="right" class="mgin-top">
+                        <p:menuButton value="#{bundle['actions']}"
+                                      rendered="#{usersBean.currentUser.isPermitted('showVoucherHistories') or usersBean.currentUser.isPermitted('updateVouchers')}">
+                            <p:menuitem icon="ui-icon-check"
+                                        rendered="#{usersBean.currentUser.isPermitted('updateVouchers')}"
+                                        value="#{bundle['save']}"
+                                        update="@(form) msgs"
+                                        resetValues="true"
+                                        oncomplete="if (!args.validationFailed){PF('dlg2').hide()}; PF('displayAllEntities').filter();"
+                                        action="#{vouchersBean.updateEntity}"/>
+                            <p:menuitem icon="ui-icon-update"
+                                        rendered="#{usersBean.currentUser.isPermitted('showVoucherHistories')}"
+                                        outcome="voucherDetails"
+                                        value="#{bundle['viewHistory']}">
+                                <f:param name="idVoucher" value="#{vouchersBean.vouchersEntity.id}"/>
+                            </p:menuitem>
+                        </p:menuButton>
+                    </div>
+                </div>
+                <p:hotkey bind="esc" handler="PF('createDialog').hide()"/>
             </h:form>
         </div>
     </f:view>
