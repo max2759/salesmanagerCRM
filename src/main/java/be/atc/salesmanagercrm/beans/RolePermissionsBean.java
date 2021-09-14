@@ -199,107 +199,35 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
         //possiblement, en cas d'update, vider tous les combos et reinserer dedans a nouveau . Ou alors, verifier en db les combos et verifier par rapport a ce qu'on a recu si ils existent ou non
 
 
-        log.info(String.valueOf(all));
+        log.info("log is not checked");
+        EntityManager em = EMF.getEM();
 
-        if (all) {
-
-            try {
-                validateRoles(rolesPermissionsEntity.getRolesByIdRoles());
-            } catch (InvalidEntityException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-                return;
-            }
-
-            EntityManager em = EMF.getEM();
-
-            log.info("all is checked");
-            log.info(String.valueOf(dao.findPermissionWithRole(em, rolesPermissionsEntity.getRolesByIdRoles().getId())));
-            List<RolesPermissionsEntity> list = dao.findPermissionWithRole(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
-//je vide
-            if (list.size() != 0) {
-                deleteRolesPermissions(rolesPermissionsEntity.getRolesByIdRoles().getId());
-            }
-//je recup mes 76 perms
-            permissionsEntitiesRole = pdao.findAllPermissions(em);
-            String idRoles = String.valueOf(rolesPermissionsEntity.getRolesByIdRoles().getId());
-            int idRole = Integer.parseInt(idRoles);
-
-            boolean com = false;
-            for (PermissionsEntity permissionsEntity : permissionsEntitiesRole) {
+        log.info(String.valueOf(rolesPermissionsEntity.getRolesByIdRoles().getId())); // je recoit mon role la c'est bon
+        RolesEntity roleEntityId = rdao.findById(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
 
 
-                RolesPermissionsEntity rolesPermissionsEntity = new RolesPermissionsEntity();
+        log.info(String.valueOf(rolesPermissionsEntity.getPermissionsByIdPermissions()));
 
-                log.info(String.valueOf(permissionsEntity.getId()));
-                // log.info(String.valueOf(rolesPermissionsEntity.getRolesByIdRoles().getId()));
+        try {
+            validateRolesPermissions(rolesPermissionsEntity);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
 
-                PermissionsEntity permissionsEntityId = pdao.findById(em, permissionsEntity.getId());
-                //      log.info(String.valueOf(dao.getComboRolePerm(em, idRole, permissionsEntity.getId())));
-//je verifie que c'est bien vide
-                if (dao.getComboRolePerm(em, idRole, permissionsEntity.getId()) == null) {
+        try {
+            validateRoles(rolesPermissionsEntity.getRolesByIdRoles());
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
 
-                    RolesEntity roleEntityId = rdao.findById(em, idRole);
-                    rolesPermissionsEntity.setPermissionsByIdPermissions(permissionsEntityId);
-                    rolesPermissionsEntity.setRolesByIdRoles(roleEntityId);
-
-                    EntityTransaction tx = null;
-                    try {
-                        tx = em.getTransaction();
-                        tx.begin();
-                        dao.addRolePermissions(em, rolesPermissionsEntity);
-                        tx.commit();
-                        log.info("Persist ok");
-                        com = true;
-
-                    } catch (Exception ex) {
-                        if (tx != null && tx.isActive()) tx.rollback();
-                        log.info("Persist echec");
-                        msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-                        FacesContext.getCurrentInstance().addMessage(null, msg);
-                    } finally {
-                        em.clear();
-                        em.clear();
-                    }
-                }
-
-
-            }
-            if (com) {
-                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "permission.update"), null);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-            }
-
-
-        } else {
-            log.info("log is not checked");
-            EntityManager em = EMF.getEM();
-
-            log.info(String.valueOf(rolesPermissionsEntity.getRolesByIdRoles().getId())); // je recoit mon role la c'est bon
-            RolesEntity roleEntityId = rdao.findById(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
-
-
-            log.info(String.valueOf(rolesPermissionsEntity.getPermissionsByIdPermissions()));
-
-            try {
-                validateRolesPermissions(rolesPermissionsEntity);
-            } catch (InvalidEntityException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-                return;
-            }
-
-            try {
-                validateRoles(rolesPermissionsEntity.getRolesByIdRoles());
-            } catch (InvalidEntityException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-                return;
-            }
-
-            try {
-                validatePermissions(permissionsEntitiesRole);
-            } catch (InvalidEntityException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-                return;
-            }
+        try {
+            validatePermissions(permissionsEntitiesRole);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            return;
+        }
 /*
         findAllRolesPermissions();
 
@@ -332,71 +260,69 @@ log.info(String.valueOf(permissionsEntities.size()));
 
 */
 
-            try {
-                for (PermissionsEntity p : permissionsEntitiesRole) {
-                    permissionsBean.findByLabel(p.getLabel());
-                }
-            } catch (EntityNotFoundException exception) {
-                log.warn("code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                //msg ici
-                return;
+        try {
+            for (PermissionsEntity p : permissionsEntitiesRole) {
+                permissionsBean.findByLabel(p.getLabel());
             }
+        } catch (EntityNotFoundException exception) {
+            log.warn("code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            //msg ici
+            return;
+        }
 
 //condition si un role perm existe
-            log.info(String.valueOf(dao.findPermissionWithRole(em, rolesPermissionsEntity.getRolesByIdRoles().getId())));
-            List<RolesPermissionsEntity> list = dao.findPermissionWithRole(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
+        log.info(String.valueOf(dao.findPermissionWithRole(em, rolesPermissionsEntity.getRolesByIdRoles().getId())));
+        List<RolesPermissionsEntity> list = dao.findPermissionWithRole(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
 
-            if (list.size() != 0) {
-                deleteRolesPermissions(rolesPermissionsEntity.getRolesByIdRoles().getId());
-            }
-
-            boolean com = false;
-            for (PermissionsEntity permissionsEntity : permissionsEntitiesRole) {
-                String idRoles = String.valueOf(rolesPermissionsEntity.getRolesByIdRoles().getId());
-                int idRole = Integer.parseInt(idRoles);
-
-                RolesPermissionsEntity rolesPermissionsEntity = new RolesPermissionsEntity();
-
-                PermissionsEntity permissionsEntityId = pdao.findById(em, permissionsEntity.getId());
-                log.info(String.valueOf(dao.getComboRolePerm(em, idRole, permissionsEntity.getId())));
-
-                if (dao.getComboRolePerm(em, idRole, permissionsEntity.getId()) == null) {
-
-                    rolesPermissionsEntity.setPermissionsByIdPermissions(permissionsEntityId);
-                    rolesPermissionsEntity.setRolesByIdRoles(roleEntityId);
-
-                    EntityTransaction tx = null;
-                    try {
-                        tx = em.getTransaction();
-                        tx.begin();
-                        dao.addRolePermissions(em, rolesPermissionsEntity);
-                        tx.commit();
-                        log.info("Persist ok");
-                        com = true;
-
-                    } catch (Exception ex) {
-                        if (tx != null && tx.isActive()) tx.rollback();
-                        log.info("Persist echec");
-                        msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-                        FacesContext.getCurrentInstance().addMessage(null, msg);
-                    } finally {
-                        em.clear();
-                        em.clear();
-                    }
-                }
-
-                if (com) {
-                    msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "permission.update"), null);
-                    FacesContext.getCurrentInstance().addMessage(null, msg);
-                }
-
-                //faire un add du combo
-                log.info(String.valueOf(rolesPermissionsEntity));
-            }
-
-
+        if (list.size() != 0) {
+            deleteRolesPermissions(rolesPermissionsEntity.getRolesByIdRoles().getId());
         }
+
+        boolean com = false;
+        for (PermissionsEntity permissionsEntity : permissionsEntitiesRole) {
+            String idRoles = String.valueOf(rolesPermissionsEntity.getRolesByIdRoles().getId());
+            int idRole = Integer.parseInt(idRoles);
+
+            RolesPermissionsEntity rolesPermissionsEntity = new RolesPermissionsEntity();
+
+            PermissionsEntity permissionsEntityId = pdao.findById(em, permissionsEntity.getId());
+            log.info(String.valueOf(dao.getComboRolePerm(em, idRole, permissionsEntity.getId())));
+
+            if (dao.getComboRolePerm(em, idRole, permissionsEntity.getId()) == null) {
+
+                rolesPermissionsEntity.setPermissionsByIdPermissions(permissionsEntityId);
+                rolesPermissionsEntity.setRolesByIdRoles(roleEntityId);
+
+                EntityTransaction tx = null;
+                try {
+                    tx = em.getTransaction();
+                    tx.begin();
+                    dao.addRolePermissions(em, rolesPermissionsEntity);
+                    tx.commit();
+                    log.info("Persist ok");
+                    com = true;
+
+                } catch (Exception ex) {
+                    if (tx != null && tx.isActive()) tx.rollback();
+                    log.info("Persist echec");
+                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                } finally {
+                    em.clear();
+                    em.clear();
+                }
+            }
+            
+            //faire un add du combo
+            log.info(String.valueOf(rolesPermissionsEntity));
+        }
+        if (com) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "permission.update"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+
     }
+
 
     //delete all
     private void deleteRolesPermissions(int idRole) {

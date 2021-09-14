@@ -86,7 +86,8 @@
                             <p:column>
                                 <h:panelGroup rendered="#{convers.active}">
                                     <p:commandLink update="@form msg"
-                                                   action="#{conversationsBean.delete(convers)}">
+                                                   rendered="#{usersBean.currentUser.isPermitted('deleteConversations')}">
+                                        action="#{conversationsBean.delete(convers)}">
                                         <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                                    icon="fa fa-warning"/>
                                         <i class="ui-icon ui-icon-delete-forever"></i>
@@ -108,17 +109,17 @@
                                                      action="#{conversationsBean.activate(convers)}"
                                                      update="@(form) msg"/>
                                 </h:panelGroup>
-                            </p:column>
 
-                            <p:column colspan="1" width="70">
-                                <p:commandLink
-                                        actionListener="#{conversationsBean.initialiseDialogConversId(convers.id)}"
-                                        update="updateConversationDialogForm:updateConversationDialog"
-                                        oncomplete="PF('updateConversation').show();return false;"
-                                        styleClass="NavyButton">
-                                    <i class="ui-icon ui-icon-create"></i>
-                                </p:commandLink>
 
+                                <!--<p:column colspan="1" width="70">
+                                    <p:commandLink
+                                            actionListener="#{conversationsBean.initialiseDialogConversId(convers.id)}"
+                                            update="updateConversationDialogForm:updateConversationDialog"
+                                            oncomplete="PF('updateConversation').show();return false;"
+                                            styleClass="NavyButton">
+                                        <i class="ui-icon ui-icon-create"></i>
+                                    </p:commandLink>
+    -->
 
                             </p:column>
 
