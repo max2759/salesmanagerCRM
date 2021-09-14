@@ -47,7 +47,8 @@
                                       filterBy="#{role.label}"
                                       filterMatchMode="contains">
                                 <p:commandLink id="titleAll" value="#{role.label}"
-                                               onclick="PF('dlg2').show();"
+                                               onclick="PF('updateRole').show();"
+                                               actionListener="#{rolesBean.initialiseDialogRoleId(role.id)}"
                                                update="@(form)"
                                 >
                                     <f:param name="idEntity" value="#{role.id}"/>
@@ -59,11 +60,13 @@
                                 <p:commandLink
                                         rendered="#{usersBean.currentUser.isPermitted('updateRoles')}"
                                         actionListener="#{rolesBean.initialiseDialogRoleId(role.id)}"
-                                        update="updateRoleDialogForm:updateRoleDialog"
+                                        update="@(form)"
                                         oncomplete="PF('updateRole').show();return false;"
                                         styleClass="NavyButton">
                                     <i class="ui-icon ui-icon-create"></i>
+
                                 </p:commandLink>
+
                                 <h:panelGroup rendered="#{role.active}">
                                     <p:commandLink update="@(form)"
                                                    action="#{rolesBean.delete(role.id)}"
@@ -119,8 +122,6 @@
                             <p:outputLabel for="roleLabelUpdate" value="#{bundle['role.label']}"/>
                             <p:inputText value="#{rolesBean.rolesEntity.label}"
                                          placeholder="#{rolesBean.roleForDialog.label}" required="true"
-                                         requiredMessage="#{bundle['fieldEmpt']}"
-                                         validatorMessage="#{bundle['error.notEnoughChar']}"
                                          id="roleLabelUpdate">
                                 <p:ajax update="updateRoleDialogForm:updateRole"
                                         event="keyup"/>
@@ -132,7 +133,7 @@
 
                         </p:panelGrid>
                         <div align="right" class="mgin-top">
-                            <p:commandButton value="Confirmer Valider" action="#{rolesBean.updateEntity}"
+                            <p:commandButton value="#{bundle['validate']}" action="#{rolesBean.updateEntity}"
                                              id="updateRole"
                                              oncomplete="if (!args.validationFailed){PF('updateRole').hide()}; PF('displayAllEntities').filter();"
                                              resetValues="true"
@@ -142,14 +143,14 @@
                         <p:hotkey bind="esc" handler="PF('updateRole').hide()"/>
                     </h:form>
                 </p:dialog>
+
             </div>
             <!-- e*******************add*******************e- -->
-
             <div class="ui-g ui-fluid">
-                <p:dialog header="#{bundle['role.create']}" widgetVar="addRole" modal="true"
-                          responsive="true" id="addRoleDialog">
+                <h:form id="addRoleDialogForm">
 
-                    <h:form id="addRoleDialogForm">
+                    <p:dialog header="#{bundle['role.create']}" widgetVar="addRole" modal="true"
+                              responsive="true" id="addRoleDialog">
 
                         <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" id="addRoleD">
                             <p:outputLabel for="roleLabel" value="#{bundle['role.create']}"/>
@@ -170,10 +171,11 @@
                                              update="@(form)"/>
                         </div>
                         <p:messages id="roleLabelAdd" closable="true" display="message"/>
-                        <p:hotkey bind="esc" handler="PF('addRole').hide()"/>
-                    </h:form>
-                </p:dialog>
+                    </p:dialog>
+                    <p:hotkey bind="esc" handler="PF('addRole').hide()"/>
+                </h:form>
             </div>
+
 
         </h:body>
     </ui:define>

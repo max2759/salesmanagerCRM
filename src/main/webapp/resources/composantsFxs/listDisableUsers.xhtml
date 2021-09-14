@@ -77,9 +77,10 @@
             <p:column colspan="1" width="70">
                 <p:commandLink
                         actionListener="#{usersBean.initialiseDialogUserId(user.id)}"
-                        oncomplete="PF('updateUser').show();return false;"
-                        update="@(form) msgs"
-                        styleClass="NavyButton">
+                        rendered="#{usersBean.currentUser.isPermitted('updateUsers')}">
+                    oncomplete="PF('updateUser').show();return false;"
+                    update="@(form) msgs"
+                    styleClass="NavyButton">
                     <i class="ui-icon ui-icon-create"></i>
                 </p:commandLink>
             </p:column>
@@ -88,7 +89,8 @@
 
                 <p:commandLink update="formUsers:tabViewUsers msgs"
                                oncomplete="PF('displayAllEntitiesActive').filter(); PF('displayAllEntitiesInactive').filter();"
-                               action="#{usersBean.activate(user.id)}">
+                               rendered="#{usersBean.currentUser.isPermitted('deleteUsers')}">
+                    action="#{usersBean.activate(user.id)}">
                     <i class="ui-icon ui-icon-update"/>
                     <f:param name="idEntity" value="#{user.id}"/>
                     <f:param name="typeEntities" value="all"/>
