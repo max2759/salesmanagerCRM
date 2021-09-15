@@ -71,7 +71,6 @@ public class CitiesBean extends ExtendBean implements Serializable {
             return null;
         }
 
-
         EntityManager em = EMF.getEM();
         try {
             return citiesDao.findById(em, id);
@@ -110,7 +109,7 @@ public class CitiesBean extends ExtendBean implements Serializable {
 
         List<CitiesEntity> citiesEntityListForm = findCitiesEntityList();
 
-        return citiesEntityListForm.stream().filter(t -> t.getLabel().toLowerCase().contains(queryLowerCase)).collect(Collectors.toList());
+        return citiesEntityListForm.stream().filter(t -> (t.getLabel().toLowerCase().contains(queryLowerCase)) || (t.getPostalCode().contains(queryLowerCase))).collect(Collectors.toList());
     }
 
 
