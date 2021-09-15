@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.entities.CompaniesContactsEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 public interface CompaniesContactsDao {
 
@@ -13,7 +14,7 @@ public interface CompaniesContactsDao {
 
     List<CompaniesContactsEntity> findByIdCompany(EntityManager em, int idCompany);
 
-    CompaniesContactsEntity findById(EntityManager em, int id);
+    Optional<CompaniesContactsEntity> findById(EntityManager em, int id);
 
     void delete(EntityManager em, CompaniesContactsEntity companiesContactsEntity);
 

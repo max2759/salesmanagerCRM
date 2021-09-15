@@ -23,10 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -334,18 +331,19 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<CompaniesEntity> optionalCompaniesEntity;
+
         try {
-            return companiesDao.findByIdCompanyAndByIdUser(em, id, usersEntity.getId());
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucune entreprise avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouvee dans la BDD",
-                    ErrorCodes.COMPANY_NOT_FOUND
-            );
+            optionalCompaniesEntity = companiesDao.findByIdCompanyAndByIdUser(em, id, usersEntity.getId());
         } finally {
             em.clear();
             em.close();
         }
+        return optionalCompaniesEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucune entreprise avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouvee dans la BDD",
+                        ErrorCodes.COMPANY_NOT_FOUND
+                ));
     }
 
     public List<CompaniesEntity> callFindByIdCompaniAndByIdUser(int id) {
@@ -476,19 +474,19 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-
+        Optional<CompaniesEntity> optionalCompaniesEntity;
         try {
-            return companiesDao.findById(em, id);
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucune entreprise avec l ID " + id + " n a ete trouvee dans la BDD",
-                    ErrorCodes.COMPANY_NOT_FOUND
-            );
+            optionalCompaniesEntity = companiesDao.findById(em, id);
         } finally {
             em.clear();
             em.close();
         }
+
+        return optionalCompaniesEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucune entreprise avec l ID " + id + " n a ete trouvee dans la BDD",
+                        ErrorCodes.COMPANY_NOT_FOUND
+                ));
     }
 
     /**
@@ -615,7 +613,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         EntityTransaction tx = null;
 
         try {
-            companiesEntityToActivate = companiesDao.findById(em, id);
+            companiesEntityToActivate = findById(id);
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
@@ -666,7 +664,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         EntityTransaction tx = null;
 
         try {
-            companiesEntityToDelete = companiesDao.findById(em, id);
+            companiesEntityToDelete = findById(id);
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);

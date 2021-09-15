@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.entities.VouchersEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -12,7 +13,7 @@ public interface VouchersDao {
 
     void save(EntityManager em, VouchersEntity entity);
 
-    VouchersEntity findById(EntityManager em, int id, int idUser);
+    Optional<VouchersEntity> findById(EntityManager em, int id, int idUser);
 
     List<VouchersEntity> findVouchersEntityByContactsByIdContacts(EntityManager em, int id, int idUser);
 

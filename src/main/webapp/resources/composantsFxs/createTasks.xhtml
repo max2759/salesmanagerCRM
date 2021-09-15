@@ -20,7 +20,7 @@
 
                 <div class="ui-g form-group" style="margin-top:10px;">
 
-                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="acTitleCreate" value="#{bundle['title']} :"/></div>
+                    <div class="ui-g-12 ui-lg-2"><p:outputLabel for="acTitleCreate" value="#{bundle['title']}:"/></div>
                     <div class="ui-g-12 ui-lg-4">
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText value="#{tasksBean.tasksEntity.title}"
@@ -28,7 +28,8 @@
                                          required="true"
                                          requiredMessage="#{bundle['task.validator.title']}"
                                          maxlength="255">
-                                <p:ajax update="msg detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                <p:ajax process="@form"
+                                        update="msg detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
                                         event="keyup" resetValues="true"/>
                             </p:inputText>
                             <label>#{bundle['title']}</label>
@@ -69,8 +70,9 @@
                             <p:calendar value="#{tasksBean.tasksEntity.endDate}"
                                         converterMessage="#{bundle['converter.dateTime']}"
                                         id="datetimeCreate" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}">
-                                <p:ajax update="msgDateTime detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
-                                        event="keyup" resetValues="true"/>
+                                <p:ajax process="@form"
+                                        update="msgDateTime detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                        event="valueChange" resetValues="true"/>
                             </p:calendar>
                             <label>#{bundle['dueDate']}:</label>
                             <p:message id="msgDateTime" for="datetimeCreate"/>
@@ -89,8 +91,13 @@
                                             itemValue="#{Contact}"
                                             dropdown="true"
                                             converter="#{contactsConverter}"
-                                            groupBy="#{contactsBean.getContactsEntityGroup(Contact)}"
-                                            scrollHeight="250">
+                                            groupBy="#{contactsBean.getContactsEntityGroup(Contact)}">
+                                <p:ajax process="@form"
+                                        update="msgContact detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                        event="itemSelect" resetValues="true"/>
+                                <p:ajax process="@form"
+                                        update="msgContact detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                        event="change" resetValues="true"/>
                             </p:autoComplete>
                             <label>#{bundle['associateWithContact']}:</label>
                             <p:message id="msgContact" for="Contact"/>
@@ -110,6 +117,12 @@
                                             converter="#{companiesConverter}"
                                             groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}"
                                             scrollHeight="250">
+                                <p:ajax process="@form"
+                                        update="msgCompany detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                        event="itemSelect" resetValues="true"/>
+                                <p:ajax process="@form"
+                                        update="msgCompany detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                        event="change" resetValues="true"/>
                             </p:autoComplete>
                             <label>#{bundle['associateWithCompany']}:</label>
                             <p:message id="msgCompany" for="Company"/>
@@ -134,13 +147,14 @@
                 <div class="ui-g-12 ui-lg-12">
                     <div align="right" class="mgin-top">
                         <p:commandButton style="width:auto;margin-bottom:10px;"
-                                         update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
+                                         update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs buttonSaveEntityTasks acTitleCreate"
                                          oncomplete="if (!args.validationFailed){PF('createDialogTask').hide()}; PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
                                          id="buttonSaveEntityTasks"
-                                         disabled="#{not facesContext.postback or facesContext.validationFailed or empty tasksBean.tasksEntity.title}"
+                                         disabled="#{facesContext.validationFailed or empty tasksBean.tasksEntity.title}"
                                          value="#{bundle['save']}"
                                          resetValues="true"
-                                         action="#{tasksBean.saveEntity}"/>
+                                         action="#{tasksBean.saveEntity}">
+                        </p:commandButton>
                     </div>
                 </div>
                 <p:hotkey bind="esc" handler="PF('createDialogTask').hide()"/>

@@ -22,6 +22,7 @@ import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Maximilien Zabbara
@@ -211,18 +212,18 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<CompaniesContactsEntity> optionalCompaniesContactsEntity;
         try {
-            return companiesContactsDao.findById(em, id);
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucune Note avec l ID " + id + " n a ete trouvee dans la BDD",
-                    ErrorCodes.CONTACT_NOT_FOUND
-            );
+            optionalCompaniesContactsEntity = companiesContactsDao.findById(em, id);
         } finally {
             em.clear();
             em.close();
         }
+        return optionalCompaniesContactsEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucune Note avec l ID " + id + " n a ete trouvee dans la BDD",
+                        ErrorCodes.CONTACT_NOT_FOUND
+                ));
     }
 
     public void getFindByIdCompany() {

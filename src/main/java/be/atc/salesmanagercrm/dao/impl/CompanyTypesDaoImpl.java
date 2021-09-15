@@ -6,6 +6,7 @@ import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Maximilien Zabbara
@@ -23,10 +24,12 @@ public class CompanyTypesDaoImpl extends EntityFinderImpl<CompanyTypesEntity> im
     }
 
     @Override
-    public CompanyTypesEntity findByLabel(EntityManager em, String label) {
+    public Optional<CompanyTypesEntity> findByLabel(EntityManager em, String label) {
         return em.createNamedQuery("CompanyTypes.findByLabel",
-                CompanyTypesEntity.class)
+                        CompanyTypesEntity.class)
                 .setParameter("label", label)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 }

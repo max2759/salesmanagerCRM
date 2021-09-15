@@ -99,18 +99,18 @@ public class VoucherStatusBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<VoucherStatusEntity> optionalVoucherStatusEntity;
         try {
-            return dao.findByLabel(em, label);
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucun Statut de ticket avec le label " + label + " n a ete trouve dans la BDD",
-                    ErrorCodes.VOUCHERSTATUS_NOT_FOUND
-            );
+            optionalVoucherStatusEntity = dao.findByLabel(em, label);
         } finally {
             em.clear();
             em.close();
         }
+        return optionalVoucherStatusEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucun Statut de ticket avec le label " + label + " n a ete trouve dans la BDD",
+                        ErrorCodes.VOUCHERSTATUS_NOT_FOUND
+                ));
     }
 
     /**

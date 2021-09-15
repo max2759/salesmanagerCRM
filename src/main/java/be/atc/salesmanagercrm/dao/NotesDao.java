@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.entities.NotesEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -12,7 +13,7 @@ public interface NotesDao {
 
     void save(EntityManager em, NotesEntity entity);
 
-    NotesEntity findById(EntityManager em, int id, int idUser);
+    Optional<NotesEntity> findById(EntityManager em, int id, int idUser);
 
     List<NotesEntity> findNotesEntityByContactsByIdContacts(EntityManager em, int id, int idUser);
 

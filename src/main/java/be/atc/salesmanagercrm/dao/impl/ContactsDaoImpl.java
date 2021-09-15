@@ -6,6 +6,7 @@ import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 public class ContactsDaoImpl extends EntityFinderImpl<ContactsEntity> implements ContactsDao {
 
@@ -15,20 +16,24 @@ public class ContactsDaoImpl extends EntityFinderImpl<ContactsEntity> implements
     }
 
     @Override
-    public ContactsEntity findById(EntityManager em, int id) {
+    public Optional<ContactsEntity> findById(EntityManager em, int id) {
         return em.createNamedQuery("Contacts.findById",
                         ContactsEntity.class)
                 .setParameter("id", id)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     @Override
-    public ContactsEntity findByIdContactAndByIdUser(EntityManager em, int id, int idUser) {
+    public Optional<ContactsEntity> findByIdContactAndByIdUser(EntityManager em, int id, int idUser) {
         return em.createNamedQuery("Contacts.findByIdContactAndByIdUser",
-                ContactsEntity.class)
+                        ContactsEntity.class)
                 .setParameter("id", id)
                 .setParameter("idUser", idUser)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     @Override

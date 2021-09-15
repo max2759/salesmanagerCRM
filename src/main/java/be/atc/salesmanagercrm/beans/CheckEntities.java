@@ -15,6 +15,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -79,7 +80,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
                     "Aucun contact n a ete trouve", ErrorCodes.CONTACT_NOT_FOUND
             );
         }
-        ContactsEntity contactsEntity;
+        Optional<ContactsEntity> contactsEntity;
         EntityManager em = EMF.getEM();
         try {
             contactsEntity = contactsDao.findById(em, entity.getId());
@@ -87,7 +88,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
             em.clear();
             em.close();
         }
-        if (contactsEntity == null) {
+        if (!contactsEntity.isPresent()) {
             log.warn("Contact with ID {} was not found in the DB", entity.getId());
             throw new EntityNotFoundException(
                     "Aucun contact avec l ID " + entity.getId() + " n a ete trouve dans la BDD", ErrorCodes.CONTACT_NOT_FOUND
@@ -107,7 +108,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
                     "Aucune compagnie n a ete trouve", ErrorCodes.COMPANY_NOT_FOUND
             );
         }
-        CompaniesEntity companiesEntity;
+        Optional<CompaniesEntity> companiesEntity;
         EntityManager em = EMF.getEM();
         try {
             companiesEntity = companiesDao.findById(em, entity.getId());
@@ -115,7 +116,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
             em.clear();
             em.close();
         }
-        if (companiesEntity == null) {
+        if (!companiesEntity.isPresent()) {
             log.warn("Company with ID {} was not found in the DB", entity.getId());
             throw new EntityNotFoundException(
                     "Aucune compagnie avec l ID " + entity.getId() + " n a ete trouvee dans la BDD", ErrorCodes.COMPANY_NOT_FOUND

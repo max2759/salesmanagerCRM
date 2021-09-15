@@ -65,6 +65,7 @@
                             <p:inplace emptyLabel="..." label="#{transactionsBean.transactionsEntity.amount}">
                                 <p:inputNumber id="amount" value="#{transactionsBean.transactionsEntity.amount}"
                                                symbol=" €"
+                                               minValue="0"
                                                symbolPosition="s"
                                                decimalSeparator="," thousandSeparator=".">
                                     <p:ajax update="amount"/>

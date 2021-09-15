@@ -98,18 +98,18 @@ public class TransactionTypesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<TransactionTypesEntity> optionalTransactionTypesEntity;
         try {
-            return dao.findByLabel(em, label);
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucun type de transaction avec le label " + label + " n a ete trouve dans la BDD",
-                    ErrorCodes.TRANSACTIONTYPE_NOT_FOUND
-            );
+            optionalTransactionTypesEntity = dao.findByLabel(em, label);
         } finally {
             em.clear();
             em.close();
         }
+        return optionalTransactionTypesEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucun type de transaction avec le label " + label + " n a ete trouve dans la BDD",
+                        ErrorCodes.TRANSACTIONTYPE_NOT_FOUND
+                ));
     }
 
     /**

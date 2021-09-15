@@ -6,6 +6,7 @@ import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -21,11 +22,12 @@ public class VoucherStatusDaoImpl extends EntityFinderImpl<VoucherStatusEntity> 
         return this.findByNamedQuery("VoucherStatus.findAll", new VoucherStatusEntity());
     }
 
-    @Override
-    public VoucherStatusEntity findByLabel(EntityManager em, String label) {
+    public Optional<VoucherStatusEntity> findByLabel(EntityManager em, String label) {
         return em.createNamedQuery("VoucherStatus.findVoucherStatusEntityByLabel",
                         VoucherStatusEntity.class)
                 .setParameter("label", label)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 }

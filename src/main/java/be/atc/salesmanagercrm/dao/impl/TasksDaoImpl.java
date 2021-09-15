@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -19,12 +20,14 @@ public class TasksDaoImpl extends EntityFinderImpl<TasksEntity> implements Tasks
     }
 
     @Override
-    public TasksEntity findById(EntityManager em, int id, int idUser) {
+    public Optional<TasksEntity> findById(EntityManager em, int id, int idUser) {
         return em.createNamedQuery("Tasks.findById",
-                TasksEntity.class)
+                        TasksEntity.class)
                 .setParameter("id", id)
                 .setParameter("idUser", idUser)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     @Override

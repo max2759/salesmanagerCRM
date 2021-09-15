@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -166,18 +167,19 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<BranchActivitiesEntity> optionalBranchActivitiesEntity;
         try {
-            return branchActivitiesDao.findById(em, id);
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucun secteur d'activié avec l ID " + id + " n'a été trouve dans la DB",
-                    ErrorCodes.BRANCHACTIVITIES_NOT_FOUND
-            );
+            optionalBranchActivitiesEntity = Optional.ofNullable(branchActivitiesDao.findById(em, id));
         } finally {
             em.clear();
             em.close();
         }
+
+        return optionalBranchActivitiesEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucun secteur d'activié avec l ID " + id + " n'a été trouve dans la DB",
+                        ErrorCodes.BRANCHACTIVITIES_NOT_FOUND
+                ));
     }
 
     /**

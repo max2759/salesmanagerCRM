@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -51,7 +52,6 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private List<JobTitlesEntity> jobTitlesEntitiesFiltered;
-
 
 
     /**
@@ -130,19 +130,19 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<JobTitlesEntity> optionalJobTitlesEntity;
 
         try {
-            return jobTitlesDao.findById(em, id);
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucun intitulé de poste avec l ID " + id + " n'a ete trouve dans la DB",
-                    ErrorCodes.JOBTITLES_NOT_FOUND
-            );
+            optionalJobTitlesEntity = Optional.ofNullable(jobTitlesDao.findById(em, id));
         } finally {
             em.clear();
             em.close();
         }
+        return optionalJobTitlesEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucun intitulé de poste avec l ID " + id + " n'a ete trouve dans la DB",
+                        ErrorCodes.JOBTITLES_NOT_FOUND
+                ));
     }
 
     /**

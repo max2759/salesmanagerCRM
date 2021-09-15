@@ -4,18 +4,19 @@ import be.atc.salesmanagercrm.entities.CompaniesEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 public interface CompaniesDao {
 
     void add(EntityManager em, CompaniesEntity companiesEntity);
 
-    CompaniesEntity findById(EntityManager em, int id);
+    Optional<CompaniesEntity> findById(EntityManager em, int id);
 
     List<CompaniesEntity> findAllCompaniesByIdUser(EntityManager em, int idUser);
 
     void update(EntityManager em, CompaniesEntity companiesEntity);
 
-    CompaniesEntity findByIdCompanyAndByIdUser(EntityManager em, int id, int idUser);
+    Optional<CompaniesEntity> findByIdCompanyAndByIdUser(EntityManager em, int id, int idUser);
 
     List<CompaniesEntity> findCompaniesEntityByIdUser(EntityManager em, int idUser);
 

@@ -218,21 +218,27 @@
                                         <label>#{bundle['address.box']}</label>
                                     </h:panelGroup>
 
-                                    <p:outputLabel value="#{bundle['cities.label']}" for="addressCity"
-                                                   styleClass="labelLike"/>
-                                    <p:autoComplete id="addressCity" dropdown="true"
-                                                    value="#{addressesBean.addressesEntity.citiesByIdCities}"
-                                                    completeMethod="#{citiesBean.completeCitiesEntityContains}"
-                                                    var="cities"
-                                                    itemLabel="#{cities.postalCode.concat(' ' .concat(cities.label))}"
-                                                    itemValue="#{cities}"
-                                                    scrollHeight="250"
-                                                    converter="citiesConverter"
-                                                    groupBy="#{citiesBean.getCitiesEntityGroup(cities)}"
-                                                    placeholder="#{bundle['cities.chooseCity']}">
-                                        <p:ajax event="focus" update="showAddressDetails"/>
-                                    </p:autoComplete>
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:autoComplete id="addressCity" dropdown="true"
+                                                        value="#{addressesBean.addressesEntity.citiesByIdCities}"
+                                                        completeMethod="#{citiesBean.completeCitiesEntityContains}"
+                                                        var="cities"
+                                                        itemLabel="#{cities.postalCode.concat(' ' .concat(cities.label))}"
+                                                        itemValue="#{cities}"
+                                                        scrollHeight="250"
+                                                        converter="citiesConverter"
+                                                        groupBy="#{citiesBean.getCitiesEntityGroup(cities)}">
+                                            <p:ajax process="@form" update="t msgAddressCity showAddressDetails"
+                                                    event="itemSelect"/>
+                                            <p:ajax process="@form" update="t msgAddressCity showAddressDetails"
+                                                    event="change"/>
+                                        </p:autoComplete>
+                                        <label>#{bundle['cities.label']}</label>
+                                        <p:message id="msgAddressCity" for="addressCity"/>
+                                    </h:panelGroup>
 
+                                    <h:outputText id="t" value="#{facesContext.validationFailed}"/>
                                     <p:panel id="showAddressDetails" styleClass="addressDetailsDesign">
                                         <h:panelGroup styleClass="md-inputfield"
                                                       style="margin-bottom:10px;">
@@ -270,7 +276,7 @@
                                              action="#{contactsBean.updateContact}"
                                              id="contactDetailsBtnLeft"
                                              resetValues="true"
-                                             disabled="#{not facesContext.postback or facesContext.validationFailed}"
+                                             disabled="#{facesContext.validationFailed}"
                                              icon="ui-icon-check"
                                              update="contactDetailsUpdateForm:contactDetailsUpdatePanelGrid msgs"/>
                         </div>

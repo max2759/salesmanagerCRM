@@ -6,6 +6,7 @@ import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -17,12 +18,14 @@ public class VouchersDaoImpl extends EntityFinderImpl<VouchersEntity> implements
     }
 
     @Override
-    public VouchersEntity findById(EntityManager em, int id, int idUser) {
+    public Optional<VouchersEntity> findById(EntityManager em, int id, int idUser) {
         return em.createNamedQuery("Vouchers.findById",
-                VouchersEntity.class)
+                        VouchersEntity.class)
                 .setParameter("id", id)
                 .setParameter("idUser", idUser)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     @Override

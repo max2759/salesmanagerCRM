@@ -6,24 +6,29 @@ import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
 @Slf4j
 public class AddressesDaoImpl extends EntityFinderImpl<AddressesEntity> implements AddressesDao {
 
     @Override
-    public AddressesEntity findByIdCompanies(EntityManager em, int id) {
+    public Optional<AddressesEntity> findByIdCompanies(EntityManager em, int id) {
         return em.createNamedQuery("Addresses.findByIdCompanies",
-                AddressesEntity.class)
+                        AddressesEntity.class)
                 .setParameter("id", id)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     @Override
-    public AddressesEntity findByIdContacts(EntityManager em, int id) {
+    public Optional<AddressesEntity> findByIdContacts(EntityManager em, int id) {
         return em.createNamedQuery("Addresses.findByIdContacts",
-                AddressesEntity.class)
+                        AddressesEntity.class)
                 .setParameter("id", id)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     @Override

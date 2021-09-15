@@ -19,6 +19,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
+import java.util.Optional;
 
 /**
  * @author Maximilien Zabbara
@@ -90,19 +91,21 @@ public class AddressesBean extends ExtendBean implements Serializable {
 
         EntityManager em = EMF.getEM();
 
+        Optional<AddressesEntity> optionalAddressesEntity;
         try {
-            return addressesDao.findByIdCompanies(em, id);
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucune adresse avec l'ID " + id + " n'a été trouve dans la DB",
-                    ErrorCodes.ADDRESSES_NOT_FOUND
-            );
-
+            optionalAddressesEntity = addressesDao.findByIdCompanies(em, id);
         } finally {
             em.clear();
             em.close();
         }
+
+        return optionalAddressesEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucune adresse avec l'ID " + id + " n'a été trouve dans la DB",
+                        ErrorCodes.ADDRESSES_NOT_FOUND
+                ));
+
+
     }
 
 
@@ -125,20 +128,21 @@ public class AddressesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<AddressesEntity> optionalAddressesEntity;
 
         try {
-            return addressesDao.findByIdContacts(em, id);
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucun contact avec l'ID " + id + " n'a été trouve dans la DB",
-                    ErrorCodes.CONTACT_NOT_FOUND
-            );
-
+            optionalAddressesEntity = addressesDao.findByIdContacts(em, id);
         } finally {
             em.clear();
             em.close();
         }
+
+        return optionalAddressesEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucune adresse avec l'ID du contact " + id + " n'a été trouve dans la DB",
+                        ErrorCodes.ADDRESSES_NOT_FOUND
+                ));
+
     }
 
 
