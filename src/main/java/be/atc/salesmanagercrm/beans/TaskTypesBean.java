@@ -228,18 +228,18 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<TaskTypesEntity> optionalTasksEntity;
         try {
-            return dao.findByLabel(em, label);
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucun type de tâche avec le label " + label + " n a ete trouve dans la BDD",
-                    ErrorCodes.TASKTYPE_NOT_FOUND
-            );
+            optionalTasksEntity = dao.findByLabel(em, label);
         } finally {
             em.clear();
             em.close();
         }
+        return optionalTasksEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucun type de tâche avec le label " + label + " n a ete trouve dans la BDD",
+                        ErrorCodes.TASKTYPE_NOT_FOUND
+                ));
     }
 
 

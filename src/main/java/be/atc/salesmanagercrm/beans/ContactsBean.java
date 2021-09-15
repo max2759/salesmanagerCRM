@@ -24,10 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -345,18 +342,19 @@ public class ContactsBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<ContactsEntity> optionalContactsEntity;
         try {
-            return contactsDao.findByIdContactAndByIdUser(em, id, usersEntity.getId());
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucun contact avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouvee dans la BDD",
-                    ErrorCodes.CONTACT_NOT_FOUND
-            );
+            optionalContactsEntity = contactsDao.findByIdContactAndByIdUser(em, id, usersEntity.getId());
         } finally {
             em.clear();
             em.close();
         }
+
+        return optionalContactsEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucun contact avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouvee dans la BDD",
+                        ErrorCodes.CONTACT_NOT_FOUND
+                ));
     }
 
     /**
@@ -415,19 +413,19 @@ public class ContactsBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-
+        Optional<ContactsEntity> optionalContactsEntity;
         try {
-            return contactsDao.findById(em, id);
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucun contact avec l ID " + id + " n'a été trouvé dans la DB",
-                    ErrorCodes.CONTACT_NOT_FOUND
-            );
+            optionalContactsEntity = contactsDao.findById(em, id);
         } finally {
             em.clear();
             em.close();
         }
+
+        return optionalContactsEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucun contact avec l ID " + id + " n'a été trouvé dans la DB",
+                        ErrorCodes.CONTACT_NOT_FOUND
+                ));
     }
 
     /**
@@ -457,8 +455,8 @@ public class ContactsBean extends ExtendBean implements Serializable {
         String queryLowerCase = query.toLowerCase();
 
         List<ContactsEntity> contactsEntitiesForm = findContactsEntityByIdUser(usersBean.getUsersEntity());
-
-        return contactsEntitiesForm.stream().filter(t -> (t.getFirstname().toLowerCase().contains(queryLowerCase)) || (t.getLastname().toLowerCase().contains(queryLowerCase))).collect(Collectors.toList());
+        String space = " ";
+        return contactsEntitiesForm.stream().filter(t -> (t.getFirstname().concat(space.concat(t.getLastname())).toLowerCase().contains(queryLowerCase)) || (t.getLastname().concat(space.concat(t.getFirstname())).toLowerCase().contains(queryLowerCase))).collect(Collectors.toList());
     }
 
     /**

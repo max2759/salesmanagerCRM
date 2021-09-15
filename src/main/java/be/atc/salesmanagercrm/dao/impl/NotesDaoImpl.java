@@ -6,6 +6,7 @@ import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -17,19 +18,21 @@ public class NotesDaoImpl extends EntityFinderImpl<NotesEntity> implements Notes
     }
 
     @Override
-    public NotesEntity findById(EntityManager em, int id, int idUser) {
+    public Optional<NotesEntity> findById(EntityManager em, int id, int idUser) {
         return em.createNamedQuery("Notes.findById",
-                NotesEntity.class)
+                        NotesEntity.class)
                 .setParameter("id", id)
                 .setParameter("idUser", idUser)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     @Override
     public List<NotesEntity> findNotesEntityByContactsByIdContacts(EntityManager em, int id, int idUser) {
 
         return em.createNamedQuery("Notes.findNotesEntityByContactsByIdContacts",
-                NotesEntity.class)
+                        NotesEntity.class)
                 .setParameter("id", id)
                 .setParameter("idUser", idUser)
                 .getResultList();
@@ -39,7 +42,7 @@ public class NotesDaoImpl extends EntityFinderImpl<NotesEntity> implements Notes
     public List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(EntityManager em, int id, int idUser) {
 
         return em.createNamedQuery("Notes.findNotesEntityByCompaniesByIdCompanies",
-                NotesEntity.class)
+                        NotesEntity.class)
                 .setParameter("id", id)
                 .setParameter("idUser", idUser)
                 .getResultList();
@@ -48,7 +51,7 @@ public class NotesDaoImpl extends EntityFinderImpl<NotesEntity> implements Notes
     @Override
     public List<NotesEntity> findAll(EntityManager em, int idUser) {
         return em.createNamedQuery("Notes.findAll",
-                NotesEntity.class)
+                        NotesEntity.class)
                 .setParameter("idUser", idUser)
                 .getResultList();
     }

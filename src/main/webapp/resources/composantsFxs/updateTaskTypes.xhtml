@@ -33,7 +33,6 @@
                                      id="buttonUpdateTaskTypes"
                                      update="@(form) msgs"
                                      oncomplete="if (!args.validationFailed){PF('dlg2').hide()}; PF('displayAllEntities').filter();"
-                                     disabled="#{empty taskTypesBean.taskTypesEntity.label}"
                                      value="#{bundle['save']}"
                                      action="#{taskTypesBean.updateEntity}"
                                      resetValues="true"

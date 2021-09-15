@@ -6,6 +6,7 @@ import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -22,10 +23,12 @@ public class TransactionTypesDaoImpl extends EntityFinderImpl<TransactionTypesEn
     }
 
     @Override
-    public TransactionTypesEntity findByLabel(EntityManager em, String label) {
+    public Optional<TransactionTypesEntity> findByLabel(EntityManager em, String label) {
         return em.createNamedQuery("TransactionTypes.findTransactionTypesEntityByLabel",
-                TransactionTypesEntity.class)
+                        TransactionTypesEntity.class)
                 .setParameter("label", label)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 }

@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -331,18 +332,19 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<TransactionsEntity> optionalTransactionsEntity;
         try {
-            return dao.findById(em, id, usersEntity.getId());
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucune transaction avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouvee dans la BDD",
-                    ErrorCodes.TRANSACTION_NOT_FOUND
-            );
+            optionalTransactionsEntity = dao.findById(em, id, usersEntity.getId());
         } finally {
             em.clear();
             em.close();
         }
+
+        return optionalTransactionsEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucune transaction avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouvee dans la BDD",
+                        ErrorCodes.TRANSACTION_NOT_FOUND
+                ));
     }
 
     /**

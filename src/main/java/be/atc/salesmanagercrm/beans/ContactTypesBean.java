@@ -18,6 +18,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -55,19 +56,19 @@ public class ContactTypesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-
+        Optional<ContactTypesEntity> optionalContactTypesEntity;
         try {
-            return contactTypesDao.findById(em, id);
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucun type de contact avec l ID " + id + " n'a été trouve dans la DB",
-                    ErrorCodes.CONTACTTYPE_NOT_FOUND
-            );
+            optionalContactTypesEntity = Optional.ofNullable(contactTypesDao.findById(em, id));
         } finally {
             em.clear();
             em.close();
         }
+
+        return optionalContactTypesEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucun type de contact avec l ID " + id + " n'a été trouve dans la DB",
+                        ErrorCodes.CONTACTTYPE_NOT_FOUND
+                ));
     }
 
     /**

@@ -60,8 +60,9 @@ class TasksBeanTest {
     void findByIdShouldReturnFalse() {
 
         // Mettre un id incorrect
-        int id = 120;
-        UsersEntity usersEntity = null;
+        int id = 1200;
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
         TasksEntity tasksEntity = null;
 
         try {
@@ -82,7 +83,7 @@ class TasksBeanTest {
     void findByIdShouldReturnTrue() {
 
         // Mettre un id correct
-        int id = 12;
+        int id = 13;
         UsersEntity usersEntity = new UsersEntity();
         usersEntity.setId(1);
         TasksEntity tasksEntity = null;

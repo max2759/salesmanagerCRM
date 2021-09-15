@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.entities.BranchActivitiesEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Maximilien Zabbara
@@ -20,5 +21,5 @@ public interface BranchActivitiesDao {
 
     List<BranchActivitiesEntity> findByLabel(EntityManager em, String label);
 
-    BranchActivitiesEntity findByLabelEntity(EntityManager em, String label);
+    Optional<BranchActivitiesEntity> findByLabelEntity(EntityManager em, String label);
 }

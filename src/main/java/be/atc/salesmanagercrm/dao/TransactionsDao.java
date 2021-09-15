@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.entities.TransactionsEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -12,7 +13,7 @@ public interface TransactionsDao {
 
     void save(EntityManager em, TransactionsEntity entity);
 
-    TransactionsEntity findById(EntityManager em, int id, int idUser);
+    Optional<TransactionsEntity> findById(EntityManager em, int id, int idUser);
 
     List<TransactionsEntity> findTransactionsEntityByContactsByIdContacts(EntityManager em, int id, int idUser);
 

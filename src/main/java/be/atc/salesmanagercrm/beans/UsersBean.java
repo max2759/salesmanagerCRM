@@ -35,10 +35,7 @@ import javax.persistence.EntityTransaction;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -543,18 +540,18 @@ public class UsersBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<UsersEntity> optionalUsersEntity;
         try {
-            return dao.findById(em, id);
-        } catch (Exception ex) {
-            log.warn("User with ID {} was not found in the DB", id);
-            throw new EntityNotFoundException(
-                    "Aucun utilisateur avec l ID " + id + " n a ete trouve dans la BDD",
-                    ErrorCodes.USER_NOT_FOUND
-            );
+            optionalUsersEntity = Optional.ofNullable(dao.findById(em, id));
         } finally {
             em.clear();
             em.close();
         }
+        return optionalUsersEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucun utilisateur avec l ID " + id + " n a ete trouve dans la BDD",
+                        ErrorCodes.USER_NOT_FOUND
+                ));
     }
 
 

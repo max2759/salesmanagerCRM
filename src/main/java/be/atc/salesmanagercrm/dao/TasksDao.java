@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.entities.TasksEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -12,7 +13,7 @@ public interface TasksDao {
 
     void save(EntityManager em, TasksEntity entity);
 
-    TasksEntity findById(EntityManager em, int id, int idUser);
+    Optional<TasksEntity> findById(EntityManager em, int id, int idUser);
 
     List<TasksEntity> findTasksEntityByContactsByIdContacts(EntityManager em, int id, int idUser);
 

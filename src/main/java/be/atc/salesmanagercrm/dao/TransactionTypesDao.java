@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.entities.TransactionTypesEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -14,5 +15,5 @@ public interface TransactionTypesDao {
 
     List<TransactionTypesEntity> findAll();
 
-    TransactionTypesEntity findByLabel(EntityManager em, String label);
+    Optional<TransactionTypesEntity> findByLabel(EntityManager em, String label);
 }

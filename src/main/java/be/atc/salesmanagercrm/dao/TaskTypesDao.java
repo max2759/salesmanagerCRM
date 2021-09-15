@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.entities.TaskTypesEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -18,5 +19,5 @@ public interface TaskTypesDao {
 
     void update(EntityManager em, TaskTypesEntity entity);
 
-    TaskTypesEntity findByLabel(EntityManager em, String label);
+    Optional<TaskTypesEntity> findByLabel(EntityManager em, String label);
 }

@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -513,32 +514,33 @@ public class TasksBean extends ExtendBean implements Serializable {
 
         if (id == 0) {
             log.error("Task ID is null");
-            getFacesMessage(FacesMessage.SEVERITY_ERROR, "tasks.notExist");
+//            getFacesMessage(FacesMessage.SEVERITY_ERROR, "tasks.notExist");
             throw new EntityNotFoundException(
                     "L ID de la tache est incorrect", ErrorCodes.TASK_NOT_FOUND
             );
         }
         if (usersEntity == null) {
             log.error("User Entity is null");
-            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
+//            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             throw new EntityNotFoundException(
                     "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
             );
         }
 
         EntityManager em = EMF.getEM();
+        Optional<TasksEntity> optionalTasksEntity;
         try {
-            return dao.findById(em, id, usersEntity.getId());
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucune tâche avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouve dans la BDD",
-                    ErrorCodes.TASK_NOT_FOUND
-            );
+            optionalTasksEntity = dao.findById(em, id, usersEntity.getId());
         } finally {
             em.clear();
             em.close();
         }
+
+        return optionalTasksEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucune tache avec l'ID " + id + " n a ete trouve dans la BDD",
+                        ErrorCodes.TASK_NOT_FOUND
+                ));
     }
 
     /**

@@ -18,6 +18,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -68,22 +69,25 @@ public class CitiesBean extends ExtendBean implements Serializable {
             log.error("Cities ID is null");
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "CitiesNotExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            return null;
-        }
-
-        EntityManager em = EMF.getEM();
-        try {
-            return citiesDao.findById(em, id);
-        } catch (Exception ex) {
-            log.info("Nothing");
             throw new EntityNotFoundException(
                     "Aucune ville avec l'ID " + id + " n a été trouve dans la DB",
                     ErrorCodes.CITIES_NOT_FOUND
             );
+        }
+
+        EntityManager em = EMF.getEM();
+        Optional<CitiesEntity> optionalCitiesEntity;
+        try {
+            optionalCitiesEntity = Optional.ofNullable(citiesDao.findById(em, id));
         } finally {
             em.clear();
             em.close();
         }
+        return optionalCitiesEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucune ville avec l'ID " + id + " n a été trouve dans la DB",
+                        ErrorCodes.CITIES_NOT_FOUND
+                ));
     }
 
     /**
@@ -108,8 +112,9 @@ public class CitiesBean extends ExtendBean implements Serializable {
         String queryLowerCase = query.toLowerCase();
 
         List<CitiesEntity> citiesEntityListForm = findCitiesEntityList();
-
-        return citiesEntityListForm.stream().filter(t -> (t.getLabel().toLowerCase().contains(queryLowerCase)) || (t.getPostalCode().contains(queryLowerCase))).collect(Collectors.toList());
+        String space = " ";
+        List<CitiesEntity> test = citiesEntityListForm.stream().filter(t -> (t.getLabel().concat(space.concat(t.getPostalCode())).toLowerCase().contains(queryLowerCase)) || (t.getPostalCode().concat(space.concat(t.getLabel())).toLowerCase().contains(queryLowerCase))).collect(Collectors.toList());
+        return test;
     }
 
 

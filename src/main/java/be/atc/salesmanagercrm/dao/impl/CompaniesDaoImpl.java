@@ -6,6 +6,7 @@ import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 public class CompaniesDaoImpl extends EntityFinderImpl<CompaniesEntity> implements CompaniesDao {
 
@@ -15,11 +16,13 @@ public class CompaniesDaoImpl extends EntityFinderImpl<CompaniesEntity> implemen
     }
 
     @Override
-    public CompaniesEntity findById(EntityManager em, int id) {
+    public Optional<CompaniesEntity> findById(EntityManager em, int id) {
         return em.createNamedQuery("Companies.findById",
                         CompaniesEntity.class)
                 .setParameter("id", id)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     @Override
@@ -37,12 +40,14 @@ public class CompaniesDaoImpl extends EntityFinderImpl<CompaniesEntity> implemen
 
 
     @Override
-    public CompaniesEntity findByIdCompanyAndByIdUser(EntityManager em, int id, int idUser) {
+    public Optional<CompaniesEntity> findByIdCompanyAndByIdUser(EntityManager em, int id, int idUser) {
         return em.createNamedQuery("Companies.findByIdCompanyAndByIdUser",
-                CompaniesEntity.class)
+                        CompaniesEntity.class)
                 .setParameter("id", id)
                 .setParameter("idUser", idUser)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     @Override

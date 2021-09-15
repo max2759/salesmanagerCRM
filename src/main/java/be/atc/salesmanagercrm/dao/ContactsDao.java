@@ -4,14 +4,15 @@ import be.atc.salesmanagercrm.entities.ContactsEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 public interface ContactsDao {
 
     void add(EntityManager em, ContactsEntity contactsEntity);
 
-    ContactsEntity findById(EntityManager em, int id);
+    Optional<ContactsEntity> findById(EntityManager em, int id);
 
-    ContactsEntity findByIdContactAndByIdUser(EntityManager em, int id, int idUser);
+    Optional<ContactsEntity> findByIdContactAndByIdUser(EntityManager em, int id, int idUser);
 
     List<ContactsEntity> findContactsEntityByIdUser(EntityManager em, int idUser);
 

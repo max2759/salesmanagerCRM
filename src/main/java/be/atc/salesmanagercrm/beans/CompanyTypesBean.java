@@ -18,6 +18,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -92,18 +93,18 @@ public class CompanyTypesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<CompanyTypesEntity> optionalCompanyTypesEntity;
         try {
-            return companyTypesDao.findById(em, id);
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucun type d'entreprise avec l ID " + id + " n'a été trouve dans la DB",
-                    ErrorCodes.COMPANYTYPES_NOT_FOUND
-            );
+            optionalCompanyTypesEntity = Optional.ofNullable(companyTypesDao.findById(em, id));
         } finally {
             em.clear();
             em.close();
         }
+        return optionalCompanyTypesEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Aucun type d'entreprise avec l ID " + id + " n'a été trouve dans la DB",
+                        ErrorCodes.COMPANYTYPES_NOT_FOUND
+                ));
     }
 
     /**

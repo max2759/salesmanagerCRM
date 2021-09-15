@@ -6,6 +6,7 @@ import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Younes Arifi
@@ -17,19 +18,21 @@ public class TransactionsDaoImpl extends EntityFinderImpl<TransactionsEntity> im
     }
 
     @Override
-    public TransactionsEntity findById(EntityManager em, int id, int idUser) {
+    public Optional<TransactionsEntity> findById(EntityManager em, int id, int idUser) {
         return em.createNamedQuery("Transactions.findById",
-                TransactionsEntity.class)
+                        TransactionsEntity.class)
                 .setParameter("id", id)
                 .setParameter("idUser", idUser)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     @Override
     public List<TransactionsEntity> findTransactionsEntityByContactsByIdContacts(EntityManager em, int id, int idUser) {
 
         return em.createNamedQuery("Transactions.findTransactionsEntityByContactsByIdContacts",
-                TransactionsEntity.class)
+                        TransactionsEntity.class)
                 .setParameter("id", id)
                 .setParameter("idUser", idUser)
                 .getResultList();
@@ -39,7 +42,7 @@ public class TransactionsDaoImpl extends EntityFinderImpl<TransactionsEntity> im
     public List<TransactionsEntity> findTransactionsEntityByCompaniesByIdCompanies(EntityManager em, int id, int idUser) {
 
         return em.createNamedQuery("Transactions.findTransactionsEntityByCompaniesByIdCompanies",
-                TransactionsEntity.class)
+                        TransactionsEntity.class)
                 .setParameter("id", id)
                 .setParameter("idUser", idUser)
                 .getResultList();
@@ -49,7 +52,7 @@ public class TransactionsDaoImpl extends EntityFinderImpl<TransactionsEntity> im
     public List<TransactionsEntity> findAll(EntityManager em, int idUser) {
 
         return em.createNamedQuery("Transactions.findAll",
-                TransactionsEntity.class)
+                        TransactionsEntity.class)
                 .setParameter("idUser", idUser)
                 .getResultList();
     }
@@ -57,7 +60,7 @@ public class TransactionsDaoImpl extends EntityFinderImpl<TransactionsEntity> im
     @Override
     public List<TransactionsEntity> findAllByPhase(EntityManager em, int idUser, String phaseTransaction) {
         return em.createNamedQuery("Transactions.findAllByPhase",
-                TransactionsEntity.class)
+                        TransactionsEntity.class)
                 .setParameter("idUser", idUser)
                 .setParameter("phaseTransaction", phaseTransaction)
                 .getResultList();

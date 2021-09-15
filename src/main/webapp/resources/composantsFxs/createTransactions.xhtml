@@ -55,6 +55,7 @@
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputNumber id="amount" value="#{transactionsBean.transactionsEntity.amount}" symbol=" €"
                                            symbolPosition="s"
+                                           minValue="0"
                                            decimalSeparator="," thousandSeparator=".">
                                 <p:ajax update="amount"/>
                             </p:inputNumber>
@@ -131,7 +132,7 @@
                         <p:commandButton style="width:auto;margin-bottom:10px;"
                                          update="@(form) msgs"
                                          id="buttonCreateTransaction"
-                                         disabled="#{empty transactionsBean.transactionsEntity.title or transactionsBean.transactionsEntity.title.length() le 1}"
+                                         disabled="#{not facesContext.postback or facesContext.validationFailed or empty transactionsBean.transactionsEntity.title }"
                                          resetValues="true"
                                          oncomplete="if (!args.validationFailed){PF('createDialog').hide()}; PF('displayAllEntities').filter();"
                                          value="#{bundle['save']}"
