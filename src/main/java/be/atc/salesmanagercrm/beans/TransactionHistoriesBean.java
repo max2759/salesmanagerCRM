@@ -5,13 +5,11 @@ import be.atc.salesmanagercrm.dao.impl.TransactionHistoriesDaoImpl;
 import be.atc.salesmanagercrm.entities.TransactionHistoriesEntity;
 import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.utils.EMF;
-import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -54,17 +52,14 @@ public class TransactionHistoriesBean extends ExtendBean implements Serializable
     protected List<TransactionHistoriesEntity> findAllByIdUserAndByIdTransaction(int idTransaction, UsersEntity usersEntity) {
         log.info("TransactionPhasesBean => method : findAllByIdUserAndByIdTransaction(int idTransaction, UsersEntity usersEntity)");
 
-        FacesMessage msg;
         if (idTransaction == 0) {
             log.error("Transaction ID is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "transactions.notExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "transactions.notExist");
             return Collections.emptyList();
         }
         if (usersEntity == null) {
             log.error("User ID is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             return Collections.emptyList();
         }
 
