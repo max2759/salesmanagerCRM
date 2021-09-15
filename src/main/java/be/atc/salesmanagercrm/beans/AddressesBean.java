@@ -182,22 +182,4 @@ public class AddressesBean extends ExtendBean implements Serializable {
         }
     }
 
-    protected void checkIfIdCompanyExist() {
-        FacesMessage facesMessage;
-
-        log.info("Start of checkIfIdCompanyExist");
-        log.info("Param : " + getParam("companyID"));
-
-        int idTest;
-
-        try {
-            idTest = Integer.parseInt(getParam("companyID"));
-        } catch (NumberFormatException exception) {
-            log.info(exception.getMessage());
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "company.error"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-        }
-    }
-
-
 }

@@ -49,6 +49,10 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
+    private List<CompaniesEntity> companiesEntities;
+
+    @Getter
+    @Setter
     private List<CompaniesEntity> companiesEntityList;
 
     @Getter
@@ -232,7 +236,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      */
     public void loadListEntities() {
 
-        List<CompaniesEntity> companiesEntities = findAllCompaniesByIdUser(usersBean.getUsersEntity().getId());
+        this.companiesEntities = findAllCompaniesByIdUser(usersBean.getUsersEntity().getId());
 
         this.companiesEntityList = companiesEntities.stream().filter(CompaniesEntity::isActive).collect(Collectors.toList());
         this.companiesEntitiesDisableList = companiesEntities.stream().filter(c -> !c.isActive()).collect(Collectors.toList());

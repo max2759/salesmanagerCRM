@@ -22,6 +22,7 @@
             <f:viewAction action="#{contactsBean.activityThread}"/>
             <f:viewAction action="#{companiesBean.findAllActiveCompanies}"/>
             <f:viewAction action="#{companiesContactsBean.fillSelectedCompaniesContacts}"/>
+            <f:viewAction action="#{contactTypesBean.findAllContactTypes}"/>
         </f:metadata>
 
         <p:growl id="msgs" skipDetailIfEqualsSummary="true" life="10000"/>
@@ -53,7 +54,8 @@
 
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:25px; margin-bottom: 30px">
-                                        <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}">
+                                        <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}"
+                                                     maxlength="255">
                                             <f:validator validatorId="contactEmailValidator"/>
                                         </p:inputText>
                                         <label>#{bundle['contacts.emailLabel']}</label>
@@ -63,23 +65,35 @@
                                                   style="margin-top:15px; margin-bottom: 30px">
                                         <p:inputText id="contactFirstName"
                                                      value="#{contactsBean.contactsEntity.firstname}"
+                                                     maxlength="255"
                                                      required="true"
-                                                     requiredMessage="#{bundle['contacts.firstnameNotValid']}"/>
+                                                     requiredMessage="#{bundle['contacts.firstnameNotValid']}">
+                                            <p:ajax event="keyup"
+                                                    update="contactFirstNameErrorMsg contactDetailsUpdateForm:contactDetailsBtnLeft"
+                                                    resetValues="true"/>
+                                        </p:inputText>
                                         <label>#{bundle['contacts.firstname']}</label>
+                                        <p:message for="contactFirstName" id="contactFirstNameErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:15px; margin-bottom: 30px">
+                                                  style="margin-top:15px">
                                         <p:inputText id="contactLastName"
                                                      value="#{contactsBean.contactsEntity.lastname}"
+                                                     maxlength="255"
                                                      required="true"
-                                                     requiredMessage="#{bundle['contacts.lastnameNotValid']}"
-                                        />
+                                                     requiredMessage="#{bundle['contacts.lastnameNotValid']}">
+                                            <p:ajax event="keyup"
+                                                    update="contactLastNameErrorMsg contactDetailsUpdateForm:contactDetailsBtnLeft"
+                                                    resetValues="true"/>
+                                        </p:inputText>
                                         <label>#{bundle['contacts.lastname']}</label>
+                                        <p:message for="contactLastName" id="contactLastNameErrorMsg"/>
                                     </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:15px; margin-bottom: 30px">
+                                    <div class="mgin-top">
+                                        <p:outputLabel for="jobTitlesDisplay" value="#{bundle['jobTitles.modalLabel']}"
+                                                       styleClass="labelLike"/>
                                         <p:autoComplete id="jobTitlesDisplay" dropdown="true"
                                                         value="#{contactsBean.contactsEntity.jobTitlesByIdJobTitles}"
                                                         completeMethod="#{jobtitlesBean.completeJobTitles}"
@@ -89,10 +103,12 @@
                                                         converter="jobTitlesConverter"
                                                         scrollHeight="250"
                                                         placeholder="#{bundle['contacts.chooseJobTitles']}"/>
-                                    </h:panelGroup>
+                                    </div>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
+                                    <div class="mgin-top">
+                                        <p:outputLabel for="branchActivitiesDisplay"
+                                                       value="#{bundle['branchActivities.title']}"
+                                                       styleClass="labelLike"/>
                                         <p:autoComplete id="branchActivitiesDisplay" dropdown="true"
                                                         value="#{contactsBean.contactsEntity.branchActivitiesByIdBranchActivities}"
                                                         completeMethod="#{branchActivitiesBean.completeBranchActivities}"
@@ -103,31 +119,31 @@
                                                         scrollHeight="250"
                                                         groupBy="#{branchActivitiesBean.getBranchActivitiesEntityGroup(branchActivities)}"
                                                         placeholder="#{bundle['company.chooseBranchActivity']}"/>
-                                    </h:panelGroup>
+                                    </div>
 
                                     <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom: 30px">
+                                                  style="margin-top:30px">
                                         <p:inputMask id="phoneNumber" value="#{contactsBean.contactsEntity.phoneNumber}"
                                                      mask="+32 999999999">
                                             <f:validator validatorId="contactPhoneNumberValidator"/>
+                                            <p:ajax event="keyup" update="phoneNumberErrorMsg"/>
                                         </p:inputMask>
                                         <label>#{bundle['contacts.phoneNumberLabel']}</label>
+                                        <p:message for="phoneNumber" id="phoneNumberErrorMsg"/>
                                     </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom: 30px">
-                                        <p:autoComplete id="contactTypeDisplay" dropdown="true"
-                                                        value="#{contactsBean.contactsEntity.contactTypesByIdContactTypes}"
-                                                        completeMethod="#{contactTypesBean.completeContactType}"
-                                                        var="contactType"
-                                                        itemLabel="#{contactType.label}"
-                                                        itemValue="#{contactType}"
-                                                        converter="contactTypesConverter"
-                                                        scrollHeight="250"
-                                                        placeholder="#{bundle['contacts.chooseContactType']}"
-                                                        required="true"
-                                                        requiredMessage="#{bundle['contacts.ContactTypeNotValid']}"/>
-                                    </h:panelGroup>
+                                    <div class="mgin-top labelLike">
+                                        <p:outputLabel for="contactTypeDisplay"
+                                                       value="#{bundle['contacts.chooseContactType']}"/>
+                                        <p:selectOneMenu id="contactTypeDisplay"
+                                                         value="#{contactsBean.contactsEntity.contactTypesByIdContactTypes}"
+                                                         converter="contactTypesConverter" required="true"
+                                                         requiredMessage="#{bundle['contacts.ContactTypeNotValid']}">
+                                            <f:selectItems value="#{contactTypesBean.contactTypesEntities}"
+                                                           var="contactType"
+                                                           itemValue="#{contactType}" itemLabel="#{contactType.label}"/>
+                                        </p:selectOneMenu>
+                                    </div>
 
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:30px; margin-bottom:10px;">
@@ -135,8 +151,10 @@
                                                      value="#{contactsBean.contactsEntity.bankAccount}"
                                                      mask="BE-99999999999999">
                                             <f:validator validatorId="companyBankAccountValidator"/>
+                                            <p:ajax event="keyup" update="companyBankAccountErrorMsg"/>
                                         </p:inputMask>
                                         <label>#{bundle['company.bankAccount']}</label>
+                                        <p:message for="companyBankAccount" id="companyBankAccountErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
@@ -161,7 +179,6 @@
                                         </h:outputText>
                                     </h:panelGroup>
                                 </p:tab>
-
                                 <p:tab title="#{bundle['contacts.tabTitle2']}">
                                     <h:panelGroup style="margin-top:30px; margin-bottom:10px;">
                                         <p:selectCheckboxMenu label="#{bundle['contacts.chooseCompany']}" filter="true"
@@ -169,7 +186,7 @@
                                                               value="#{companiesContactsBean.selectedCompaniesContacts}"
                                                               multiple="true">
                                             <p:ajax event="itemUnselect" listener="#{contactsBean.onItemUnselect}"/>
-                                            <f:selectItems value="#{companiesBean.companiesEntityList}"
+                                            <f:selectItems value="#{companiesBean.companiesEntities}"
                                                            var="company"
                                                            itemValue="#{company}"
                                                            itemLabel="#{company.label}"/>
@@ -201,53 +218,59 @@
                                         <label>#{bundle['address.box']}</label>
                                     </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
-                                        <p:autoComplete id="addressCity" dropdown="true"
-                                                        value="#{addressesBean.addressesEntity.citiesByIdCities}"
-                                                        completeMethod="#{citiesBean.completeCitiesEntityContains}"
-                                                        var="cities"
-                                                        itemLabel="#{cities.label}"
-                                                        itemValue="#{cities}"
-                                                        scrollHeight="250"
-                                                        converter="citiesConverter"
-                                                        groupBy="#{citiesBean.getCitiesEntityGroup(cities)}"
-                                                        placeholder="#{bundle['cities.chooseCity']}"/>
-                                    </h:panelGroup>
+                                    <p:outputLabel value="#{bundle['cities.label']}" for="addressCity"
+                                                   styleClass="labelLike"/>
+                                    <p:autoComplete id="addressCity" dropdown="true"
+                                                    value="#{addressesBean.addressesEntity.citiesByIdCities}"
+                                                    completeMethod="#{citiesBean.completeCitiesEntityContains}"
+                                                    var="cities"
+                                                    itemLabel="#{cities.postalCode.concat(' ' .concat(cities.label))}"
+                                                    itemValue="#{cities}"
+                                                    scrollHeight="250"
+                                                    converter="citiesConverter"
+                                                    groupBy="#{citiesBean.getCitiesEntityGroup(cities)}"
+                                                    placeholder="#{bundle['cities.chooseCity']}">
+                                        <p:ajax event="focus" update="showAddressDetails"/>
+                                    </p:autoComplete>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
+                                    <p:panel id="showAddressDetails" styleClass="addressDetailsDesign">
+                                        <h:panelGroup styleClass="md-inputfield"
+                                                      style="margin-bottom:10px;">
                                         <span style="margin-right: 15px"
                                               class="labelLike">#{bundle['address.region']}</span>
-                                        <h:outputText id="addressRegion"
-                                                      value="#{addressesBean.addressesEntity.citiesByIdCities.region eq null ? '--' : addressesBean.addressesEntity.citiesByIdCities.region}">
-                                        </h:outputText>
-                                    </h:panelGroup>
+                                            <h:outputText id="addressRegion"
+                                                          value="#{addressesBean.addressesEntity.citiesByIdCities.region eq null ? '--' : addressesBean.addressesEntity.citiesByIdCities.region}">
+                                            </h:outputText>
+                                        </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <h:panelGroup styleClass="md-inputfield"
+                                                      style="margin-bottom:10px;">
                                         <span style="margin-right: 15px"
                                               class="labelLike">#{bundle['address.postalCode']}</span>
-                                        <h:outputText id="addressPostalCode"
-                                                      value="#{addressesBean.addressesEntity.citiesByIdCities.postalCode eq null ? '--' : addressesBean.addressesEntity.citiesByIdCities.postalCode}">
-                                        </h:outputText>
-                                    </h:panelGroup>
+                                            <h:outputText id="addressPostalCode"
+                                                          value="#{addressesBean.addressesEntity.citiesByIdCities.postalCode eq null ? '--' : addressesBean.addressesEntity.citiesByIdCities.postalCode}">
+                                            </h:outputText>
+                                        </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <h:panelGroup styleClass="md-inputfield">
                                         <span style="margin-right: 15px"
                                               class="labelLike">#{bundle['address.country']}</span>
-                                        <h:outputText id="addressCountry"
-                                                      value="#{addressesBean.addressesEntity.citiesByIdCities.countriesByIdCountries.label eq null ? '--' : addressesBean.addressesEntity.citiesByIdCities.countriesByIdCountries.label}">
-                                        </h:outputText>
-                                    </h:panelGroup>
+                                            <h:outputText id="addressCountry"
+                                                          value="#{addressesBean.addressesEntity.citiesByIdCities.countriesByIdCountries.label eq null ? '--' : addressesBean.addressesEntity.citiesByIdCities.countriesByIdCountries.label}">
+                                            </h:outputText>
+                                        </h:panelGroup>
+                                    </p:panel>
                                 </p:tab>
+
                             </p:accordionPanel>
                         </p:panelGrid>
 
                         <div align="right">
                             <p:commandButton value="#{bundle['validate']}"
                                              action="#{contactsBean.updateContact}"
+                                             id="contactDetailsBtnLeft"
+                                             resetValues="true"
+                                             disabled="#{not facesContext.postback or facesContext.validationFailed}"
                                              icon="ui-icon-check"
                                              update="contactDetailsUpdateForm:contactDetailsUpdatePanelGrid msgs"/>
                         </div>
