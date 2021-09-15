@@ -68,7 +68,10 @@
                         <h:panelGroup styleClass="md-inputfield">
                             <p:calendar value="#{tasksBean.tasksEntity.endDate}"
                                         converterMessage="#{bundle['converter.dateTime']}"
-                                        id="datetimeCreate" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
+                                        id="datetimeCreate" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}">
+                                <p:ajax update="msgDateTime detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                        event="keyup" resetValues="true"/>
+                            </p:calendar>
                             <label>#{bundle['dueDate']}:</label>
                             <p:message id="msgDateTime" for="datetimeCreate"/>
                         </h:panelGroup>
@@ -87,7 +90,8 @@
                                             dropdown="true"
                                             converter="#{contactsConverter}"
                                             groupBy="#{contactsBean.getContactsEntityGroup(Contact)}"
-                                            scrollHeight="250"/>
+                                            scrollHeight="250">
+                            </p:autoComplete>
                             <label>#{bundle['associateWithContact']}:</label>
                             <p:message id="msgContact" for="Contact"/>
                         </h:panelGroup>
@@ -105,7 +109,8 @@
                                             dropdown="true"
                                             converter="#{companiesConverter}"
                                             groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}"
-                                            scrollHeight="250"/>
+                                            scrollHeight="250">
+                            </p:autoComplete>
                             <label>#{bundle['associateWithCompany']}:</label>
                             <p:message id="msgCompany" for="Company"/>
                         </h:panelGroup>
@@ -132,7 +137,7 @@
                                          update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
                                          oncomplete="if (!args.validationFailed){PF('createDialogTask').hide()}; PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
                                          id="buttonSaveEntityTasks"
-                                         disabled="#{empty tasksBean.tasksEntity.title or tasksBean.tasksEntity.title.length() le 1}"
+                                         disabled="#{not facesContext.postback or facesContext.validationFailed or empty tasksBean.tasksEntity.title}"
                                          value="#{bundle['save']}"
                                          resetValues="true"
                                          action="#{tasksBean.saveEntity}"/>

@@ -8,7 +8,6 @@ import be.atc.salesmanagercrm.entities.NotesEntity;
 import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.exceptions.*;
 import be.atc.salesmanagercrm.utils.EMF;
-import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.validators.NotesValidator;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.primefaces.event.RowEditEvent;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -77,9 +75,8 @@ public class NotesBean extends ExtendBean implements Serializable {
             notesEntity.setUsersByIdUsers(usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            FacesMessage msg;
-            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+
+            getFacesMessage(FacesMessage.SEVERITY_WARN, "userNotExist");
             return;
         }
 
@@ -132,8 +129,7 @@ public class NotesBean extends ExtendBean implements Serializable {
         } else if (this.paramType.equalsIgnoreCase("displayByCompany")) {
             setCompanyEntityInNotesEntity();
         } else {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_WARN, "errorOccured");
         }
     }
 
@@ -146,8 +142,7 @@ public class NotesBean extends ExtendBean implements Serializable {
         } else if (this.paramType.equalsIgnoreCase("displayByCompany")) {
             listEntitiesCompanies();
         } else {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_WARN, "errorOccured");
         }
     }
 
@@ -169,13 +164,11 @@ public class NotesBean extends ExtendBean implements Serializable {
         log.info("NotesBean => method : onRowEdit(RowEditEvent<NotesEntity> event)");
 
         int idNote;
-        FacesMessage msg;
         try {
             idNote = event.getObject().getId();
         } catch (NumberFormatException exception) {
             log.info(exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "notes.notExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_WARN, "notes.notExist");
             return;
         }
 
@@ -185,8 +178,7 @@ public class NotesBean extends ExtendBean implements Serializable {
             notesEntityToUpdate = findById(idNote, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "notes.notExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_WARN, "notes.notExist");
             return;
         }
 
@@ -194,8 +186,7 @@ public class NotesBean extends ExtendBean implements Serializable {
             notesEntityToUpdate.setMessage(event.getObject().getMessage());
         } catch (InvalidOperationException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "notes.validator.message"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_WARN, "notes.validator.message");
             return;
         }
 
@@ -211,8 +202,7 @@ public class NotesBean extends ExtendBean implements Serializable {
      */
     public void onRowCancel(RowEditEvent<NotesEntity> event) {
         log.info("NotesBean => method : onRowCancel(RowEditEvent<NotesEntity> event)");
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "canceled"), null);
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+        getFacesMessage(FacesMessage.SEVERITY_INFO, "canceled");
     }
 
     /**
@@ -226,8 +216,7 @@ public class NotesBean extends ExtendBean implements Serializable {
             delete(idEntity, usersBean.getUsersEntity());
         } catch (NumberFormatException exception) {
             log.warn(exception.getMessage());
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "errorOccured");
             return;
         }
 
@@ -243,8 +232,7 @@ public class NotesBean extends ExtendBean implements Serializable {
             this.notesEntity.setContactsByIdContacts(contactsBean.getContactsEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "contactNotExist");
         }
     }
 
@@ -257,8 +245,7 @@ public class NotesBean extends ExtendBean implements Serializable {
             this.notesEntity.setCompaniesByIdCompanies(companiesBean.getCompaniesEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "companyNotExist");
         }
     }
 
@@ -284,20 +271,17 @@ public class NotesBean extends ExtendBean implements Serializable {
             return;
         }
 
-        FacesMessage msg;
         CheckEntities checkEntities = new CheckEntities();
 
         try {
             checkEntities.checkUser(entity.getUsersByIdUsers());
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             return;
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             return;
         }
 
@@ -306,8 +290,7 @@ public class NotesBean extends ExtendBean implements Serializable {
                 checkEntities.checkContact(entity.getContactsByIdContacts());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
+                getFacesMessage(FacesMessage.SEVERITY_ERROR, "contactNotExist");
                 return;
             }
         }
@@ -317,8 +300,7 @@ public class NotesBean extends ExtendBean implements Serializable {
                 checkEntities.checkCompany(entity.getCompaniesByIdCompanies());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
+                getFacesMessage(FacesMessage.SEVERITY_ERROR, "companyNotExist");
                 return;
             }
         }
@@ -333,13 +315,11 @@ public class NotesBean extends ExtendBean implements Serializable {
             dao.save(em, entity);
             tx.commit();
             log.info("Persist ok");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "notes.saved"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_INFO, "notes.saved");
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist echec");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "errorOccured");
         } finally {
             em.clear();
             em.clear();
@@ -355,12 +335,9 @@ public class NotesBean extends ExtendBean implements Serializable {
     protected NotesEntity findById(int id, UsersEntity usersEntity) {
         log.info("NotesBean => method : findById(int id, int idUser)");
 
-        FacesMessage msg;
-
         if (id == 0) {
             log.error("Note ID is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "note.notExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "note.notExist");
             throw new EntityNotFoundException(
                     "L ID de la note est incorrect",
                     ErrorCodes.NOTE_NOT_FOUND
@@ -368,8 +345,7 @@ public class NotesBean extends ExtendBean implements Serializable {
         }
         if (usersEntity == null) {
             log.error("User Entity is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             throw new EntityNotFoundException(
                     "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
             );
@@ -398,17 +374,15 @@ public class NotesBean extends ExtendBean implements Serializable {
      */
     protected List<NotesEntity> findNotesEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity) {
         log.info("NotesBean => method : findNotesEntityByContactsByIdContacts(int id, int idUser)");
-        FacesMessage msg;
+
         if (contactsEntity == null) {
             log.error("Contact Entity is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "contactNotExist");
             return Collections.emptyList();
         }
         if (usersEntity == null) {
             log.error("User Entity is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             return Collections.emptyList();
         }
 
@@ -431,17 +405,15 @@ public class NotesBean extends ExtendBean implements Serializable {
      */
     protected List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity) {
         log.info("NotesBean => method : findNotesEntityByCompaniesByIdCompanies(int id, int idUser)");
-        FacesMessage msg;
+
         if (companiesEntity == null) {
             log.error("Company Entity is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "companyNotExist");
             return Collections.emptyList();
         }
         if (usersEntity == null) {
             log.error("User Entity is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             return Collections.emptyList();
         }
 
@@ -465,11 +437,10 @@ public class NotesBean extends ExtendBean implements Serializable {
      */
     protected List<NotesEntity> findAll(UsersEntity usersEntity) {
         log.info("NotesBean => method : findAll(int idUser)");
-        FacesMessage msg;
+
         if (usersEntity == null) {
             log.error("User Entity is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             return Collections.emptyList();
         }
         EntityManager em = EMF.getEM();
@@ -500,17 +471,14 @@ public class NotesBean extends ExtendBean implements Serializable {
             return;
         }
 
-        FacesMessage msg;
         if (id == 0) {
             log.error("Note ID is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "note.notExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "note.notExist");
             return;
         }
         if (usersEntity == null) {
             log.error("User Entity is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             return;
         }
 
@@ -520,8 +488,7 @@ public class NotesBean extends ExtendBean implements Serializable {
             notesEntity = findById(id, usersEntity);
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "note.notExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "note.notExist");
             return;
         }
 
@@ -535,13 +502,11 @@ public class NotesBean extends ExtendBean implements Serializable {
             dao.delete(em, notesEntity);
             tx.commit();
             log.info("Delete ok");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "notes.deleted"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_INFO, "notes.deleted");
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.error("Delete Error");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "errorOccured");
         } finally {
             em.clear();
             em.close();
@@ -571,14 +536,12 @@ public class NotesBean extends ExtendBean implements Serializable {
             return;
         }
 
-        FacesMessage msg;
         try {
             NotesEntity notesEntity = findById(entity.getId(), entity.getUsersByIdUsers());
             entity.setCreationDate(notesEntity.getCreationDate());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "notes.notExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "notes.notExist");
             return;
         }
         CheckEntities checkEntities = new CheckEntities();
@@ -587,13 +550,11 @@ public class NotesBean extends ExtendBean implements Serializable {
             checkEntities.checkUser(entity.getUsersByIdUsers());
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             return;
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             return;
         }
 
@@ -602,8 +563,7 @@ public class NotesBean extends ExtendBean implements Serializable {
                 checkEntities.checkContact(entity.getContactsByIdContacts());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contactNotExist"), null);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
+                getFacesMessage(FacesMessage.SEVERITY_ERROR, "contactNotExist");
                 return;
             }
         }
@@ -613,8 +573,7 @@ public class NotesBean extends ExtendBean implements Serializable {
                 checkEntities.checkCompany(entity.getCompaniesByIdCompanies());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
+                getFacesMessage(FacesMessage.SEVERITY_ERROR, "companyNotExist");
                 return;
             }
         }
@@ -627,13 +586,11 @@ public class NotesBean extends ExtendBean implements Serializable {
             dao.update(em, entity);
             tx.commit();
             log.info("Update ok");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "notes.updated"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_INFO, "notes.updated");
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Update echec");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "errorOccured");
         } finally {
             em.clear();
             em.clear();

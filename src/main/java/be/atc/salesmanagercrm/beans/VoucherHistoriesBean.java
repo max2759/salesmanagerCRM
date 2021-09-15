@@ -5,13 +5,11 @@ import be.atc.salesmanagercrm.dao.impl.VoucherHistoriesDaoImpl;
 import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.entities.VoucherHistoriesEntity;
 import be.atc.salesmanagercrm.utils.EMF;
-import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -53,17 +51,14 @@ public class VoucherHistoriesBean extends ExtendBean implements Serializable {
     protected List<VoucherHistoriesEntity> findAllByIdUserAndByIdVoucher(int idVoucher, UsersEntity usersEntity) {
         log.info("VoucherHistoriesBean => method : findAllByIdUserAndByIdVoucher(int idVoucher, UsersEntity usersEntity)");
 
-        FacesMessage msg;
         if (idVoucher == 0) {
             log.error("Voucher ID is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "vouchers.notExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "vouchers.notExist");
             return Collections.emptyList();
         }
         if (usersEntity == null) {
             log.error("User is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             return Collections.emptyList();
         }
 
