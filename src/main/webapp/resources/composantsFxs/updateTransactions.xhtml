@@ -28,7 +28,7 @@
                                              maxlength="255"
                                              requiredMessage="#{bundle['transactions.validator.title']}">
                                     <p:ajax process="@form"
-                                            update="msg"
+                                            update="msg listAllTransactions:updateTransactions:formUpdateTransaction:buttonActionUpdateTransaction"
                                             resetValues="true" event="keyup"/>
                                 </p:inputText>
                                 <label>#{bundle['title']} :</label>
@@ -90,7 +90,7 @@
                                             id="datetime" pattern="dd/MM/yyyy HH:mm"
                                             mindate="#{transactionsBean.transactionsEntity.creationDate}">
                                     <p:ajax process="@form"
-                                            update="msgDateTime"
+                                            update="msgDateTime listAllTransactions:updateTransactions:formUpdateTransaction:buttonActionUpdateTransaction"
                                             event="valueChange" resetValues="true"/>
                                 </p:calendar>
                                 <label>#{bundle['dueDate']}:</label>
@@ -133,10 +133,10 @@
                                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}"
                                                 scrollHeight="250">
                                     <p:ajax process="@form"
-                                            update="msgContact"
+                                            update="msgContact listAllTransactions:updateTransactions:formUpdateTransaction:buttonActionUpdateTransaction"
                                             event="itemSelect" resetValues="true"/>
                                     <p:ajax process="@form"
-                                            update="msgContact"
+                                            update="msgContact listAllTransactions:updateTransactions:formUpdateTransaction:buttonActionUpdateTransaction"
                                             event="change" resetValues="true"/>
                                 </p:autoComplete>
                                 <label>#{bundle['contact']}:</label>
@@ -162,10 +162,10 @@
                                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}"
                                                 scrollHeight="250">
                                     <p:ajax process="@form"
-                                            update="msgCompany"
+                                            update="msgCompany listAllTransactions:updateTransactions:formUpdateTransaction:buttonActionUpdateTransaction"
                                             event="itemSelect" resetValues="true"/>
                                     <p:ajax process="@form"
-                                            update="msgCompany"
+                                            update="msgCompany listAllTransactions:updateTransactions:formUpdateTransaction:buttonActionUpdateTransaction"
                                             event="change" resetValues="true"/>
                                 </p:autoComplete>
                                 <label>#{bundle['company']}:</label>
@@ -183,6 +183,7 @@
                             <p:menuitem icon="ui-icon-check"
                                         rendered="#{usersBean.currentUser.isPermitted('updateTransactions')}"
                                         id="buttonSaveUpdateTransaction"
+                                        disabled="#{facesContext.validationFailed or empty transactionsBean.transactionsEntity.title }"
                                         value="#{bundle['save']}"
                                         update="@(form) msgs"
                                         resetValues="true"
