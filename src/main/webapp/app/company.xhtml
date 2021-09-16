@@ -27,6 +27,7 @@
                         <p:commandButton value="#{bundle['company.create']}"
                                          action="#{companiesBean.createNewEntity}"
                                          onclick="PF('companyWidgetModal').show();" styleClass="NavyButton"
+                                         resetValues="true"
                                          update="@(form) msgs">
                         </p:commandButton>
                     </h:form>

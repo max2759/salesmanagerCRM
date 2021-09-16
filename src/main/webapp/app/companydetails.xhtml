@@ -40,18 +40,27 @@
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:15px; margin-bottom: 30px">
                                         <p:inputText id="domainName"
-                                                     value="#{companiesBean.companiesEntity.domainName}">
+                                                     value="#{companiesBean.companiesEntity.domainName}"
+                                                     maxlength="255">
                                             <f:validator validatorId="companyDomainValidator"/>
+                                            <p:ajax process="@form"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn domainNameErrorMsg"
+                                                    event="keyup" resetValues="true"/>
                                         </p:inputText>
                                         <label>#{bundle['company.domainName']}</label>
+                                        <p:message for="domainName" id="domainNameErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield" style=" margin-bottom:10px;">
                                         <p:inputText id="labelCompany" value="#{companiesBean.companiesEntity.label}"
                                                      required="true"
-                                                     requiredMessage="#{bundle['company.labelNotValid']}"/>
+                                                     maxlength="255"
+                                                     requiredMessage="#{bundle['company.labelNotValid']}">
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn labelCompanyErrorMsg"/>
+                                        </p:inputText>
                                         <label>#{bundle['company.labelName']}</label>
-                                        <p:ajax event="keyup" update="@form:companyDetailsValidateBtn"/>
+                                        <p:message for="labelCompany" id="labelCompanyErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
@@ -73,7 +82,15 @@
                                                     converter="branchActivitiesConverter"
                                                     scrollHeight="250"
                                                     groupBy="#{branchActivitiesBean.getBranchActivitiesEntityGroup(branchActivities)}"
-                                                    placeholder="#{bundle['company.chooseBranchActivity']}"/>
+                                                    placeholder="#{bundle['company.chooseBranchActivity']}">
+                                        <p:ajax process="@form"
+                                                update="companyDetailsUpdateForm:companyDetailsValidateBtn branchActivitiesDisplayErrorMsg"
+                                                event="itemSelect" resetValues="true"/>
+                                        <p:ajax process="@form"
+                                                update="companyDetailsUpdateForm:companyDetailsValidateBtn branchActivitiesDisplayErrorMsg"
+                                                event="change" resetValues="true"/>
+                                    </p:autoComplete>
+                                    <p:message for="branchActivitiesDisplay" id="branchActivitiesDisplayErrorMsg"/>
 
                                     <div class="mgin-top">
                                         <p:outputLabel value="#{bundle['company.chooseCompanyType']}"
@@ -87,7 +104,6 @@
                                                            var="companyTypes"
                                                            itemValue="#{companyTypes}"
                                                            itemLabel="#{companyTypes.label}"/>
-                                            <p:ajax update="@form:companyDetailsValidateBtn" event="keyup"/>
                                         </p:selectOneMenu>
                                     </div>
 
@@ -97,8 +113,11 @@
                                                        value="#{companiesBean.companiesEntity.employeesNumber}"
                                                        validatorMessage="#{bundle['company.employeesNumberNotValid']}">
                                             <f:validateLongRange minimum="0"/>
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn employeesNumberErrorMsg"/>
                                         </p:inputNumber>
                                         <label>#{bundle['company.employessNumber']}</label>
+                                        <p:message for="employeesNumber" id="employeesNumberErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
@@ -106,8 +125,11 @@
                                         <p:inputNumber id="revenue" value="#{companiesBean.companiesEntity.revenue}"
                                                        validatorMessage="#{bundle['company.employeesNumberNotValid']}">
                                             <f:validateLongRange minimum="0"/>
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn revenueErrorMsg"/>
                                         </p:inputNumber>
                                         <label>#{bundle['company.revenue']}</label>
+                                        <p:message for="revenue" id="revenueErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
@@ -116,30 +138,37 @@
                                                        value="#{companiesBean.companiesEntity.annualSales}"
                                                        validatorMessage="#{bundle['company.employeesNumberNotValid']}">
                                             <f:validateLongRange minimum="0"/>
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn companyAnnualSalesErrorMsg"/>
                                         </p:inputNumber>
                                         <label>#{bundle['company.annualSales']}</label>
+                                        <p:message for="companyAnnualSales" id="companyAnnualSalesErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:30px;margin-bottom:10px;">
                                         <p:inputMask id="companyCreationDate"
                                                      value="#{companiesBean.companiesEntity.creationDate}"
-                                                     mask="9999"
-                                        >
+                                                     mask="9999">
                                             <f:validator validatorId="companyDateValidator"/>
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn companyCreationDateErrorMsg"/>
                                         </p:inputMask>
                                         <label>#{bundle['company.creationDate']}</label>
+                                        <p:message for="companyCreationDate" id="companyCreationDateErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:30px; margin-bottom:10px;">
                                         <p:inputMask id="companyClosingDate"
                                                      value="#{companiesBean.companiesEntity.closingDate}"
-                                                     mask="9999"
-                                        >
+                                                     mask="9999">
                                             <f:validator validatorId="companyClosingDateValidator"/>
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn companyClosingDateErrorMsg"/>
                                         </p:inputMask>
                                         <label>#{bundle['company.closingDate']}</label>
+                                        <p:message for="companyClosingDate" id="companyClosingDateErrorMsg"/>
                                     </h:panelGroup>
 
                                 </p:tab>
@@ -171,20 +200,27 @@
                                         <label>#{bundle['address.box']}</label>
                                     </h:panelGroup>
 
-                                    <p:outputLabel value="#{bundle['cities.label']}" for="addressCity"
-                                                   styleClass="labelLike"/>
-                                    <p:autoComplete id="addressCity" dropdown="true"
-                                                    value="#{addressesBean.addressesEntity.citiesByIdCities}"
-                                                    completeMethod="#{citiesBean.completeCitiesEntityContains}"
-                                                    var="cities"
-                                                    itemLabel="#{cities.postalCode.concat(' ' .concat(cities.label))}"
-                                                    itemValue="#{cities}"
-                                                    scrollHeight="250"
-                                                    converter="citiesConverter"
-                                                    groupBy="#{citiesBean.getCitiesEntityGroup(cities)}"
-                                                    placeholder="#{bundle['cities.chooseCity']}">
-                                        <p:ajax event="focus" update="showAddressDetails"/>
-                                    </p:autoComplete>
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  style="margin-top:30px; margin-bottom:10px;">
+                                        <p:autoComplete id="addressCity" dropdown="true"
+                                                        value="#{addressesBean.addressesEntity.citiesByIdCities}"
+                                                        completeMethod="#{citiesBean.completeCitiesEntityContains}"
+                                                        var="cities"
+                                                        itemLabel="#{cities.postalCode.concat(' ' .concat(cities.label))}"
+                                                        itemValue="#{cities}"
+                                                        scrollHeight="250"
+                                                        converter="citiesConverter"
+                                                        groupBy="#{citiesBean.getCitiesEntityGroup(cities)}">
+                                            <p:ajax process="@form"
+                                                    update="AddressCityErrorMsg showAddressDetails companyDetailsUpdateForm:companyDetailsValidateBtn"
+                                                    event="itemSelect"/>
+                                            <p:ajax process="@form"
+                                                    update="AddressCityErrorMsg showAddressDetails companyDetailsUpdateForm:companyDetailsValidateBtn"
+                                                    event="change"/>
+                                        </p:autoComplete>
+                                        <label>#{bundle['cities.label']}</label>
+                                        <p:message id="AddressCityErrorMsg" for="addressCity"/>
+                                    </h:panelGroup>
 
 
                                     <p:panel id="showAddressDetails" styleClass="addressDetailsDesign">
@@ -221,16 +257,22 @@
                                                      value="#{companiesBean.companiesEntity.phoneNumber}"
                                                      mask="+32 99999999">
                                             <f:validator validatorId="contactPhoneNumberValidator"/>
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn companyPhoneNumberErrorMsg"/>
                                         </p:inputMask>
                                         <label>#{bundle['contacts.phoneNumberLabel']}</label>
+                                        <p:message for="companyPhoneNumber" id="companyPhoneNumberErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:30px; margin-bottom:10px;">
                                         <p:inputText id="companyEmail" value="#{companiesBean.companiesEntity.email}">
                                             <f:validator validatorId="companyEmailValidator"/>
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn companyEmailErrorMsg"/>
                                         </p:inputText>
                                         <label>#{bundle['contacts.emailLabel']}</label>
+                                        <p:message for="companyEmail" id="companyEmailErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
@@ -238,8 +280,11 @@
                                         <p:inputMask id="companyVAT" value="#{companiesBean.companiesEntity.vatNumber}"
                                                      mask="BE-9999999999">
                                             <f:validator validatorId="companyVATValidator"/>
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn companyVATErrorMsg"/>
                                         </p:inputMask>
                                         <label>#{bundle['company.vatNumber']}</label>
+                                        <p:message for="companyVAT" id="companyVATErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
@@ -248,8 +293,11 @@
                                                      value="#{companiesBean.companiesEntity.bankAccount}"
                                                      mask="BE-99999999999999">
                                             <f:validator validatorId="companyBankAccountValidator"/>
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn companyBankAccountErrorMsg"/>
                                         </p:inputMask>
                                         <label>#{bundle['company.bankAccount']}</label>
+                                        <p:message for="companyBankAccount" id="companyBankAccountErrorMsg"/>
                                     </h:panelGroup>
                                 </p:tab>
 
@@ -260,8 +308,11 @@
                                         <p:inputText id="linkedinPage"
                                                      value="#{companiesBean.companiesEntity.linkedInPage}">
                                             <f:validator validatorId="linkedinPageValidator"/>
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn linkedinPageErrorMsg"/>
                                         </p:inputText>
                                         <label>#{bundle['company.linkedInPage']}</label>
+                                        <p:message for="linkedinPage" id="linkedinPageErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
@@ -316,7 +367,8 @@
                             <p:commandButton value="#{bundle['validate']}"
                                              action="#{companiesBean.updateCompanies}"
                                              id="companyDetailsValidateBtn"
-                                             disabled="#{empty companiesBean.companiesEntity.label}"
+                                             resetValues="true"
+                                             disabled="#{facesContext.validationFailed or empty companiesBean.companiesEntity.label or companiesBean.companiesEntity.label.length() le 1}"
                                              icon="ui-icon-check"
                                              update="companyDetailsUpdateForm:companyDetailsUpdatePanelGrid msgs"
                             />

@@ -29,7 +29,8 @@
                                              required="true"
                                              requiredMessage="#{bundle['company.labelNotValid']}"
                                              maxlength="255">
-                                    <p:ajax update="validateCompany labelCompanyErrorMsg" event="keyup"/>
+                                    <p:ajax process="@form" update="validateCompany labelCompanyErrorMsg" event="keyup"
+                                            resetValues="true"/>
                                 </p:inputText>
                                 <label>#{bundle['company.labelName']}</label>
                                 <p:message id="labelCompanyErrorMsg" for="labelCompany"/>
@@ -47,7 +48,6 @@
                                              placeholder="#{bundle['company.chooseCompanyType']}">
                                 <f:selectItems value="#{companyTypesBean.companyTypesEntities}" var="companyTypes"
                                                itemValue="#{companyTypes}" itemLabel="#{companyTypes.label}"/>
-                                <p:ajax update="validateCompany" event="keyup"/>
                             </p:selectOneMenu>
                         </div>
 
@@ -59,8 +59,11 @@
                                 <p:inputText id="domainName" value="#{companiesBean.companiesEntity.domainName}"
                                              maxlength="255">
                                     <f:validator validatorId="companyDomainValidator"/>
+                                    <p:ajax process="@form" update="validateCompany domainNameErrorMsg" event="keyup"
+                                            resetValues="true"/>
                                 </p:inputText>
                                 <label>#{bundle['company.domainName']}</label>
+                                <p:message id="domainNameErrorMsg" for="domainName"/>
                             </h:panelGroup>
                         </div>
 
@@ -77,8 +80,16 @@
                                                 itemLabel="#{branchActivities.label}"
                                                 itemValue="#{branchActivities}"
                                                 converter="branchActivitiesConverter"
-                                                scrollHeight="250"/>
+                                                scrollHeight="250">
+                                    <p:ajax process="@form"
+                                            update="validateCompany branchActivitiesDisplayErrorMsg"
+                                            event="itemSelect" resetValues="true"/>
+                                    <p:ajax process="@form"
+                                            update="validateCompany branchActivitiesDisplayErrorMsg"
+                                            event="change" resetValues="true"/>
+                                </p:autoComplete>
                                 <label>#{bundle['company.chooseBranchActivity']}</label>
+                                <p:message for="branchActivitiesDisplay" id="branchActivitiesDisplayErrorMsg"/>
                             </h:panelGroup>
                         </div>
 
@@ -91,8 +102,11 @@
                                                value="#{companiesBean.companiesEntity.employeesNumber}"
                                                validatorMessage="#{bundle['company.employeesNumberNotValid']}">
                                     <f:validateLongRange minimum="0"/>
+                                    <p:ajax process="@form" update="validateCompany employeesNumberErrorMsg"
+                                            event="keyup" resetValues="true"/>
                                 </p:inputNumber>
                                 <label>#{bundle['company.numberLabelPlaceHolder']}</label>
+                                <p:message for="employeesNumber" id="employeesNumberErrorMsg"/>
                             </h:panelGroup>
                         </div>
 
@@ -104,8 +118,11 @@
                                 <p:inputNumber id="revenue" value="#{companiesBean.companiesEntity.revenue}"
                                                validatorMessage="#{bundle['company.employeesNumberNotValid']}">
                                     <f:validateLongRange minimum="0"/>
+                                    <p:ajax process="@form" update="validateCompany revenueErrorMsg" event="keyup"
+                                            resetValues="true"/>
                                 </p:inputNumber>
                                 <label>#{bundle['company.numberLabelPlaceHolder']}</label>
+                                <p:message for="revenue" id="revenueErrorMsg"/>
                             </h:panelGroup>
                         </div>
 
@@ -117,8 +134,11 @@
                                 <p:inputText id="linkedinPage" value="#{companiesBean.companiesEntity.linkedInPage}"
                                              maxlength="255">
                                     <f:validator validatorId="linkedinPageValidator"/>
+                                    <p:ajax process="@form" update="validateCompany linkedinPageErrorMsg" event="keyup"
+                                            resetValues="true"/>
                                 </p:inputText>
                                 <label>#{bundle['company.linkedInPage']}</label>
+                                <p:message for="linkedinPage" id="linkedinPageErrorMsg"/>
                             </h:panelGroup>
                         </div>
 
@@ -130,10 +150,11 @@
                                              style="width:auto;margin-bottom:10px;"
                                              id="validateCompany"
                                              action="#{companiesBean.saveCompany}"
-                                             disabled="#{empty companiesBean.companiesEntity.label or companiesBean.companiesEntity.label.length() le 1}"
+                                             disabled="#{facesContext.validationFailed or empty companiesBean.companiesEntity.label}"
                                              icon="ui-icon-check"
                                              update="@(form) msgs"
-                                             oncomplete="PF('companyWidgetModal').hide();"/>
+                                             resetValues="true"
+                                             oncomplete="if (!args.validationFailed){PF('companyWidgetModal').hide();}"/>
                         </div>
                     </div>
                     <p:hotkey bind="esc" handler="PF('companyWidgetModal').hide()"/>

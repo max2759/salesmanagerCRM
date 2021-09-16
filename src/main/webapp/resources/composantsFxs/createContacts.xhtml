@@ -28,7 +28,8 @@
                                 <p:inputText id="contactFirstName" value="#{contactsBean.contactsEntity.firstname}"
                                              required="true" requiredMessage="#{bundle['contacts.firstnameNotValid']}"
                                              maxlength="255">
-                                    <p:ajax update="validateContacts contactFirstNameErrorMsg" event="keyup"/>
+                                    <p:ajax process="@form" update="validateContacts contactFirstNameErrorMsg"
+                                            event="keyup" resetValues="true"/>
                                 </p:inputText>
                                 <label>#{bundle['contacts.firstname']}</label>
                                 <p:message for="contactFirstName" id="contactFirstNameErrorMsg"/>
@@ -43,7 +44,8 @@
                                 <p:inputText id="contactLastName" value="#{contactsBean.contactsEntity.lastname}"
                                              required="true" requiredMessage="#{bundle['contacts.lastnameNotValid']}"
                                              maxlength="255">
-                                    <p:ajax update="validateContacts contactLastNameErrorMsg" event="keyup"/>
+                                    <p:ajax process="@form" update="validateContacts contactLastNameErrorMsg"
+                                            event="keyup" resetValues="true"/>
                                 </p:inputText>
                                 <label>#{bundle['contacts.lastname']}</label>
                                 <p:message for="contactLastName" id="contactLastNameErrorMsg"/>
@@ -73,8 +75,11 @@
                                 <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}"
                                              maxlength="255">
                                     <f:validator validatorId="contactEmailValidator"/>
+                                    <p:ajax process="@form" resetValues="true"
+                                            update="validateContacts contactEmailErrorMsg" event="keyup"/>
                                 </p:inputText>
                                 <label>#{bundle['contacts.emailLabel']}</label>
+                                <p:message for="contactEmail" id="contactEmailErrorMsg"/>
                             </h:panelGroup>
                         </div>
 
@@ -90,10 +95,19 @@
                                                 itemLabel="#{jobtitles.label}"
                                                 itemValue="#{jobtitles}"
                                                 converter="jobTitlesConverter"
-                                                scrollHeight="250"/>
+                                                scrollHeight="250">
+                                    <p:ajax process="@form"
+                                            update="validateContacts jobTitlesDisplayErrorMsg"
+                                            event="itemSelect" resetValues="true"/>
+                                    <p:ajax process="@form"
+                                            update="validateContacts jobTitlesDisplayErrorMsg"
+                                            event="change" resetValues="true"/>
+                                </p:autoComplete>
                                 <label>#{bundle['contacts.chooseJobTitles']}</label>
+                                <p:message for="jobTitlesDisplay" id="jobTitlesDisplayErrorMsg"/>
                             </h:panelGroup>
                         </div>
+
                         <div class="ui-g-12 ui-lg-2">
                             <p:outputLabel for="phoneNumber" value="#{bundle['contacts.phoneNumberLabel']}"/>
                         </div>
@@ -102,8 +116,11 @@
                                 <p:inputMask id="phoneNumber" value="#{contactsBean.contactsEntity.phoneNumber}"
                                              mask="+32 999999999">
                                     <f:validator validatorId="contactPhoneNumberValidator"/>
+                                    <p:ajax process="@form" resetValues="true"
+                                            update="validateContacts phoneNumberErrorMsg" event="keyup"/>
                                 </p:inputMask>
                                 <label>#{bundle['contacts.phoneNumberLabel']}</label>
+                                <p:message for="phoneNumber" id="phoneNumberErrorMsg"/>
                             </h:panelGroup>
                         </div>
                     </div>
@@ -115,10 +132,11 @@
                                              action="#{contactsBean.addContact}"
                                              id="validateContacts"
                                              style="width:auto;margin-bottom:10px;"
-                                             disabled="#{empty contactsBean.contactsEntity.firstname or contactsBean.contactsEntity.firstname.length() le 1 or empty contactsBean.contactsEntity.lastname or contactsBean.contactsEntity.lastname.length() le 1 }"
+                                             disabled="#{facesContext.validationFailed or empty contactsBean.contactsEntity.firstname or contactsBean.contactsEntity.firstname.length() le 1 or empty contactsBean.contactsEntity.lastname or contactsBean.contactsEntity.lastname.length() le 1 }"
                                              icon="ui-icon-check"
                                              update="@(form) msgs"
-                                             oncomplete="PF('contactsWidgetModal').hide();"/>
+                                             resetValues="true"
+                                             oncomplete="if (!args.validationFailed){PF('contactsWidgetModal').hide();}"/>
                         </div>
                     </div>
                     <p:hotkey bind="esc" handler="PF('contactsWidgetModal').hide()"/>

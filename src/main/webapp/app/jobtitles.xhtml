@@ -22,6 +22,7 @@
 
                         <p:commandButton value="#{bundle['jobTitles.create']}" update="@(form)"
                                          onclick="PF('jobTitlesModal').show();" styleClass="NavyButton"
+                                         resetValues="true"
                                          action="#{jobtitlesBean.showModalCreate}">
                         </p:commandButton>
 

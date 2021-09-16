@@ -13,7 +13,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.Locale;
-
+/**
+ * @author Zabbara - Maximilien
+ */
 @FacesConverter(value = "dateConverter")
 public class DateConverter implements Converter {
 
@@ -31,7 +33,7 @@ public class DateConverter implements Converter {
         if (value != null) {
             return LocalDateTime.parse(value, DATE_FORMAT);
         } else {
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "localDateTimeConvertor.error")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "localDateTimeConvertor.error"), null));
         }
 
     }
