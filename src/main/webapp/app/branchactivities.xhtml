@@ -21,6 +21,7 @@
                         <h1>#{bundle['branchActivities.title']}</h1>
                         <p:commandButton value="#{bundle['branchActivities.create']}" update="@(form)"
                                          onclick="PF('branchActivitiesModal').show();" styleClass="NavyButton"
+                                         resetValues="true"
                                          action="#{branchActivitiesBean.showModalCreate}">
                         </p:commandButton>
 

@@ -32,6 +32,7 @@
 
             <p:column headerText="#{bundle['edit']}" colspan="2">
                 <p:commandLink icon="ui-icon-edit" styleClass="NavyButton" update="@(form)"
+                               resetValues="true"
                                onclick="PF('updateJobTitlesModal').show();" action="#{jobtitlesBean.showModalUpdate}">
                     <i class="ui-icon ui-icon-create"/>
                     <f:param name="id" value="#{jobtitles.id}"/>

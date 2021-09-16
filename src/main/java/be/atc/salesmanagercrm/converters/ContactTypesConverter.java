@@ -33,12 +33,12 @@ public class ContactTypesConverter implements Converter {
 
         int id;
         if (value == null) {
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "contactTypes.NotExist")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "contactTypes.NotExist"), null));
         }
         try {
             id = Integer.parseInt(value);
         } catch (NumberFormatException nfe) {
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "contactTypes.NotExist")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "contactTypes.NotExist"), null));
         }
 
         if (id != 0) {
@@ -47,11 +47,11 @@ public class ContactTypesConverter implements Converter {
                 return contactTypesEntity;
             } catch (EntityNotFoundException exception) {
                 log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "contactTypes.NotExist")));
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "contactTypes.NotExist"), null));
             }
         } else {
             log.warn("Erreur Converter ContactTypes");
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "contactTypes.NotExist")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "contactTypes.NotExist"), null));
         }
     }
 

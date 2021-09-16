@@ -21,10 +21,11 @@
                   <p:inputText id="jobTitlesLabel" value="#{jobtitlesBean.jobTitlesEntity.label}" required="true"
                                requiredMessage="#{bundle['jobTitles.labelError']}" maxlength="255">
                      <f:validator validatorId="jobTitlesLabelValidator"/>
-                     <p:ajax event="keyup" update="jobTitlesLabelMsgError validateJobTitlesBtn" resetValues="true"/>
+                     <p:ajax process="@form" update="validateJobTitlesBtn jobTitlesLabelMsgError" event="keyup"
+                             resetValues="true"/>
                   </p:inputText>
                   <label>#{bundle['jobTitles.modalLabel']}</label>
-                  <p:message for="jobTitlesLabel" id="jobTitlesLabelMsgError" redisplay="message"/>
+                  <p:message for="jobTitlesLabel" id="jobTitlesLabelMsgError"/>
                </h:panelGroup>
             </p:outputPanel>
 
@@ -33,7 +34,7 @@
                                 id="validateJobTitlesBtn"
                                 icon="ui-icon-check"
                                 resetValues="true"
-                                disabled="#{empty jobtitlesBean.jobTitlesEntity.label}"
+                                disabled="#{facesContext.validationFailed or empty jobtitlesBean.jobTitlesEntity.label}"
                                 update="@(form) facesMessage" action="#{jobtitlesBean.saveJobTitles}"
                                 oncomplete="PF('jobTitlesModal').hide(); PF('displayAllJobTitles').filter()"/>
             </div>

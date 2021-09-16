@@ -57,8 +57,12 @@
                                         <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}"
                                                      maxlength="255">
                                             <f:validator validatorId="contactEmailValidator"/>
+                                            <p:ajax process="@form"
+                                                    update="contactDetailsUpdateForm:contactDetailsBtnLeft contactEmailErrorMsg"
+                                                    event="keyup" resetValues="true"/>
                                         </p:inputText>
                                         <label>#{bundle['contacts.emailLabel']}</label>
+                                        <p:message for="contactEmail" id="contactEmailErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
@@ -68,8 +72,9 @@
                                                      maxlength="255"
                                                      required="true"
                                                      requiredMessage="#{bundle['contacts.firstnameNotValid']}">
-                                            <p:ajax event="keyup"
-                                                    update="contactFirstNameErrorMsg contactDetailsUpdateForm:contactDetailsBtnLeft"
+                                            <p:ajax process="@form"
+                                                    event="keyup"
+                                                    update="contactDetailsUpdateForm:contactDetailsBtnLeft contactFirstNameErrorMsg"
                                                     resetValues="true"/>
                                         </p:inputText>
                                         <label>#{bundle['contacts.firstname']}</label>
@@ -83,8 +88,9 @@
                                                      maxlength="255"
                                                      required="true"
                                                      requiredMessage="#{bundle['contacts.lastnameNotValid']}">
-                                            <p:ajax event="keyup"
-                                                    update="contactLastNameErrorMsg contactDetailsUpdateForm:contactDetailsBtnLeft"
+                                            <p:ajax process="@form"
+                                                    event="keyup"
+                                                    update="contactDetailsUpdateForm:contactDetailsBtnLeft contactLastNameErrorMsg"
                                                     resetValues="true"/>
                                         </p:inputText>
                                         <label>#{bundle['contacts.lastname']}</label>
@@ -102,7 +108,15 @@
                                                         itemValue="#{jobtitles}"
                                                         converter="jobTitlesConverter"
                                                         scrollHeight="250"
-                                                        placeholder="#{bundle['contacts.chooseJobTitles']}"/>
+                                                        placeholder="#{bundle['contacts.chooseJobTitles']}">
+                                            <p:ajax process="@form"
+                                                    update="contactDetailsUpdateForm:contactDetailsBtnLeft jobTitlesDisplayErrorMsg"
+                                                    event="itemSelect" resetValues="true"/>
+                                            <p:ajax process="@form"
+                                                    update="contactDetailsUpdateForm:contactDetailsBtnLeft jobTitlesDisplayErrorMsg"
+                                                    event="change" resetValues="true"/>
+                                        </p:autoComplete>
+                                        <p:message for="jobTitlesDisplay" id="jobTitlesDisplayErrorMsg"/>
                                     </div>
 
                                     <div class="mgin-top">
@@ -118,7 +132,15 @@
                                                         converter="branchActivitiesConverter"
                                                         scrollHeight="250"
                                                         groupBy="#{branchActivitiesBean.getBranchActivitiesEntityGroup(branchActivities)}"
-                                                        placeholder="#{bundle['company.chooseBranchActivity']}"/>
+                                                        placeholder="#{bundle['company.chooseBranchActivity']}">
+                                            <p:ajax process="@form"
+                                                    update="contactDetailsUpdateForm:contactDetailsBtnLeft branchActivitiesDisplayErrorMsg"
+                                                    event="itemSelect" resetValues="true"/>
+                                            <p:ajax process="@form"
+                                                    update="contactDetailsUpdateForm:contactDetailsBtnLeft branchActivitiesDisplayErrorMsg"
+                                                    event="change" resetValues="true"/>
+                                        </p:autoComplete>
+                                        <p:message for="branchActivitiesDisplay" id="branchActivitiesDisplayErrorMsg"/>
                                     </div>
 
                                     <h:panelGroup styleClass="md-inputfield"
@@ -126,7 +148,8 @@
                                         <p:inputMask id="phoneNumber" value="#{contactsBean.contactsEntity.phoneNumber}"
                                                      mask="+32 999999999">
                                             <f:validator validatorId="contactPhoneNumberValidator"/>
-                                            <p:ajax event="keyup" update="phoneNumberErrorMsg"/>
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="contactDetailsUpdateForm:contactDetailsBtnLeft phoneNumberErrorMsg"/>
                                         </p:inputMask>
                                         <label>#{bundle['contacts.phoneNumberLabel']}</label>
                                         <p:message for="phoneNumber" id="phoneNumberErrorMsg"/>
@@ -151,7 +174,8 @@
                                                      value="#{contactsBean.contactsEntity.bankAccount}"
                                                      mask="BE-99999999999999">
                                             <f:validator validatorId="companyBankAccountValidator"/>
-                                            <p:ajax event="keyup" update="companyBankAccountErrorMsg"/>
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="contactDetailsUpdateForm:contactDetailsBtnLeft companyBankAccountErrorMsg"/>
                                         </p:inputMask>
                                         <label>#{bundle['company.bankAccount']}</label>
                                         <p:message for="companyBankAccount" id="companyBankAccountErrorMsg"/>
@@ -179,6 +203,7 @@
                                         </h:outputText>
                                     </h:panelGroup>
                                 </p:tab>
+
                                 <p:tab title="#{bundle['contacts.tabTitle2']}">
                                     <h:panelGroup style="margin-top:30px; margin-bottom:10px;">
                                         <p:selectCheckboxMenu label="#{bundle['contacts.chooseCompany']}" filter="true"
@@ -193,29 +218,39 @@
                                         </p:selectCheckboxMenu>
                                     </h:panelGroup>
                                 </p:tab>
+
                                 <p:tab title="#{bundle['contacts.tabTitle3']}">
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:30px; margin-bottom:10px;">
                                         <p:inputText id="contactAddressStreet"
                                                      value="#{addressesBean.addressesEntity.street}">
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="contactDetailsUpdateForm:contactDetailsBtnLeft contactAddressStreetErrorMsg"/>
                                         </p:inputText>
                                         <label>#{bundle['address.street']}</label>
+                                        <p:message for="contactAddressStreet" id="contactAddressStreetErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:30px; margin-bottom:10px;">
                                         <p:inputText id="contactNumberAdress"
                                                      value="#{addressesBean.addressesEntity.number}">
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="contactDetailsUpdateForm:contactDetailsBtnLeft contactNumberAdressErrorMsg"/>
                                         </p:inputText>
                                         <label>#{bundle['address.number']}</label>
+                                        <p:message for="contactNumberAdress" id="contactNumberAdressErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
                                                   style="margin-top:30px; margin-bottom:10px;">
                                         <p:inputText id="contactBox"
                                                      value="#{addressesBean.addressesEntity.box}">
+                                            <p:ajax process="@form" event="keyup"
+                                                    update="contactDetailsUpdateForm:contactDetailsBtnLeft contactBoxErrorMsg"/>
                                         </p:inputText>
                                         <label>#{bundle['address.box']}</label>
+                                        <p:message for="contactBox" id="contactBoxErrorMsg"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="md-inputfield"
@@ -229,16 +264,17 @@
                                                         scrollHeight="250"
                                                         converter="citiesConverter"
                                                         groupBy="#{citiesBean.getCitiesEntityGroup(cities)}">
-                                            <p:ajax process="@form" update="t msgAddressCity showAddressDetails"
+                                            <p:ajax process="@form"
+                                                    update="AddressCityErrorMsg showAddressDetails contactDetailsUpdateForm:contactDetailsBtnLeft"
                                                     event="itemSelect"/>
-                                            <p:ajax process="@form" update="t msgAddressCity showAddressDetails"
+                                            <p:ajax process="@form"
+                                                    update="AddressCityErrorMsg showAddressDetails contactDetailsUpdateForm:contactDetailsBtnLeft"
                                                     event="change"/>
                                         </p:autoComplete>
                                         <label>#{bundle['cities.label']}</label>
-                                        <p:message id="msgAddressCity" for="addressCity"/>
+                                        <p:message id="AddressCityErrorMsg" for="addressCity"/>
                                     </h:panelGroup>
 
-                                    <h:outputText id="t" value="#{facesContext.validationFailed}"/>
                                     <p:panel id="showAddressDetails" styleClass="addressDetailsDesign">
                                         <h:panelGroup styleClass="md-inputfield"
                                                       style="margin-bottom:10px;">
@@ -276,9 +312,10 @@
                                              action="#{contactsBean.updateContact}"
                                              id="contactDetailsBtnLeft"
                                              resetValues="true"
-                                             disabled="#{facesContext.validationFailed}"
+                                             disabled="#{facesContext.validationFailed or empty contactsBean.contactsEntity.firstname or contactsBean.contactsEntity.firstname.length() le 1 or empty contactsBean.contactsEntity.lastname or contactsBean.contactsEntity.lastname.length() le 1}"
                                              icon="ui-icon-check"
-                                             update="contactDetailsUpdateForm:contactDetailsUpdatePanelGrid msgs"/>
+                                             update="contactDetailsUpdateForm:contactDetailsUpdatePanelGrid msgs"
+                            />
                         </div>
                     </h:form>
                 </div>

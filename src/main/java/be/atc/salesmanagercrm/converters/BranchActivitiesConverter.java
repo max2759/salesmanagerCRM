@@ -35,12 +35,12 @@ public class BranchActivitiesConverter implements Converter {
 
         int id;
         if (value == null) {
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "branchActivities.error")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "branchActivities.error"), null));
         }
         try {
             id = Integer.parseInt(value);
         } catch (NumberFormatException nfe) {
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "branchActivities.error")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "branchActivities.error"), null));
         }
 
         if (id != 0) {
@@ -49,11 +49,11 @@ public class BranchActivitiesConverter implements Converter {
                 return branchActivitiesEntity;
             } catch (EntityNotFoundException exception) {
                 log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "branchActivities.error")));
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "branchActivities.error"), null));
             }
         } else {
             log.warn("Erreur Converter BranchActivity");
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "branchActivities.error")));
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "branchActivities.error"), null));
         }
     }
 

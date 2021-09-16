@@ -25,9 +25,12 @@
                                      value="#{branchActivitiesBean.branchActivitiesEntity.label}" required="true"
                                      requiredMessage="#{bundle['branchActivities.labelExist']}" maxlength="255">
                             <f:validator validatorId="branchActivitiesLabelValidator"/>
+                            <p:ajax process="@form" resetValues="true"
+                                    update="validateUpdateBranchActivitiesBtn branchActivitiesLabelUpdateErrorMsg"
+                                    event="keyup"/>
                         </p:inputText>
                         <label>#{bundle['branchActivities.title']}</label>
-                        <p:message for="branchActivitiesLabelUpdate" closable="true"/>
+                        <p:message for="branchActivitiesLabelUpdate" id="branchActivitiesLabelUpdateErrorMsg"/>
                     </h:panelGroup>
                 </p:outputPanel>
 
@@ -35,7 +38,7 @@
                     <p:commandButton value="#{bundle['edit']}"
                                      icon="ui-icon-check"
                                      id="validateUpdateBranchActivitiesBtn"
-                                     disabled="#{empty branchActivitiesBean.branchActivitiesEntity.label or branchActivitiesBean.branchActivitiesEntity.label eq null}"
+                                     disabled="#{facesContext.validationFailed or empty branchActivitiesBean.branchActivitiesEntity.label or branchActivitiesBean.branchActivitiesEntity.label eq null}"
                                      update="@(form) facesMessage"
                                      resetValues="true"
                                      action="#{branchActivitiesBean.updateBranchActivities}"

@@ -33,6 +33,7 @@
             </p:column>
             <p:column headerText="#{bundle['edit']}" colspan="2">
                 <p:commandLink icon="ui-icon-edit" styleClass="NavyButton" update="@(form)"
+                               resetValues="true"
                                onclick="PF('updateBranchActivitiesModal').show();"
                                action="#{branchActivitiesBean.showModalUpdate}">
                     <i class="ui-icon ui-icon-create"/>
