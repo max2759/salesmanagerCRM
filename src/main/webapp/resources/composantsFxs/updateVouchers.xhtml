@@ -15,7 +15,7 @@
 <cc:implementation>
     <f:view>
         <div class="ui-g ui-fluid">
-            <h:form>
+            <h:form id="formUpdateVoucher">
                 <div class="ui-g form-group" style="margin-top:10px;">
 
                     <div class="ui-g-12 ui-lg-2"><p:outputLabel for="titleUpdate" value="#{bundle['title']}:"/></div>
@@ -27,7 +27,7 @@
                                              maxlength="255"
                                              requiredMessage="#{bundle['vouchers.validator.title']}">
                                     <p:ajax process="@form"
-                                            update="msg"
+                                            update="msg listAllVouchers:updateVouchers:formUpdateVoucher:updateMenuButton"
                                             resetValues="true" event="keyup"/>
                                 </p:inputText>
                                 <label>#{bundle['title']} :</label>
@@ -88,10 +88,10 @@
                                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}"
                                                 scrollHeight="250">
                                     <p:ajax process="@form"
-                                            update="msgContact"
+                                            update="msgContact listAllVouchers:updateVouchers:formUpdateVoucher:updateMenuButton"
                                             event="itemSelect" resetValues="true"/>
                                     <p:ajax process="@form"
-                                            update="msgContact"
+                                            update="msgContact listAllVouchers:updateVouchers:formUpdateVoucher:updateMenuButton"
                                             event="change" resetValues="true"/>
                                 </p:autoComplete>
                                 <label>#{bundle['contact']}:</label>
@@ -117,10 +117,10 @@
                                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}"
                                                 scrollHeight="250">
                                     <p:ajax process="@form"
-                                            update="msgCompany"
+                                            update="msgCompany listAllVouchers:updateVouchers:formUpdateVoucher:updateMenuButton"
                                             event="itemSelect" resetValues="true"/>
                                     <p:ajax process="@form"
-                                            update="msgCompany"
+                                            update="msgCompany listAllVouchers:updateVouchers:formUpdateVoucher:updateMenuButton"
                                             event="change" resetValues="true"/>
                                 </p:autoComplete>
                                 <label>#{bundle['company']}:</label>
@@ -146,12 +146,14 @@
                 </div>
                 <div class="ui-g-12 ui-lg-12">
                     <div align="right" class="mgin-top">
-                        <p:menuButton value="#{bundle['actions']}"
+                        <p:menuButton value="#{bundle['actions']}" id="updateMenuButton"
                                       rendered="#{usersBean.currentUser.isPermitted('showVoucherHistories') or usersBean.currentUser.isPermitted('updateVouchers')}">
                             <p:menuitem icon="ui-icon-check"
                                         rendered="#{usersBean.currentUser.isPermitted('updateVouchers')}"
                                         value="#{bundle['save']}"
                                         update="@(form) msgs"
+                                        id="updateVoucherMenuItem"
+                                        disabled="#{facesContext.validationFailed or empty vouchersBean.vouchersEntity.title }"
                                         resetValues="true"
                                         oncomplete="if (!args.validationFailed){PF('dlg2').hide()}; PF('displayAllEntities').filter();"
                                         action="#{vouchersBean.updateEntity}"/>
