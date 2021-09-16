@@ -28,7 +28,8 @@
                                          required="true"
                                          requiredMessage="#{bundle['task.validator.title']}"
                                          maxlength="255">
-                                <p:ajax update="msg detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                <p:ajax process="@form"
+                                        update="msg detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
                                         event="keyup" resetValues="true"/>
                             </p:inputText>
                             <label>#{bundle['title']}</label>
@@ -68,7 +69,11 @@
                         <h:panelGroup styleClass="md-inputfield">
                             <p:calendar value="#{tasksBean.tasksEntity.endDate}"
                                         converterMessage="#{bundle['converter.dateTime']}"
-                                        id="datetimeCreate" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}"/>
+                                        id="datetimeCreate" pattern="dd/MM/yyyy HH:mm" mindate="#{tasksBean.now}">
+                                <p:ajax process="@form"
+                                        update="msgDateTime detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                        event="valueChange" resetValues="true"/>
+                            </p:calendar>
                             <label>#{bundle['dueDate']}:</label>
                             <p:message id="msgDateTime" for="datetimeCreate"/>
                         </h:panelGroup>
@@ -87,7 +92,14 @@
                                             dropdown="true"
                                             converter="#{contactsConverter}"
                                             groupBy="#{contactsBean.getContactsEntityGroup(Contact)}"
-                                            scrollHeight="250"/>
+                                            scrollHeight="250">
+                                <p:ajax process="@form"
+                                        update="msgContact detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                        event="itemSelect" resetValues="true"/>
+                                <p:ajax process="@form"
+                                        update="msgContact detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                        event="change" resetValues="true"/>
+                            </p:autoComplete>
                             <label>#{bundle['associateWithContact']}:</label>
                             <p:message id="msgContact" for="Contact"/>
                         </h:panelGroup>
@@ -105,7 +117,14 @@
                                             dropdown="true"
                                             converter="#{companiesConverter}"
                                             groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}"
-                                            scrollHeight="250"/>
+                                            scrollHeight="250">
+                                <p:ajax process="@form"
+                                        update="msgCompany detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                        event="itemSelect" resetValues="true"/>
+                                <p:ajax process="@form"
+                                        update="msgCompany detailsRight:createTasks:formCreateTask:buttonSaveEntityTasks"
+                                        event="change" resetValues="true"/>
+                            </p:autoComplete>
                             <label>#{bundle['associateWithCompany']}:</label>
                             <p:message id="msgCompany" for="Company"/>
                         </h:panelGroup>
@@ -132,7 +151,7 @@
                                          update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
                                          oncomplete="if (!args.validationFailed){PF('createDialogTask').hide();}"
                                          id="buttonSaveEntityTasks"
-                                         disabled="#{empty tasksBean.tasksEntity.title or tasksBean.tasksEntity.title.length() le 1}"
+                                         disabled="#{facesContext.validationFailed or empty tasksBean.tasksEntity.title}"
                                          value="#{bundle['save']}"
                                          resetValues="true"
                                          action="#{tasksBean.saveEntity}"/>

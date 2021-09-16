@@ -42,7 +42,7 @@
                     <div align="right" class="mgin-top">
                         <p:commandButton style="width:auto;margin-bottom:10px;"
                                          id="buttonSaveEntityNotes"
-                                         disabled="#{empty notesBean.notesEntity.message or notesBean.notesEntity.message.length() le 1}"
+                                         disabled="#{facesContext.validationFailed or empty notesBean.notesEntity.message}"
                                          value="#{bundle['notes.save']}"
                                          oncomplete="if (!args.validationFailed){PF('createDialogNotes').hide()}"
                                          resetValues="true"

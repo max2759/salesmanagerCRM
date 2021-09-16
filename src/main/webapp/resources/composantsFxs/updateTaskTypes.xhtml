@@ -23,6 +23,9 @@
                                      maxlength="255"
                                      requiredMessage="#{bundle['taskTypes.validator.title']}"
                         >
+                            <p:ajax process="@form"
+                                    update="msg listAllTaskTypes:updateTaskTypes:updateTaskTypesForm:buttonUpdateTaskTypes"
+                                    event="keyup" resetValues="true"/>
                         </p:inputText>
                         <label>#{bundle['title']} :</label>
                         <p:message for="titleUpdate" id="msg" closable="true" display="message"/>
@@ -32,6 +35,7 @@
                     <p:commandButton style="width:auto;margin-bottom:10px;"
                                      id="buttonUpdateTaskTypes"
                                      update="@(form) msgs"
+                                     disabled="#{facesContext.validationFailed or empty taskTypesBean.taskTypesEntity.label}"
                                      oncomplete="if (!args.validationFailed){PF('dlg2').hide()}; PF('displayAllEntities').filter();"
                                      value="#{bundle['save']}"
                                      action="#{taskTypesBean.updateEntity}"

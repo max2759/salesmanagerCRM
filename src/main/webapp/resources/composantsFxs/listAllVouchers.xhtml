@@ -33,6 +33,7 @@
                 <p:commandButton value="#{bundle['vouchers.create']}"
                                  rendered="#{usersBean.currentUser.isPermitted('addVouchers')}"
                                  update="@(form) msgs"
+                                 resetValues="true"
                                  onclick="PF('createDialog').show();" styleClass="NavyButton marginBottom15"
                                  action="#{vouchersBean.showModalCreate}"
                 />
@@ -76,6 +77,7 @@
                                 id="titleAll" value="#{voucher.title}" styleClass="boldText"
                                 onclick="PF('dlg2').show();"
                                 update="@(form) msgs"
+                                resetValues="true"
                                 action="#{vouchersBean.showModalUpdate}"
                         >
                             <p:tooltip for="titleAll" value="#{voucher.description}"
