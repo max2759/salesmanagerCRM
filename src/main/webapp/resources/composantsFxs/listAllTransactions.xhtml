@@ -23,7 +23,7 @@
 
         <p:dialog header="#{bundle['transactions.create']}" width="55%" widgetVar="createDialog" modal="true"
                   responsive="true"
-                  showEffect="fade">
+                  showEffect="fade" id="createDialogID">
             <fxs:createTransactions id="createTransactions"/>
         </p:dialog>
 
@@ -33,6 +33,7 @@
                 <p:commandButton value="#{bundle['transactions.create']}"
                                  rendered="#{usersBean.currentUser.isPermitted('addTransactions')}"
                                  update="@(form) msgs"
+                                 resetValues="true"
                                  onclick="PF('createDialog').show();" styleClass="NavyButton marginBottom15"
                                  action="#{transactionsBean.showModalCreate}"
                 />
@@ -54,6 +55,7 @@
                               filterBy="#{transaction.title}"
                               filterMatchMode="contains">
                         <p:commandLink id="titleAll" value="#{transaction.title}"
+                                       resetValues="true"
                                        onclick="PF('dlg2').show();"
                                        update="@(form) msgs"
                                        styleClass="boldText"

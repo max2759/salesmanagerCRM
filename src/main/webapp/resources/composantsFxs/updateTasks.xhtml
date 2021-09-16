@@ -25,7 +25,11 @@
                             <p:inputText id="acTitle" value="#{tasksBean.tasksEntity.title}"
                                          maxlength="255"
                                          required="true"
-                                         requiredMessage="#{bundle['task.validator.title']}"/>
+                                         requiredMessage="#{bundle['task.validator.title']}">
+                                <p:ajax process="@form"
+                                        update="msg detailsRight:updateTasks:formUpdateTask:buttonUpdateTask"
+                                        event="keyup" resetValues="true"/>
+                            </p:inputText>
                             <label>#{bundle['title']}</label>
                             <p:message id="msg" for="acTitle"/>
                         </h:panelGroup>
@@ -63,7 +67,11 @@
                             <p:calendar value="#{tasksBean.tasksEntity.endDate}"
                                         id="datetime" pattern="dd/MM/yyyy HH:mm"
                                         converterMessage="#{bundle['converter.dateTime']}"
-                                        mindate="#{tasksBean.tasksEntity.creationDate.plusMinutes(1)}"/>
+                                        mindate="#{tasksBean.tasksEntity.creationDate.plusMinutes(1)}">
+                                <p:ajax process="@form"
+                                        update="msgDateTime detailsRight:updateTasks:formUpdateTask:buttonUpdateTask"
+                                        event="valueChange" resetValues="true"/>
+                            </p:calendar>
                             <label>#{bundle['dueDate']}:</label>
                             <p:message id="msgDateTime" for="datetime"/>
                         </h:panelGroup>
@@ -81,7 +89,14 @@
                                             dropdown="true"
                                             converter="#{contactsConverter}"
                                             groupBy="#{contactsBean.getContactsEntityGroup(Contact)}"
-                                            scrollHeight="250"/>
+                                            scrollHeight="250">
+                                <p:ajax process="@form"
+                                        update="msgContact detailsRight:updateTasks:formUpdateTask:buttonUpdateTask"
+                                        event="itemSelect" resetValues="true"/>
+                                <p:ajax process="@form"
+                                        update="msgContact detailsRight:updateTasks:formUpdateTask:buttonUpdateTask"
+                                        event="change" resetValues="true"/>
+                            </p:autoComplete>
                             <label>#{bundle['associateWithContact']}:</label>
                             <p:message id="msgContact" for="Contact"/>
                         </h:panelGroup>
@@ -99,7 +114,14 @@
                                             dropdown="true"
                                             converter="#{companiesConverter}"
                                             groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}"
-                                            scrollHeight="250"/>
+                                            scrollHeight="250">
+                                <p:ajax process="@form"
+                                        update="msgCompany detailsRight:updateTasks:formUpdateTask:buttonUpdateTask"
+                                        event="itemSelect" resetValues="true"/>
+                                <p:ajax process="@form"
+                                        update="msgCompany detailsRight:updateTasks:formUpdateTask:buttonUpdateTask"
+                                        event="change" resetValues="true"/>
+                            </p:autoComplete>
                             <label>#{bundle['associateWithCompany']}:</label>
                             <p:message id="msgCompany" for="Company"/>
                         </h:panelGroup>
@@ -127,6 +149,7 @@
                                          update="@(form) msgs"
                                          id="buttonUpdateTask"
                                          oncomplete="if (!args.validationFailed){PF('updateDialogTask').hide()}; PF('displayAllEntities').filter(); PF('displayEntitiesDueToday').filter(); PF('displayEntitiesToLate').filter(); PF('displayEntitiesToCome').filter(); PF('displayEntitiesFinished').filter();"
+                                         disabled="#{facesContext.validationFailed or empty tasksBean.tasksEntity.title}"
                                          value="#{bundle['update']}"
                                          resetValues="true"
                                          action="#{tasksBean.updateEntity}">

@@ -26,7 +26,8 @@
                                          required="true"
                                          maxlength="255"
                                          requiredMessage="#{bundle['vouchers.validator.title']}">
-                                <p:ajax update="msg listAllVouchers:createVouchers:createVoucherForm:buttonCreateVoucher"
+                                <p:ajax process="@form"
+                                        update="msg listAllVouchers:createVouchers:createVoucherForm:buttonCreateVoucher"
                                         resetValues="true" event="keyup"/>
                             </p:inputText>
                             <label>#{bundle['title']} :</label>
@@ -74,7 +75,14 @@
                                             dropdown="true"
                                             converter="#{contactsConverter}"
                                             groupBy="#{contactsBean.getContactsEntityGroup(Contact)}"
-                                            scrollHeight="250"/>
+                                            scrollHeight="250">
+                                <p:ajax process="@form"
+                                        update="msgContact listAllVouchers:createVouchers:createVoucherForm:buttonCreateVoucher"
+                                        event="itemSelect" resetValues="true"/>
+                                <p:ajax process="@form"
+                                        update="msgContact listAllVouchers:createVouchers:createVoucherForm:buttonCreateVoucher"
+                                        event="change" resetValues="true"/>
+                            </p:autoComplete>
                             <label>#{bundle['contact']}:</label>
                             <p:message id="msgContact" for="Contact"/>
                         </h:panelGroup>
@@ -92,7 +100,14 @@
                                             dropdown="true"
                                             converter="#{companiesConverter}"
                                             groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}"
-                                            scrollHeight="250"/>
+                                            scrollHeight="250">
+                                <p:ajax process="@form"
+                                        update="msgCompany listAllVouchers:createVouchers:createVoucherForm:buttonCreateVoucher"
+                                        event="itemSelect" resetValues="true"/>
+                                <p:ajax process="@form"
+                                        update="msgCompany listAllVouchers:createVouchers:createVoucherForm:buttonCreateVoucher"
+                                        event="change" resetValues="true"/>
+                            </p:autoComplete>
                             <label>#{bundle['company']}:</label>
                             <p:message id="msgCompany" for="Company"/>
                         </h:panelGroup>
@@ -120,7 +135,7 @@
                                          resetValues="true"
                                          value="#{bundle['save']}"
                                          action="#{vouchersBean.saveEntity}"
-                                         disabled="#{empty vouchersBean.vouchersEntity.title or vouchersBean.vouchersEntity.title.length() le 1}"
+                                         disabled="#{facesContext.validationFailed or empty vouchersBean.vouchersEntity.title }"
                         >
                         </p:commandButton>
                     </div>

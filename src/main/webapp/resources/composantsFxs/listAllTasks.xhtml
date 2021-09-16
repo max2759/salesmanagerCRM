@@ -36,6 +36,7 @@
                 <p:commandButton value="#{bundle['tasks.create']}"
                                  rendered="#{usersBean.currentUser.isPermitted('addTasks')}"
                                  update="@(form) msgs"
+                                 resetValues="true"
                                  onclick="PF('createDialogTask').show();" styleClass="NavyButton marginBottom10"
                                  action="#{tasksBean.showModalCreate}"
                 />
@@ -74,6 +75,7 @@
                                       filterMatchMode="contains">
 
                                 <p:commandLink id="titleAll" value="#{task.title}"
+                                               resetValues="true"
                                                onclick="PF('updateDialogTask').show();"
                                                update="@(form) msgs"
                                                styleClass="boldText"
@@ -167,6 +169,7 @@
                             <p:column colspan="1" width="70" priority="1"
                                       rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
+                                               resetValues="true"
                                                onclick="PF('updateDialogTask').show();"
                                                action="#{tasksBean.showModalUpdate}"
                                                rendered="#{usersBean.currentUser.isPermitted('updateTasks')}"
@@ -228,6 +231,7 @@
                                       filterBy="#{task.title}"
                                       filterMatchMode="contains">
                                 <p:commandLink id="titleToday" value="#{task.title}"
+                                               resetValues="true"
                                                onclick="PF('updateDialogTask').show();"
                                                update="@(form) msgs"
                                                styleClass="boldText"
@@ -309,6 +313,7 @@
                             <p:column colspan="1" width="70" priority="1"
                                       rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
+                                               resetValues="true"
                                                onclick="PF('updateDialogTask').show();"
                                                action="#{tasksBean.showModalUpdate}"
                                                rendered="#{usersBean.currentUser.isPermitted('updateTasks')}"
@@ -370,6 +375,7 @@
                                       filterMatchMode="contains">
 
                                 <p:commandLink id="titleToLate" value="#{task.title}"
+                                               resetValues="true"
                                                onclick="PF('updateDialogTask').show();"
                                                update="@(form) msgs"
                                                styleClass="boldText"
@@ -462,6 +468,7 @@
                             <p:column colspan="1" width="70" priority="1"
                                       rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
+                                               resetValues="true"
                                                onclick="PF('updateDialogTask').show();"
                                                action="#{tasksBean.showModalUpdate}"
                                                rendered="#{usersBean.currentUser.isPermitted('updateTasks')}"
@@ -522,6 +529,7 @@
                                       filterBy="#{task.title}"
                                       filterMatchMode="contains">
                                 <p:commandLink id="titleToCome" value="#{task.title}"
+                                               resetValues="true"
                                                onclick="PF('updateDialogTask').show();"
                                                update="@(form) msgs"
                                                styleClass="boldText"
@@ -614,6 +622,7 @@
                             <p:column colspan="1" width="70" priority="1"
                                       rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
+                                               resetValues="true"
                                                onclick="PF('updateDialogTask').show();"
                                                action="#{tasksBean.showModalUpdate}"
                                                rendered="#{usersBean.currentUser.isPermitted('updateTasks')}"
@@ -676,6 +685,7 @@
                                       filterMatchMode="contains">
 
                                 <p:commandLink id="titleFinished" value="#{task.title}"
+                                               resetValues="true"
                                                onclick="PF('updateDialogTask').show();"
                                                update="@(form) msgs"
                                                styleClass="boldText"
@@ -763,6 +773,7 @@
                             <p:column colspan="1" width="70" priority="1"
                                       rendered="#{usersBean.currentUser.isPermitted('updateTasks') or usersBean.currentUser.isPermitted('deleteTasks')}">
                                 <p:commandLink update="@(form) msgs"
+                                               resetValues="true"
                                                onclick="PF('updateDialogTask').show();"
                                                action="#{tasksBean.showModalUpdate}"
                                                rendered="#{usersBean.currentUser.isPermitted('updateTasks')}"

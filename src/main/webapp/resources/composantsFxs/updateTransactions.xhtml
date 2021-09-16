@@ -27,6 +27,9 @@
                                              required="true"
                                              maxlength="255"
                                              requiredMessage="#{bundle['transactions.validator.title']}">
+                                    <p:ajax process="@form"
+                                            update="msg"
+                                            resetValues="true" event="keyup"/>
                                 </p:inputText>
                                 <label>#{bundle['title']} :</label>
                             </p:inplace>
@@ -86,10 +89,13 @@
                                             converterMessage="#{bundle['converter.dateTime']}"
                                             id="datetime" pattern="dd/MM/yyyy HH:mm"
                                             mindate="#{transactionsBean.transactionsEntity.creationDate}">
+                                    <p:ajax process="@form"
+                                            update="msgDateTime"
+                                            event="valueChange" resetValues="true"/>
                                 </p:calendar>
                                 <label>#{bundle['dueDate']}:</label>
                             </p:inplace>
-                            <p:message id="msgDatetime" for="datetime"/>
+                            <p:message id="msgDateTime" for="datetime"/>
                         </h:panelGroup>
                     </div>
 
@@ -125,7 +131,14 @@
                                                 dropdown="true"
                                                 converter="#{contactsConverter}"
                                                 groupBy="#{contactsBean.getContactsEntityGroup(Contact)}"
-                                                scrollHeight="250"/>
+                                                scrollHeight="250">
+                                    <p:ajax process="@form"
+                                            update="msgContact"
+                                            event="itemSelect" resetValues="true"/>
+                                    <p:ajax process="@form"
+                                            update="msgContact"
+                                            event="change" resetValues="true"/>
+                                </p:autoComplete>
                                 <label>#{bundle['contact']}:</label>
                             </p:inplace>
                             <p:message id="msgContact" for="Contact"/>
@@ -147,7 +160,14 @@
                                                 dropdown="true"
                                                 converter="#{companiesConverter}"
                                                 groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}"
-                                                scrollHeight="250"/>
+                                                scrollHeight="250">
+                                    <p:ajax process="@form"
+                                            update="msgCompany"
+                                            event="itemSelect" resetValues="true"/>
+                                    <p:ajax process="@form"
+                                            update="msgCompany"
+                                            event="change" resetValues="true"/>
+                                </p:autoComplete>
                                 <label>#{bundle['company']}:</label>
                             </p:inplace>
                             <p:message id="msgCompany" for="Company"/>

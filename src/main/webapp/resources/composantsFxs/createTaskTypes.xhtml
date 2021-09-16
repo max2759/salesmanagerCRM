@@ -23,7 +23,8 @@
                                  required="true"
                                  maxlength="255"
                                  requiredMessage="#{bundle['taskTypes.validator.title']}">
-                        <p:ajax update="msg listAllTaskTypes:createTaskTypes:createTaskTypesForm:buttonCreateTaskTypes"
+                        <p:ajax process="@form"
+                                update="msg listAllTaskTypes:createTaskTypes:createTaskTypesForm:buttonCreateTaskTypes"
                                 event="keyup" resetValues="true"/>
                     </p:inputText>
                     <label>#{bundle['title']} :</label>
@@ -34,7 +35,7 @@
                 <p:commandButton style="width:auto;"
                                  id="buttonCreateTaskTypes"
                                  update="@(form) msgs"
-                                 disabled="#{empty taskTypesBean.taskTypesEntity.label or taskTypesBean.taskTypesEntity.label.length() le 1}"
+                                 disabled="#{facesContext.validationFailed or empty taskTypesBean.taskTypesEntity.label}"
                                  oncomplete="if (!args.validationFailed){PF('createDialog').hide()}; PF('displayAllEntities').filter(); "
                                  value="#{bundle['save']}"
                                  resetValues="true"

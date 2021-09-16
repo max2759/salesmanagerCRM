@@ -27,7 +27,8 @@
                                          required="true"
                                          maxlength="255"
                                          requiredMessage="#{bundle['transactions.validator.title']}">
-                                <p:ajax update="msg listAllTransactions:createTransactions:createTransactionForm:buttonCreateTransaction"
+                                <p:ajax process="@form"
+                                        update="msg listAllTransactions:createTransactions:createTransactionForm:buttonCreateTransaction"
                                         resetValues="true" event="keyup"/>
                             </p:inputText>
                             <label>#{bundle['title']}:</label>
@@ -69,9 +70,13 @@
                         <h:panelGroup styleClass="md-inputfield">
                             <p:calendar value="#{transactionsBean.transactionsEntity.endDate}"
                                         converterMessage="#{bundle['converter.dateTime']}"
-                                        id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{transactionsBean.now}"/>
+                                        id="datetime" pattern="dd/MM/yyyy HH:mm" mindate="#{transactionsBean.now}">
+                                <p:ajax process="@form"
+                                        update="msgDateTime listAllTransactions:createTransactions:createTransactionForm:buttonCreateTransaction"
+                                        event="valueChange" resetValues="true"/>
+                            </p:calendar>
                             <label>#{bundle['dueDate']}:</label>
-                            <p:message id="msgDatetime" for="datetime"/>
+                            <p:message id="msgDateTime" for="datetime"/>
                         </h:panelGroup>
                     </div>
 
@@ -101,7 +106,14 @@
                                             dropdown="true"
                                             converter="#{contactsConverter}"
                                             groupBy="#{contactsBean.getContactsEntityGroup(Contact)}"
-                                            scrollHeight="250"/>
+                                            scrollHeight="250">
+                                <p:ajax process="@form"
+                                        update="msgContact listAllTransactions:createTransactions:createTransactionForm:buttonCreateTransaction"
+                                        event="itemSelect" resetValues="true"/>
+                                <p:ajax process="@form"
+                                        update="msgContact listAllTransactions:createTransactions:createTransactionForm:buttonCreateTransaction"
+                                        event="change" resetValues="true"/>
+                            </p:autoComplete>
                             <label>#{bundle['contact']}:</label>
                             <p:message id="msgContact" for="Contact"/>
                         </h:panelGroup>
@@ -120,7 +132,14 @@
                                             dropdown="true"
                                             converter="#{companiesConverter}"
                                             groupBy="#{companiesBean.getCompaniesEntityGroup(Company)}"
-                                            scrollHeight="250"/>
+                                            scrollHeight="250">
+                                <p:ajax process="@form"
+                                        update="msgCompany listAllTransactions:createTransactions:createTransactionForm:buttonCreateTransaction"
+                                        event="itemSelect" resetValues="true"/>
+                                <p:ajax process="@form"
+                                        update="msgCompany listAllTransactions:createTransactions:createTransactionForm:buttonCreateTransaction"
+                                        event="change" resetValues="true"/>
+                            </p:autoComplete>
                             <label>#{bundle['company']}:</label>
                             <p:message id="msgCompany" for="Company"/>
                         </h:panelGroup>
@@ -132,13 +151,12 @@
                         <p:commandButton style="width:auto;margin-bottom:10px;"
                                          update="@(form) msgs"
                                          id="buttonCreateTransaction"
-                                         disabled="#{not facesContext.postback or facesContext.validationFailed or empty transactionsBean.transactionsEntity.title }"
+                                         disabled="#{facesContext.validationFailed or empty transactionsBean.transactionsEntity.title }"
                                          resetValues="true"
                                          oncomplete="if (!args.validationFailed){PF('createDialog').hide()}; PF('displayAllEntities').filter();"
                                          value="#{bundle['save']}"
                                          action="#{transactionsBean.saveEntity}"
-                        >
-                        </p:commandButton>
+                        />
                     </div>
                 </div>
                 <p:hotkey bind="esc" handler="PF('createDialog').hide()"/>
