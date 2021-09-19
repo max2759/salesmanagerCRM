@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.entities.RolesEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 public interface RolesDao {
 
@@ -13,7 +14,7 @@ public interface RolesDao {
 
     List<RolesEntity> findAllRolesActive(EntityManager em);
 
-    RolesEntity findByLabel(EntityManager em, String label);
+    Optional<RolesEntity> findByLabel(EntityManager em, String label);
 
     void register(EntityManager em, RolesEntity rolesEntity);
 

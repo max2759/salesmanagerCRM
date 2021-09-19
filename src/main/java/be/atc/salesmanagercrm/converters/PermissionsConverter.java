@@ -2,7 +2,6 @@ package be.atc.salesmanagercrm.converters;
 
 
 import be.atc.salesmanagercrm.beans.PermissionsBean;
-import be.atc.salesmanagercrm.entities.PermissionsEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -23,21 +22,18 @@ public class PermissionsConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
-        PermissionsEntity permissionsEntity;
 
+        if (value == null) {
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "roleNoExist"), null));
+        }
         log.info("value:  " + value);
-        if (value != null || !value.isEmpty()) {
-            try {
-                permissionsEntity = permissionsBean.findByLabel(value);
-                log.info("in roleConverter " + permissionsEntity.getLabel() + " " + permissionsEntity.getId());
-                return permissionsEntity;
-            } catch (EntityNotFoundException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.error")));
-            }
-        } else {
+        try {
+            return permissionsBean.findByLabel(value);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.error")));
         }
+
         //return null;
       /*  PermissionsEntity permissionsEntity = new PermissionsEntity();
         permissionsEntity.setId(1);

@@ -4,6 +4,7 @@ import be.atc.salesmanagercrm.entities.PermissionsEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 public interface PermissionsDao {
 
@@ -13,7 +14,7 @@ public interface PermissionsDao {
 
     void register(EntityManager em, PermissionsEntity permissionsEntity);
 
-    PermissionsEntity findByLabel(EntityManager em, String label);
+    Optional<PermissionsEntity> findByLabel(EntityManager em, String label);
 
 
 }

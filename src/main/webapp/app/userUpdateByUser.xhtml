@@ -16,9 +16,9 @@
             <div class="ui-g-12 ui-md-6 ui-lg-4">
                 <div class="card card-w-title">
                     <h1>#{bundle['user.logs']}</h1>
-                    <h:form id="companyDetailsUpdateForm">
+                    <h:form id="usersUpdateForm">
                         <p:panelGrid columns="4" layout="flex"
-                                     id="companyDetailsUpdatePanelGrid"
+                                     id="userUpdateByUser"
                                      columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
                                      contentStyleClass="ui-fluid" styleClass="ui-panelgrid-blank form-group">
 
@@ -44,39 +44,48 @@
 
                             <h:panelGroup styleClass="md-inputfield mgin-top"
                             >
-                                <p:password id="password" value="#{usersBean.usersEntity.password}" match="password2">
-                                    <p:ajax update="pass1"
-                                            global="false" event="keyup"/>
+                                <p:password id="password" value="#{usersBean.password1}" match="password2"
+                                            autocomplete="false">
+                                    <p:ajax process="@form"
+                                            update="msgPass1 usersUpdateForm:update"
+                                            event="keyup" resetValues="true"/>
                                     <f:validator validatorId="userUpdatePasswordValidator"></f:validator>
                                 </p:password>
                                 <label>#{bundle['user.password']}</label>
+                                <p:message id="msgPass1" for="password"/>
                             </h:panelGroup>
 
                             <h:panelGroup styleClass="md-inputfield"
                             >
                                 <p:password id="password2" value="#{usersBean.password2}" label="password2"/>
-
+                                <p:ajax process="@form"
+                                        update="msgPass1 usersUpdateForm:update"
+                                        event="keyup" resetValues="true"/>
                                 <label for="password2">#{bundle['user.password2']}</label>
                             </h:panelGroup>
 
                             <h:panelGroup styleClass="md-inputfield mgin-top"
                             >
-                                <p:inputText id="email" value="#{usersBean.usersEntity.email}" required="true">
-                                    <p:ajax update="mail"
-                                            global="false" event="keyup"/>
+                                <p:inputText id="email" value="#{usersBean.usersEntity.email}" required="true"
+                                             requiredMessage="#{bundle['mailEmpty']}"
+                                             validatorMessage="#{bundle['contacts.emailNotValid']}">
+                                    <p:ajax process="@form"
+                                            update="msgMail usersUpdateForm:update"
+                                            event="keyup" resetValues="true"/>
                                     <f:validator validatorId="userEmailValidator"></f:validator>
                                 </p:inputText>
                                 <label for="email">#{bundle['email']}</label>
+                                <p:message id="msgMail" for="email"/>
                             </h:panelGroup>
 
-                            <p:messages id="mail" closable="true" display="message"/>
                             <p:messages id="pass1" closable="true" display="message"/>
 
 
                         </p:panelGrid>
 
                         <div align="right">
-                            <p:commandButton value="#{bundle['validate']}"
+                            <p:commandButton value="#{bundle['validate']}" id="update"
+                                             disabled="#{facesContext.validationFailed or empty usersBean.usersEntity.email }"
                                              action="#{usersBean.userUpdateByUser(usersBean.usersEntity)}"
                                              update="@(form)"/>
                         </div>

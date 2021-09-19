@@ -67,6 +67,9 @@ public class UsersBean extends ExtendBean implements Serializable {
     private RolesBean rolesBean;
     @Getter
     @Setter
+    private String password1;
+    @Getter
+    @Setter
     private String password2;
     @Getter
     @Setter
@@ -106,6 +109,7 @@ public class UsersBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private UsersEntity usersEntityOther = new UsersEntity();
+
     @Getter
     @Setter
     private List<UsersEntity> usersEntitiesActive;
@@ -184,124 +188,138 @@ public class UsersBean extends ExtendBean implements Serializable {
             //test a typed permission (not instance-level)
             if (currentUser.isPermitted("addUsers")) {
                 log.info("Tu as l'autorisation Test.");
+
+
+                //regex password + hash + pseudo unique
+                //  log.info(String.valueOf(usersEntity.getEmail()));
+                //log.info(String.valueOf(rolesEntity.getId()));
+                //String idRoles = String.valueOf(rolesEntity.getId());
+                //int idRole = Integer.parseInt(idRoles);
+
+                //log.info(String.valueOf(usersEntity.getRolesByIdRoles())); //null
+                //RolesEntity rolesEntity = new RolesEntity();
+                //rolesEntity.setId(rolesEntity.getId());
+
+
+                //mettre dans un try catch + fermer l'em
+                //rolesEntity = rolesBean.findById(em, idRole);
+                try {
+                    validateUsers(entityToAdd);
+                } catch (InvalidEntityException exception) {
+                    log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                    return;
+                }
+
+                try {
+                    validateRoles(entityToAdd);
+                } catch (InvalidEntityException exception) {
+                    log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roleNotExist"), null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return;
+                }
+
+
+                String firstName3Cara;
+                String lastName3Cara;
+
+                if (entityToAdd.getFirstname().length() >= 3) {
+                    firstName3Cara = entityToAdd.getFirstname().substring(0, 3);
+                    log.info(firstName3Cara);
+                } else {
+                    String randomLetter = getRandomStr(1);
+                    firstName3Cara = entityToAdd.getFirstname().substring(0, 2) + randomLetter;
+                    log.info(firstName3Cara);
+                }
+
+                if (entityToAdd.getLastname().length() >= 3) {
+                    lastName3Cara = entityToAdd.getLastname().substring(0, 3);
+                    log.info(lastName3Cara);
+                } else {
+                    String randomLetter = getRandomStr(1);
+                    lastName3Cara = entityToAdd.getLastname().substring(0, 2) + randomLetter;
+                    log.info(lastName3Cara);
+                }
+
+
+                String usernameWithoutNumber = firstName3Cara + lastName3Cara;
+
+                Random random = new Random();
+                int number = random.nextInt(99 - 1);
+
+                CheckEntities checkEntities = new CheckEntities();
+
+
+                username = checkEntities.checkUserByUsernameAuto(usernameWithoutNumber, number);
+
+
+                entityToAdd.setUsername(username);
+
+                try {
+                    checkEntities.checkUserByUsername(entityToAdd);
+                } catch (InvalidEntityException exception) {
+                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorRegister"), null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                    return;
+                }
+
+                try {
+                    checkEntities.checkRole(entityToAdd.getRolesByIdRoles());
+                } catch (EntityNotFoundException exception) {
+                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorRegister"), null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                    return;
+                }
+
+                log.info("username final " + username);
+                char[] passwordUncrypted = aleaPassword();
+
+
+                String passwordUncrypt = new String(passwordUncrypted);
+
+                //      String password = usersEntity.getPassword();
+                String hashPass = encrypt(passwordUncrypt);
+                log.info(hashPass);
+
+                entityToAdd.setPassword(hashPass);
+
+                entityToAdd.setActive(true);
+                entityToAdd.setRegisterDate(LocalDateTime.now());
+
+                //    usersEntity.setRolesByIdRoles(rolesBean.findById(em, idRole));
+//log.info("avant em , le role est: "+usersEntity.getRolesByIdRoles().getId());
+                EntityManager em = EMF.getEM();
+                EntityTransaction tx = null;
+                try {
+                    tx = em.getTransaction();
+                    tx.begin();
+                    dao.register(em, entityToAdd);
+                    tx.commit();
+                    generatePDF(passwordUncrypt);
+                    //    JavaMailUtil.sendMail(entityToAdd);
+                    log.info("Persist ok");
+                    loadListEntities();
+                    msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.register"), null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                } catch (Exception ex) {
+                    if (tx != null && tx.isActive()) tx.rollback();
+                    log.info("Persist echec");
+                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorRegister"), null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                } finally {
+                    em.clear();
+                    em.clear();
+                }
             } else {
                 log.info("Sorry, lightsaber1 rings are for schwartz masters only.");
-            }
-
-            //regex password + hash + pseudo unique
-            //  log.info(String.valueOf(usersEntity.getEmail()));
-            //log.info(String.valueOf(rolesEntity.getId()));
-            //String idRoles = String.valueOf(rolesEntity.getId());
-            //int idRole = Integer.parseInt(idRoles);
-
-            //log.info(String.valueOf(usersEntity.getRolesByIdRoles())); //null
-            //RolesEntity rolesEntity = new RolesEntity();
-            //rolesEntity.setId(rolesEntity.getId());
-
-
-            //mettre dans un try catch + fermer l'em
-            //rolesEntity = rolesBean.findById(em, idRole);
-            try {
-                validateUsers(entityToAdd);
-            } catch (InvalidEntityException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-                return;
-            }
-            String firstName3Cara;
-            String lastName3Cara;
-
-            if (entityToAdd.getFirstname().length() >= 3) {
-                firstName3Cara = entityToAdd.getFirstname().substring(0, 3);
-                log.info(firstName3Cara);
-            } else {
-                String randomLetter = getRandomStr(1);
-                firstName3Cara = entityToAdd.getFirstname().substring(0, 2) + randomLetter;
-                log.info(firstName3Cara);
-            }
-
-            if (entityToAdd.getLastname().length() >= 3) {
-                lastName3Cara = entityToAdd.getLastname().substring(0, 3);
-                log.info(lastName3Cara);
-            } else {
-                String randomLetter = getRandomStr(1);
-                lastName3Cara = entityToAdd.getLastname().substring(0, 2) + randomLetter;
-                log.info(lastName3Cara);
-            }
-
-
-            String usernameWithoutNumber = firstName3Cara + lastName3Cara;
-
-            Random random = new Random();
-            int number = random.nextInt(99 - 1);
-
-            CheckEntities checkEntities = new CheckEntities();
-
-
-            username = checkEntities.checkUserByUsernameAuto(usernameWithoutNumber, number);
-
-
-            entityToAdd.setUsername(username);
-
-            try {
-                checkEntities.checkUserByUsername(entityToAdd);
-            } catch (InvalidEntityException exception) {
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorRegister"), null);
                 FacesContext.getCurrentInstance().addMessage(null, msg);
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-                return;
-            }
-
-            try {
-                checkEntities.checkRole(entityToAdd.getRolesByIdRoles());
-            } catch (EntityNotFoundException exception) {
-                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorRegister"), null);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                return;
-            }
-
-            log.info("username final " + username);
-            char[] passwordUncrypted = aleaPassword();
-
-
-            String passwordUncrypt = new String(passwordUncrypted);
-
-            //      String password = usersEntity.getPassword();
-            String hashPass = encrypt(passwordUncrypt);
-            log.info(hashPass);
-
-            entityToAdd.setPassword(hashPass);
-
-            entityToAdd.setActive(true);
-            entityToAdd.setRegisterDate(LocalDateTime.now());
-
-            //    usersEntity.setRolesByIdRoles(rolesBean.findById(em, idRole));
-//log.info("avant em , le role est: "+usersEntity.getRolesByIdRoles().getId());
-            EntityManager em = EMF.getEM();
-            EntityTransaction tx = null;
-            try {
-                tx = em.getTransaction();
-                tx.begin();
-                dao.register(em, entityToAdd);
-                tx.commit();
-                generatePDF(passwordUncrypt);
-                //    JavaMailUtil.sendMail(entityToAdd);
-                log.info("Persist ok");
-                loadListEntities();
-                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.register"), null);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-            } catch (Exception ex) {
-                if (tx != null && tx.isActive()) tx.rollback();
-                log.info("Persist echec");
-                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorRegister"), null);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-            } finally {
-                em.clear();
-                em.clear();
             }
         } else {
             log.info("Sorry, lightsaber1 rings are for schwartz masters only.");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorRegister"), null);
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
 
@@ -610,6 +628,15 @@ public class UsersBean extends ExtendBean implements Serializable {
             return;
         }
 
+        try {
+            validateRoles(usersEntityOther);
+        } catch (InvalidEntityException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roleNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
 
         String usernameOld = usersEntityOld.getUsername();
         if (usernameOld.equals(usersEntityOther.getUsername())) {
@@ -677,8 +704,9 @@ public class UsersBean extends ExtendBean implements Serializable {
 //pour les mdp, comparer en db AVANT hashage si il correspondent. Si ils corresepondent pas, on le hash et on le modifie
         // !!! verifier avant d'"hasher le mdp si la regex est ok et si ce n'est pas un mdp deja hashé
         log.info(password2);
+        log.info(password1);
         try {
-            validateUsersUpdateByUser(usersEntity, password2);
+            validateUsersUpdateByUser(usersEntity, password2, password1);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
@@ -831,6 +859,20 @@ public class UsersBean extends ExtendBean implements Serializable {
         }
     }
 
+    private void validateRoles(UsersEntity entity) {
+        FacesMessage msg;
+        CheckEntities checkEntities = new CheckEntities();
+        try {
+            checkEntities.checkRoleByLabel(entity);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+    }
+
+
     private void validateRole(UsersEntity entity) {
         FacesMessage msg;
         CheckEntities checkEntities = new CheckEntities();
@@ -871,8 +913,8 @@ public class UsersBean extends ExtendBean implements Serializable {
         }
     }
 
-    private void validateUsersUpdateByUser(UsersEntity entity, String password2) {
-        List<String> errors = UsersValidator.validateUpdateByUser(entity, password2);
+    private void validateUsersUpdateByUser(UsersEntity entity, String password2, String password1) {
+        List<String> errors = UsersValidator.validateUpdateByUser(entity, password2, password1);
         if (!errors.isEmpty()) {
             log.error("Register is not valide {}", entity);
             throw new InvalidEntityException("L'inscription n est pas valide", ErrorCodes.USER_NOT_VALID, errors);
