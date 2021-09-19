@@ -22,6 +22,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -129,16 +130,17 @@ public class RolesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
+        Optional<RolesEntity> optionalRolesEntity;
 
         try {
-            return dao.findByLabel(em, label);
-        } catch (Exception exception) {
-            log.info("nothing in roles bean");
-            throw new EntityNotFoundException("aucun role avec le label " + label + " n'a été trouvé en db", ErrorCodes.ROLES_NOT_FOUND);
+            optionalRolesEntity = dao.findByLabel(em, label);
         } finally {
             em.clear();
             em.close();
         }
+
+        return optionalRolesEntity.orElseThrow(() ->
+                new EntityNotFoundException("aucun role avec le label " + label + " n'a été trouvé en db", ErrorCodes.ROLES_NOT_FOUND));
 
     }
 

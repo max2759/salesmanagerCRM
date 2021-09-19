@@ -66,7 +66,7 @@
 
                 <div align="right" class="mgin-top">
                     <p:commandButton value="#{bundle['validate']}"
-                                     rendered="#{usersBean.currentUser.isPermitted('updateRolesPermissions')} or #{usersBean.currentUser.isPermitted('addRolesPermissions')} or #{usersBean.currentUser.isPermitted('deleteRolesPermissions')}"
+                                     rendered="#{usersBean.currentUser.isPermitted('updateRolesPermissions')}"
                                      action="#{rolesPermissionsBean.manageRolesPermissions}"
                                      process="@(form)"
                                      update="@(form)"/>

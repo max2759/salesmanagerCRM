@@ -158,7 +158,7 @@ public class UsersValidator {
         return errors;
     }
 
-    public static List<String> validateUpdateByUser(UsersEntity entity, String pass2) {
+    public static List<String> validateUpdateByUser(UsersEntity entity, String pass2, String pass1) {
         List<String> errors = new ArrayList<>();
         String errorMessage = null;
 
@@ -182,8 +182,8 @@ public class UsersValidator {
             errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "mailRegex") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "mailRegex") + "\n";
         }
 
-        if (entity.getPassword() != null || !entity.getPassword().isEmpty() || pass2 != null || !pass2.isEmpty()) {
-            if (!validatePassword(entity.getPassword()) || !validatePassword(pass2)) {
+        if (pass1 != null || !pass1.isEmpty() || pass2 != null || !pass2.isEmpty()) {
+            if (!validatePassword(pass1) || !validatePassword(pass2)) {
                 errors.add("Votre mot de passe doit faire 8 caractéres, posséder une majuscule et un chiffre ou un caractére spécial");
                 errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n";
             } else if (!vaidateMatchPassword(entity.getPassword(), pass2)) {

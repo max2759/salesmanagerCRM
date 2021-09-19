@@ -652,20 +652,18 @@ public class CheckEntities extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        RolesEntity rolesEntity;
+        Optional<RolesEntity> optionalRolesEntity;
         try {
-            rolesEntity = rolesDao.findByLabel(em, entity.getLabel());
+            optionalRolesEntity = rolesDao.findByLabel(em, entity.getLabel());
         } finally {
             em.clear();
             em.close();
         }
 
-        if (rolesEntity != null) {
-            log.warn("Role label exists yet" + entity.getLabel());
-            throw new InvalidEntityException(
-                    "Il y a déjà un role avec ce nom: " + entity.getLabel(), ErrorCodes.ROLES_FOUND
-            );
-        }
+        optionalRolesEntity.orElseThrow(() ->
+                new InvalidEntityException(
+                        "Il y a déjà un role avec ce nom: " + entity.getLabel(), ErrorCodes.ROLES_FOUND
+                ));
     }
 
     public void checkForSafeDeleteRole(RolesEntity entity) {
@@ -716,4 +714,27 @@ public class CheckEntities extends ExtendBean implements Serializable {
             );
         }
     }
+
+    public void checkRoleByLabel(UsersEntity entity) {
+        if (entity == null) {
+            log.error("role is null");
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
+            );
+        }
+        EntityManager em = EMF.getEM();
+        Optional<RolesEntity> optionalRolesEntity;
+        try {
+            optionalRolesEntity = rolesDao.findByLabel(em, entity.getRolesByIdRoles().getLabel());
+        } finally {
+            em.clear();
+            em.close();
+        }
+
+        optionalRolesEntity.orElseThrow(() ->
+                new EntityNotFoundException(
+                        "Le role est inexistant " + entity.getId(), ErrorCodes.ROLES_NOT_VALID
+                ));
+    }
+
 }

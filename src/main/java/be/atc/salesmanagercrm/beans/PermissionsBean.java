@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Larché Marie-Élise
@@ -70,21 +71,21 @@ public class PermissionsBean extends ExtendBean implements Serializable {
     public PermissionsEntity findByLabel(String label) {
         if (label == null) {
             log.info("label null in permbean");
-            return null;
+            new EntityNotFoundException("aucune permission avec le perml " + label + " n'a été trouvé en db", ErrorCodes.ROLES_NOT_FOUND);
         }
 
         EntityManager em = EMF.getEM();
-
+        Optional<PermissionsEntity> optionalPermissionsEntity;
         try {
-            return dao.findByLabel(em, label);
-        } catch (Exception exception) {
-            log.info("nothing in permissio bean");
-            throw new EntityNotFoundException("aucune permission avec le perml " + label + " n'a été trouvé en db", ErrorCodes.ROLES_NOT_FOUND);
+            optionalPermissionsEntity = dao.findByLabel(em, label);
         } finally {
             em.clear();
             em.close();
         }
 
+        return optionalPermissionsEntity.orElseThrow(() ->
+                new EntityNotFoundException("aucune permission avec le perml " + label + " n'a été trouvé en db", ErrorCodes.ROLES_NOT_FOUND)
+        );
     }
 
 
