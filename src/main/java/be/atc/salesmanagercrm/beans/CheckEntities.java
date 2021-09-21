@@ -652,18 +652,20 @@ public class CheckEntities extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        Optional<RolesEntity> optionalRolesEntity;
+        RolesEntity rolesEntity;
         try {
-            optionalRolesEntity = rolesDao.findByLabel(em, entity.getLabel());
+            rolesEntity = rolesDao.findByLabel(em, entity.getLabel());
         } finally {
             em.clear();
             em.close();
         }
 
-        optionalRolesEntity.orElseThrow(() ->
-                new InvalidEntityException(
-                        "Il y a déjà un role avec ce nom: " + entity.getLabel(), ErrorCodes.ROLES_FOUND
-                ));
+        if (rolesEntity != null) {
+            log.warn("Role label exists yet" + entity.getLabel());
+            throw new InvalidEntityException(
+                    "Il y a déjà un role avec ce nom: " + entity.getLabel(), ErrorCodes.ROLES_FOUND
+            );
+        }
     }
 
     public void checkForSafeDeleteRole(RolesEntity entity) {
@@ -723,18 +725,19 @@ public class CheckEntities extends ExtendBean implements Serializable {
             );
         }
         EntityManager em = EMF.getEM();
-        Optional<RolesEntity> optionalRolesEntity;
+        RolesEntity entityActive;
         try {
-            optionalRolesEntity = rolesDao.findByLabel(em, entity.getRolesByIdRoles().getLabel());
+            entityActive = rolesDao.findByLabel(em, entity.getRolesByIdRoles().getLabel());
         } finally {
             em.clear();
             em.close();
         }
-
-        optionalRolesEntity.orElseThrow(() ->
-                new EntityNotFoundException(
-                        "Le role est inexistant " + entity.getId(), ErrorCodes.ROLES_NOT_VALID
-                ));
+        if (entityActive == null) {
+            log.warn("role isn't exist" + entity.getId());
+            throw new EntityNotFoundException(
+                    "Le role est inexistant " + entity.getId(), ErrorCodes.ROLES_NOT_VALID
+            );
+        }
     }
 
 }

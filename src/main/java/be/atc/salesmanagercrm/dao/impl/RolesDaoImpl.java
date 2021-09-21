@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Larché Marie-Élise
@@ -36,14 +35,12 @@ public class RolesDaoImpl implements RolesDao {
     }
 
     @Override
-    public Optional<RolesEntity> findByLabel(EntityManager em, String label) {
+    public RolesEntity findByLabel(EntityManager em, String label) {
         try {
             return em.createNamedQuery("Roles.findByLabel",
                     RolesEntity.class)
                     .setParameter("label", label)
-                    .getResultList()
-                    .stream()
-                    .findFirst();
+                    .getSingleResult();
         } catch (NoResultException e) {
             return null;
         }

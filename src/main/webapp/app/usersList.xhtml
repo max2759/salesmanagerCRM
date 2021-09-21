@@ -128,7 +128,10 @@
                         <div class="ui-g-12 ui-lg-4">
                             <p:selectOneMenu id="rolesByUsersUpdate"
                                              value="#{usersBean.usersEntityOther.rolesByIdRoles}"
-                                             converter="rolesConverter" required="true" feedback="false"
+                                             converter="rolesConverter"
+                                             converterMessage="#{bundle['roleNoExist']}"
+                                             requiredMessage="#{bundle['mailEmpty']}"
+                                             required="true" feedback="false"
                             >
                                 <f:selectItems value="#{rolesBean.rolesEntityList}" var="companyTypes"
                                                itemValue="#{companyTypes}"

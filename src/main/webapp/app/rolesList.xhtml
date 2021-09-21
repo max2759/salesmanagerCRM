@@ -180,7 +180,7 @@
                             <div align="right" class="mgin-top">
                                 <p:commandButton value="#{bundle['validate']}" action="#{rolesBean.addEntity}"
                                                  id="addRole"
-                                                 disabled="#{facesContext.validationFailed or empty rolesBean.rolesEntity.label}"
+                                                 disabled="#{facesContext.validationFailed or empty rolesBean.rolesEntityNew.label}"
                                                  oncomplete="if (!args.validationFailed){PF('addRole').hide()}; PF('displayAllEntities').filter();"
                                                  resetValues="true"
                                                  update="@(form)"/>

@@ -186,7 +186,7 @@ public class UsersValidator {
             if (!validatePassword(pass1) || !validatePassword(pass2)) {
                 errors.add("Votre mot de passe doit faire 8 caractéres, posséder une majuscule et un chiffre ou un caractére spécial");
                 errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n";
-            } else if (!vaidateMatchPassword(entity.getPassword(), pass2)) {
+            } else if (!vaidateMatchPassword(pass1, pass2)) {
                 errors.add("Vos mots de passe doivent être identique");
                 errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n";
             }
