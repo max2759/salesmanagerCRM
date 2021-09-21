@@ -16,6 +16,7 @@
             <div class="ui-g-12 ui-md-6 ui-lg-4">
                 <div class="card card-w-title">
                     <h1>#{bundle['user.logs']}</h1>
+                    <p:growl id="msgs" skipDetailIfEqualsSummary="true" life="10000"/>
                     <h:form id="usersUpdateForm">
                         <p:panelGrid columns="4" layout="flex"
                                      id="userUpdateByUser"
@@ -45,7 +46,8 @@
                             <h:panelGroup styleClass="md-inputfield mgin-top"
                             >
                                 <p:password id="password" value="#{usersBean.password1}" match="password2"
-                                            autocomplete="false">
+                                            autocomplete="false"
+                                            validatorMessage="#{bundle['users.regexPassError']}">
                                     <p:ajax process="@form"
                                             update="msgPass1 usersUpdateForm:update"
                                             event="keyup" resetValues="true"/>
@@ -57,7 +59,8 @@
 
                             <h:panelGroup styleClass="md-inputfield"
                             >
-                                <p:password id="password2" value="#{usersBean.password2}" label="password2"/>
+                                <p:password id="password2" value="#{usersBean.password2}" label="password2"
+                                            validatorMessage="#{bundle['matchPasswird']}"/>
                                 <p:ajax process="@form"
                                         update="msgPass1 usersUpdateForm:update"
                                         event="keyup" resetValues="true"/>

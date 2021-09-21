@@ -22,7 +22,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -130,17 +129,16 @@ public class RolesBean extends ExtendBean implements Serializable {
         }
 
         EntityManager em = EMF.getEM();
-        Optional<RolesEntity> optionalRolesEntity;
 
         try {
-            optionalRolesEntity = dao.findByLabel(em, label);
+            return dao.findByLabel(em, label);
+        } catch (EntityNotFoundException exception) {
+            log.info("nothing in roles bean");
+            throw new EntityNotFoundException("aucun role avec le label " + label + " n'a été trouvé en db", ErrorCodes.ROLES_NOT_FOUND);
         } finally {
             em.clear();
             em.close();
         }
-
-        return optionalRolesEntity.orElseThrow(() ->
-                new EntityNotFoundException("aucun role avec le label " + label + " n'a été trouvé en db", ErrorCodes.ROLES_NOT_FOUND));
 
     }
 
@@ -164,7 +162,9 @@ public class RolesBean extends ExtendBean implements Serializable {
         try {
             checkEntities.checkRoleByLabel(rolesEntity);
         } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roles.labelExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+//            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
         rolesEntity.setActive(true);
@@ -177,7 +177,7 @@ public class RolesBean extends ExtendBean implements Serializable {
             dao.register(em, rolesEntity);
             tx.commit();
             log.info("Persist ok");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.create"), null);
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.createOk"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
@@ -211,9 +211,12 @@ public class RolesBean extends ExtendBean implements Serializable {
         try {
             checkEntities.checkRoleByLabel(rolesEntity);
         } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roles.labelExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+//            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
+        rolesEntity.setActive(true);
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -223,7 +226,7 @@ public class RolesBean extends ExtendBean implements Serializable {
             dao.update(em, rolesEntity);
             tx.commit();
             log.info("Persist ok");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.updateOk"), null);
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.create"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();

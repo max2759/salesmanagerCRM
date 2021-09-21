@@ -1,6 +1,5 @@
 package be.atc.salesmanagercrm.validators;
 
-import be.atc.salesmanagercrm.beans.CheckEntities;
 import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidOperationException;
@@ -26,7 +25,6 @@ public class UsersPassworFront1Validator implements Validator {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        CheckEntities checkEntities = new CheckEntities();
 
         UsersEntity usersEntity = new UsersEntity();
         usersEntity.setPassword((String) value);
@@ -37,7 +35,7 @@ public class UsersPassworFront1Validator implements Validator {
             checkPasswordRegexe(usersEntity);
         } catch (InvalidOperationException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            errorMessage = JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" + JsfUtils.returnMessage(getLocale(), "task.validator.title");
+            errorMessage = JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" + JsfUtils.returnMessage(getLocale(), "passwordBadRegex");
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             throw new ValidatorException(new FacesMessage(getMessageErrorPaswword()));
@@ -50,7 +48,7 @@ public class UsersPassworFront1Validator implements Validator {
      * @return jsf utils message
      */
     private String getMessageErrorPaswword() {
-        return JsfUtils.returnMessage(locale, "users.regexPassError");
+        return JsfUtils.returnMessage(locale, "passwordBadRegex");
     }
 
     /**
@@ -59,7 +57,7 @@ public class UsersPassworFront1Validator implements Validator {
      * @param entity : UsersEntity
      */
 
-    public void checkPasswordRegexe(UsersEntity entity) {
+    private void checkPasswordRegexe(UsersEntity entity) {
         if (entity != null) {
             if (entity.getPassword() != null) {
                 Pattern pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?])[A-Za-z\\d@$!%*?/.^&*_=+>)]{8,}$");
