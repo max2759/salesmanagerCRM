@@ -155,9 +155,10 @@
                                         <p:message for="phoneNumber" id="phoneNumberErrorMsg"/>
                                     </h:panelGroup>
 
-                                    <div class="mgin-top labelLike">
+                                    <div class="mgin-top">
                                         <p:outputLabel for="contactTypeDisplay"
-                                                       value="#{bundle['contacts.chooseContactType']}"/>
+                                                       value="#{bundle['contacts.chooseContactType']}"
+                                                       styleClass="labelLike"/>
                                         <p:selectOneMenu id="contactTypeDisplay"
                                                          value="#{contactsBean.contactsEntity.contactTypesByIdContactTypes}"
                                                          converter="contactTypesConverter" required="true"
@@ -310,6 +311,7 @@
                         <div align="right">
                             <p:commandButton value="#{bundle['validate']}"
                                              action="#{contactsBean.updateContact}"
+                                             rendered="#{usersBean.currentUser.isPermitted('updateContacts')}"
                                              id="contactDetailsBtnLeft"
                                              resetValues="true"
                                              disabled="#{facesContext.validationFailed or empty contactsBean.contactsEntity.firstname or contactsBean.contactsEntity.firstname.length() le 1 or empty contactsBean.contactsEntity.lastname or contactsBean.contactsEntity.lastname.length() le 1}"

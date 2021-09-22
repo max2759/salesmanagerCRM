@@ -12,6 +12,7 @@ import java.util.Objects;
         @NamedQuery(name = "Contacts.findDisableContactsEntityByIdUser", query = "select c from ContactsEntity c where (c.usersByIdUsers.id = :idUser and c.active=false)"),
         @NamedQuery(name = "Contacts.findAllContactsEntityByIdUser", query = "select c from ContactsEntity c where (c.usersByIdUsers.id = :idUser)"),
         @NamedQuery(name = "Contacts.findByIdContactAndByIdUser", query = "select c from ContactsEntity c where (c.id = :id and c.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Contacts.countActiveContacts", query = "select COUNT(c.lastname) from ContactsEntity c where (c.active = true and c.usersByIdUsers.id = :idUser)"),
         @NamedQuery(name = "Contacts.findAll", query = "select c from ContactsEntity c where c.active=true"),
         @NamedQuery(name = "Contacts.findById", query = "select c from ContactsEntity c where c.id = :id"),
 })

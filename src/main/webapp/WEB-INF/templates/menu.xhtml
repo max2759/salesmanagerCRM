@@ -8,22 +8,23 @@
 
     <div class="layout-sidebar #{guestPreferences.darkMenu ? 'layout-sidebar-dark': ''}">
         <pa:tabMenu>
-            <pa:tab icon="home" title="Features">
+            <pa:tab icon="home" title="#{bundle['menu.features']}">
                 <h:form id="menu-form">
                     <pa:menu widgetVar="me">
-                        <p:menuitem id="um_dashboard" value="Dashboard" icon="&#xE871;" outcome="/app/dashboard"/>
-                        <p:submenu id="om_orientation" label="Orientation" icon="&#xE237;">
-                            <p:menuitem id="om_ltr" value="LTR" icon="&#xE236;"
+                        <p:menuitem id="um_dashboard" value="#{bundle['menu.dashboard']}" icon="&#xE871;"
+                                    outcome="/app/dashboard"/>
+                        <p:submenu id="om_orientation" label="#{bundle['menu.orientation']}" icon="&#xE237;">
+                            <p:menuitem id="om_ltr" value="#{bundle['menu.LTR']}" icon="&#xE236;"
                                         actionListener="#{guestPreferences.setOrientationRTL(false)}" ajax="false"/>
-                            <p:menuitem id="om_rtl" value="RTL" icon="&#xE237;"
+                            <p:menuitem id="om_rtl" value="#{bundle['menu.RTL']}" icon="&#xE237;"
                                         actionListener="#{guestPreferences.setOrientationRTL(true)}" ajax="false"/>
                         </p:submenu>
-                        <p:submenu id="um_themes" label="Themes" icon="&#xE40A;">
-                            <p:menuitem id="theme3" value="Blue Grey - Green" icon="&#xE40A;"
+                        <p:submenu id="um_themes" label="#{bundle['menu.Themes']}" icon="&#xE40A;">
+                            <p:menuitem id="theme3" value="#{bundle['menu.light']}" icon="brightness_5"
                                         actionListener="#{guestPreferences.setTheme('blue-grey')}" ajax="false">
                                 <f:actionListener binding="#{guestPreferences.setDarkMenu(false)}"/>
                             </p:menuitem>
-                            <p:menuitem id="theme6" value="Dark - Green" icon="&#xE40A;"
+                            <p:menuitem id="theme6" value="#{bundle['menu.dark']}" icon="brightness_4"
                                         actionListener="#{guestPreferences.setTheme('dark-green')}" ajax="false">
                                 <f:actionListener binding="#{guestPreferences.setDarkMenu(true)}"/>
                             </p:menuitem>
@@ -32,55 +33,54 @@
                 </h:form>
             </pa:tab>
 
-            <pa:tab icon="people" title="Autres pages">
-                <h:form id="menu-others">
+            <pa:tab icon="people" title="#{bundle['contacts.title']}">
+                <h:form id="menu-contacts">
                     <pa:menu widgetVar="me">
-                        <p:menuitem id="um_Charts" value="Charts" icon="&#xE871;" outcome="/charts"/>
-                        <p:menuitem id="um_data" value="Data" icon="&#xE871;" outcome="/data"/>
-                        <p:menuitem id="um_docs" value="docs" icon="&#xE871;" outcome="/docs"/>
-                        <p:menuitem id="um_empty" value="empty" icon="&#xE871;" outcome="/empty"/>
-                        <p:menuitem id="um_error" value="error" icon="&#xE871;" outcome="/error"/>
-                        <p:menuitem id="um_file" value="file" icon="&#xE871;" outcome="/file"/>
-                        <p:menuitem id="um_forms" value="forms" icon="&#xE871;" outcome="/forms"/>
-                        <p:menuitem id="um_landing" value="landing" icon="&#xE871;" outcome="/landing"/>
-                        <p:menuitem id="um_messages" value="messages" icon="&#xE871;" outcome="/messages"/>
-                        <p:menuitem id="um_menu" value="menu" icon="&#xE871;" outcome="/menu"/>
-                        <p:menuitem id="um_misc" value="misc" icon="&#xE871;" outcome="/misc"/>
-                        <p:menuitem id="um_overlay" value="overlay" icon="&#xE871;" outcome="/overlay"/>
-                        <p:menuitem id="um_panel" value="panel" icon="&#xE871;" outcome="/panel"/>
-                        <p:menuitem id="um_sample" value="sample" icon="&#xE871;" outcome="/sample"/>
-                        <p:menuitem id="um_utils" value="utils" icon="&#xE871;" outcome="/utils"/>
+                        <p:menuitem id="um_Company" value="#{bundle['company.title']}" icon="&#xE871;"
+                                    outcome="/app/company"/>
+                        <p:menuitem id="um_Contacts" value="#{bundle['contacts.title']}" icon="&#xE871;"
+                                    outcome="/app/contacts"/>
                     </pa:menu>
                 </h:form>
             </pa:tab>
 
-            <pa:tab icon="event" title="Nos pages brut">
-                <h:form id="menu-ourPage">
+            <pa:tab icon="business" title="#{bundle['menu.sales']}">
+                <h:form id="menu-task">
                     <pa:menu widgetVar="me">
-                        <p:menuitem id="um_allTasks" value="allTasks" icon="&#xE871;" outcome="/app/alltasks"/>
-                        <p:menuitem id="um_JobTitles" value="JobTitles" icon="&#xE871;" outcome="/app/jobtitles"
+                        <p:menuitem id="um_Transactions" value="#{bundle['transactions.title']}" icon="&#xE871;"
+                                    outcome="/app/transactions"/>
+                        <p:menuitem id="um_allTasks" value="#{bundle['tasks.title']}" icon="&#xE871;"
+                                    outcome="/app/alltasks"/>
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+
+            <pa:tab icon="receipt" title="#{bundle['menu.services']}">
+                <h:form id="menu-service">
+                    <pa:menu widgetVar="me">
+                        <p:menuitem id="um_Vouchers" value="#{bundle['vouchers.title']}" icon="&#xE871;"
+                                    outcome="/app/vouchers"/>
+                    </pa:menu>
+                </h:form>
+            </pa:tab>
+
+            <pa:tab icon="build" title="#{bundle['menu.appSettings']}"
+                    rendered="#{usersBean.currentUser.isPermitted('showJobTitles') or usersBean.currentUser.isPermitted('showBranchActivities') or usersBean.currentUser.isPermitted('showTaskTypes')}">
+                <h:form id="menu-adminBuild">
+                    <pa:menu widgetVar="me">
+                        <p:menuitem id="um_JobTitles" value="#{bundle['jobTitles.title']}" icon="&#xE871;"
+                                    outcome="/app/jobtitles"
                                     rendered="#{usersBean.currentUser.isPermitted('showJobTitles')}"/>
-                        <p:menuitem id="um_BranchActivities" value="BranchActivities" icon="&#xE871;"
+                        <p:menuitem id="um_BranchActivities" value="#{bundle['branchActivities.title']}" icon="&#xE871;"
                                     outcome="/app/branchactivities"
                                     rendered="#{usersBean.currentUser.isPermitted('showBranchActivities')}"/>
-                        <p:menuitem id="um_Company" value="Company" icon="&#xE871;" outcome="/app/company"/>
-                        <p:menuitem id="um_Contacts" value="Contacts" icon="&#xE871;" outcome="/app/contacts"/>
-                        <p:menuitem id="um_Transactions" value="Transactions" icon="&#xE871;"
-                                    outcome="/app/transactions"/>
-                        <p:menuitem id="um_Vouchers" value="Vouchers" icon="&#xE871;" outcome="/app/vouchers"/>
-                        <p:menuitem id="um_TaskTypes" value="TaskTypes" icon="&#xE871;" outcome="/app/tasktypes"/>
-                        <p:menuitem id="um_allRoles" value="allRoles" icon="&#xE871;" outcome="/app/rolesList"/>
-                        <p:menuitem id="um_allUsers" value="allUsers" icon="&#xE871;" outcome="/app/usersList"/>
+                        <p:menuitem id="um_TaskTypes" value="#{bundle['taskTypes.title']}" icon="&#xE871;"
+                                    outcome="/app/tasktypes"
+                                    rendered="#{usersBean.currentUser.isPermitted('showTaskTypes')}"/>
                         <p:menuitem id="um_Conversation" value="Conversation" icon="&#xE871;"
                                     outcome="/app/conversations"/>
-                        <p:menuitem id="um_RolePermissions" value="Role-permissions" icon="&#xE871;"
-                                    outcome="/app/addRolePermissions"/>
-                        <p:menuitem id="um_UpdateUserByUser" value="updateUserByUser" icon="&#xE871;"
-                                    outcome="/app/userUpdateByUser"/>
                         <p:menuitem id="um_ConversationsList" value="conversationsList" icon="&#xE871;"
                                     outcome="/app/conversationsList"/>
-                        <p:menuitem id="um_Connection" value="Connexion" icon="&#xE871;" outcome="/connection"/>
-                        <p:menuitem id="um_Dashboard2" value="Dashboard2" icon="&#xE871;" outcome="/app/dashboard2"/>
                     </pa:menu>
                 </h:form>
             </pa:tab>

@@ -19,7 +19,6 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Maximilien Zabbara
@@ -45,6 +44,7 @@ public class ContactTypesBean extends ExtendBean implements Serializable {
      * @return ContactTypesEntity
      */
     public ContactTypesEntity findById(int id) {
+        log.info("ContactTypesBean => method : findById()");
 
         FacesMessage facesMessage;
 
@@ -75,6 +75,8 @@ public class ContactTypesBean extends ExtendBean implements Serializable {
      * Public method that call findAll
      */
     public void findAllContactTypes() {
+        log.info("ContactTypesBean => method : findAllContactTypes()");
+
         contactTypesEntities = findAll();
     }
 
@@ -84,6 +86,7 @@ public class ContactTypesBean extends ExtendBean implements Serializable {
      * @return List of Contact Types
      */
     protected List<ContactTypesEntity> findAll() {
+        log.info("ContactTypesBean => method : findAll()");
 
         EntityManager em = EMF.getEM();
 
@@ -95,19 +98,5 @@ public class ContactTypesBean extends ExtendBean implements Serializable {
         return contactTypesEntities;
     }
 
-    /**
-     * Auto complete for ContactTypesEntity
-     *
-     * @param search String
-     * @return list of ContactTypesEntity
-     */
-    public List<ContactTypesEntity> completeContactType(String search) {
-
-        String searchLowerCase = search.toLowerCase();
-
-        List<ContactTypesEntity> contactTypesDropdown = findAll();
-
-        return contactTypesDropdown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
-    }
 
 }

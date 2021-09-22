@@ -21,6 +21,7 @@
                         <h1>#{bundle['jobTitles.title']}</h1>
 
                         <p:commandButton value="#{bundle['jobTitles.create']}" update="@(form)"
+                                         rendered="#{usersBean.currentUser.isPermitted('addJobTitles')}"
                                          onclick="PF('jobTitlesModal').show();" styleClass="NavyButton"
                                          resetValues="true"
                                          action="#{jobtitlesBean.showModalCreate}">

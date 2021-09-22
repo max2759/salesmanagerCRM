@@ -79,8 +79,31 @@ public class CompaniesDaoImpl extends EntityFinderImpl<CompaniesEntity> implemen
     @Override
     public List<CompaniesEntity> findDisableCompany(EntityManager em, int idUser) {
         return em.createNamedQuery("Companies.findDisableCompany",
-                CompaniesEntity.class)
+                        CompaniesEntity.class)
                 .setParameter("idUser", idUser)
                 .getResultList();
+    }
+
+    @Override
+    public Long countActiveCompanies(EntityManager em, int idUser) {
+
+        Object activeCompanies = em.createNamedQuery("Companies.countActiveCompanies",
+                        CompaniesEntity.class)
+                .setParameter("idUser", idUser)
+                .getSingleResult();
+
+        return (Long) activeCompanies;
+
+    }
+
+    @Override
+    public Long countAllCompanies(EntityManager em, int idUser) {
+
+        Object activeCompanies = em.createNamedQuery("Companies.countAllCompanies",
+                        CompaniesEntity.class)
+                .setParameter("idUser", idUser)
+                .getSingleResult();
+
+        return (Long) activeCompanies;
     }
 }

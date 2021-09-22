@@ -366,6 +366,7 @@
                         <div align="right">
                             <p:commandButton value="#{bundle['validate']}"
                                              action="#{companiesBean.updateCompanies}"
+                                             rendered="#{usersBean.currentUser.isPermitted('updateCompagnies')}"
                                              id="companyDetailsValidateBtn"
                                              resetValues="true"
                                              disabled="#{facesContext.validationFailed or empty companiesBean.companiesEntity.label or companiesBean.companiesEntity.label.length() le 1}"

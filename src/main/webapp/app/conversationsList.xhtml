@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="../WEB-INF/templates/template.xhtml">
 
-    <ui:define name="title">#{bundle['cnversationList.title']}</ui:define>
+    <ui:define name="title">#{bundle['conversationList.title']}</ui:define>
     <ui:define name="content">
 
         <f:metadata>
@@ -13,10 +13,8 @@
         </f:metadata>
 
         <h:body>
-            <h1>#{bundle['conversationList.title']}</h1>
-
-
             <div class="card card-w-title">
+                <h1>#{bundle['conversationList.title']}</h1>
                 <p:growl id="msg" life="2000"/>
                 <h:form id="form">
                     <p:tab id="displayAll" title="#{bundle['all']} (#{conversationsBean.conversationsEntities.size()})">

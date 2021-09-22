@@ -25,6 +25,7 @@
                     <h:form>
                         <p:commandButton value="#{bundle['contacts.create']}"
                                          action="#{contactsBean.createNewEntity}"
+                                         rendered="#{usersBean.currentUser.isPermitted('addContacts')}"
                                          resetValues="true"
                                          onclick="PF('contactsWidgetModal').show();" styleClass="NavyButton"
                                          update="@(form)">

@@ -13,13 +13,10 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
-
-        <div class="ui-g-12 ui-md-5">
-            <p:panel header="Calendar" style="height:100%" styleClass="ui-shadow-content ">
-                <p:schedule id="schedule" value="#{tasksBean.eventModel}" leftHeaderTemplate="prev,next"
-                            widgetVar="myschedule" draggable="false" resizable="false"/>
-            </p:panel>
-        </div>
+        <p:panel header="Calendar" style="height:100%" styleClass="ui-shadow-content ">
+            <p:schedule id="schedule" value="#{tasksBean.eventModel}" leftHeaderTemplate="prev,next"
+                        widgetVar="myschedule" draggable="false" resizable="false"/>
+        </p:panel>
     </f:view>
 </cc:implementation>
 </html>

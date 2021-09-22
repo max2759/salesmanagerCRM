@@ -48,6 +48,7 @@ public class AddressesBean extends ExtendBean implements Serializable {
      * Return addressEntity by id companies if exist else return new AddressesEntity
      */
     public void getAddressByIdCompany() {
+        log.info("AddressesBean => method : getAddressByIdCompany()");
 
         try {
             addressesEntity = findByIdCompanies(companiesBean.getCompaniesEntity().getId());
@@ -62,6 +63,7 @@ public class AddressesBean extends ExtendBean implements Serializable {
      * Return addressEntity by id contacts if exist else return new AddressesEntity
      */
     public void getAddressByIdContacts() {
+        log.info("AddressesBean => method : getAddressByIdContacts()");
 
         try {
             addressesEntity = findByIdContacts(contactsBean.getContactsEntity().getId());
@@ -79,7 +81,7 @@ public class AddressesBean extends ExtendBean implements Serializable {
      */
     protected AddressesEntity findByIdCompanies(int id) {
 
-        log.info("Start of findByIdCompanies");
+        log.info("AddressesBean => method : findByIdCompanies()");
         FacesMessage facesMessage;
 
         if (id == 0) {
@@ -105,7 +107,6 @@ public class AddressesBean extends ExtendBean implements Serializable {
                         ErrorCodes.ADDRESSES_NOT_FOUND
                 ));
 
-
     }
 
 
@@ -117,7 +118,7 @@ public class AddressesBean extends ExtendBean implements Serializable {
      */
     protected AddressesEntity findByIdContacts(int id) {
 
-        log.info("Start of findByIdContacts");
+        log.info("AddressesBean => method : findByIdContacts()");
         FacesMessage facesMessage;
 
         if (id == 0) {
@@ -150,6 +151,7 @@ public class AddressesBean extends ExtendBean implements Serializable {
      * Method that call updateAddress
      */
     public void updateEntity() {
+        log.info("AddressesBean => method : updateEntity()");
 
         if (addressesEntity.getCitiesByIdCities() != null) {
             updateAddress(this.addressesEntity);
@@ -165,6 +167,8 @@ public class AddressesBean extends ExtendBean implements Serializable {
      * @param addressesEntity AddressesEntity
      */
     protected void updateAddress(AddressesEntity addressesEntity) {
+        log.info("AddressesBean => method : updateAddress()");
+
         FacesMessage facesMessage;
 
         EntityManager em = EMF.getEM();

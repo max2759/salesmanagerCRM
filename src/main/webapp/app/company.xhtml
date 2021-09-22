@@ -26,6 +26,7 @@
                     <h:form>
                         <p:commandButton value="#{bundle['company.create']}"
                                          action="#{companiesBean.createNewEntity}"
+                                         rendered="#{usersBean.currentUser.isPermitted('addCompagnies')}"
                                          onclick="PF('companyWidgetModal').show();" styleClass="NavyButton"
                                          resetValues="true"
                                          update="@(form) msgs">

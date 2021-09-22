@@ -25,4 +25,8 @@ public interface CompaniesDao {
     List<CompaniesEntity> findActiveCompany(EntityManager em, int idUser);
 
     List<CompaniesEntity> findDisableCompany(EntityManager em, int idUser);
+
+    Long countActiveCompanies(EntityManager em, int idUser);
+
+    Long countAllCompanies(EntityManager em, int idUser);
 }

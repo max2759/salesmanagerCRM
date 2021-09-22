@@ -23,4 +23,6 @@ public interface ContactsDao {
     List<ContactsEntity> findAll();
 
     void update(EntityManager em, ContactsEntity contactsEntity);
+
+    Long countActiveContacts(EntityManager em, int idUser);
 }

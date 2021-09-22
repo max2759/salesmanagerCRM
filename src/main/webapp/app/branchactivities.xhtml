@@ -20,6 +20,7 @@
                     <div class="card card-w-title">
                         <h1>#{bundle['branchActivities.title']}</h1>
                         <p:commandButton value="#{bundle['branchActivities.create']}" update="@(form)"
+                                         rendered="#{usersBean.currentUser.isPermitted('addBranchActivities')}"
                                          onclick="PF('branchActivitiesModal').show();" styleClass="NavyButton"
                                          resetValues="true"
                                          action="#{branchActivitiesBean.showModalCreate}">

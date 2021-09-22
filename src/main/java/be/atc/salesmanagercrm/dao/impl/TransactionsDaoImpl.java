@@ -70,4 +70,15 @@ public class TransactionsDaoImpl extends EntityFinderImpl<TransactionsEntity> im
     public void update(EntityManager em, TransactionsEntity entity) {
         em.merge(entity);
     }
+
+    @Override
+    public Long countActiveTransactions(EntityManager em, int idUser) {
+
+        Object activeTransactions = em.createNamedQuery("Transactions.countActiveTransactions",
+                        TransactionsEntity.class)
+                .setParameter("idUser", idUser)
+                .getSingleResult();
+
+        return (Long) activeTransactions;
+    }
 }

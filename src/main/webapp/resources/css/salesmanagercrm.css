@@ -115,6 +115,10 @@
     margin-top: 15px;
 }
 
+.mgin-bottom-logo {
+    margin-top: -13px !important;
+}
+
 .descriptionTask {
     display: block;
     padding-bottom: 10px;
@@ -126,4 +130,13 @@
 
 .addressDetailsDesign {
     margin-top: 1rem;
+}
+
+.profile-info-corrected {
+    margin-top: 0px !important;
+}
+
+.taskDashboard {
+    height: 100%;
+    background-color: white !important;
 }

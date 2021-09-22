@@ -30,8 +30,10 @@
                 <p:watermark value="#{bundle['jobTitles.search']}" for="@(.jobTitlesLabel)"/>
             </p:column>
 
-            <p:column headerText="#{bundle['edit']}" colspan="2">
+            <p:column headerText="#{bundle['edit']}" colspan="2"
+                      rendered="#{usersBean.currentUser.isPermitted('updateJobTitles')}">
                 <p:commandLink icon="ui-icon-edit" styleClass="NavyButton" update="@(form)"
+                               rendered="#{usersBean.currentUser.isPermitted('updateJobTitles')}"
                                resetValues="true"
                                onclick="PF('updateJobTitlesModal').show();" action="#{jobtitlesBean.showModalUpdate}">
                     <i class="ui-icon ui-icon-create"/>
