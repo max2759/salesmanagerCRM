@@ -19,7 +19,6 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Maximilien Zabbara
@@ -46,6 +45,8 @@ public class CompanyTypesBean extends ExtendBean implements Serializable {
      * public method that call findAll
      */
     public void findAllCompanyTypes() {
+        log.info("CompaniesTypesBean => method : findAllCompanyTypes()");
+
         companyTypesEntities = findAll();
     }
 
@@ -55,6 +56,8 @@ public class CompanyTypesBean extends ExtendBean implements Serializable {
      * @return List of Company Types Entity
      */
     protected List<CompanyTypesEntity> findAll() {
+        log.info("CompaniesTypesBean  => method : findAll()");
+
         EntityManager em = EMF.getEM();
         List<CompanyTypesEntity> companyTypesEntities = companyTypesDao.findAll();
 
@@ -65,24 +68,11 @@ public class CompanyTypesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Find CompanyTypes entities
-     *
-     * @return List CompanyTypesEntity
+     * @param id id
+     * @return optionalCompanyTypesEntity
      */
-    public List<CompanyTypesEntity> findCompanyTypesList() {
-
-
-        EntityManager em = EMF.getEM();
-
-        List<CompanyTypesEntity> companyTypesEntities = companyTypesDao.findAll();
-
-        em.clear();
-        em.close();
-
-        return companyTypesEntities;
-    }
-
     public CompanyTypesEntity findById(int id) {
+        log.info("CompaniesTypesBean  => method : findById()");
         FacesMessage facesMessage;
 
         if (id == 0) {
@@ -105,31 +95,5 @@ public class CompanyTypesBean extends ExtendBean implements Serializable {
                         "Aucun type d'entreprise avec l ID " + id + " n'a été trouve dans la DB",
                         ErrorCodes.COMPANYTYPES_NOT_FOUND
                 ));
-    }
-
-    /**
-     * Auto complete for CompanyTypes
-     *
-     * @param search String
-     * @return list of CompanyTypesEntity
-     */
-    public List<CompanyTypesEntity> completeCompanyTypes(String search) {
-
-        String searchLowerCase = search.toLowerCase();
-
-        List<CompanyTypesEntity> companyTypesEntitiesDropDown = findCompanyTypesList();
-
-        return companyTypesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
-
-    }
-
-    /**
-     * Sort CompanyTypes by group in form
-     *
-     * @param entityGroup CompanyTypesEntity
-     * @return label of entitygroup
-     */
-    public char getCompanyTypesEntityGroup(CompanyTypesEntity entityGroup) {
-        return entityGroup.getLabel().charAt(0);
     }
 }

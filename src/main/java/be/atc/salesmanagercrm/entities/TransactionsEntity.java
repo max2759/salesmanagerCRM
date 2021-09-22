@@ -12,6 +12,7 @@ import java.util.Objects;
         @NamedQuery(name = "Transactions.findTransactionsEntityByCompaniesByIdCompanies", query = "select t from TransactionsEntity t where (t.companiesByIdCompanies.id = :id and t.usersByIdUsers.id = :idUser and t.active = true) ORDER BY t.creationDate desc "),
         @NamedQuery(name = "Transactions.findAll", query = "SELECT t from TransactionsEntity t where (t.usersByIdUsers.id = :idUser and t.active = true) ORDER BY t.creationDate desc "),
         @NamedQuery(name = "Transactions.findById", query = "SELECT t from TransactionsEntity t where (t.id = :id and t.usersByIdUsers.id = :idUser and t.active = true)"),
+        @NamedQuery(name = "Transactions.countActiveTransactions", query = "SELECT COUNT(t) from TransactionsEntity t where (t.usersByIdUsers.id = :idUser and t.active = true)"),
         @NamedQuery(name = "Transactions.findAllByPhase", query = "SELECT t from TransactionsEntity t where (t.usersByIdUsers.id = :idUser and t.active = true and t.transactionPhasesByIdTransactionPhases.label = :phaseTransaction) ORDER BY t.creationDate desc "),
 
 })

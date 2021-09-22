@@ -22,4 +22,6 @@ public interface VouchersDao {
     List<VouchersEntity> findAll(EntityManager em, int idUser);
 
     void update(EntityManager em, VouchersEntity entity);
+
+    Long countActiveVouchers(EntityManager em, int idUser);
 }

@@ -171,4 +171,15 @@ class CompaniesBeanTest {
         assertThat(valid).isEqualTo(true);
     }
 
+    @Test
+    void countActiveCompanies() {
+
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
+
+        long i = companiesBean.countActiveCompanies(usersEntity);
+
+        log.info("Valeur du résultat = " + i);
+
+    }
 }

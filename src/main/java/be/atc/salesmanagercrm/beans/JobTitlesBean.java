@@ -58,6 +58,7 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
      * Public method that call addJobTitle
      */
     public void saveJobTitles() {
+        log.info("JobTitlesBean => method : saveJobTitles()");
 
         addJobTitle(jobTitlesEntity);
 
@@ -70,6 +71,7 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
      * @param jobTitlesEntity JobTitlesEntity
      */
     protected void addJobTitle(JobTitlesEntity jobTitlesEntity) {
+        log.info("JobTitlesBean => method : addJobTitle()");
 
         try {
             validateJobTitles(jobTitlesEntity);
@@ -119,6 +121,7 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
      * @return JobTitlesEntity
      */
     public JobTitlesEntity findById(int id) {
+        log.info("JobTitlesBean => method : findById()");
 
         FacesMessage facesMessage;
 
@@ -149,6 +152,8 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
      * Method that call findAll and fill jobTitlesEntityList
      */
     public void findAllJobTitles() {
+        log.info("JobTitlesBean => method : findAllJobTitles()");
+
         jobTitlesEntityList = findAll();
     }
 
@@ -159,6 +164,7 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
      * @return List of JobTitles Entity
      */
     protected List<JobTitlesEntity> findAll() {
+        log.info("JobTitlesBean => method : findAll()");
 
         EntityManager em = EMF.getEM();
         List<JobTitlesEntity> jobTitlesEntities = jobTitlesDao.findAll();
@@ -173,6 +179,8 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
      * Public method that call update
      */
     public void updateJobTitles() {
+        log.info("JobTitlesBean => method : updateJobTitles()");
+
         update(jobTitlesEntity);
         findAllJobTitles();
     }
@@ -183,6 +191,7 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
      * @param jobTitlesEntity JobTitlesEntity
      */
     protected void update(JobTitlesEntity jobTitlesEntity) {
+        log.info("JobTitlesBean => method : update()");
 
         try {
             validateJobTitles(jobTitlesEntity);
@@ -242,6 +251,7 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
      * @param entity JobTitles
      */
     private void validateJobTitles(JobTitlesEntity entity) {
+        log.info("JobTitlesBean => method : validateJobTitles()");
         List<String> errors = JobTitlesValidator.validate(entity);
         if (!errors.isEmpty()) {
             log.error("Job title is not valid {}", entity);
@@ -256,6 +266,7 @@ public class JobTitlesBean extends ExtendBean implements Serializable {
      * @return list of JobTitlesEntity
      */
     public List<JobTitlesEntity> completeJobTitles(String search) {
+        log.info("JobTitlesBean => method : completeJobTitles()");
 
         String searchLowerCase = search.toLowerCase();
 

@@ -70,4 +70,15 @@ public class ContactsDaoImpl extends EntityFinderImpl<ContactsEntity> implements
     public void update(EntityManager em, ContactsEntity contactsEntity) {
         em.merge(contactsEntity);
     }
+
+    @Override
+    public Long countActiveContacts(EntityManager em, int idUser) {
+
+        Object activeContacts = em.createNamedQuery("Contacts.countActiveContacts",
+                        ContactsEntity.class)
+                .setParameter("idUser", idUser)
+                .getSingleResult();
+
+        return (Long) activeContacts;
+    }
 }

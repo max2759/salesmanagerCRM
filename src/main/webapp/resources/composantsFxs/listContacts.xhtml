@@ -64,9 +64,10 @@
                 </h:outputText>
             </p:column>
 
-            <p:column>
+            <p:column rendered="#{usersBean.currentUser.isPermitted('deleteContacts')}">
                 <p:commandLink update="@(form) msgs"
-                               action="#{contactsBean.deleteContact}">
+                               action="#{contactsBean.deleteContact}"
+                               rendered="#{usersBean.currentUser.isPermitted('deleteContacts')}">
                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                icon="fa fa-warning"/>
                     <i class="ui-icon ui-icon-delete-forever"/>

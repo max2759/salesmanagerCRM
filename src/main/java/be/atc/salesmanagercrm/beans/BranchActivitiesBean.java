@@ -70,6 +70,8 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
      */
     protected void addBranchActivities(BranchActivitiesEntity branchActivitiesEntity) {
 
+        log.info("BranchActivitiesBean => method : addBranchActivities()");
+
         try {
             validateBranchActivities(branchActivitiesEntity);
         } catch (InvalidEntityException exception) {
@@ -115,6 +117,8 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
      * public method that call findAll
      */
     public void findAllBranchActivities() {
+        log.info("BranchActivitiesBean => method : findAllBranchActivities()");
+
         branchActivitiesEntityList = findAll();
     }
 
@@ -124,6 +128,8 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
      * @return List of BranchActivities
      */
     protected List<BranchActivitiesEntity> findAll() {
+        log.info("BranchActivitiesBean => method : findAll()");
+
         EntityManager em = EMF.getEM();
         List<BranchActivitiesEntity> branchActivitiesEntities = branchActivitiesDao.findAll();
         em.clear();
@@ -137,7 +143,7 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
      * @return List BranchActivitiesEntity
      */
     public List<BranchActivitiesEntity> findBranchActvivitiesList() {
-
+        log.info("BranchActivitiesBean => method : findBranchActvivitiesList()");
 
         EntityManager em = EMF.getEM();
 
@@ -156,6 +162,7 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
      * @return BranchActivitiesEntity
      */
     public BranchActivitiesEntity findById(int id) {
+        log.info("BranchActivitiesBean => method : findById()");
 
         FacesMessage facesMessage;
 
@@ -186,6 +193,7 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
      * Public method that call updateBranchActivitiesLabel
      */
     public void updateBranchActivities() {
+        log.info("BranchActivitiesBean => method : updateBranchActivities()");
         updateBranchActivitiesLabel(branchActivitiesEntity);
         findAllBranchActivities();
     }
@@ -196,7 +204,7 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
      * @param branchActivitiesEntity BranchActivities
      */
     protected void updateBranchActivitiesLabel(BranchActivitiesEntity branchActivitiesEntity) {
-
+        log.info("BranchActivitiesBean => method : updateBranchActivitiesLabel()");
 
         try {
             validateBranchActivities(branchActivitiesEntity);
@@ -255,6 +263,7 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
      * @return list of BranchActivitiesEntity
      */
     public List<BranchActivitiesEntity> completeBranchActivities(String search) {
+        log.info("BranchActivitiesBean => method : completeBranchActivities()");
 
         String searchLowerCase = search.toLowerCase();
 
@@ -295,6 +304,7 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
      */
 
     public char getBranchActivitiesEntityGroup(BranchActivitiesEntity entityGroup) {
+        log.info("BranchActivitiesBean => method : getBranchActivitiesEntityGroup()");
         return entityGroup.getLabel().charAt(0);
     }
 
@@ -305,6 +315,7 @@ public class BranchActivitiesBean extends ExtendBean implements Serializable {
      * @param entity BranchActivities
      */
     private void validateBranchActivities(BranchActivitiesEntity entity) {
+        log.info("BranchActivitiesBean => method : validateBranchActivities()");
         List<String> errors = BranchActivitiesValidator.validate(entity);
         if (!errors.isEmpty()) {
             log.error("BranchActivities is not valid {}", entity);

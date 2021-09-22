@@ -32,8 +32,8 @@ public class ConversationsDaoImpl implements ConversationsDao {
     @Override
     public List<ConversationsEntity> find10Last(EntityManager em) {
         return em.createNamedQuery("Conversations.findAll",
-                ConversationsEntity.class)
-                .setMaxResults(10)
+                        ConversationsEntity.class)
+                .setMaxResults(50)
                 .getResultList();
     }
 

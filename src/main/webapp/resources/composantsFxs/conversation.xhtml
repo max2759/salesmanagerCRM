@@ -2,7 +2,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
@@ -15,16 +14,13 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
-
-        <div class="ui-g dashboard">
-
-
-            <div class="ui-g-12 ui-lg-8 chat">
-                <p:panel header="Chat" styleClass="ui-shadow-content">
-                    <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
-                    <ul>
-                        <ui:repeat value="#{conversationsBean.conversationsEntityList}" var="convers">
-                            <li class="#{convers.usersByIdUsers.username eq usersBean.usersEntity.username ? 'clearfix message-own' : 'clearfix message-from'}">
+        <p:panel header="Chat" styleClass="ui-shadow-content">
+            <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
+            <h:form>
+                <ul>
+                    <p:dataScroller value="#{conversationsBean.conversationsEntityList}" var="convers" chunkSize="100"
+                                    scrollHeight="500" mode="inline">
+                        <li class="#{convers.usersByIdUsers.username eq usersBean.usersEntity.username ? 'clearfix message-own' : 'clearfix message-from'}">
                                 <span>
                                     <p:outputLabel value="#{convers.creationDate}">
                             <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
@@ -34,34 +30,27 @@
                                     <h:outputText styleClass="displayInlineBlock"
                                                   value="#{convers.message}"/>
                                 </span>
-                            </li>
-                        </ui:repeat>
-                    </ul>
+                        </li>
+                    </p:dataScroller>
+                </ul>
+                <div class="ui-g new-message">
 
+                    <div class="ui-g-12 ui-md-6 ui-lg-11 ui-fluid ">
+                        <p:inputText id="message" value="#{conversationsBean.conversationsEntity.message}"
+                                     placeholder="Entrez un message"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-1">
 
-                    <p:message for="message">
-                        <p:autoUpdate/>
-                    </p:message>
-                    <div class="ui-g new-message">
-                        <div class="ui-g-12 ui-md-6 ui-lg-11 ui-fluid ">
-                            <p:inputText id="message" value="#{conversationsBean.conversationsEntity.message}"
-                                         placeholder="Entrez un message"/>
-                        </div>
-                        <div class="ui-g-12 ui-md-6 ui-lg-1">
-                            <p:commandLink action="#{conversationsBean.addEntity}"
-                                           update="@(form)"
-                                           process="@form">
-                                <i class="fa fa-send fa-lg"/>
-                            </p:commandLink>
-                        </div>
+                        <p:commandLink action="#{conversationsBean.addEntity}"
+                                       update="@(form)"
+                                       process="@form">
+                            <i class="fa fa-send fa-lg"/>
+                        </p:commandLink>
                     </div>
 
-
-                </p:panel>
-            </div>
-        </div>
-
-
+                </div>
+            </h:form>
+        </p:panel>
     </f:view>
 </cc:implementation>
 </html>

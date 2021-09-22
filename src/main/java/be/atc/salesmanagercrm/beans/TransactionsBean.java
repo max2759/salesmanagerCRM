@@ -56,6 +56,9 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private List<TransactionsEntity> transactionsEntitiesFiltered;
+    @Getter
+    @Setter
+    private Long countActiveTransactions;
 
     @Inject
     private TransactionHistoriesBean transactionHistoriesBean;
@@ -691,5 +694,43 @@ public class TransactionsBean extends ExtendBean implements Serializable {
         transactionHistoriesEntity.setSaveDate(LocalDateTime.now());
 
         return transactionHistoriesEntity;
+    }
+
+    /**
+     * public method for countActiveTransactions()
+     */
+    public void countActiveTransactionsEntity() {
+        log.info("ContactsBean => method : countActiveContactsEntity()");
+        this.countActiveTransactions = countActiveTransactions(usersBean.getUsersEntity());
+
+    }
+
+    /**
+     * Count all active transactions
+     *
+     * @param usersEntity userEntity
+     * @return resultCount
+     */
+    protected Long countActiveTransactions(UsersEntity usersEntity) {
+        log.info("TransactionsBean => method : countActiveContacts()");
+
+        if (usersEntity == null) {
+            log.error("User Entity is null");
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
+            );
+        }
+
+        EntityManager em = EMF.getEM();
+        Long resultCount;
+
+        try {
+            resultCount = dao.countActiveTransactions(em, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
+
+        return resultCount;
     }
 }

@@ -4,7 +4,8 @@
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:p="http://primefaces.org/ui"
         xmlns:f="http://java.sun.com/jsf/core"
->
+        xmlns:fxs="http://java.sun.com/jsf/composite/composantsFxs">
+
 
     <div class="topbar">
         <div class="logo">
@@ -13,16 +14,19 @@
             </h:link>
         </div>
 
-        <p:graphicImage name="images/SalesManager-text.png" library="barcelona-layout" styleClass="title-topBar"/>
+        <h:link outcome="/app/dashboard">
+            <p:graphicImage name="images/SalesManager-text.png" library="barcelona-layout" styleClass="title-topBar"/>
+        </h:link>
 
         <a id="topbar-menu-button" href="#">
             <i class="fa fa-bars"></i>
         </a>
 
         <ul class="topbar-menu fadeInDown animated">
+
             <li class="profile-item">
                 <a id="topbar-usermenu-button" href="#">
-                    <div class="profile-info">
+                    <div class="profile-info profile-info-corrected">
                         <span class="topbar-item-name profile-name">#{usersBean.usersEntity.firstname} #{usersBean.usersEntity.lastname}</span>
                         <span class="topbar-item-name profile-role">#{usersBean.usersEntity.rolesByIdRoles.label}</span>
                     </div>
@@ -30,46 +34,48 @@
 
                 <ul id="topbar-usermenu" class="usermenu">
                     <li>
-                        <a href="#">
-                            <i class="fa fa-fw fa-user"></i>
-                            <span class="topbar-item-name">Profile</span>
-                            <span class="topbar-submenuitem-badge">4</span>
-                        </a>
+                        <h:form>
+                            <h:commandLink action="#{usersBean.goToProfilePage}">
+                                <i class="fa fa-fw fa-user"></i>
+                                <span class="topbar-item-name">#{bundle['menu.profile']}</span>
+                            </h:commandLink>
+                        </h:form>
                     </li>
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-fw fa-cog"></i>
-                            <span class="topbar-item-name">Settings</span>
-                            <i class="fa fa-angle-down menu-arrow"></i>
-                            <span class="topbar-submenuitem-badge">2</span>
-                        </a>
-                        <ul>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="fa fa-fw fa-paint-brush"></i>
-                                    <span>Change</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="fa fa-fw fa-star-o"></i>
-                                    <span>Favorites</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="fa fa-fw fa-lock"></i>
-                                    <span>Lock Screen</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="fa fa-fw fa-picture-o"></i>
-                                    <span>Wallpaper</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                    <h:panelGroup rendered="#{usersBean.currentUser.hasRole('Admin')}">
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-fw fa-cog"></i>
+                                <span class="topbar-item-name">#{bundle['menu.settings']}</span>
+                                <i class="fa fa-angle-down menu-arrow"></i>
+                            </a>
+                            <ul>
+                                <li role="menuitem">
+                                    <h:form>
+                                        <h:commandLink action="#{usersBean.goToRolesPage}">
+                                            <i class="fa fa-fw fa-user"></i>
+                                            <span class="topbar-item-name">#{bundle['roleList.title']}</span>
+                                        </h:commandLink>
+                                    </h:form>
+                                </li>
+                                <li role="menuitem">
+                                    <h:form>
+                                        <h:commandLink action="#{usersBean.goToRolesPermissionsPage}">
+                                            <i class="fa fa-fw fa-user"></i>
+                                            <span class="topbar-item-name">#{bundle['manageRolePermissions.title']}</span>
+                                        </h:commandLink>
+                                    </h:form>
+                                </li>
+                                <li role="menuitem">
+                                    <h:form>
+                                        <h:commandLink action="#{usersBean.goToUserListPage}">
+                                            <i class="fa fa-fw fa-user"></i>
+                                            <span class="topbar-item-name">#{bundle['usersList.title']}</span>
+                                        </h:commandLink>
+                                    </h:form>
+                                </li>
+                            </ul>
+                        </li>
+                    </h:panelGroup>
                     <li>
                         <h:form>
                             <h:commandLink action="#{usersBean.logOut}">
@@ -82,7 +88,7 @@
             </li>
             <li>
                 <a href="#">
-                    <i class="topbar-icon fa fa-fw fa-globe"></i>
+                    <i class="material-icons">language</i>
                 </a>
                 <ul class="animated">
                     <li role="menuitem">
@@ -97,6 +103,7 @@
                             </h:commandLink>
                         </h:form>
                     </li>
+
                     <li role="menuitem">
                         <h:form>
                             <h:commandLink action="#{internalizationBean.changeLanguage}">
@@ -109,7 +116,22 @@
                             </h:commandLink>
                         </h:form>
                     </li>
+
                 </ul>
+            </li>
+            <li>
+                <h:form>
+                    <p:commandLink id="carBtn" action="#{conversationsBean.get10convers}"><i class="material-icons"
+                                                                                             style="color: white">message</i></p:commandLink>
+                    <p:overlayPanel id="carPanel" for="carBtn" hideEffect="fade" dynamic="true"
+                                    style="width: 1000px; height: 1000px" showCloseIcon="true">
+                        <div class="dashboard">
+                            <div class="ui-g-12 chat">
+                                <fxs:conversation id="conversation"/>
+                            </div>
+                        </div>
+                    </p:overlayPanel>
+                </h:form>
             </li>
         </ul>
     </div>

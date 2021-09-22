@@ -13,6 +13,7 @@
     </f:facet>
     <title>SalesManager</title>
     <link rel="shortcut icon" type="image/x-icon" href="#{resource['/barcelona-layout/images/favicon-16x16.png']}"/>
+    <h:outputStylesheet name="salesmanagercrm.css" library="css"/>
     <h:outputScript name="js/ripple.js" library="barcelona-layout"/>
     <h:outputScript name="js/layout.js" library="barcelona-layout"/>
 </h:head>
@@ -24,7 +25,8 @@
         <div class="ui-g">
             <div class="ui-g-12 login-header">
                 <h1>#{bundle['connection.title']}</h1>
-                <p:graphicImage name="images/logo.png" library="barcelona-layout"/>
+                <p:graphicImage name="images/logo_salesManager.png" library="barcelona-layout"
+                                styleClass="mgin-bottom-logo"/>
             </div>
             <h:form>
                 <div class="ui-g-12">

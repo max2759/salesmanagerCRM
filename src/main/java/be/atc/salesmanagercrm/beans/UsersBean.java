@@ -893,6 +893,22 @@ public class UsersBean extends ExtendBean implements Serializable {
         accessControlBean.isNotLogged();
     }
 
+    public String goToProfilePage() {
+        return "/app/userUpdateByUser?faces-redirect=true";
+    }
+
+    public String goToRolesPage() {
+        return "/app/rolesList?faces-redirect=true";
+    }
+
+    public String goToRolesPermissionsPage() {
+        return "/app/addRolePermissions?faces-redirect=true";
+    }
+
+    public String goToUserListPage() {
+        return "/app/usersList?faces-redirect=true";
+    }
+
     protected void generatePDF(String password) {
         PDFUtil.generatePDF(userEntityNew, password);
     }

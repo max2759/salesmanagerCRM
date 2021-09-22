@@ -52,7 +52,7 @@ public class VouchersDaoImpl extends EntityFinderImpl<VouchersEntity> implements
     public List<VouchersEntity> findAll(EntityManager em, int idUser) {
 
         return em.createNamedQuery("Vouchers.findAll",
-                VouchersEntity.class)
+                        VouchersEntity.class)
                 .setParameter("idUser", idUser)
                 .getResultList();
     }
@@ -60,5 +60,15 @@ public class VouchersDaoImpl extends EntityFinderImpl<VouchersEntity> implements
     @Override
     public void update(EntityManager em, VouchersEntity entity) {
         em.merge(entity);
+    }
+
+    @Override
+    public Long countActiveVouchers(EntityManager em, int idUser) {
+        Object activeContacts = em.createNamedQuery("Vouchers.countActiveVouchers",
+                        VouchersEntity.class)
+                .setParameter("idUser", idUser)
+                .getSingleResult();
+
+        return (Long) activeContacts;
     }
 }

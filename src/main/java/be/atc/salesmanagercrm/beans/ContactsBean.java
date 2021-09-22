@@ -59,6 +59,10 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
+    private Long countActiveContacts;
+
+    @Getter
+    @Setter
     private List<ContactsEntity> contactEntitiesFiltered;
     @Inject
     private NotesBean notesBean;
@@ -88,6 +92,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * this method is used in activity page
      */
     public void activityThread() {
+        log.info("ContactsBean => method : activityThread()");
         if (contactsEntity == null) {
             return;
         }
@@ -132,7 +137,11 @@ public class ContactsBean extends ExtendBean implements Serializable {
         log.info("Liste : " + listActivity);
     }
 
+    /**
+     * Public method that call loadsListEntities()
+     */
     public void findAllActiveContacts() {
+        log.info("ContactsBean => method : findAllActiveContacts()");
         loadListEntities();
     }
 
@@ -143,7 +152,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * @return List ContactsEntity
      */
     public List<ContactsEntity> findContactsEntityByIdUser(UsersEntity usersEntity) {
-
+        log.info("ContactsBean => method : findContactsEntityByIdUser()");
         if (usersEntity == null) {
             log.error("User Entity is null");
             return Collections.emptyList();
@@ -163,7 +172,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * method to know which entity to reload
      */
     public void loadListEntities() {
-
+        log.info("ContactsBean => method : loadListEntities()");
         List<ContactsEntity> contactsEntities = findAllContactsEntityByIdUser(usersBean.getUsersEntity().getId());
 
         this.contactsEntityList = contactsEntities.stream().filter(ContactsEntity::isActive).collect(Collectors.toList());
@@ -175,6 +184,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * Method for soft delete
      */
     public void deleteContact() {
+        log.info("ContactsBean => method : deleteContact()");
         log.info("Id de contacts = " + getParam("contactsID"));
 
         delete(Integer.parseInt(getParam("contactsID")));
@@ -182,8 +192,14 @@ public class ContactsBean extends ExtendBean implements Serializable {
         loadListEntities();
     }
 
+    /**
+     * Find all contacts by id user
+     *
+     * @param id id
+     * @return contactsEntityList1
+     */
     protected List<ContactsEntity> findAllContactsEntityByIdUser(int id) {
-
+        log.info("ContactsBean => method : findAllContactsEntityByIdUser()");
         EntityManager em = EMF.getEM();
 
         List<ContactsEntity> contactsEntityList1 = contactsDao.findAllContactsEntityByIdUser(em, id);
@@ -198,7 +214,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * Public method for activateContact
      */
     public void activateContactbyIdContact() {
-        log.info("method : activateContactbyIdContact()");
+        log.info("ContactsBean => method : activateContactbyIdContact()");
         log.info("Id de contact = " + getParam("contactsID"));
 
         activateContact(Integer.parseInt(getParam("contactsID")));
@@ -212,6 +228,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * @param id contact id
      */
     protected void activateContact(int id) {
+        log.info("ContactsBean => method : activateContact()");
 
         FacesMessage facesMessage;
 
@@ -255,6 +272,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * @param id id Contacts
      */
     protected void delete(int id) {
+        log.info("ContactsBean => method : delete()");
 
         FacesMessage facesMessage;
 
@@ -293,6 +311,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
     }
 
     public void onItemUnselect(UnselectEvent event) {
+        log.info("ContactsBean => method : onItemUnselect()");
 
         FacesMessage facesMessage;
 
@@ -307,6 +326,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * @return List of Contact Types
      */
     public List<ContactsEntity> findAll() {
+        log.info("ContactsBean => method : findAll()");
 
         EntityManager em = EMF.getEM();
 
@@ -325,6 +345,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * @return Contacts Entity
      */
     public ContactsEntity findByIdContactAndByIdUser(int id, UsersEntity usersEntity) {
+        log.info("ContactsBean => method : findByIdContactAndByIdUser()");
 
         FacesMessage msg;
 
@@ -361,6 +382,8 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * public method that call displayOneContact
      */
     public void getDisplayOneContact() {
+        log.info("ContactsBean => method : getDisplayOneContact()");
+
         displayOneContact();
     }
 
@@ -368,6 +391,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * display one contact by CompanyId
      */
     protected void displayOneContact() {
+        log.info("ContactsBean => method : displayOneContact()");
         FacesContext fc = FacesContext.getCurrentInstance();
         ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
         FacesMessage facesMessage;
@@ -403,6 +427,8 @@ public class ContactsBean extends ExtendBean implements Serializable {
     }
 
     protected ContactsEntity findById(int id) {
+        log.info("ContactsBean => method : findById()");
+
         FacesMessage facesMessage;
 
         if (id == 0) {
@@ -432,7 +458,8 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * Create new instance for objects
      */
     public void createNewEntity() {
-        log.info("method : createNewEntity()");
+        log.info("ContactsBean => method : createNewEntity()");
+
         contactsEntity = new ContactsEntity();
     }
 
@@ -440,6 +467,8 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * Public method that call save() method
      */
     public void addContact() {
+        log.info("ContactsBean => method : addContact()");
+
         save(contactsEntity);
         createNewEntity();
         findAllActiveContacts();
@@ -452,6 +481,8 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * @return List Contacts Entities
      */
     public List<ContactsEntity> completeContactsContains(String query) {
+        log.info("ContactsBean => method : completeContactsContains()");
+
         String queryLowerCase = query.toLowerCase();
 
         List<ContactsEntity> contactsEntitiesForm = findContactsEntityByIdUser(usersBean.getUsersEntity());
@@ -467,6 +498,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      */
 
     public char getContactsEntityGroup(ContactsEntity entityGroup) {
+        log.info("ContactsBean => method : getContactsEntityGroup()");
         return entityGroup.getFirstname().charAt(0);
     }
 
@@ -476,6 +508,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * @param contactsEntity ContactsEntity
      */
     protected void save(ContactsEntity contactsEntity) {
+        log.info("ContactsBean => method : save()");
 
         contactsEntity.setRegisterDate(LocalDateTime.now());
         contactsEntity.setActive(true);
@@ -532,6 +565,8 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * Public method that call update
      */
     public void updateContact() {
+        log.info("ContactsBean => method : updateContact()");
+
         update(contactsEntity);
     }
 
@@ -541,6 +576,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * @param contactsEntity contactsEntity
      */
     protected void update(ContactsEntity contactsEntity) {
+        log.info("ContactsBean => method : update()");
 
         FacesMessage facesMessage;
         CheckEntities checkEntities = new CheckEntities();
@@ -637,10 +673,50 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * @param entity ContactsEntity
      */
     private void validateContacts(ContactsEntity entity) {
+        log.info("ContactsBean => method : validateContacts()");
+
         List<String> errors = ContactValidator.validate(entity);
         if (!errors.isEmpty()) {
             log.error("Contacts is not valid {}", entity);
             throw new InvalidEntityException("Les données du contact ne sont pas valide", ErrorCodes.CONTACT_NOT_VALID, errors);
         }
+    }
+
+    /**
+     * public method for countActiveContacts()
+     */
+    public void countActiveContactsEntity() {
+        log.info("ContactsBean => method : countActiveContactsEntity()");
+        this.countActiveContacts = countActiveContacts(usersBean.getUsersEntity());
+
+    }
+
+    /**
+     * Count all active contacts
+     *
+     * @param usersEntity userEntity
+     * @return resultCount
+     */
+    protected Long countActiveContacts(UsersEntity usersEntity) {
+        log.info("ContactsBean => method : countActiveContacts()");
+
+        if (usersEntity == null) {
+            log.error("User Entity is null");
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
+            );
+        }
+
+        EntityManager em = EMF.getEM();
+        Long resultCount;
+
+        try {
+            resultCount = contactsDao.countActiveContacts(em, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
+
+        return resultCount;
     }
 }

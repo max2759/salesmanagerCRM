@@ -31,8 +31,10 @@
                 <h:outputText value="#{branchActivities.label}"/>
                 <p:watermark value="#{bundle['branchActivities.search']}" for="@(.branchActivitiesLabel)"/>
             </p:column>
-            <p:column headerText="#{bundle['edit']}" colspan="2">
+            <p:column headerText="#{bundle['edit']}" colspan="2"
+                      rendered="#{usersBean.currentUser.isPermitted('updateBranchActivities')}">
                 <p:commandLink icon="ui-icon-edit" styleClass="NavyButton" update="@(form)"
+                               rendered="#{usersBean.currentUser.isPermitted('updateBranchActivities')}"
                                resetValues="true"
                                onclick="PF('updateBranchActivitiesModal').show();"
                                action="#{branchActivitiesBean.showModalUpdate}">

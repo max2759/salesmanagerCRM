@@ -71,6 +71,14 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     @Setter
     private List<CompaniesEntity> companiesEntitiesFiltered;
 
+    @Getter
+    @Setter
+    private Long countActiveCompanies;
+
+    @Getter
+    @Setter
+    private Long countAllCompanies;
+
     @Inject
     private AddressesBean addressesBean;
     @Inject
@@ -98,7 +106,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * this method is used in activity page
      */
     public void activityThread() {
-        log.info("CompaniesBean : activityThread");
+        log.info("CompaniesBean => method : activityThread()");
         this.listActivity = new TreeMap<>(Collections.reverseOrder());
 
         for (NotesEntity n : notesBean.getNotesEntities()) {
@@ -142,6 +150,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * public method that call save
      */
     public void saveCompany() {
+        log.info("CompaniesBean => method : saveCompany()");
         save(companiesEntity);
         createNewEntity();
         findAllActiveCompanies();
@@ -153,7 +162,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @param companiesEntity CompaniesEntity
      */
     protected void save(CompaniesEntity companiesEntity) {
-
+        log.info("CompaniesBean => method : save()");
         companiesEntity.setRegisterDate(LocalDateTime.now());
         companiesEntity.setActive(true);
 
@@ -225,6 +234,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * Method that call findActiveCompanies and fill companiesEntityList
      */
     public void findAllActiveCompanies() {
+        log.info("CompaniesBean => method : findAllActiveCompanies()");
         loadListEntities();
     }
 
@@ -232,7 +242,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * method to know which entity to reload
      */
     public void loadListEntities() {
-
+        log.info("CompaniesBean => method : loadListEntities()");
         this.companiesEntities = findAllCompaniesByIdUser(usersBean.getUsersEntity().getId());
 
         this.companiesEntityList = companiesEntities.stream().filter(CompaniesEntity::isActive).collect(Collectors.toList());
@@ -246,6 +256,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @return List Contacts Entities
      */
     public List<CompaniesEntity> completeCompaniesContains(String query) {
+        log.info("CompaniesBean => method : completeCompaniesContains()");
         String queryLowerCase = query.toLowerCase();
 
         List<CompaniesEntity> companiesEntitiesForm = findCompaniesEntityByIdUser(usersBean.getUsersEntity());
@@ -260,6 +271,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @return entity label
      */
     public char getCompaniesEntityGroup(CompaniesEntity entityGroup) {
+        log.info("CompaniesBean => method : getCompaniesEntityGroup()");
         return entityGroup.getLabel().charAt(0);
     }
 
@@ -271,7 +283,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @return List CompaniesEntities
      */
     protected List<CompaniesEntity> findAllCompaniesByIdUser(int id) {
-
+        log.info("CompaniesBean => method : findAllCompaniesByIdUser()");
         log.info("Start method findAll");
 
         EntityManager em = EMF.getEM();
@@ -290,7 +302,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @return List CompaniesEntity
      */
     public List<CompaniesEntity> findCompaniesEntityByIdUser(UsersEntity usersEntity) {
-
+        log.info("CompaniesBean => method : findCompaniesEntityByIdUser()");
         if (usersEntity == null) {
             log.error("User Entity is null");
             return Collections.emptyList();
@@ -314,7 +326,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @return Companies Entity
      */
     public CompaniesEntity findByIdCompanyAndByIdUser(int id, UsersEntity usersEntity) {
-
+        log.info("CompaniesBean => method : findByIdCompanyAndByIdUser()");
         FacesMessage msg;
 
         if (id == 0) {
@@ -347,6 +359,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
     public List<CompaniesEntity> callFindByIdCompaniAndByIdUser(int id) {
+        log.info("CompaniesBean => method : callFindByIdCompaniAndByIdUser()");
         return findByIdCompaniAndByIdUser(id, usersBean.getUsersEntity());
     }
 
@@ -358,7 +371,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @return CompaniesEntity
      */
     private List<CompaniesEntity> findByIdCompaniAndByIdUser(int id, UsersEntity usersEntity) {
-
+        log.info("CompaniesBean => method : findByIdCompaniAndByIdUser()");
         FacesMessage msg;
 
         if (id == 0) {
@@ -394,6 +407,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * Create new instance for objects
      */
     public void createNewEntity() {
+        log.info("CompaniesBean => method : createNewEntity()");
         log.info("method : createNewEntity()");
         companiesEntity = new CompaniesEntity();
     }
@@ -404,6 +418,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @param entity CompaniesEntity
      */
     private void validateCompanies(CompaniesEntity entity) {
+        log.info("CompaniesBean => method : validateCompanies()");
         List<String> errors = CompanyValidator.validate(entity);
         if (!errors.isEmpty()) {
             log.error("Company is not valid {}", entity);
@@ -415,6 +430,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * Public method to display company
      */
     public void displayCompanyDetails() {
+        log.info("CompaniesBean => method : displayCompanyDetails()");
         displayOneCompany();
     }
 
@@ -422,6 +438,8 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * Get company by it's ID
      */
     protected void displayOneCompany() {
+        log.info("CompaniesBean => method : displayOneCompany()");
+
         FacesContext fc = FacesContext.getCurrentInstance();
         ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
         FacesMessage facesMessage;
@@ -463,6 +481,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @return CompaniesEntity
      */
     protected CompaniesEntity findById(int id) {
+        log.info("CompaniesBean => method : findById()");
 
         FacesMessage msg;
 
@@ -493,6 +512,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * Public method that call update company
      */
     public void updateCompanies() {
+        log.info("CompaniesBean => method : updateCompanies()");
         update(companiesEntity);
     }
 
@@ -502,6 +522,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @param companiesEntity CompaniesEntity
      */
     protected void update(CompaniesEntity companiesEntity) {
+        log.info("CompaniesBean => method : update()");
 
         FacesMessage facesMessage;
 
@@ -581,8 +602,8 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * Public method for activeCompany
      */
     public void activateCompanyByIdCompany() {
+        log.info("CompaniesBean => method : activateCompanyByIdCompany()");
 
-        log.info("method : activateCompany()");
         log.info("Id de companies = " + getParam("companiesID"));
 
         activeCompany(Integer.parseInt(getParam("companiesID")));
@@ -597,6 +618,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @param id id Company
      */
     protected void activeCompany(int id) {
+        log.info("CompaniesBean => method : activeCompany()");
 
         FacesMessage facesMessage;
 
@@ -648,7 +670,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * @param id id Company
      */
     protected void delete(int id) {
-
+        log.info("CompaniesBean => method : delete()");
         FacesMessage facesMessage;
 
         if (id == 0) {
@@ -697,11 +719,87 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      * Method for delete
      */
     public void deleteCompany() {
-        log.info("method : deleteCompany()");
+        log.info("CompaniesBean => method : deleteCompany()");
         log.info("Id de companies = " + getParam("companiesID"));
 
         delete(Integer.parseInt(getParam("companiesID")));
 
         loadListEntities();
+    }
+
+    /**
+     * public method for countActiveCompanies()
+     */
+    public void countActiveCompaniesEntity() {
+        log.info("CompaniesBean => method : countActiveCompaniesEntity()");
+        this.countActiveCompanies = countActiveCompanies(usersBean.getUsersEntity());
+
+    }
+
+    /**
+     * Count all active companies
+     *
+     * @param usersEntity userEntity
+     * @return resultCount
+     */
+    protected Long countActiveCompanies(UsersEntity usersEntity) {
+        log.info("CompaniesBean => method : countActiveCompanies()");
+
+        if (usersEntity == null) {
+            log.error("User Entity is null");
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
+            );
+        }
+
+        EntityManager em = EMF.getEM();
+        Long resultCount;
+
+        try {
+            resultCount = companiesDao.countActiveCompanies(em, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
+
+        return resultCount;
+    }
+
+    /**
+     * public method for countAllCompanies()
+     */
+    public void countAllCompaniesEntity() {
+        log.info("CompaniesBean => method : countAllCompaniesEntity()");
+        this.countAllCompanies = countAllCompanies(usersBean.getUsersEntity());
+
+    }
+
+    /**
+     * Count all active and disable companies
+     *
+     * @param usersEntity userEntity
+     * @return resultCount
+     */
+    protected Long countAllCompanies(UsersEntity usersEntity) {
+        log.info("CompaniesBean => method : countAllCompanies()");
+
+        if (usersEntity == null) {
+            log.error("User Entity is null");
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
+            );
+        }
+
+        EntityManager em = EMF.getEM();
+        Long resultCount;
+
+        try {
+            resultCount = companiesDao.countAllCompanies(em, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
+
+        return resultCount;
     }
 }

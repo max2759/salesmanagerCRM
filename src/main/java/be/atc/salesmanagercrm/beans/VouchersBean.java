@@ -54,6 +54,9 @@ public class VouchersBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private List<VouchersEntity> vouchersEntitiesFiltered;
+    @Getter
+    @Setter
+    private Long countActiveVouchers;
 
     @Inject
     private VoucherHistoriesBean voucherHistoriesBean;
@@ -588,6 +591,44 @@ public class VouchersBean extends ExtendBean implements Serializable {
             }
         }
         return entity;
+    }
+
+    /**
+     * public method for countActiveVouchers()
+     */
+    public void countActiveVouchersEntity() {
+        log.info("VouchersBean => method : countActiveVouchersEntity()");
+        this.countActiveVouchers = countActiveVouchers(usersBean.getUsersEntity());
+
+    }
+
+    /**
+     * Count all active vouchers
+     *
+     * @param usersEntity userEntity
+     * @return resultCount
+     */
+    protected Long countActiveVouchers(UsersEntity usersEntity) {
+        log.info("VouchersBean => method : countActiveVouchers()");
+
+        if (usersEntity == null) {
+            log.error("User Entity is null");
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
+            );
+        }
+
+        EntityManager em = EMF.getEM();
+        Long resultCount;
+
+        try {
+            resultCount = dao.countActiveVouchers(em, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
+
+        return resultCount;
     }
 
 }

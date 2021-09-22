@@ -13,22 +13,20 @@
 </cc:interface>
 <cc:implementation>
     <f:view>
+        <p:dataTable paginator="true" rows="10"
+                     paginatorPosition="bottom"
+                     emptyMessage="#{bundle['tasks.notFound']}"
+                     var="task"
+                     value="#{tasksBean.tasksEntitiesDueToday}">
 
-        <div class="ui-g-12 ui-md-2">
-            <p:dataTable paginator="true" rows="10"
-                         paginatorPosition="bottom"
-                         emptyMessage="#{bundle['tasks.notFound']}"
-                         var="task"
-                         value="#{tasksBean.tasksEntitiesDueToday}">
+            <p:column>
+                <h:outputText id="titleToday" value="#{task.title}"/>
+                <p:tooltip for="titleToday"
+                           value="#{empty task.description ? '' : bundle['tasks.description'].concat(' : ').concat(task.description)}"
+                           showEffect="clip" hideEffect="fold" position="bottom"/>
+            </p:column>
+        </p:dataTable>
 
-                <p:column headerText="#{bundle['tasks.tasksDueToday']}">
-                    <h:outputText id="titleToday" value="#{task.title}"/>
-                    <p:tooltip for="titleToday"
-                               value="#{empty task.description ? '' : bundle['tasks.description'].concat(' : ').concat(task.description)}"
-                               showEffect="clip" hideEffect="fold" position="bottom"/>
-                </p:column>
-            </p:dataTable>
-        </div>
     </f:view>
 </cc:implementation>
 </html>

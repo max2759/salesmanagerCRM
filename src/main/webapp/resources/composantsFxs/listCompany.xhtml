@@ -89,9 +89,10 @@
                         value="#{empty companies.branchActivitiesByIdBranchActivities.label ? '--' : companies.branchActivitiesByIdBranchActivities.label}"/>
             </p:column>
 
-            <p:column>
+            <p:column rendered="#{usersBean.currentUser.isPermitted('deleteCompagnies')}">
                 <p:commandLink update="@(form) msgs"
-                               action="#{companiesBean.deleteCompany}">
+                               action="#{companiesBean.deleteCompany}"
+                               rendered="#{usersBean.currentUser.isPermitted('deleteCompagnies')}">
                     <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                icon="fa fa-warning"/>
                     <i class="ui-icon ui-icon-delete-forever"/>

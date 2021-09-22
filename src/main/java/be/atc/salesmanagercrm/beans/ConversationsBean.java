@@ -24,7 +24,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -240,7 +239,7 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     public void get10convers() {
         conversationsEntityList = find10convers();
         log.info("avant modif :" + conversationsEntityList);
-        Collections.reverse(conversationsEntityList);
+//        Collections.reverse(conversationsEntityList);
         log.info("après modif :" + conversationsEntityList);
     }
 

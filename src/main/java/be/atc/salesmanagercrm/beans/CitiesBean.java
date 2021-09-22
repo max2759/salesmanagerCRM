@@ -44,6 +44,7 @@ public class CitiesBean extends ExtendBean implements Serializable {
      * @return List BranchActivitiesEntity
      */
     public List<CitiesEntity> findCitiesEntityList() {
+        log.info("CitiesBean => method : findCitiesEntityList()");
 
         EntityManager em = EMF.getEM();
 
@@ -62,6 +63,7 @@ public class CitiesBean extends ExtendBean implements Serializable {
      * @return CitiesEntity CitiesEntity
      */
     public CitiesEntity findById(int id) {
+        log.info("CitiesBean => method : findById()");
 
         FacesMessage facesMessage;
 
@@ -97,6 +99,7 @@ public class CitiesBean extends ExtendBean implements Serializable {
      * @return label of entitygroup
      */
     public char getCitiesEntityGroup(CitiesEntity entityGroup) {
+        log.info("CitiesBean => method : getCitiesEntityGroup()");
         return entityGroup.getLabel().charAt(0);
     }
 
@@ -108,7 +111,7 @@ public class CitiesBean extends ExtendBean implements Serializable {
      * @return List Cities Entities
      */
     public List<CitiesEntity> completeCitiesEntityContains(String query) {
-
+        log.info("CitiesBean => method : completeCitiesEntityContains()");
         String queryLowerCase = query.toLowerCase();
 
         List<CitiesEntity> citiesEntityListForm = findCitiesEntityList();

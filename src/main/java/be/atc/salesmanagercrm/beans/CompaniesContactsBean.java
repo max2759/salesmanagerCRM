@@ -70,7 +70,7 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
      */
     protected void createCompaniesContacts() {
 
-        log.info("Start of createCompaniesContacts");
+        log.info("CompaniesContactsBean => method : createCompaniesContacts()");
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -97,7 +97,12 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
 
     }
 
+    /**
+     * Fill companies
+     */
     public void fillSelectedCompaniesContacts() {
+        log.info("CompaniesContactsBean => method : fillSelectedCompaniesContacts()");
+
         if (contactsBean.getContactsEntity() == null) {
             return;
         }
@@ -117,7 +122,7 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
      * @return CompaniesContactsEntity
      */
     protected List<CompaniesContactsEntity> findByIdContacts(int id) {
-
+        log.info("CompaniesContactsBean => method : findByIdContacts()");
         FacesMessage facesMessage;
 
         if (id == 0) {
@@ -149,7 +154,7 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
      */
     protected void delete(int id) {
 
-        log.info("CompaniesContactsBean => method : delete(int id, int idUser)");
+        log.info("CompaniesContactsBean => method : delete()");
 
         FacesMessage msg;
 
@@ -197,7 +202,7 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
      * @return CompaniesContact Entity
      */
     protected CompaniesContactsEntity findById(int id) {
-        log.info("CompaniesContact => method : findById(int id, int idUser)");
+        log.info("CompaniesContact => method : findById()");
 
         FacesMessage msg;
 
@@ -226,20 +231,25 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
                 ));
     }
 
+    /**
+     * public method for findByIdCompany
+     */
     public void getFindByIdCompany() {
+        log.info("CompaniesContactsBean => method : getFindByIdCompany()");
+
         log.info("ID company" + companiesBean.getCompaniesEntity().getId());
         this.companiesContactsEntityList = findByIdCompany(companiesBean.getCompaniesEntity());
     }
 
     /**
-     * Return list of CompaniesContacts by compan id
+     * Return list of CompaniesContacts by company id
      *
      * @param companiesEntity CompaniesEntity
      * @return companiesContactsEntities
      */
     protected List<CompaniesContactsEntity> findByIdCompany(CompaniesEntity companiesEntity) {
 
-        log.info("CompaniesContactsBean => method : findByIdCompany(int id)");
+        log.info("CompaniesContactsBean => method : findByIdCompany()");
 
         FacesMessage facesMessage;
 
