@@ -2,7 +2,6 @@ package be.atc.salesmanagercrm.converters;
 
 
 import be.atc.salesmanagercrm.beans.RolesBean;
-import be.atc.salesmanagercrm.entities.RolesEntity;
 import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -23,27 +22,18 @@ public class RolesConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
-        RolesEntity rolesEntity;
-
         log.info("value:  " + value);
-        if (value != null || !value.isEmpty()) {
-            try {
-                rolesEntity = rolesBean.findByLabel(value);
-                log.info("in roleConverter " + rolesEntity.getLabel() + " " + rolesEntity.getId());
-                return rolesEntity;
-            } catch (EntityNotFoundException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-                throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.error")));
-            }
-        } else {
-            throw new ConverterException(new FacesMessage(JsfUtils.returnMessage(locale, "companyTypes.error")));
-        }
-        //return null;
-      /*  RolesEntity rolesEntity = new RolesEntity();
-        rolesEntity.setId(1);
-        return rolesEntity;
-        */
 
+        if (value == null) {
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "roleNoExist"), null));
+        }
+
+        try {
+            return rolesBean.findByLabel(value);
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "roleNoExist"), null));
+        }
     }
 
     @Override

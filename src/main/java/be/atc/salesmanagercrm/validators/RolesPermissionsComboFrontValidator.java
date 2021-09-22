@@ -15,6 +15,7 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import javax.persistence.EntityManager;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * @author Larche Marie-Élise
@@ -34,7 +35,7 @@ public class RolesPermissionsComboFrontValidator implements Validator {
 
         RolesPermissionsEntity rolesPermissionsEntity = new RolesPermissionsEntity();
         log.info((String) value);
-        PermissionsEntity permissionsEntity = pdao.findByLabel(em, (String) value);
+        Optional<PermissionsEntity> permissionsEntity = pdao.findByLabel(em, (String) value);
 
         em.clear();
         em.close();

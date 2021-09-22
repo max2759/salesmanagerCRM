@@ -716,4 +716,28 @@ public class CheckEntities extends ExtendBean implements Serializable {
             );
         }
     }
+
+    public void checkRoleByLabel(UsersEntity entity) {
+        if (entity == null) {
+            log.error("role is null");
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
+            );
+        }
+        EntityManager em = EMF.getEM();
+        RolesEntity entityActive;
+        try {
+            entityActive = rolesDao.findByLabel(em, entity.getRolesByIdRoles().getLabel());
+        } finally {
+            em.clear();
+            em.close();
+        }
+        if (entityActive == null) {
+            log.warn("role isn't exist" + entity.getId());
+            throw new EntityNotFoundException(
+                    "Le role est inexistant " + entity.getId(), ErrorCodes.ROLES_NOT_VALID
+            );
+        }
+    }
+
 }

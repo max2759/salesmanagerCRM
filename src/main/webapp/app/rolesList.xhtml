@@ -20,7 +20,7 @@
                             value="#{bundle['role.create']}"
                             rendered="#{usersBean.currentUser.isPermitted('addRoles')}"
                             action="#{rolesBean.createNewRoleEntity}"
-                            update="addRoleDialogForm:addRoleDialog"
+                            update="@(form)"
                             oncomplete="PF('addRole').show();return false;"
                             styleClass="NavyButton marginBottom10">
                     </p:commandButton>
@@ -116,30 +116,37 @@
 
                     <h:form id="updateRoleDialogForm">
 
-                        <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <div class="ui-g form-group" style="margin-top:10px;">
 
+                            <div class="ui-g-12 ui-lg-5"><p:outputLabel for="roleLabelUpdate"
+                                                                        value="#{bundle['role.label']}:"/></div>
+                            <div class="ui-g-12 ui-lg-4">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="roleLabelUpdate" value="#{rolesBean.rolesEntity.label}"
+                                                 maxlength="255"
+                                                 required="true"
+                                                 requiredMessage="#{bundle['roleEmpty']}">
+                                        <p:ajax process="@form"
+                                                update="msgRoleUpdate updateRoleDialogForm:updateRole"
+                                                event="keyup" resetValues="true"/>
+                                    </p:inputText>
+                                    <label>#{bundle['role.label']}</label>
+                                    <p:message id="msgRoleUpdate" for="roleLabelUpdate"/>
+                                </h:panelGroup>
+                            </div>
 
-                            <p:outputLabel for="roleLabelUpdate" value="#{bundle['role.label']}"/>
-                            <p:inputText value="#{rolesBean.rolesEntity.label}"
-                                         placeholder="#{rolesBean.roleForDialog.label}" required="true"
-                                         id="roleLabelUpdate">
-                                <p:ajax update="updateRoleDialogForm:updateRole"
-                                        event="keyup"/>
-                                <p:ajax update="roleLabelUp"
-                                        global="false" event="keyup"/>
-                                <f:validator validatorId="roleLabelValidator"></f:validator>
-                            </p:inputText>
-
-
-                        </p:panelGrid>
-                        <div align="right" class="mgin-top">
-                            <p:commandButton value="#{bundle['validate']}" action="#{rolesBean.updateEntity}"
-                                             id="updateRole"
-                                             oncomplete="if (!args.validationFailed){PF('updateRole').hide()}; PF('displayAllEntities').filter();"
-                                             resetValues="true"
-                                             update="@(form)"/>
                         </div>
-                        <p:messages id="roleLabelUp" closable="true" display="message"/>
+                        <div class="ui-g-12 ui-lg-12">
+                            <div align="right" class="mgin-top">
+                                <p:commandButton value="#{bundle['validate']}" action="#{rolesBean.updateEntity}"
+                                                 id="updateRole"
+                                                 disabled="#{facesContext.validationFailed or empty rolesBean.rolesEntity.label}"
+                                                 oncomplete="if (!args.validationFailed){PF('updateRole').hide()}; PF('displayAllEntities').filter();"
+                                                 resetValues="true"
+                                                 update="@(form)"/>
+                            </div>
+                        </div>
+
                         <p:hotkey bind="esc" handler="PF('updateRole').hide()"/>
                     </h:form>
                 </p:dialog>
@@ -147,33 +154,43 @@
             </div>
             <!-- e*******************add*******************e- -->
             <div class="ui-g ui-fluid">
-                <h:form id="addRoleDialogForm">
+                <p:dialog header="#{bundle['role.create']}" widgetVar="addRole" modal="true"
+                          responsive="true" id="addRoleDialog">
+                    <h:form id="addRoleDialogForm">
 
-                    <p:dialog header="#{bundle['role.create']}" widgetVar="addRole" modal="true"
-                              responsive="true" id="addRoleDialog">
-
-                        <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" id="addRoleD">
-                            <p:outputLabel for="roleLabel" value="#{bundle['role.create']}"/>
-                            <p:inputText value="#{rolesBean.rolesEntityNew.label}" id="roleLabel" required="true">
-                                <p:ajax update="addRoleDialogForm:addRole"
-                                        event="keyup"/>
-                                <p:ajax update="roleLabelAdd"
-                                        global="false" event="keyup"/>
-                                <f:validator validatorId="roleLabelValidator"></f:validator>
-                            </p:inputText>
-
-                        </p:panelGrid>
-                        <div align="right" class="mgin-top">
-                            <p:commandButton value="Confirmer Valider" action="#{rolesBean.addEntity}" id="addRole"
-                                             disabled="#{empty rolesBean.rolesEntityNew.label or rolesBean.rolesEntityNew.label.length() le 1}"
-                                             oncomplete="if (!args.validationFailed){PF('addRole').hide()}; PF('displayAllEntities').filter();"
-                                             resetValues="true"
-                                             update="@(form)"/>
+                        <div class="ui-g form-group" style="margin-top:10px;">
+                            <div class="ui-g-12 ui-lg-5"><p:outputLabel for="roleLabelAdd"
+                                                                        value="#{bundle['role.label']}:"/></div>
+                            <div class="ui-g-12 ui-lg-4">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="roleLabelAdd" value="#{rolesBean.rolesEntityNew.label}"
+                                                 maxlength="255"
+                                                 required="true"
+                                                 requiredMessage="#{bundle['roleEmpty']}">
+                                        <p:ajax process="@form"
+                                                update="msgRoleAdd addRoleDialogForm:addRole"
+                                                event="keyup" resetValues="true"/>
+                                    </p:inputText>
+                                    <label>#{bundle['role.label']}</label>
+                                    <p:message id="msgRoleAdd" for="roleLabelAdd"/>
+                                </h:panelGroup>
+                            </div>
                         </div>
-                        <p:messages id="roleLabelAdd" closable="true" display="message"/>
-                    </p:dialog>
-                    <p:hotkey bind="esc" handler="PF('addRole').hide()"/>
-                </h:form>
+                        <div class="ui-g-12 ui-lg-12">
+                            <div align="right" class="mgin-top">
+                                <p:commandButton value="#{bundle['validate']}" action="#{rolesBean.addEntity}"
+                                                 id="addRole"
+                                                 disabled="#{facesContext.validationFailed or empty rolesBean.rolesEntityNew.label}"
+                                                 oncomplete="if (!args.validationFailed){PF('addRole').hide()}; PF('displayAllEntities').filter();"
+                                                 resetValues="true"
+                                                 update="@(form)"/>
+                            </div>
+                        </div>
+
+                        <p:hotkey bind="esc" handler="PF('addRole').hide()"/>
+                    </h:form>
+                </p:dialog>
+
             </div>
 
 
