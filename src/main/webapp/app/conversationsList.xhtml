@@ -84,11 +84,12 @@
                             <p:column>
                                 <h:panelGroup rendered="#{convers.active}">
                                     <p:commandLink update="@form msg"
-                                                   rendered="#{usersBean.currentUser.isPermitted('deleteConversations')}">
-                                        action="#{conversationsBean.delete(convers)}">
+                                                   rendered="#{usersBean.currentUser.isPermitted('deleteConversations')}"
+                                                   action="#{conversationsBean.delete(convers)}">
+                                        <i class="ui-icon ui-icon-delete-forever"></i>
                                         <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
                                                    icon="fa fa-warning"/>
-                                        <i class="ui-icon ui-icon-delete-forever"></i>
+
                                         <f:param name="idEntity" value="#{c.id}"/>
                                         <f:param name="typeEntities" value="all"/>
                                     </p:commandLink>
@@ -102,10 +103,13 @@
                                     </p:confirmDialog>
                                 </h:panelGroup>
 
+
                                 <h:panelGroup rendered="#{not convers.active}">
-                                    <p:commandButton value="#{bundle['activate']}"
-                                                     action="#{conversationsBean.activate(convers)}"
-                                                     update="@(form) msg"/>
+                                    <p:commandLink update="@(form) msg"
+                                                   rendered="#{usersBean.currentUser.isPermitted('deleteConversations')}"
+                                                   action="#{conversationsBean.activate(convers)}">
+                                        <i class="ui-icon ui-icon-update"/>
+                                    </p:commandLink>
                                 </h:panelGroup>
 
 
@@ -152,10 +156,6 @@
                 </p:dialog>
 
             </h:form>
-
-            <p:messages id="messages" showDetail="true">
-                <p:autoUpdate/>
-            </p:messages>
 
 
         </h:body>

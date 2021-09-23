@@ -125,10 +125,12 @@
                                     <p:inputText id="roleLabelUpdate" value="#{rolesBean.rolesEntity.label}"
                                                  maxlength="255"
                                                  required="true"
-                                                 requiredMessage="#{bundle['roleEmpty']}">
+                                                 requiredMessage="#{bundle['roleEmpty']}"
+                                    >
                                         <p:ajax process="@form"
                                                 update="msgRoleUpdate updateRoleDialogForm:updateRole"
                                                 event="keyup" resetValues="true"/>
+                                        <f:validator validatorId="roleLabelValidator"></f:validator>
                                     </p:inputText>
                                     <label>#{bundle['role.label']}</label>
                                     <p:message id="msgRoleUpdate" for="roleLabelUpdate"/>
@@ -170,6 +172,7 @@
                                         <p:ajax process="@form"
                                                 update="msgRoleAdd addRoleDialogForm:addRole"
                                                 event="keyup" resetValues="true"/>
+                                        <f:validator validatorId="roleLabelValidator"></f:validator>
                                     </p:inputText>
                                     <label>#{bundle['role.label']}</label>
                                     <p:message id="msgRoleAdd" for="roleLabelAdd"/>

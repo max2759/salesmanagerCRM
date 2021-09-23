@@ -33,7 +33,7 @@ public class RolesValidator {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return errors;
         }
-        if (entity.getLabel() == null || entity.getLabel().isEmpty()) {
+        if (entity.getLabel() == null || entity.getLabel().isEmpty() || entity.getLabel() == " ") {
             errors.add("Le nom de rôle est vide");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "role.empty"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);

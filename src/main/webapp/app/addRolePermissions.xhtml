@@ -62,12 +62,13 @@
                                               layout="responsive"
                                               columns="4">
                             <f:selectItems value="#{permissionsBean.permissionsEntityList}" var="rolesPermissions"
-                                           itemLabel="#{rolesPermissions.label}" itemValue="#{rolesPermissions}"/>
+                                           itemLabel="#{bundle[rolesPermissions.label]}"
+                                           itemValue="#{rolesPermissions}"/>
                         </p:selectManyCheckbox>
 
                         <div align="right" class="mgin-top">
                             <p:commandButton value="#{bundle['validate']}"
-                                             rendered="#{usersBean.currentUser.isPermitted('updateRolesPermissions')}"
+                                             rendered="#{usersBean.currentUser.isPermitted('updateRolesPermissions') and usersBean.currentUser.isPermitted('addRolesPermissions') and usersBean.currentUser.isPermitted('deleteRolesPermissions')}"
                                              action="#{rolesPermissionsBean.manageRolesPermissions}"
                                              process="@(form)"
                                              update="@(form)"/>
