@@ -37,6 +37,8 @@ public class RoleLabelFrontValidator extends ExtendBean implements Validator {
         try {
             validateLength(rolesEntity);
         } catch (InvalidOperationException exception) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "role.warning1", null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             throw new ValidatorException(new FacesMessage(getMessageTooShort()));
         }
@@ -44,6 +46,8 @@ public class RoleLabelFrontValidator extends ExtendBean implements Validator {
         try {
             checkEntities.checkRoleByLabel(rolesEntity);
         } catch (InvalidEntityException exception) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "roles.labelExist", null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             throw new ValidatorException(new FacesMessage(getMessageErrorLabelAlreadyExist()));
         }
@@ -59,15 +63,16 @@ public class RoleLabelFrontValidator extends ExtendBean implements Validator {
     }
 
     private String getMessageTooShort() {
-        return JsfUtils.returnMessage(locale, "error.notEnoughChar");
+        return JsfUtils.returnMessage(locale, "role.warning1");
     }
 
     public void validateLength(RolesEntity entity) {
+        log.info(entity.getLabel().substring(0, 1));
 
-        if (entity.getLabel() != null && entity.getLabel().length() < 2) {
-            log.warn("longueur trop courte", entity.getLabel());
+        if (entity.getLabel() != null && entity.getLabel().charAt(0) == ' ') {
+            log.warn("au moins 1 caractére", entity.getLabel());
             throw new InvalidOperationException(
-                    "longueur trop courte " + entity.getLabel(), ErrorCodes.ROLES_NOT_VALID
+                    "au moiins 1 caractére " + entity.getLabel(), ErrorCodes.ROLES_NOT_VALID
             );
         }
     }

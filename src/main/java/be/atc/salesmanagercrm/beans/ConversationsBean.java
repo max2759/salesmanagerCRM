@@ -202,7 +202,7 @@ public class ConversationsBean extends ExtendBean implements Serializable {
 
     public void activate(ConversationsEntity entity) {
         FacesMessage msg;
-
+log.info("conversationListActive");
         try {
             validateConvers(conversationsEntity);
         } catch (InvalidEntityException exception) {

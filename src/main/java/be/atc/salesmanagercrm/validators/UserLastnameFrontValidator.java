@@ -38,7 +38,14 @@ public class UserLastnameFrontValidator implements Validator {
             validateLength(usersEntity);
         } catch (InvalidOperationException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            throw new ValidatorException(new FacesMessage(getMessageEmailError()));
+            throw new ValidatorException(new FacesMessage(getMessageLenghtError()));
+        }
+
+        try {
+            validateName(usersEntity);
+        } catch (InvalidOperationException exception) {
+            log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            throw new ValidatorException(new FacesMessage(getMessageLenghtError()));
         }
 
     }
@@ -48,7 +55,16 @@ public class UserLastnameFrontValidator implements Validator {
      *
      * @return jsf utils message
      */
-    private String getMessageEmailError() {
+    private String getMessageLenghtError() {
+        return JsfUtils.returnMessage(locale, "error.notEnoughChar");
+    }
+
+    /**
+     * Return message for username already in DB
+     *
+     * @return jsf utils message
+     */
+    private String getMessageStringError() {
         return JsfUtils.returnMessage(locale, "error.notEnoughChar");
     }
 
@@ -64,6 +80,16 @@ public class UserLastnameFrontValidator implements Validator {
             FacesContext.getCurrentInstance().addMessage(null, msg);
 */
             //  FacesContext.getCurrentInstance().addMessage("mail", new FacesMessage(FacesMessage.SEVERITY_INFO, "error.notEnoughChar", "2"));
+        }
+    }
+
+    public void validateName(UsersEntity entity) {
+
+        if (entity.getFirstname() != null && entity.getFirstname().charAt(0) == ' ') {
+            log.warn("au moins 1 caractére", entity.getFirstname());
+            throw new InvalidOperationException(
+                    "au moiins 1 caractére " + entity.getFirstname(), ErrorCodes.ROLES_NOT_VALID
+            );
         }
     }
 

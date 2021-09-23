@@ -41,7 +41,8 @@
                             </h:commandLink>
                         </h:form>
                     </li>
-                    <h:panelGroup rendered="#{usersBean.currentUser.hasRole('Admin')}">
+                    <h:panelGroup
+                            rendered="#{usersBean.currentUser.isPermitted('showRoles') or usersBean.currentUser.isPermitted('showRolesPermissions') or usersBean.currentUser.isPermitted('showUsers') }">
                         <li>
                             <a href="#">
                                 <i class="fa fa-fw fa-cog"></i>
@@ -49,30 +50,36 @@
                                 <i class="fa fa-angle-down menu-arrow"></i>
                             </a>
                             <ul>
-                                <li role="menuitem">
-                                    <h:form>
-                                        <h:commandLink action="#{usersBean.goToRolesPage}">
-                                            <i class="fa fa-fw fa-user"></i>
-                                            <span class="topbar-item-name">#{bundle['roleList.title']}</span>
-                                        </h:commandLink>
-                                    </h:form>
-                                </li>
-                                <li role="menuitem">
-                                    <h:form>
-                                        <h:commandLink action="#{usersBean.goToRolesPermissionsPage}">
-                                            <i class="fa fa-fw fa-user"></i>
-                                            <span class="topbar-item-name">#{bundle['manageRolePermissions.title']}</span>
-                                        </h:commandLink>
-                                    </h:form>
-                                </li>
-                                <li role="menuitem">
-                                    <h:form>
-                                        <h:commandLink action="#{usersBean.goToUserListPage}">
-                                            <i class="fa fa-fw fa-user"></i>
-                                            <span class="topbar-item-name">#{bundle['usersList.title']}</span>
-                                        </h:commandLink>
-                                    </h:form>
-                                </li>
+                                <h:panelGroup rendered="#{usersBean.currentUser.isPermitted('showRoles')}">
+                                    <li role="menuitem">
+                                        <h:form>
+                                            <h:commandLink action="#{usersBean.goToRolesPage}">
+                                                <i class="fa fa-fw fa-user"></i>
+                                                <span class="topbar-item-name">#{bundle['roleList.title']}</span>
+                                            </h:commandLink>
+                                        </h:form>
+                                    </li>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{usersBean.currentUser.isPermitted('showRolesPermissions')}">
+                                    <li role="menuitem">
+                                        <h:form>
+                                            <h:commandLink action="#{usersBean.goToRolesPermissionsPage}">
+                                                <i class="fa fa-fw fa-user"></i>
+                                                <span class="topbar-item-name">#{bundle['manageRolePermissions.title']}</span>
+                                            </h:commandLink>
+                                        </h:form>
+                                    </li>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{usersBean.currentUser.isPermitted('showUsers')}">
+                                    <li role="menuitem">
+                                        <h:form>
+                                            <h:commandLink action="#{usersBean.goToUserListPage}">
+                                                <i class="fa fa-fw fa-user"></i>
+                                                <span class="topbar-item-name">#{bundle['usersList.title']}</span>
+                                            </h:commandLink>
+                                        </h:form>
+                                    </li>
+                                </h:panelGroup>
                             </ul>
                         </li>
                     </h:panelGroup>
