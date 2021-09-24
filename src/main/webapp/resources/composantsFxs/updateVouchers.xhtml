@@ -21,7 +21,7 @@
                     <div class="ui-g-12 ui-lg-2"><p:outputLabel for="titleUpdate" value="#{bundle['title']}:"/></div>
                     <div class="ui-g-12 ui-lg-4">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inplace>
+                            <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateVouchers')}">
                                 <p:inputText id="titleUpdate" value="#{vouchersBean.vouchersEntity.title}"
                                              required="true"
                                              maxlength="255"
@@ -33,6 +33,9 @@
                                 <label>#{bundle['title']} :</label>
                             </p:inplace>
                             <p:message id="msg" for="titleUpdate"/>
+
+                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateVouchers')}"
+                                           value="#{vouchersBean.vouchersEntity.title}"/>
                         </h:panelGroup>
                     </div>
 
@@ -42,7 +45,8 @@
                                                                 value="#{bundle['vouchers.status']}:"/>
                     </div>
                     <div class="ui-g-12 ui-lg-4">
-                        <p:inplace emptyLabel="..."
+                        <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateVouchers')}"
+                                   emptyLabel="..."
                                    label="#{vouchersBean.vouchersEntity.voucherStatusByIdVoucherStatus.label}"
                                    effectSpeed="fast" event="click">
                             <p:selectOneMenu id="voucherStatus"
@@ -54,12 +58,17 @@
                                                itemLabel="#{voucherStatusEntities.label}"/>
                             </p:selectOneMenu>
                         </p:inplace>
+                        <h:panelGroup styleClass="md-inputfield"
+                                      rendered="#{not usersBean.currentUser.isPermitted('updateVouchers')}">
+                            <p:outputLabel value="#{vouchersBean.vouchersEntity.voucherStatusByIdVoucherStatus.label}"/>
+                        </h:panelGroup>
                     </div>
 
                     <div class="ui-g-12 ui-lg-2"><p:outputLabel for="voucherPriority" value="#{bundle['priority']}:"/>
                     </div>
                     <div class="ui-g-12 ui-lg-4">
-                        <p:inplace emptyLabel="..."
+                        <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateVouchers')}"
+                                   emptyLabel="..."
                                    label="#{vouchersBean.vouchersEntity.priority.label}"
                                    effectSpeed="fast" event="click">
                             <p:selectOneMenu id="voucherPriority"
@@ -70,13 +79,19 @@
                                 <f:validator validatorId="enumPriorityValidator"/>
                             </p:selectOneMenu>
                         </p:inplace>
+
+                        <h:panelGroup styleClass="md-inputfield"
+                                      rendered="#{not usersBean.currentUser.isPermitted('updateVouchers')}">
+                            <p:outputLabel value="#{vouchersBean.vouchersEntity.priority.label}"/>
+                        </h:panelGroup>
                     </div>
 
                     <div class="ui-g-12 ui-lg-2"><p:outputLabel for="Contact"
                                                                 value="#{bundle['associateWithContact']}:"/></div>
                     <div class="ui-g-12 ui-lg-4">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inplace emptyLabel="..."
+                            <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateVouchers')}"
+                                       emptyLabel="..."
                                        label="#{vouchersBean.vouchersEntity.contactsByIdContacts.lastname.concat(' '.concat(vouchersBean.vouchersEntity.contactsByIdContacts.firstname))}">
                                 <p:autoComplete id="Contact" value="#{vouchersBean.vouchersEntity.contactsByIdContacts}"
                                                 completeMethod="#{contactsBean.completeContactsContains}"
@@ -97,6 +112,9 @@
                                 <label>#{bundle['contact']}:</label>
                             </p:inplace>
                             <p:message id="msgContact" for="Contact"/>
+
+                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateVouchers')}"
+                                           value="#{vouchersBean.vouchersEntity.contactsByIdContacts.lastname.concat(' '.concat(vouchersBean.vouchersEntity.contactsByIdContacts.firstname))}"/>
                         </h:panelGroup>
                     </div>
 
@@ -104,7 +122,8 @@
                                                                 value="#{bundle['associateWithCompany']}:"/></div>
                     <div class="ui-g-12 ui-lg-4">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inplace emptyLabel="..."
+                            <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateVouchers')}"
+                                       emptyLabel="..."
                                        label="#{vouchersBean.vouchersEntity.companiesByIdCompanies.label}">
                                 <p:autoComplete id="Company"
                                                 value="#{vouchersBean.vouchersEntity.companiesByIdCompanies}"
@@ -126,6 +145,9 @@
                                 <label>#{bundle['company']}:</label>
                             </p:inplace>
                             <p:message id="msgCompany" for="Company"/>
+
+                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateVouchers')}"
+                                           value="#{vouchersBean.vouchersEntity.companiesByIdCompanies.label}"/>
                         </h:panelGroup>
                     </div>
 
@@ -133,7 +155,8 @@
                                                                 value="#{bundle['tasks.description']}:"/></div>
                     <div class="ui-g-12 ui-lg-10">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inplace emptyLabel="..." label="#{vouchersBean.vouchersEntity.description}">
+                            <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateVouchers')}"
+                                       emptyLabel="..." label="#{vouchersBean.vouchersEntity.description}">
                                 <p:inputTextarea id="description" value="#{vouchersBean.vouchersEntity.description}"
                                                  rows="4"
                                                  maxlength="255"
@@ -141,6 +164,9 @@
                                 <label>#{bundle['descriptionHolder']}:</label>
                             </p:inplace>
                             <p:message id="msgDescriptionCreate" for="description"/>
+
+                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateVouchers')}"
+                                           value="#{vouchersBean.vouchersEntity.description}"/>
                         </h:panelGroup>
                     </div>
                 </div>
