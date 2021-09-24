@@ -514,14 +514,14 @@ public class TasksBean extends ExtendBean implements Serializable {
 
         if (id == 0) {
             log.error("Task ID is null");
-//            getFacesMessage(FacesMessage.SEVERITY_ERROR, "tasks.notExist");
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "tasks.notExist");
             throw new EntityNotFoundException(
                     "L ID de la tache est incorrect", ErrorCodes.TASK_NOT_FOUND
             );
         }
         if (usersEntity == null) {
             log.error("User Entity is null");
-//            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
             throw new EntityNotFoundException(
                     "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
             );

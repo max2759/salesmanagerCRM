@@ -81,4 +81,14 @@ public class TransactionsDaoImpl extends EntityFinderImpl<TransactionsEntity> im
 
         return (Long) activeTransactions;
     }
+
+    @Override
+    public Long countTransactionsActivePhase(EntityManager em, int idUser, String phaseTransaction) {
+        Object test = em.createNamedQuery("Transactions.countTransactionsActivePhase",
+                        TransactionsEntity.class)
+                .setParameter("idUser", idUser)
+                .setParameter("phaseTransaction", phaseTransaction)
+                .getSingleResult();
+        return (Long) test;
+    }
 }

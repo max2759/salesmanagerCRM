@@ -59,6 +59,10 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private Long countActiveTransactions;
+    @Getter
+    @Setter
+    private double percentActiveTransactionsByPhase;
+
 
     @Inject
     private TransactionHistoriesBean transactionHistoriesBean;
@@ -191,6 +195,15 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     public void showModalCreate() {
         log.info("TransactionsBean => method : showModalCreate()");
         transactionsEntity = new TransactionsEntity();
+    }
+
+    /**
+     * method to calculate the transaction rate concluded on canceled transactions
+     */
+    public void calculPercentTransactionConclueAnnule() {
+        Long conclue = countTransactionsActivePhase(usersBean.getUsersEntity(), "Conclue");
+        Long annule = countTransactionsActivePhase(usersBean.getUsersEntity(), "Annulé");
+        this.percentActiveTransactionsByPhase = (double) conclue / ((double) conclue + (double) annule);
     }
 
     /**
@@ -648,6 +661,30 @@ public class TransactionsBean extends ExtendBean implements Serializable {
 
 
     /**
+     * Count Transaction Active by Phase
+     *
+     * @param usersEntity      UsersEntity
+     * @param phaseTransaction String
+     * @return Long
+     */
+    protected Long countTransactionsActivePhase(UsersEntity usersEntity, String phaseTransaction) {
+        log.info("TransactionsBean => method : countTransactionsActiveConclue(UsersEntity usersEntity, String phaseTransaction)");
+
+        if (usersEntity == null) {
+            log.error("User Entity is null");
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
+            return null;
+        }
+        EntityManager em = EMF.getEM();
+        try {
+            return dao.countTransactionsActivePhase(em, usersEntity.getId(), phaseTransaction);
+        } finally {
+            em.clear();
+            em.clear();
+        }
+    }
+
+    /**
      * Validate Transaction !
      *
      * @param entity TransactionsEntity
@@ -733,4 +770,5 @@ public class TransactionsBean extends ExtendBean implements Serializable {
 
         return resultCount;
     }
+
 }

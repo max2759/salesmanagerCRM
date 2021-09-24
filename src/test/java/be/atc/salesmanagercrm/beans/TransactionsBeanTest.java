@@ -295,4 +295,22 @@ class TransactionsBeanTest {
         log.info("La liste contient : " + (long) transactionsEntitiesAnnulee.size() + " transactions Annulées");
 
     }
+
+    @Test
+    void countTransactionsActivePhaseConclue() {
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
+        String phaseTransaction = "Conclue";
+        Long count = transactionsBean.countTransactionsActivePhase(usersEntity, phaseTransaction);
+        log.info("Le nombre de transaction active conlue est de : " + count);
+    }
+
+    @Test
+    void countTransactionsActivePhaseAnnule() {
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
+        String phaseTransaction = "Annulé";
+        Long count = transactionsBean.countTransactionsActivePhase(usersEntity, phaseTransaction);
+        log.info("Le nombre de transaction active annulé est de : " + count);
+    }
 }
