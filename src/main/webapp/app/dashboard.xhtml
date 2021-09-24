@@ -57,7 +57,9 @@
             <f:viewAction action="#{companiesBean.countAllCompaniesEntity}"/>
             <f:viewAction action="#{contactsBean.countActiveContactsEntity}"/>
             <f:viewAction action="#{transactionsBean.countActiveTransactionsEntity}"/>
+            <f:viewAction action="#{transactionsBean.calculPercentTransactionConclueAnnule}"/>
             <f:viewAction action="#{vouchersBean.countActiveVouchersEntity}"/>
+            <f:viewAction action="#{vouchersBean.calculPercentVouchers}"/>
             <f:viewAction action="#{conversationsBean.get10convers}"/>
             <f:viewAction action="#{tasksBean.listEntities}"/>
             <f:viewAction action="#{tasksBean.setCalendar}"/>
@@ -91,7 +93,15 @@
                 <div class="ui-g card overview-box overview-box-3">
                     <span class="overview-box-name">#{bundle['transaction.numberActiveTransactions']}</span>
                     <span class="overview-box-count">#{transactionsBean.countActiveTransactions}</span>
-                    <span class="overview-box-badge">-75%</span>
+                    <span class="overview-box-badge">
+                        <h:outputText id="focusTransaction"
+                                      value="#{transactionsBean.percentActiveTransactionsByPhase}">
+                            <f:convertNumber maxFractionDigits="2" maxIntegerDigits="4" type="percent"/>
+                        </h:outputText>
+                       <p:tooltip for="focusTransaction" value="#{bundle['transaction.percentConclueAnnule']}"
+                                  showEffect="clip"
+                                  hideEffect="fold" position="bottom"/>
+                    </span>
                     <p:graphicImage name="images/dashboard/chart-3.svg" library="barcelona-layout"/>
                 </div>
             </div>
@@ -99,7 +109,14 @@
                 <div class="ui-g card overview-box overview-box-4">
                     <span class="overview-box-name">#{bundle['vouchers.numberActiveVouchers']}</span>
                     <span class="overview-box-count">#{vouchersBean.countActiveVouchers}</span>
-                    <span class="overview-box-badge">25%</span>
+                    <span class="overview-box-badge">
+                        <h:outputText id="focusVoucher" value="#{vouchersBean.percentActiveVouchersByStatus}">
+                            <f:convertNumber maxFractionDigits="2" maxIntegerDigits="4" type="percent"/>
+                        </h:outputText>
+                       <p:tooltip for="focusVoucher" value="#{bundle['vouchers.percent']}"
+                                  showEffect="clip"
+                                  hideEffect="fold" position="bottom"/>
+                    </span>
                     <p:graphicImage name="images/dashboard/chart-4.svg" library="barcelona-layout"/>
                 </div>
             </div>

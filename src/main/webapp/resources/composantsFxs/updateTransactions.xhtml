@@ -22,7 +22,7 @@
                     <div class="ui-g-12 ui-lg-2"><p:outputLabel for="titleUpdate" value="#{bundle['title']}:"/></div>
                     <div class="ui-g-12 ui-lg-4">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inplace>
+                            <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateTransactions')}">
                                 <p:inputText id="titleUpdate" value="#{transactionsBean.transactionsEntity.title}"
                                              required="true"
                                              maxlength="255"
@@ -34,21 +34,27 @@
                                 <label>#{bundle['title']} :</label>
                             </p:inplace>
                             <p:message id="msg" for="titleUpdate"/>
+
+                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}"
+                                           value="#{transactionsBean.transactionsEntity.title}"/>
                         </h:panelGroup>
                     </div>
                     <div class="ui-g-12 ui-lg-2"><p:outputLabel for="datetimeCreation"
                                                                 value="#{bundle['transactions.creationDate']}:"/></div>
                     <div class="ui-g-12 ui-lg-4">
-                        <h:outputText styleClass="fontStyleItalic" id="datetimeCreation"
-                                      value="#{transactionsBean.transactionsEntity.creationDate}">
-                            <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
-                        </h:outputText>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <h:outputText styleClass="fontStyleItalic" id="datetimeCreation"
+                                          value="#{transactionsBean.transactionsEntity.creationDate}">
+                                <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </h:panelGroup>
                     </div>
 
                     <div class="ui-g-12 ui-lg-2"><p:outputLabel for="phase" value="#{bundle['transactions.phase']}:"/>
                     </div>
                     <div class="ui-g-12 ui-lg-4">
-                        <p:inplace emptyLabel="..."
+                        <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateTransactions')}"
+                                   emptyLabel="..."
                                    label="#{transactionsBean.transactionsEntity.transactionPhasesByIdTransactionPhases.label}"
                                    effectSpeed="fast" event="click">
                             <p:selectOneMenu id="phase"
@@ -60,12 +66,18 @@
                                                itemLabel="#{transactionPhasesEntities.label}"/>
                             </p:selectOneMenu>
                         </p:inplace>
+
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}"
+                                           value="#{transactionsBean.transactionsEntity.transactionPhasesByIdTransactionPhases.label}"/>
+                        </h:panelGroup>
                     </div>
 
                     <div class="ui-g-12 ui-lg-2"><p:outputLabel for="amount" value="#{bundle['amount']}:"/></div>
                     <div class="ui-g-12 ui-lg-4">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inplace emptyLabel="..." label="#{transactionsBean.transactionsEntity.amount}">
+                            <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateTransactions')}"
+                                       emptyLabel="..." label="#{transactionsBean.transactionsEntity.amount}">
                                 <p:inputNumber id="amount" value="#{transactionsBean.transactionsEntity.amount}"
                                                symbol=" €"
                                                minValue="0"
@@ -76,6 +88,8 @@
                                 <label>9.999,99 €</label>
                             </p:inplace>
                             <p:message id="msgAmount" for="amount"/>
+                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}"
+                                           value="#{transactionsBean.transactionsEntity.amount}"/>
                         </h:panelGroup>
                     </div>
 
@@ -83,7 +97,8 @@
                     <div class="ui-g-12 ui-lg-2"><p:outputLabel for="datetime" value="#{bundle['dueDate']}:"/></div>
                     <div class="ui-g-12 ui-lg-4">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inplace emptyLabel="..."
+                            <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateTransactions')}"
+                                       emptyLabel="..."
                                        label="#{transactionsBean.transactionsEntity.endDate.dayOfMonth}/#{transactionsBean.transactionsEntity.endDate.monthValue}/#{transactionsBean.transactionsEntity.endDate.year}">
                                 <p:calendar value="#{transactionsBean.transactionsEntity.endDate}"
                                             converterMessage="#{bundle['converter.dateTime']}"
@@ -96,13 +111,19 @@
                                 <label>#{bundle['dueDate']}:</label>
                             </p:inplace>
                             <p:message id="msgDateTime" for="datetime"/>
+                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}"
+                                           value="#{transactionsBean.transactionsEntity.endDate}">
+                                <f:convertDateTime type="localDate"
+                                                   pattern="&nbsp;dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                            </p:outputLabel>
                         </h:panelGroup>
                     </div>
 
                     <div class="ui-g-12 ui-lg-2"><p:outputLabel for="type" value="#{bundle['transactions.type']}:"/>
                     </div>
                     <div class="ui-g-12 ui-lg-4">
-                        <p:inplace emptyLabel="..."
+                        <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateTransactions')}"
+                                   emptyLabel="..."
                                    label="#{transactionsBean.transactionsEntity.transactionTypesByIdTransactionTypes.label}"
                                    effectSpeed="fast" event="click">
                             <p:selectOneMenu id="type"
@@ -114,13 +135,19 @@
                                                itemLabel="#{transactionTypesEntities.label}"/>
                             </p:selectOneMenu>
                         </p:inplace>
+
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}"
+                                           value="#{transactionsBean.transactionsEntity.transactionTypesByIdTransactionTypes.label}"/>
+                        </h:panelGroup>
                     </div>
 
                     <div class="ui-g-12 ui-lg-2"><p:outputLabel for="Contact"
                                                                 value="#{bundle['associateWithContact']}:"/></div>
                     <div class="ui-g-12 ui-lg-4">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inplace emptyLabel="..."
+                            <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateTransactions')}"
+                                       emptyLabel="..."
                                        label="#{transactionsBean.transactionsEntity.contactsByIdContacts.lastname.concat(' '.concat(transactionsBean.transactionsEntity.contactsByIdContacts.firstname))}">
                                 <p:autoComplete id="Contact"
                                                 value="#{transactionsBean.transactionsEntity.contactsByIdContacts}"
@@ -142,6 +169,8 @@
                                 <label>#{bundle['contact']}:</label>
                             </p:inplace>
                             <p:message id="msgContact" for="Contact"/>
+                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}"
+                                           value="#{transactionsBean.transactionsEntity.contactsByIdContacts.lastname.concat(' '.concat(transactionsBean.transactionsEntity.contactsByIdContacts.firstname))}"/>
                         </h:panelGroup>
                     </div>
 
@@ -149,7 +178,8 @@
                                                                 value="#{bundle['associateWithCompany']}:"/></div>
                     <div class="ui-g-12 ui-lg-4">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inplace emptyLabel="..."
+                            <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateTransactions')}"
+                                       emptyLabel="..."
                                        label="#{transactionsBean.transactionsEntity.companiesByIdCompanies.label}">
                                 <p:autoComplete id="Company"
                                                 value="#{transactionsBean.transactionsEntity.companiesByIdCompanies}"
@@ -171,6 +201,8 @@
                                 <label>#{bundle['company']}:</label>
                             </p:inplace>
                             <p:message id="msgCompany" for="Company"/>
+                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}"
+                                           value="#{transactionsBean.transactionsEntity.companiesByIdCompanies.label}"/>
                         </h:panelGroup>
                     </div>
 

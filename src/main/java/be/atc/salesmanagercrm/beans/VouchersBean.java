@@ -57,6 +57,9 @@ public class VouchersBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private Long countActiveVouchers;
+    @Getter
+    @Setter
+    private double percentActiveVouchersByStatus;
 
     @Inject
     private VoucherHistoriesBean voucherHistoriesBean;
@@ -167,6 +170,15 @@ public class VouchersBean extends ExtendBean implements Serializable {
         log.info("VouchersBean => method : showModalCreate()");
         this.vouchersEntity = new VouchersEntity();
 
+    }
+
+    /**
+     * method to calculate the vouchers rate on closed vouchers
+     */
+    public void calculPercentVouchers() {
+        Long all = countActiveVouchers(usersBean.getUsersEntity());
+        Long closed = countVouchersActiveStatus(usersBean.getUsersEntity(), "Fermé");
+        this.percentActiveVouchersByStatus = ((double) all - (double) closed) / (double) all;
     }
 
     /**
@@ -631,4 +643,27 @@ public class VouchersBean extends ExtendBean implements Serializable {
         return resultCount;
     }
 
+    /**
+     * Count all vouchers not Fermé
+     *
+     * @param usersEntity   UsersEntity
+     * @param voucherStatus String
+     * @return Long
+     */
+    protected Long countVouchersActiveStatus(UsersEntity usersEntity, String voucherStatus) {
+        log.info("VouchersBean => method : countVouchersActiveStatus(UsersEntity usersEntity, String voucherStatus)");
+
+        if (usersEntity == null) {
+            log.error("User Entity is null");
+            getFacesMessage(FacesMessage.SEVERITY_ERROR, "userNotExist");
+            return null;
+        }
+        EntityManager em = EMF.getEM();
+        try {
+            return dao.countVouchersActiveStatus(em, usersEntity.getId(), voucherStatus);
+        } finally {
+            em.clear();
+            em.clear();
+        }
+    }
 }

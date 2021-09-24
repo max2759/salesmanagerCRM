@@ -15,6 +15,7 @@ import java.util.Objects;
         @NamedQuery(name = "Vouchers.findAll", query = "SELECT v from VouchersEntity v where v.usersByIdUsers.id = :idUser ORDER BY v.creationDate desc "),
         @NamedQuery(name = "Vouchers.countActiveVouchers", query = "SELECT COUNT(v.title) from VouchersEntity v where v.usersByIdUsers.id = :idUser and v.voucherStatusByIdVoucherStatus.id <> 3 "),
         @NamedQuery(name = "Vouchers.findById", query = "SELECT v from VouchersEntity v where (v.id = :id and v.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Vouchers.countVouchersActiveStatus", query = "SELECT count(v.id)  from VouchersEntity v where (v.usersByIdUsers.id = :idUser and v.voucherStatusByIdVoucherStatus.label = :voucherStatus)"),
 
 })
 public class VouchersEntity {

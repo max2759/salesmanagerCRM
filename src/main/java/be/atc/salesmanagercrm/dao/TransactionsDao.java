@@ -25,5 +25,7 @@ public interface TransactionsDao {
 
     void update(EntityManager em, TransactionsEntity entity);
 
+    Long countTransactionsActivePhase(EntityManager em, int idUser, String phaseTransaction);
+
     Long countActiveTransactions(EntityManager em, int idUser);
 }

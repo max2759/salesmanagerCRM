@@ -1,6 +1,7 @@
 package be.atc.salesmanagercrm.dao.impl;
 
 import be.atc.salesmanagercrm.dao.VouchersDao;
+import be.atc.salesmanagercrm.entities.TransactionsEntity;
 import be.atc.salesmanagercrm.entities.VouchersEntity;
 import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 
@@ -70,5 +71,15 @@ public class VouchersDaoImpl extends EntityFinderImpl<VouchersEntity> implements
                 .getSingleResult();
 
         return (Long) activeContacts;
+    }
+
+    @Override
+    public Long countVouchersActiveStatus(EntityManager em, int idUser, String voucherStatus) {
+        Object test = em.createNamedQuery("Vouchers.countVouchersActiveStatus",
+                        TransactionsEntity.class)
+                .setParameter("idUser", idUser)
+                .setParameter("voucherStatus", voucherStatus)
+                .getSingleResult();
+        return (Long) test;
     }
 }

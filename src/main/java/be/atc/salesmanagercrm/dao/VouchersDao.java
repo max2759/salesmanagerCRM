@@ -23,5 +23,7 @@ public interface VouchersDao {
 
     void update(EntityManager em, VouchersEntity entity);
 
+    Long countVouchersActiveStatus(EntityManager em, int idUser, String voucherStatus);
+
     Long countActiveVouchers(EntityManager em, int idUser);
 }

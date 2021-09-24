@@ -14,6 +14,7 @@ import java.util.Objects;
         @NamedQuery(name = "Transactions.findById", query = "SELECT t from TransactionsEntity t where (t.id = :id and t.usersByIdUsers.id = :idUser and t.active = true)"),
         @NamedQuery(name = "Transactions.countActiveTransactions", query = "SELECT COUNT(t) from TransactionsEntity t where (t.usersByIdUsers.id = :idUser and t.active = true)"),
         @NamedQuery(name = "Transactions.findAllByPhase", query = "SELECT t from TransactionsEntity t where (t.usersByIdUsers.id = :idUser and t.active = true and t.transactionPhasesByIdTransactionPhases.label = :phaseTransaction) ORDER BY t.creationDate desc "),
+        @NamedQuery(name = "Transactions.countTransactionsActivePhase", query = "SELECT count(t.id) from TransactionsEntity t where (t.usersByIdUsers.id = :idUser and t.active = true and t.transactionPhasesByIdTransactionPhases.label = :phaseTransaction)"),
 
 })
 public class TransactionsEntity {

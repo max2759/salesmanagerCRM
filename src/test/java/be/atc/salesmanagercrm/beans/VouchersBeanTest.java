@@ -208,4 +208,31 @@ class VouchersBeanTest {
 
         vouchersBean.update(vouchersEntity);
     }
+
+    @Test
+    void countTransactionsActivePhaseFerme() {
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
+        String voucherStatus = "Fermé";
+        Long count = vouchersBean.countVouchersActiveStatus(usersEntity, voucherStatus);
+        log.info("Le nombre de tickets active ferme est de : " + count);
+    }
+
+    @Test
+    void countTransactionsActivePhaseEnAttenteDeContact() {
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
+        String voucherStatus = "En attente de contact";
+        Long count = vouchersBean.countVouchersActiveStatus(usersEntity, voucherStatus);
+        log.info("Le nombre de tickets active ferme est de : " + count);
+    }
+
+    @Test
+    void countTransactionsActivePhaseEnAttente() {
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(1);
+        String voucherStatus = "En attente";
+        Long count = vouchersBean.countVouchersActiveStatus(usersEntity, voucherStatus);
+        log.info("Le nombre de tickets active ferme est de : " + count);
+    }
 }
