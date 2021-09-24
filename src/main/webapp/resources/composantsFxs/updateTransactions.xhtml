@@ -43,10 +43,10 @@
                                                                 value="#{bundle['transactions.creationDate']}:"/></div>
                     <div class="ui-g-12 ui-lg-4">
                         <h:panelGroup styleClass="md-inputfield">
-                            <h:outputText styleClass="fontStyleItalic" id="datetimeCreation"
-                                          value="#{transactionsBean.transactionsEntity.creationDate}">
+                            <h:outputLabel styleClass="fontStyleItalic" id="datetimeCreation"
+                                           value="#{transactionsBean.transactionsEntity.creationDate}">
                                 <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
-                            </h:outputText>
+                            </h:outputLabel>
                         </h:panelGroup>
                     </div>
 
@@ -67,9 +67,10 @@
                             </p:selectOneMenu>
                         </p:inplace>
 
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}"
-                                           value="#{transactionsBean.transactionsEntity.transactionPhasesByIdTransactionPhases.label}"/>
+                        <h:panelGroup styleClass="md-inputfield"
+                                      rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}">
+                            <p:outputLabel
+                                    value="#{transactionsBean.transactionsEntity.transactionPhasesByIdTransactionPhases.label}"/>
                         </h:panelGroup>
                     </div>
 
@@ -136,9 +137,10 @@
                             </p:selectOneMenu>
                         </p:inplace>
 
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}"
-                                           value="#{transactionsBean.transactionsEntity.transactionTypesByIdTransactionTypes.label}"/>
+                        <h:panelGroup rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}"
+                                      styleClass="md-inputfield">
+                            <p:outputLabel
+                                    value="#{transactionsBean.transactionsEntity.transactionTypesByIdTransactionTypes.label}"/>
                         </h:panelGroup>
                     </div>
 
