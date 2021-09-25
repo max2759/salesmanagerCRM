@@ -98,8 +98,6 @@ public class ConversationsBean extends ExtendBean implements Serializable {
         message = message.replaceAll("\\<[^>]*>", "");
         log.info(message);
 
-        CheckEntities checkEntities = new CheckEntities();
-
         conversationsEntity.setMessage(message);
         conversationsEntity.setCreationDate(LocalDateTime.now());
         conversationsEntity.setActive(true);
@@ -238,9 +236,9 @@ log.info("conversationListActive");
 
     public void get10convers() {
         conversationsEntityList = find10convers();
-        log.info("avant modif :" + conversationsEntityList);
+
 //        Collections.reverse(conversationsEntityList);
-        log.info("après modif :" + conversationsEntityList);
+
     }
 
     private List<ConversationsEntity> find10convers() {
@@ -268,7 +266,7 @@ log.info("conversationListActive");
     public void findAllConversations() {
         log.info("bgin findallrole");
         conversationsEntityList = findAll();
-        log.info(String.valueOf(conversationsEntityList));
+
     }
 
     protected List<ConversationsEntity> findAll() {

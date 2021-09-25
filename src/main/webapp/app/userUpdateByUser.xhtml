@@ -23,7 +23,6 @@
                                      columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
                                      contentStyleClass="ui-fluid" styleClass="ui-panelgrid-blank form-group">
 
-
                             <h:panelGroup styleClass="md-inputfield"
                             >
                                 <label style="font-weight: bold">#{bundle['user.username']}: #{usersBean.usersEntity.username}</label>
@@ -43,55 +42,60 @@
                                 <label style="font-weight: bold">#{bundle['email']}: #{usersBean.usersEntity.email}</label>
                             </h:panelGroup>
 
-                            <h:panelGroup styleClass="md-inputfield mgin-top"
-                            >
-                                <p:password id="password" value="#{usersBean.password1}" match="password2"
-                                            autocomplete="false"
-                                            validatorMessage="#{bundle['users.regexPassError']}">
-                                    <p:ajax process="@form"
-                                            update="msgPass1 usersUpdateForm:update"
+                            <p:panel header="#{bundle['user.updateByUser']}" toggleable="true" collapsed="true">
+                                <h:panelGroup styleClass="md-inputfield mgin-top"
+                                >
+                                    <p:password id="password" value="#{usersBean.password1}" match="password2"
+                                                autocomplete="false"
+                                                validatorMessage="#{bundle['users.regexPassError']}">
+                                        <p:ajax process="@(form) msgPass1"
+                                                update="msgPass1 usersUpdateForm:update"
+                                                event="keyup" resetValues="true"/>
+                                        <f:validator validatorId="userUpdatePasswordValidator"></f:validator>
+                                    </p:password>
+                                    <label>#{bundle['user.password']}</label>
+                                    <p:message id="msgPass1" for="password"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup styleClass="md-inputfield mgin-top"
+                                >
+                                    <p:password id="password2" value="#{usersBean.password2}" label="password2"
+                                                validatorMessage="#{bundle['matchPasswird']}"/>
+                                    <p:ajax process="@(form)"
+                                            update="msgPass2 msgPass1 usersUpdateForm:update"
                                             event="keyup" resetValues="true"/>
-                                    <f:validator validatorId="userUpdatePasswordValidator"></f:validator>
-                                </p:password>
-                                <label>#{bundle['user.password']}</label>
-                                <p:message id="msgPass1" for="password"/>
-                            </h:panelGroup>
+                                    <label for="password2">#{bundle['user.password2']}</label>
+                                    <p:message id="msgPass2" for="password2"/>
+                                </h:panelGroup>
 
-                            <h:panelGroup styleClass="md-inputfield"
-                            >
-                                <p:password id="password2" value="#{usersBean.password2}" label="password2"
-                                            validatorMessage="#{bundle['matchPasswird']}"/>
-                                <p:ajax process="@form"
-                                        update="msgPass1 usersUpdateForm:update"
-                                        event="keyup" resetValues="true"/>
-                                <label for="password2">#{bundle['user.password2']}</label>
-                            </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield mgin-top"
+                                >
+                                    <p:inputText id="email" value="#{usersBean.usersEntity.email}" required="true"
+                                                 requiredMessage="#{bundle['mailEmpty']}"
+                                                 validatorMessage="#{bundle['contacts.emailNotValid']}">
+                                        <p:ajax process="@form"
+                                                update="msgMail usersUpdateForm:update"
+                                                event="keyup" resetValues="true"/>
+                                        <f:validator validatorId="userEmailValidator"></f:validator>
+                                    </p:inputText>
+                                    <label for="email">#{bundle['email']}</label>
+                                    <p:message id="msgMail" for="email"/>
+                                </h:panelGroup>
 
-                            <h:panelGroup styleClass="md-inputfield mgin-top"
-                            >
-                                <p:inputText id="email" value="#{usersBean.usersEntity.email}" required="true"
-                                             requiredMessage="#{bundle['mailEmpty']}"
-                                             validatorMessage="#{bundle['contacts.emailNotValid']}">
-                                    <p:ajax process="@form"
-                                            update="msgMail usersUpdateForm:update"
-                                            event="keyup" resetValues="true"/>
-                                    <f:validator validatorId="userEmailValidator"></f:validator>
-                                </p:inputText>
-                                <label for="email">#{bundle['email']}</label>
-                                <p:message id="msgMail" for="email"/>
-                            </h:panelGroup>
+                                <p:messages id="pass1" closable="true" display="message"/>
 
-                            <p:messages id="pass1" closable="true" display="message"/>
+                                <div align="right">
+                                    <p:commandButton value="#{bundle['validate']}" id="update"
+                                                     disabled="#{facesContext.validationFailed or empty usersBean.usersEntity.email }"
+                                                     action="#{usersBean.userUpdateByUser(usersBean.usersEntity)}"
+                                                     update="@(form)"/>
+                                </div>
+                            </p:panel>
 
 
                         </p:panelGrid>
 
-                        <div align="right">
-                            <p:commandButton value="#{bundle['validate']}" id="update"
-                                             disabled="#{facesContext.validationFailed or empty usersBean.usersEntity.email }"
-                                             action="#{usersBean.userUpdateByUser(usersBean.usersEntity)}"
-                                             update="@(form)"/>
-                        </div>
+
                     </h:form>
                 </div>
             </div>
