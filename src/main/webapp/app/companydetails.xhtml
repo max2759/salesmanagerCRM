@@ -70,28 +70,28 @@
                                                          maxlength="255"/>
                                         <label>#{bundle['company.description']}</label>
                                     </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield" style="margin-top: 15px">
 
-                                    <p:outputLabel value="#{bundle['branchActivities.title']}"
-                                                   for="branchActivitiesDisplay" class="labelLike"/>
-                                    <p:autoComplete id="branchActivitiesDisplay" dropdown="true"
-                                                    value="#{companiesBean.companiesEntity.branchActivitiesByIdBranchActivities}"
-                                                    completeMethod="#{branchActivitiesBean.completeBranchActivities}"
-                                                    var="branchActivities"
-                                                    itemLabel="#{branchActivities.label}"
-                                                    itemValue="#{branchActivities}"
-                                                    converter="branchActivitiesConverter"
-                                                    scrollHeight="250"
-                                                    groupBy="#{branchActivitiesBean.getBranchActivitiesEntityGroup(branchActivities)}"
-                                                    placeholder="#{bundle['company.chooseBranchActivity']}">
-                                        <p:ajax process="@form"
-                                                update="companyDetailsUpdateForm:companyDetailsValidateBtn branchActivitiesDisplayErrorMsg"
-                                                event="itemSelect" resetValues="true"/>
-                                        <p:ajax process="@form"
-                                                update="companyDetailsUpdateForm:companyDetailsValidateBtn branchActivitiesDisplayErrorMsg"
-                                                event="change" resetValues="true"/>
-                                    </p:autoComplete>
-                                    <p:message for="branchActivitiesDisplay" id="branchActivitiesDisplayErrorMsg"/>
-
+                                        <p:autoComplete id="branchActivitiesDisplay" dropdown="true"
+                                                        value="#{companiesBean.companiesEntity.branchActivitiesByIdBranchActivities}"
+                                                        completeMethod="#{branchActivitiesBean.completeBranchActivities}"
+                                                        var="branchActivities"
+                                                        itemLabel="#{branchActivities.label}"
+                                                        itemValue="#{branchActivities}"
+                                                        converter="branchActivitiesConverter"
+                                                        scrollHeight="250"
+                                                        groupBy="#{branchActivitiesBean.getBranchActivitiesEntityGroup(branchActivities)}"
+                                        >
+                                            <p:ajax process="@form"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn branchActivitiesDisplayErrorMsg"
+                                                    event="itemSelect" resetValues="true"/>
+                                            <p:ajax process="@form"
+                                                    update="companyDetailsUpdateForm:companyDetailsValidateBtn branchActivitiesDisplayErrorMsg"
+                                                    event="change" resetValues="true"/>
+                                        </p:autoComplete>
+                                        <label>#{bundle['branchActivities.title']}</label>
+                                        <p:message for="branchActivitiesDisplay" id="branchActivitiesDisplayErrorMsg"/>
+                                    </h:panelGroup>
                                     <div class="mgin-top">
                                         <p:outputLabel value="#{bundle['company.chooseCompanyType']}"
                                                        for="companyTypesDisplay" styleClass="labelLike"/>

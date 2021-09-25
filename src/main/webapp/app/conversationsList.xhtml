@@ -30,7 +30,7 @@
                                      rendered="#{conversationsBean.conversationsEntities.size() eq 0 ? false : true}"
                                      value="#{conversationsBean.conversationsEntityList}">
 
-                            <p:column width="500" headerText="#{bundle['message']}"
+                            <p:column colspan="3" headerText="#{bundle['message']}"
                                       sortBy="#{convers.message}"
                                       filterBy="#{convers.message}"
                                       filterMatchMode="contains">
@@ -42,7 +42,7 @@
                                 </p:commandLink>
                             </p:column>
 
-                            <p:column width="500" headerText="#{bundle['user.username']}"
+                            <p:column colspan="2" headerText="#{bundle['user.username']}"
                                       sortBy="#{convers.usersByIdUsers.username}"
                                       filterBy="#{convers.usersByIdUsers.username}"
                                       filterMatchMode="contains">
@@ -54,7 +54,7 @@
                                 </p:commandLink>
                             </p:column>
 
-                            <p:column headerText="#{bundle['firstname']}"
+                            <p:column colspan="2" headerText="#{bundle['firstname']}"
                                       sortBy="#{convers.usersByIdUsers.firstname}"
                                       filterBy="#{convers.usersByIdUsers.firstname}"
                                       filterMatchMode="contains"
@@ -62,7 +62,7 @@
                                 <h:outputText value="#{convers.usersByIdUsers.firstname}"/>
                             </p:column>
 
-                            <p:column headerText="#{bundle['lastname']}"
+                            <p:column colspan="2" headerText="#{bundle['lastname']}"
                                       sortBy="#{convers.usersByIdUsers.lastname}"
                                       filterBy="#{convers.usersByIdUsers.lastname}"
                                       filterMatchMode="contains"
@@ -70,7 +70,7 @@
                                 <h:outputText value="#{convers.usersByIdUsers.lastname}"/>
                             </p:column>
 
-                            <p:column headerText="#{bundle['conversation.date']}"
+                            <p:column colspan="2" headerText="#{bundle['conversation.date']}"
                                       sortBy="#{convers.creationDate}"
                                       filterBy="#{convers.creationDate}"
                                       filterMatchMode="contains"
@@ -81,7 +81,7 @@
                             </p:column>
 
 
-                            <p:column>
+                            <p:column colspan="1">
                                 <h:panelGroup rendered="#{convers.active}">
                                     <p:commandLink update="@form msg"
                                                    rendered="#{usersBean.currentUser.isPermitted('deleteConversations')}"
