@@ -140,3 +140,33 @@
     height: 100%;
     background-color: white !important;
 }
+
+#detailsRight > #formTabView > #tabViewRight > #listNotes > #note1_data tr {
+    background-color: white !important;
+}
+
+.styleDataTableEdit {
+    background-color: white !important;
+    color: black !important;
+}
+
+.colorBlack {
+    color: black !important;
+}
+
+body .ui-state-active .ui-icon, body .ui-state-highlight .ui-icon {
+    color: #757575;
+}
+
+body .ui-datatable tbody tr.ui-state-highlight .ui-inputfield {
+    color: #424242 !important;
+}
+
+body .ui-datatable tbody tr .ui-cell-editor-input input {
+    color: black !important;
+}
+
+.dataTableCellEditorInput {
+    padding-top: 15px !important;
+    padding-left: 15px !important;
+}
