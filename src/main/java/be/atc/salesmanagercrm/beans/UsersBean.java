@@ -10,6 +10,7 @@ import be.atc.salesmanagercrm.exceptions.EntityNotFoundException;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidEntityException;
 import be.atc.salesmanagercrm.utils.EMF;
+import be.atc.salesmanagercrm.utils.JavaMailUtil;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import be.atc.salesmanagercrm.utils.PDFUtil;
 import be.atc.salesmanagercrm.validators.UsersValidator;
@@ -279,7 +280,6 @@ public class UsersBean extends ExtendBean implements Serializable {
 
                 String passwordUncrypt = new String(passwordUncrypted);
 
-                //      String password = usersEntity.getPassword();
                 String hashPass = encrypt(passwordUncrypt);
                 log.info(hashPass);
 
@@ -288,8 +288,6 @@ public class UsersBean extends ExtendBean implements Serializable {
                 entityToAdd.setActive(true);
                 entityToAdd.setRegisterDate(LocalDateTime.now());
 
-                //    usersEntity.setRolesByIdRoles(rolesBean.findById(em, idRole));
-//log.info("avant em , le role est: "+usersEntity.getRolesByIdRoles().getId());
                 EntityManager em = EMF.getEM();
                 EntityTransaction tx = null;
                 try {
@@ -298,7 +296,7 @@ public class UsersBean extends ExtendBean implements Serializable {
                     dao.register(em, entityToAdd);
                     tx.commit();
                     generatePDF(passwordUncrypt);
-                    //    JavaMailUtil.sendMail(entityToAdd);
+                    JavaMailUtil.sendMail(entityToAdd);
                     log.info("Persist ok");
                     loadListEntities();
                     msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.register"), null);
@@ -429,12 +427,8 @@ public class UsersBean extends ExtendBean implements Serializable {
             log.info("Sorry, lightsaber rings are for schwartz masters only.");
         }
 */
-        //all done - log out!
-        //     this.currentUser.logout();
 
-        //    System.exit(0);
-//no problem
-        //faire le truc des roles
+
         session.setAttribute("idUser", usersEntity.getId());
         session.setAttribute("username", usersEntity.getUsername());
         log.info("usersEntity : " + session.getAttribute("idUser"));
@@ -454,36 +448,45 @@ public class UsersBean extends ExtendBean implements Serializable {
 
 
     public void delete(int id) {
+
         FacesMessage msg;
-        log.info(String.valueOf(id));
+        if (this.currentUser.isPermitted("deleteUsers")) {
+            log.info(String.valueOf(id));
 
 
-        // UsersEntity usersEntity1 = dao.findById(em, id);
-        UsersEntity usersEntity1 = findById(id);
+            // UsersEntity usersEntity1 = dao.findById(em, id);
+            UsersEntity usersEntity1 = findById(id);
 
-        usersEntity1.setActive(false);
+            usersEntity1.setActive(false);
 
-        EntityManager em = EMF.getEM();
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            dao.update(em, usersEntity1);
-            tx.commit();
-            log.info("Delete ok");
-            loadListEntities();
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.deleted"), null);
+            EntityManager em = EMF.getEM();
+            EntityTransaction tx = null;
+            try {
+                tx = em.getTransaction();
+                tx.begin();
+                dao.update(em, usersEntity1);
+                tx.commit();
+                log.info("Delete ok");
+                loadListEntities();
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.deleted"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } catch (Exception ex) {
+                if (tx != null && tx.isActive()) tx.rollback();
+                log.error("Delete Error");
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } finally {
+                em.clear();
+                em.close();
+            }
+        } else {
+
+            log.info("Sorry, lightsaber1 rings are for schwartz masters only.");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.error("Delete Error");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } finally {
-            em.clear();
-            em.close();
         }
     }
+
 
     public void activate(int id) {
         FacesMessage msg;
@@ -712,7 +715,7 @@ public class UsersBean extends ExtendBean implements Serializable {
             return;
         }
 
-        if (password2 != null || password2.isEmpty() || password2 == "") {
+        if (password2 != null || !password2.equals("")) {
             String password = encrypt(usersEntity.getPassword());
             usersEntity.setPassword(password);
         }
@@ -882,7 +885,7 @@ public class UsersBean extends ExtendBean implements Serializable {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "user"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return;
+            //return;
         }
 
     }

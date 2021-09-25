@@ -63,7 +63,7 @@
                                         update="@(form)"
                                         oncomplete="PF('updateRole').show();return false;"
                                         styleClass="NavyButton">
-                                    <i class="ui-icon ui-icon-create"></i>
+                                    <i class="ui-icon ui-icon-create"/>
 
                                 </p:commandLink>
 
@@ -75,7 +75,7 @@
                                         <p:confirm header="#{bundle['confirmation']}"
                                                    message="#{bundle['role.confirmeDelete']}"
                                                    icon="fa fa-warning"/>
-                                        <i class="ui-icon ui-icon-delete-forever"></i>
+                                        <i class="ui-icon ui-icon-delete-forever"/>
                                         <f:param name="idEntity" value="#{role.id}"/>
                                         <f:param name="typeEntities" value="all"/>
                                     </p:commandLink>
@@ -126,11 +126,12 @@
                                                  maxlength="255"
                                                  required="true"
                                                  requiredMessage="#{bundle['roleEmpty']}"
+                                                 validatorMessage="#{bundle['roles.labelExist']}"
                                     >
                                         <p:ajax process="@form"
                                                 update="msgRoleUpdate updateRoleDialogForm:updateRole"
                                                 event="keyup" resetValues="true"/>
-                                        <f:validator validatorId="roleLabelValidator"></f:validator>
+                                        <f:validator validatorId="roleLabelValidator"/>
                                     </p:inputText>
                                     <label>#{bundle['role.label']}</label>
                                     <p:message id="msgRoleUpdate" for="roleLabelUpdate"/>
@@ -168,11 +169,12 @@
                                     <p:inputText id="roleLabelAdd" value="#{rolesBean.rolesEntityNew.label}"
                                                  maxlength="255"
                                                  required="true"
-                                                 requiredMessage="#{bundle['roleEmpty']}">
+                                                 requiredMessage="#{bundle['roleEmpty']}"
+                                                 validatorMessage="#{bundle['roles.labelExist']}">
                                         <p:ajax process="@form"
                                                 update="msgRoleAdd addRoleDialogForm:addRole"
                                                 event="keyup" resetValues="true"/>
-                                        <f:validator validatorId="roleLabelValidator"></f:validator>
+                                        <f:validator validatorId="roleLabelValidator"/>
                                     </p:inputText>
                                     <label>#{bundle['role.label']}</label>
                                     <p:message id="msgRoleAdd" for="roleLabelAdd"/>
