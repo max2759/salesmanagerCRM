@@ -178,7 +178,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
     public void calculPercentVouchers() {
         Long all = countActiveVouchers(usersBean.getUsersEntity());
         Long closed = countVouchersActiveStatus(usersBean.getUsersEntity(), "Fermé");
-        this.percentActiveVouchersByStatus = ((double) all - (double) closed) / (double) all;
+        this.percentActiveVouchersByStatus = all != 0 ? ((double) all - (double) closed) / (double) all : 0;
     }
 
     /**

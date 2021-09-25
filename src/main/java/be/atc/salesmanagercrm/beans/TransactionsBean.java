@@ -203,7 +203,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     public void calculPercentTransactionConclueAnnule() {
         Long conclue = countTransactionsActivePhase(usersBean.getUsersEntity(), "Conclue");
         Long annule = countTransactionsActivePhase(usersBean.getUsersEntity(), "Annulé");
-        this.percentActiveTransactionsByPhase = (double) conclue / ((double) conclue + (double) annule);
+        this.percentActiveTransactionsByPhase = conclue + annule != 0 ? (double) conclue / ((double) conclue + (double) annule) : 1;
+
     }
 
     /**
