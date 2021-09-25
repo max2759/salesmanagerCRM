@@ -27,13 +27,13 @@
                      paginator="true" rows="10"
                      paginatorPosition="bottom"
                      rowsPerPageTemplate="10,20,50"
-                     filteredValue="#{tasksBean.tasksEntitiesFiltered}"
+                     rowStyleClass="styleDataTableEdit"
         >
 
             <p:ajax event="rowEdit" listener="#{tasksBean.onRowEdit}" update="@this msgs"/>
             <p:ajax event="rowEditCancel" listener="#{tasksBean.onRowCancel}" update="@this msgs"/>
 
-            <p:column>
+            <p:column styleClass="dataTableCellEditorInput">
                 <div class="align-start justify-between">
                     <div class="display-inline-flex align-center">
                         <h:outputText styleClass="boldText" value="#{bundle['task']} "/>
@@ -87,7 +87,7 @@
                     </f:facet>
                     <f:facet name="input">
                         <div class="ui-g form-group">
-                            <div class="ui-g-12 ui-lg-2"><p:outputLabel for="taskTypeUpdate"
+                            <div class="ui-g-12 ui-lg-2"><p:outputLabel for="taskTypeUpdate" styleClass="colorBlack"
                                                                         value="#{bundle['tasks.taskType']}:"/>
                             </div>
                             <div class="ui-g-12 ui-lg-10">
@@ -142,7 +142,9 @@
                                                 converterMessage="#{bundle['converter.dateTime']}"
                                                 validatorMessage="#{bundle['task.validator.dateEnd']}"
                                                 id="datetimeUpdate" pattern="dd/MM/yyyy HH:mm"
-                                                mindate="#{task.creationDate}"/>
+                                                mindate="#{task.creationDate}">
+                                        <p:ajax update="msgDateTime" global="false" event="change"/>
+                                    </p:calendar>
                                     <label>#{bundle['dueDate']}:</label>
                                     <p:message id="msgDateTime" for="datetimeUpdate"/>
                                 </h:panelGroup>

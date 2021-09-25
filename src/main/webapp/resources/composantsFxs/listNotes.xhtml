@@ -28,12 +28,13 @@
                      paginatorPosition="bottom"
                      rowsPerPageTemplate="10,20,50"
                      filteredValue="#{notesBean.notesEntitiesFiltered}"
+                     rowStyleClass="styleDataTableEdit"
         >
 
             <p:ajax event="rowEdit" listener="#{notesBean.onRowEdit}" update="@this msgs"/>
             <p:ajax event="rowEditCancel" listener="#{notesBean.onRowCancel}" update="@this msgs"/>
 
-            <p:column>
+            <p:column styleClass="dataTableCellEditorInput">
                 <div class="align-start justify-between">
                     <div class="display-inline-flex align-center">
                         <h:outputText styleClass="boldText" value="#{bundle['notes.remarks']}"/>
@@ -50,7 +51,7 @@
                     </div>
                 </div>
 
-                <div class="styleEditorOutPut">
+                <div id="test" class="styleEditorOutPut">
                     <p:cellEditor>
                         <f:facet name="output">
                             <h:outputText escape="false" value="#{note.message}"/>
@@ -62,6 +63,7 @@
                                     <p:inputTextarea widgetVar="editor1" value="#{note.message}"
                                                      id="acTitleNote"
                                                      required="true"
+                                                     styleClass="colorBlack"
                                                      requiredMessage="#{bundle['notes.validator.message']}"
                                                      rows="6"
                                                      cols="100"
