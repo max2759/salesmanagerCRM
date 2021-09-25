@@ -63,6 +63,10 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
+    private Long countAllContacts;
+
+    @Getter
+    @Setter
     private List<ContactsEntity> contactEntitiesFiltered;
     @Inject
     private NotesBean notesBean;
@@ -712,6 +716,45 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
         try {
             resultCount = contactsDao.countActiveContacts(em, usersEntity.getId());
+        } finally {
+            em.clear();
+            em.close();
+        }
+
+        return resultCount;
+    }
+
+    /**
+     * public method for countAllCompanies()
+     */
+    public void countAllContactsEntity() {
+        log.info("ContactsBean => method : countAllContactsEntity()");
+        this.countAllContacts = countAllContacts(usersBean.getUsersEntity());
+
+    }
+
+
+    /**
+     * Count all contacts
+     *
+     * @param usersEntity userEntity
+     * @return resultCount
+     */
+    protected Long countAllContacts(UsersEntity usersEntity) {
+        log.info("ContactsBean => method : countAllContacts()");
+
+        if (usersEntity == null) {
+            log.error("User Entity is null");
+            throw new EntityNotFoundException(
+                    "Aucun utilisateur n a ete trouve", ErrorCodes.USER_NOT_FOUND
+            );
+        }
+
+        EntityManager em = EMF.getEM();
+        Long resultCount;
+
+        try {
+            resultCount = contactsDao.countAllContacts(em, usersEntity.getId());
         } finally {
             em.clear();
             em.close();

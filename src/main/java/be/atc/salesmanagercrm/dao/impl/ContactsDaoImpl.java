@@ -81,4 +81,15 @@ public class ContactsDaoImpl extends EntityFinderImpl<ContactsEntity> implements
 
         return (Long) activeContacts;
     }
+
+    @Override
+    public Long countAllContacts(EntityManager em, int idUser) {
+
+        Object activeContacts = em.createNamedQuery("Contacts.countAllContacts",
+                        ContactsEntity.class)
+                .setParameter("idUser", idUser)
+                .getSingleResult();
+
+        return (Long) activeContacts;
+    }
 }
