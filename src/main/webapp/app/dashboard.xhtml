@@ -56,6 +56,7 @@
             <f:viewAction action="#{companiesBean.countActiveCompaniesEntity}"/>
             <f:viewAction action="#{companiesBean.countAllCompaniesEntity}"/>
             <f:viewAction action="#{contactsBean.countActiveContactsEntity}"/>
+            <f:viewAction action="#{contactsBean.countAllContactsEntity}"/>
             <f:viewAction action="#{transactionsBean.countActiveTransactionsEntity}"/>
             <f:viewAction action="#{transactionsBean.calculPercentTransactionConclueAnnule}"/>
             <f:viewAction action="#{vouchersBean.countActiveVouchersEntity}"/>
@@ -72,12 +73,14 @@
                 <div class="ui-g card overview-box overview-box-1">
                     <span class="overview-box-name">#{bundle['company.numberActiveCompany']}</span>
                     <span class="overview-box-count">#{companiesBean.countActiveCompanies}</span>
-                    <h:outputText class="overview-box-badge"
+                    <h:outputText class="overview-box-badge" id="countCompanies"
                                   value="#{companiesBean.countActiveCompanies/companiesBean.countAllCompanies}">
                         <f:convertNumber type="percent"
                                          maxIntegerDigits="5"
                                          maxFractionDigits="0"/>
                     </h:outputText>
+                    <p:tooltip id="toolTipCompaniesPercent" for="countCompanies"
+                               value="#{bundle['company.percentValue']}" position="bottom"/>
                     <p:graphicImage name="images/dashboard/chart-1.svg" library="barcelona-layout"/>
                 </div>
             </div>
@@ -85,7 +88,14 @@
                 <div class="ui-g card overview-box overview-box-2">
                     <span class="overview-box-name">#{bundle['contacts.numberActiveContacts']}</span>
                     <span class="overview-box-count">#{contactsBean.countActiveContacts}</span>
-                    <span class="overview-box-badge">+45%</span>
+                    <h:outputText class="overview-box-badge" id="countContacts"
+                                  value="#{contactsBean.countActiveContacts/contactsBean.countAllContacts}">
+                        <f:convertNumber type="percent"
+                                         maxIntegerDigits="5"
+                                         maxFractionDigits="0"/>
+                    </h:outputText>
+                    <p:tooltip id="toolTipContactsPercent" for="countContacts"
+                               value="#{bundle['contacts.percentValue']}" position="bottom"/>
                     <p:graphicImage name="images/dashboard/chart-2.svg" library="barcelona-layout"/>
                 </div>
             </div>
