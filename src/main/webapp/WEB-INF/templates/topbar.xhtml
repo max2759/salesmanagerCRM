@@ -130,8 +130,8 @@
                 <h:form>
                     <p:commandLink id="carBtn" action="#{conversationsBean.get10convers}"><i class="material-icons"
                                                                                              style="color: white">message</i></p:commandLink>
-                    <p:overlayPanel id="carPanel" for="carBtn" hideEffect="fade" dynamic="true"
-                                    style="width: 1000px; height: 1000px" showCloseIcon="true">
+                    <p:overlayPanel id="carPanel" for="carBtn" hideEffect="fade" dynamic="true" dismissable="true"
+                                    style="width: 500px; height: auto" showCloseIcon="true">
                         <div class="dashboard">
                             <div class="ui-g-12 chat">
                                 <fxs:conversation id="conversation"/>
