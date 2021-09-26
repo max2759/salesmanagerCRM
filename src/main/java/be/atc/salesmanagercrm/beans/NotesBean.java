@@ -399,7 +399,7 @@ public class NotesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Find Notes Entities by Id Company
+     * Find Notes Entities by CompaniesEntity and UsersEntity
      *
      * @param companiesEntity CompaniesEntity
      * @return List NotesEntity
