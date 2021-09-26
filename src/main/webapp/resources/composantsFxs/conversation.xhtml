@@ -18,7 +18,8 @@
             <p:growl id="facesMessage" showDetail="true" skipDetailIfEqualsSummary="true"/>
             <h:form id="chatForm">
                 <ul>
-                    <p:dataScroller value="#{conversationsBean.conversationsEntityList}" var="convers" chunkSize="100"
+                    <p:dataScroller id="dataScrollerChat" value="#{conversationsBean.conversationsEntityList}"
+                                    var="convers" chunkSize="100"
                                     scrollHeight="500" mode="inline">
                         <li class="#{convers.usersByIdUsers.username eq usersBean.usersEntity.username ? 'clearfix message-own' : 'clearfix message-from'}">
                                 <span>

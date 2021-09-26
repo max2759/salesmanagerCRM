@@ -126,20 +126,22 @@
 
                 </ul>
             </li>
-            <li>
-                <h:form>
-                    <p:commandLink id="carBtn" action="#{conversationsBean.get10convers}"><i class="material-icons"
-                                                                                             style="color: white">message</i></p:commandLink>
-                    <p:overlayPanel id="carPanel" for="carBtn" hideEffect="fade" dynamic="true" dismissable="true"
-                                    style="width: 500px; height: auto" showCloseIcon="true">
-                        <div class="dashboard">
-                            <div class="ui-g-12 chat">
-                                <fxs:conversation id="conversation"/>
+            <h:panelGroup rendered="#{conversationsBean.paramType}">
+                <li>
+                    <h:form>
+                        <p:commandLink id="carBtn" action="#{conversationsBean.get10convers}"><i class="material-icons"
+                                                                                                 style="color: white">message</i></p:commandLink>
+                        <p:overlayPanel id="carPanel" for="carBtn" hideEffect="fade" dynamic="true" dismissable="true"
+                                        style="width: 500px; height: auto" showCloseIcon="true">
+                            <div class="dashboard">
+                                <div class="ui-g-12 chat">
+                                    <fxs:conversation id="conversation"/>
+                                </div>
                             </div>
-                        </div>
-                    </p:overlayPanel>
-                </h:form>
-            </li>
+                        </p:overlayPanel>
+                    </h:form>
+                </li>
+            </h:panelGroup>
         </ul>
     </div>
 

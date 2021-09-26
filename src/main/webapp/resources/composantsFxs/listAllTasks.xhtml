@@ -43,7 +43,6 @@
             </h:form>
             <h:form id="formTabView">
                 <p:tabView id="tabViewListAllTasks">
-                    <p:ajax event="tabChange" update="@form msgs"/>
 
                     <p:tab id="displayAll" title="#{bundle['all']} (#{tasksBean.tasksEntities.size()})">
                         <p:dataTable paginator="true" rows="10"
