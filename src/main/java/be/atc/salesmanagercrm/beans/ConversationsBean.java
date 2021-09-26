@@ -63,7 +63,9 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private List<ConversationsEntity> conversationsEntitiesFiltered;
-
+    @Getter
+    @Setter
+    private boolean paramType = true;
 
     @Inject
     private UsersBean usersBean;
@@ -80,6 +82,7 @@ public class ConversationsBean extends ExtendBean implements Serializable {
         add(this.conversationsEntity);
         get10convers();
         this.conversationsEntity = new ConversationsEntity();
+
     }
 
     public void add(ConversationsEntity conversationsEntity) {
