@@ -77,11 +77,12 @@
                     <h:outputText class="overview-box-badge" id="countCompanies"
                                   value="#{companiesBean.countActiveCompanies/companiesBean.countAllCompanies}">
                         <f:convertNumber type="percent"
-                                         maxIntegerDigits="5"
-                                         maxFractionDigits="0"/>
+                                         maxIntegerDigits="2"
+                                         maxFractionDigits="4"/>
                     </h:outputText>
                     <p:tooltip id="toolTipCompaniesPercent" for="countCompanies"
-                               value="#{bundle['company.percentValue']}" position="bottom"/>
+                               value="#{bundle['company.percentValue']}" position="bottom" showEffect="clip"
+                               hideEffect="fold"/>
                     <p:graphicImage name="images/dashboard/chart-1.svg" library="barcelona-layout"/>
                 </div>
             </div>
@@ -92,11 +93,12 @@
                     <h:outputText class="overview-box-badge" id="countContacts"
                                   value="#{contactsBean.countActiveContacts/contactsBean.countAllContacts}">
                         <f:convertNumber type="percent"
-                                         maxIntegerDigits="5"
-                                         maxFractionDigits="0"/>
+                                         maxIntegerDigits="2"
+                                         maxFractionDigits="4"/>
                     </h:outputText>
                     <p:tooltip id="toolTipContactsPercent" for="countContacts"
-                               value="#{bundle['contacts.percentValue']}" position="bottom"/>
+                               value="#{bundle['contacts.percentValue']}" position="bottom" showEffect="clip"
+                               hideEffect="fold"/>
                     <p:graphicImage name="images/dashboard/chart-2.svg" library="barcelona-layout"/>
                 </div>
             </div>
