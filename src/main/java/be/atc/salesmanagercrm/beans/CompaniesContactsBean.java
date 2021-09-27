@@ -86,7 +86,6 @@ public class CompaniesContactsBean extends ExtendBean implements Serializable {
             }
             tx.commit();
             log.info("Persist ok");
-            // TODO : ajouter message
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
             log.info("Persist failed");

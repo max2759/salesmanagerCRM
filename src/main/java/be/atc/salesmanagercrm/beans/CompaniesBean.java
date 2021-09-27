@@ -460,7 +460,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
                 return;
             }
 
-            // TODO: faire une méthode findbyid dans bean
             try {
                 companiesEntity = findById(idCompany);
             } catch (EntityNotFoundException exception) {

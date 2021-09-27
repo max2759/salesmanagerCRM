@@ -43,7 +43,6 @@ public class CompaniesListConverter implements Converter {
 
         if (id != 0) {
             try {
-                // TODO : A modifier et à rajouter l'id de User
                 companiesEntityList = companiesBean.callFindByIdCompaniAndByIdUser(id);
                 return companiesEntityList;
             } catch (EntityNotFoundException exception) {
