@@ -181,8 +181,8 @@ public class UsersValidator {
             errors.add("Votre email n'est pas valide");
             errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "mailRegex") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "mailRegex") + "\n";
         }
-
-        if (pass1 != null || !pass1.isEmpty() || pass2 != null || !pass2.isEmpty()) {
+        log.info(pass1);
+        if ((pass1 != null && !pass1.equals("")) || (pass2 != null && !pass2.equals(""))) {
             if (!validatePassword(pass1) || !validatePassword(pass2)) {
                 errors.add("Votre mot de passe doit faire 8 caractéres, posséder une majuscule et un chiffre ou un caractére spécial");
                 errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n";

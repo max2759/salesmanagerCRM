@@ -122,7 +122,7 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
         return dao.findPermissionWithRole(em, id);
     }
 
-    //findall
+
     public void findAllRolesPermissions() {
         log.info("bgin findallrole");
         rolesPermissionsEntityList = findAll();
@@ -169,7 +169,11 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
         log.info("list des permissions : " + permissionsBean.getPermissionsEntityList().size());
     }
 
-    //findallwithrole
+    /**
+     * find all permissions by role
+     *
+     * @param idRole
+     */
     public void findAllPermissionsIWithdRole(int idRole) {
         log.info("bgin findallrole");
         rolesPermissionsEntityList = findAllWithIdRole(idRole);
@@ -195,18 +199,10 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
         //verifier si un combo existe
         FacesMessage msg;
 
-        //ne pas séparer les methodes, mais faire un if else car je sais pas comment ca va se passer avec la boucle
-        //possiblement, en cas d'update, vider tous les combos et reinserer dedans a nouveau . Ou alors, verifier en db les combos et verifier par rapport a ce qu'on a recu si ils existent ou non
-
-
         log.info("log is not checked");
         EntityManager em = EMF.getEM();
 
-        log.info(String.valueOf(rolesPermissionsEntity.getRolesByIdRoles().getId())); // je recoit mon role la c'est bon
         RolesEntity roleEntityId = rdao.findById(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
-
-
-        log.info(String.valueOf(rolesPermissionsEntity.getPermissionsByIdPermissions()));
 
         try {
             validateRolesPermissions(rolesPermissionsEntity);
@@ -228,37 +224,6 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
-/*
-        findAllRolesPermissions();
-
-       log.info(String.valueOf(rolesPermissionsEntityList.get(0).getPermissionsByIdPermissions().getId()));
-
-
-        //verifier avec la liste entities
-log.info(String.valueOf(permissionsEntities));
-        //recuperer tous les combos en db qui on le role puis comparer avec la liste recue
-log.info(String.valueOf(permissionsEntities.size()));
-
-        Vector<Integer> listIdExist = new Vector<Integer>();
-        for(int i = 0; i < rolesPermissionsEntityList.size(); i++){
-            log.info(String.valueOf(permissionsEntities.get(i)));
-            for(int j = 0; j < permissionsEntities.size() ; i++){
-                log.info(String.valueOf(rolesPermissionsEntityList.get(j).getPermissionsByIdPermissions().getId()));
-                log.info("i: "+i+ " j: "+j);
-                if (permissionsEntities.get(i).equals(rolesPermissionsEntityList.get(j).getPermissionsByIdPermissions().getId())) {
-                    int id = rolesPermissionsEntityList.get(j).getPermissionsByIdPermissions().getId();
-                   listIdExist.add(id);
-                    log.info("if");
-                }
-                else{
-                    log.info("else");
-                }
-            }
-        }
-
-        log.info(String.valueOf(listIdExist));
-
-*/
 
         try {
             for (PermissionsEntity p : permissionsEntitiesRole) {
@@ -266,12 +231,11 @@ log.info(String.valueOf(permissionsEntities.size()));
             }
         } catch (EntityNotFoundException exception) {
             log.warn("code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            //msg ici
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
 
-//condition si un role perm existe
-        log.info(String.valueOf(dao.findPermissionWithRole(em, rolesPermissionsEntity.getRolesByIdRoles().getId())));
         List<RolesPermissionsEntity> list = dao.findPermissionWithRole(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
 
         if (list.size() != 0) {
@@ -312,8 +276,7 @@ log.info(String.valueOf(permissionsEntities.size()));
                     em.clear();
                 }
             }
-            
-            //faire un add du combo
+
             log.info(String.valueOf(rolesPermissionsEntity));
         }
         if (com) {
@@ -324,11 +287,9 @@ log.info(String.valueOf(permissionsEntities.size()));
     }
 
 
-    //delete all
+
     private void deleteRolesPermissions(int idRole) {
         findAllPermissionsIWithdRole(idRole);
-        log.info(String.valueOf(rolesPermissionsEntityList));
-
 
         EntityManager em = EMF.getEM();
         EntityTransaction tx = null;
@@ -352,43 +313,6 @@ log.info(String.valueOf(permissionsEntities.size()));
         }
     }
 
-    //delete user choice
-    public void deleteRolePerm(int id) {
-        FacesMessage msg;
-        log.info(String.valueOf(id));
-
-        EntityManager em = EMF.getEM();
-        RolesPermissionsEntity rolesPermissionsEntity1 = dao.findById(em, id);
-
-        log.info(String.valueOf(rolesPermissionsEntity1.getId()));
-
-        try {
-            validateRolesPermissions(rolesPermissionsEntity1);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
-
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            dao.delete(em, rolesPermissionsEntity1);
-            tx.commit();
-            log.info("Delete ok");
-
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.error("Delete Error");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } finally {
-            em.clear();
-            em.close();
-        }
-
-
-    }
 
 
     private void validateRolesPermissions(RolesPermissionsEntity entity) {
@@ -415,30 +339,5 @@ log.info(String.valueOf(permissionsEntities.size()));
         }
     }
 
-
-
-   /* public void manageRolesPermissions() {
-        //verifier si un combo existe
-
-
-        //ne pas séparer les methodes, mais faire un if else car je sais pas comment ca va se passer avec la boucle
-        //possiblement, en cas d'update, vider tous les combos et reinserer dedans a nouveau . Ou alors, verifier en db les combos et verifier par rapport a ce qu'on a recu si ils existent ou non
-
-        log.info(String.valueOf(rolesPermissionsEntity.getRolesByIdRoles())); // je recoit mon role la c'est bon
-        log.info(String.valueOf(rolesPermissionsEntity.getPermissionsByIdPermissions()));
-
-        for (Integer permissionsEntity : permissionsEntities) {
-            EntityManager em = EMF.getEM();
-            log.info("deda, " + permissionsEntity);
-            RolesPermissionsEntity rolesPermissionsEntity = new RolesPermissionsEntity();
-
-            PermissionsEntity permissionsEntityId = pdao.findById(em, permissionsEntity );
-
-            rolesPermissionsEntity.setPermissionsByIdPermissions(permissionsEntityId);
-            rolesPermissionsEntity.setRolesByIdRoles(rolesEntity);
-            //faire un add du combo
-            log.info(String.valueOf(rolesPermissionsEntity));
-        }
-    }*/
 
 }

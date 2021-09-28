@@ -213,7 +213,7 @@ public class RolesBean extends ExtendBean implements Serializable {
         } catch (InvalidEntityException exception) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roles.labelExist"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-//            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+        //    log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
         rolesEntity.setActive(true);
@@ -226,7 +226,7 @@ public class RolesBean extends ExtendBean implements Serializable {
             dao.update(em, rolesEntity);
             tx.commit();
             log.info("Persist ok");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.create"), null);
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.updateOk"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
             if (tx != null && tx.isActive()) tx.rollback();
