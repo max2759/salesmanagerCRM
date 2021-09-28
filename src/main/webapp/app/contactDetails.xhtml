@@ -40,10 +40,10 @@
                             <p:accordionPanel multiple="true">
                                 <p:tab title="#{bundle['contacts.tabTitle1']}">
 
-                                    <h:panelGroup
-                                            style="margin-top:30px; margin-bottom:10px;">
+                                    <h:panelGroup styleClass="mgin-top-30 mgin-bottom-10">
                                         <p:outputLabel for="civilities" value="Civilité"/>
                                         <p:selectOneRadio id="civilities"
+                                                          disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}"
                                                           value="#{contactsBean.contactsEntity.civilitiesByIdCivilities}"
                                                           unselectable="true">
                                             <f:selectItems value="#{civilitiesBean.civilitiesEntities}" var="civilities"
@@ -52,9 +52,9 @@
                                         </p:selectOneRadio>
                                     </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:25px; margin-bottom: 30px">
+                                    <h:panelGroup styleClass="md-inputfield mgin-top-30 mgin-bottom-10">
                                         <p:inputText id="contactEmail" value="#{contactsBean.contactsEntity.email}"
+                                                     disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}"
                                                      maxlength="255">
                                             <f:validator validatorId="contactEmailValidator"/>
                                             <p:ajax process="@form"
@@ -65,13 +65,13 @@
                                         <p:message for="contactEmail" id="contactEmailErrorMsg"/>
                                     </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:15px; margin-bottom: 30px">
+                                    <h:panelGroup styleClass="md-inputfield mgin-top-30 mgin-bottom-10">
                                         <p:inputText id="contactFirstName"
                                                      value="#{contactsBean.contactsEntity.firstname}"
                                                      maxlength="255"
                                                      required="true"
-                                                     requiredMessage="#{bundle['contacts.firstnameNotValid']}">
+                                                     requiredMessage="#{bundle['contacts.firstnameNotValid']}"
+                                                     disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}">
                                             <p:ajax process="@form"
                                                     event="keyup"
                                                     update="contactDetailsUpdateForm:contactDetailsBtnLeft contactFirstNameErrorMsg"
@@ -81,13 +81,13 @@
                                         <p:message for="contactFirstName" id="contactFirstNameErrorMsg"/>
                                     </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:15px">
+                                    <h:panelGroup styleClass="md-inputfield mgin-top-30 mgin-bottom-10">
                                         <p:inputText id="contactLastName"
                                                      value="#{contactsBean.contactsEntity.lastname}"
                                                      maxlength="255"
                                                      required="true"
-                                                     requiredMessage="#{bundle['contacts.lastnameNotValid']}">
+                                                     requiredMessage="#{bundle['contacts.lastnameNotValid']}"
+                                                     disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}">
                                             <p:ajax process="@form"
                                                     event="keyup"
                                                     update="contactDetailsUpdateForm:contactDetailsBtnLeft contactLastNameErrorMsg"
@@ -108,7 +108,8 @@
                                                         itemValue="#{jobtitles}"
                                                         converter="jobTitlesConverter"
                                                         scrollHeight="250"
-                                                        placeholder="#{bundle['contacts.chooseJobTitles']}">
+                                                        placeholder="#{bundle['contacts.chooseJobTitles']}"
+                                                        disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}">
                                             <p:ajax process="@form"
                                                     update="contactDetailsUpdateForm:contactDetailsBtnLeft jobTitlesDisplayErrorMsg"
                                                     event="itemSelect" resetValues="true"/>
@@ -132,7 +133,8 @@
                                                         converter="branchActivitiesConverter"
                                                         scrollHeight="250"
                                                         groupBy="#{branchActivitiesBean.getBranchActivitiesEntityGroup(branchActivities)}"
-                                                        placeholder="#{bundle['company.chooseBranchActivity']}">
+                                                        placeholder="#{bundle['company.chooseBranchActivity']}"
+                                                        disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}">
                                             <p:ajax process="@form"
                                                     update="contactDetailsUpdateForm:contactDetailsBtnLeft branchActivitiesDisplayErrorMsg"
                                                     event="itemSelect" resetValues="true"/>
@@ -143,10 +145,10 @@
                                         <p:message for="branchActivitiesDisplay" id="branchActivitiesDisplayErrorMsg"/>
                                     </div>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px">
+                                    <h:panelGroup styleClass="md-inputfield mgin-top-30 mgin-bottom-10">
                                         <p:inputMask id="phoneNumber" value="#{contactsBean.contactsEntity.phoneNumber}"
-                                                     mask="+32 999999999">
+                                                     mask="+32 999999999"
+                                                     disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}">
                                             <f:validator validatorId="contactPhoneNumberValidator"/>
                                             <p:ajax process="@form" event="keyup"
                                                     update="contactDetailsUpdateForm:contactDetailsBtnLeft phoneNumberErrorMsg"/>
@@ -162,18 +164,19 @@
                                         <p:selectOneMenu id="contactTypeDisplay"
                                                          value="#{contactsBean.contactsEntity.contactTypesByIdContactTypes}"
                                                          converter="contactTypesConverter" required="true"
-                                                         requiredMessage="#{bundle['contacts.ContactTypeNotValid']}">
+                                                         requiredMessage="#{bundle['contacts.ContactTypeNotValid']}"
+                                                         disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}">
                                             <f:selectItems value="#{contactTypesBean.contactTypesEntities}"
                                                            var="contactType"
                                                            itemValue="#{contactType}" itemLabel="#{contactType.label}"/>
                                         </p:selectOneMenu>
                                     </div>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
+                                    <h:panelGroup styleClass="md-inputfield mgin-top-30 mgin-bottom-10">
                                         <p:inputMask id="companyBankAccount"
                                                      value="#{contactsBean.contactsEntity.bankAccount}"
-                                                     mask="BE-99999999999999">
+                                                     mask="BE-99999999999999"
+                                                     disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}">
                                             <f:validator validatorId="companyBankAccountValidator"/>
                                             <p:ajax process="@form" event="keyup"
                                                     update="contactDetailsUpdateForm:contactDetailsBtnLeft companyBankAccountErrorMsg"/>
@@ -182,8 +185,7 @@
                                         <p:message for="companyBankAccount" id="companyBankAccountErrorMsg"/>
                                     </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
+                                    <h:panelGroup styleClass="md-inputfield mgin-top-30 mgin-bottom-10">
                                         <span style="margin-right: 15px"
                                               class="labelLike">#{bundle['company.registerDateLabel']}</span>
                                         <h:outputText id="registerDate"
@@ -193,8 +195,7 @@
                                         </h:outputText>
                                     </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
+                                    <h:panelGroup styleClass="md-inputfield mgin-top-30 mgin-bottom-10">
                                         <span style="margin-right: 15px"
                                               class="labelLike">#{bundle['company.modificationDateLabel']}</span>
                                         <h:outputText id="modficationDate"
@@ -206,11 +207,12 @@
                                 </p:tab>
 
                                 <p:tab title="#{bundle['contacts.tabTitle2']}">
-                                    <h:panelGroup style="margin-top:30px; margin-bottom:10px;">
+                                    <h:panelGroup styleClass="mgin-top-30 mgin-bottom-10">
                                         <p:selectCheckboxMenu label="#{bundle['contacts.chooseCompany']}" filter="true"
                                                               filterMatchMode="contains" style="width: 100%"
                                                               value="#{companiesContactsBean.selectedCompaniesContacts}"
-                                                              multiple="true">
+                                                              multiple="true"
+                                                              disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}">
                                             <p:ajax event="itemUnselect" listener="#{contactsBean.onItemUnselect}"/>
                                             <f:selectItems value="#{companiesBean.companiesEntities}"
                                                            var="company"
@@ -221,10 +223,10 @@
                                 </p:tab>
 
                                 <p:tab title="#{bundle['contacts.tabTitle3']}">
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
+                                    <h:panelGroup styleClass="md-inputfield mgin-top-30 mgin-bottom-10">
                                         <p:inputText id="contactAddressStreet"
-                                                     value="#{addressesBean.addressesEntity.street}">
+                                                     value="#{addressesBean.addressesEntity.street}"
+                                                     disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}">
                                             <p:ajax process="@form" event="keyup"
                                                     update="contactDetailsUpdateForm:contactDetailsBtnLeft contactAddressStreetErrorMsg"/>
                                         </p:inputText>
@@ -232,10 +234,10 @@
                                         <p:message for="contactAddressStreet" id="contactAddressStreetErrorMsg"/>
                                     </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
+                                    <h:panelGroup styleClass="md-inputfield mgin-top-30 mgin-bottom-10">
                                         <p:inputText id="contactNumberAdress"
-                                                     value="#{addressesBean.addressesEntity.number}">
+                                                     value="#{addressesBean.addressesEntity.number}"
+                                                     disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}">
                                             <p:ajax process="@form" event="keyup"
                                                     update="contactDetailsUpdateForm:contactDetailsBtnLeft contactNumberAdressErrorMsg"/>
                                         </p:inputText>
@@ -243,10 +245,10 @@
                                         <p:message for="contactNumberAdress" id="contactNumberAdressErrorMsg"/>
                                     </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
+                                    <h:panelGroup styleClass="md-inputfield mgin-top-30 mgin-bottom-10">
                                         <p:inputText id="contactBox"
-                                                     value="#{addressesBean.addressesEntity.box}">
+                                                     value="#{addressesBean.addressesEntity.box}"
+                                                     disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}">
                                             <p:ajax process="@form" event="keyup"
                                                     update="contactDetailsUpdateForm:contactDetailsBtnLeft contactBoxErrorMsg"/>
                                         </p:inputText>
@@ -254,8 +256,7 @@
                                         <p:message for="contactBox" id="contactBoxErrorMsg"/>
                                     </h:panelGroup>
 
-                                    <h:panelGroup styleClass="md-inputfield"
-                                                  style="margin-top:30px; margin-bottom:10px;">
+                                    <h:panelGroup styleClass="md-inputfield mgin-top-30 mgin-bottom-10">
                                         <p:autoComplete id="addressCity" dropdown="true"
                                                         value="#{addressesBean.addressesEntity.citiesByIdCities}"
                                                         completeMethod="#{citiesBean.completeCitiesEntityContains}"
@@ -264,7 +265,8 @@
                                                         itemValue="#{cities}"
                                                         scrollHeight="250"
                                                         converter="citiesConverter"
-                                                        groupBy="#{citiesBean.getCitiesEntityGroup(cities)}">
+                                                        groupBy="#{citiesBean.getCitiesEntityGroup(cities)}"
+                                                        disabled="#{not usersBean.currentUser.isPermitted('updateContacts')}">
                                             <p:ajax process="@form"
                                                     update="AddressCityErrorMsg showAddressDetails contactDetailsUpdateForm:contactDetailsBtnLeft"
                                                     event="itemSelect"/>
@@ -277,8 +279,7 @@
                                     </h:panelGroup>
 
                                     <p:panel id="showAddressDetails" styleClass="addressDetailsDesign">
-                                        <h:panelGroup styleClass="md-inputfield"
-                                                      style="margin-bottom:10px;">
+                                        <h:panelGroup styleClass="md-inputfield mgin-top-30 mgin-bottom-10">
                                         <span style="margin-right: 15px"
                                               class="labelLike">#{bundle['address.region']}</span>
                                             <h:outputText id="addressRegion"
