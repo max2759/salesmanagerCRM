@@ -115,6 +115,22 @@
     margin-top: 15px;
 }
 
+.mgin-top-30 {
+    margin-top: 30px;
+}
+
+.mgin-bottom-10 {
+    margin-bottom: 10px;
+}
+
+.mgin-top-10 {
+    margin-top: 10px;
+}
+
+.mgin-bottom {
+    margin-bottom: 1.5rem;
+}
+
 .mgin-bottom-logo {
     margin-top: -13px !important;
 }
