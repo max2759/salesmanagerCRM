@@ -28,12 +28,17 @@ public class RolesConverter implements Converter {
             throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "roleNoExist"), null));
         }
 
-        try {
-            return rolesBean.findByLabel(value);
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+        if (rolesBean.findByLabel(value) != null) {
+            try {
+                return rolesBean.findByLabel(value);
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "roleNoExist"), null));
+            }
+        } else {
             throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "roleNoExist"), null));
         }
+
     }
 
     @Override

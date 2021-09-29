@@ -20,6 +20,12 @@ import be.atc.salesmanagercrm.validators.RolesValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
 import org.primefaces.component.selectoneradio.SelectOneRadio;
 
 import javax.enterprise.context.SessionScoped;
@@ -59,8 +65,6 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
     @Setter
     private RolesPermissionsEntity rolePermissionsForDialog;
     @Inject
-    private RolesBean rolesBean;
-    @Inject
     private PermissionsBean permissionsBean;
     @Getter
     @Setter
@@ -90,14 +94,13 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
     @Setter
     private boolean delete;
 
+    @Getter
+    @Setter
+    private Subject currentUser;
+    @Getter
+    @Setter
+    private Session session;
 
-    public void initialiseDialogRolePermissionsId(Integer idRolePermission) {
-        if (idRolePermission == null || idRolePermission < 1) {
-            return;
-        }
-        rolePermissionsForDialog = getDao().findById(EMF.getEM(), idRolePermission);
-        rolesPermissionsEntity = dao.findById(EMF.getEM(), idRolePermission);
-    }
 
     public void selectOrUnselectAllPermissions(AjaxBehaviorEvent event) {
         log.info("RolePermissionsBean : Method => selectAllPermission()");
@@ -199,93 +202,107 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
         //verifier si un combo existe
         FacesMessage msg;
 
-        log.info("log is not checked");
-        EntityManager em = EMF.getEM();
 
-        RolesEntity roleEntityId = rdao.findById(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
+        SecurityManager securityManager = factory.getInstance();
+        SecurityUtils.setSecurityManager(securityManager);
 
-        try {
-            validateRolesPermissions(rolesPermissionsEntity);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
+        this.currentUser = SecurityUtils.getSubject();
+        log.info(String.valueOf(currentUser));
+        this.session = currentUser.getSession();
+        if (this.currentUser.isPermitted("updateRolesPermissions") && this.currentUser.isPermitted("addRolesPermissions") && this.currentUser.isPermitted("deleteRolesPermissions")) {
 
-        try {
-            validateRoles(rolesPermissionsEntity.getRolesByIdRoles());
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
+            log.info("log is not checked");
+            EntityManager em = EMF.getEM();
 
-        try {
-            validatePermissions(permissionsEntitiesRole);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
+            RolesEntity roleEntityId = rdao.findById(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
 
-        try {
-            for (PermissionsEntity p : permissionsEntitiesRole) {
-                permissionsBean.findByLabel(p.getLabel());
+            try {
+                validateRolesPermissions(rolesPermissionsEntity);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                return;
             }
-        } catch (EntityNotFoundException exception) {
-            log.warn("code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return;
-        }
 
-        List<RolesPermissionsEntity> list = dao.findPermissionWithRole(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
+            try {
+                validateRoles(rolesPermissionsEntity.getRolesByIdRoles());
+            } catch (InvalidEntityException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                return;
+            }
 
-        if (list.size() != 0) {
-            deleteRolesPermissions(rolesPermissionsEntity.getRolesByIdRoles().getId());
-        }
+            try {
+                validatePermissions(permissionsEntitiesRole);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                return;
+            }
 
-        boolean com = false;
-        for (PermissionsEntity permissionsEntity : permissionsEntitiesRole) {
-            String idRoles = String.valueOf(rolesPermissionsEntity.getRolesByIdRoles().getId());
-            int idRole = Integer.parseInt(idRoles);
-
-            RolesPermissionsEntity rolesPermissionsEntity = new RolesPermissionsEntity();
-
-            PermissionsEntity permissionsEntityId = pdao.findById(em, permissionsEntity.getId());
-            log.info(String.valueOf(dao.getComboRolePerm(em, idRole, permissionsEntity.getId())));
-
-            if (dao.getComboRolePerm(em, idRole, permissionsEntity.getId()) == null) {
-
-                rolesPermissionsEntity.setPermissionsByIdPermissions(permissionsEntityId);
-                rolesPermissionsEntity.setRolesByIdRoles(roleEntityId);
-
-                EntityTransaction tx = null;
-                try {
-                    tx = em.getTransaction();
-                    tx.begin();
-                    dao.addRolePermissions(em, rolesPermissionsEntity);
-                    tx.commit();
-                    log.info("Persist ok");
-                    com = true;
-
-                } catch (Exception ex) {
-                    if (tx != null && tx.isActive()) tx.rollback();
-                    log.info("Persist echec");
-                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-                    FacesContext.getCurrentInstance().addMessage(null, msg);
-                } finally {
-                    em.clear();
-                    em.clear();
+            try {
+                for (PermissionsEntity p : permissionsEntitiesRole) {
+                    permissionsBean.findByLabel(p.getLabel());
                 }
+            } catch (EntityNotFoundException exception) {
+                log.warn("code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                return;
             }
 
-            log.info(String.valueOf(rolesPermissionsEntity));
-        }
-        if (com) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "permission.update"), null);
+            List<RolesPermissionsEntity> list = dao.findPermissionWithRole(em, rolesPermissionsEntity.getRolesByIdRoles().getId());
+
+            if (list.size() != 0) {
+                deleteRolesPermissions(rolesPermissionsEntity.getRolesByIdRoles().getId());
+            }
+
+            boolean com = false;
+            for (PermissionsEntity permissionsEntity : permissionsEntitiesRole) {
+                String idRoles = String.valueOf(rolesPermissionsEntity.getRolesByIdRoles().getId());
+                int idRole = Integer.parseInt(idRoles);
+
+                RolesPermissionsEntity rolesPermissionsEntity = new RolesPermissionsEntity();
+
+                PermissionsEntity permissionsEntityId = pdao.findById(em, permissionsEntity.getId());
+                log.info(String.valueOf(dao.getComboRolePerm(em, idRole, permissionsEntity.getId())));
+
+                if (dao.getComboRolePerm(em, idRole, permissionsEntity.getId()) == null) {
+
+                    rolesPermissionsEntity.setPermissionsByIdPermissions(permissionsEntityId);
+                    rolesPermissionsEntity.setRolesByIdRoles(roleEntityId);
+
+                    EntityTransaction tx = null;
+                    try {
+                        tx = em.getTransaction();
+                        tx.begin();
+                        dao.addRolePermissions(em, rolesPermissionsEntity);
+                        tx.commit();
+                        log.info("Persist ok");
+                        com = true;
+
+                    } catch (Exception ex) {
+                        if (tx != null && tx.isActive()) tx.rollback();
+                        log.info("Persist echec");
+                        msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                        FacesContext.getCurrentInstance().addMessage(null, msg);
+                    } finally {
+                        em.clear();
+                        em.clear();
+                    }
+                }
+
+                log.info(String.valueOf(rolesPermissionsEntity));
+            }
+            if (com) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "permission.update"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
+        } else {
+            log.info("Sorry, you aren't permissions.");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
 
     }
-
 
 
     private void deleteRolesPermissions(int idRole) {
@@ -314,7 +331,6 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
     }
 
 
-
     private void validateRolesPermissions(RolesPermissionsEntity entity) {
         List<String> errors = RolesPermissionsValidator.validate(entity);
         if (!errors.isEmpty()) {
@@ -337,6 +353,14 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
             log.error("Register role is not valide {}", entities);
             throw new InvalidEntityException("L'ajou de role n est pas valide", ErrorCodes.USER_NOT_VALID, errors);
         }
+    }
+
+    public void initialiseDialogRolePermissionsId(Integer idRolePermission) {
+        if (idRolePermission == null || idRolePermission < 1) {
+            return;
+        }
+        rolePermissionsForDialog = getDao().findById(EMF.getEM(), idRolePermission);
+        rolesPermissionsEntity = dao.findById(EMF.getEM(), idRolePermission);
     }
 
 

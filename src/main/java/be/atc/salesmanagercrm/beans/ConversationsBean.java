@@ -70,13 +70,6 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     @Inject
     private UsersBean usersBean;
 
-    public void initialiseDialogConversId(Integer idConvers) {
-        if (idConvers == null || idConvers < 1) {
-            return;
-        }
-        conversationsForDialog = getDao().findById(EMF.getEM(), idConvers);
-        conversationsEntity = dao.findById(EMF.getEM(), idConvers);
-    }
 
     public void addEntity() {
         add(this.conversationsEntity);
@@ -203,7 +196,7 @@ public class ConversationsBean extends ExtendBean implements Serializable {
 
     public void activate(ConversationsEntity entity) {
         FacesMessage msg;
-log.info("conversationListActive");
+        log.info("conversationListActive");
         try {
             validateConvers(conversationsEntity);
         } catch (InvalidEntityException exception) {
@@ -255,17 +248,6 @@ log.info("conversationListActive");
         return conversationsEntities;
     }
 
-    /*public void showAfterAdd() {
-        updateUsersAdmin(this.usersEntity);
-        usersEntityList = findAll();
-    }
-*/
-
-    //  public void findUser() {
-    //    usersBean.findUser();
-    // }
-
-
     public void findAllConversations() {
         log.info("bgin findallrole");
         conversationsEntityList = findAll();
@@ -297,6 +279,15 @@ log.info("conversationListActive");
             log.error("Conversation is not valide {}", entity);
             throw new InvalidEntityException("L'ajout du message n'est pas valide", ErrorCodes.CONVERSATION_NOT_VALID, errors);
         }
+    }
+
+
+    public void initialiseDialogConversId(Integer idConvers) {
+        if (idConvers == null || idConvers < 1) {
+            return;
+        }
+        conversationsForDialog = getDao().findById(EMF.getEM(), idConvers);
+        conversationsEntity = dao.findById(EMF.getEM(), idConvers);
     }
 
 

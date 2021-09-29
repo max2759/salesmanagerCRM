@@ -12,6 +12,12 @@ import be.atc.salesmanagercrm.validators.RolesValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -63,6 +69,13 @@ public class RolesBean extends ExtendBean implements Serializable {
     @Getter
     @Setter
     private RolesEntity rolesEntityNew = new RolesEntity();
+
+    @Getter
+    @Setter
+    private Subject currentUser;
+    @Getter
+    @Setter
+    private Session session;
 
     public void initialiseDialogRoleId(Integer idRole) {
         if (idRole == null || idRole < 1) {
@@ -151,42 +164,56 @@ public class RolesBean extends ExtendBean implements Serializable {
         //rolesEntity = rolesBean.findById(em, idRole);
         FacesMessage msg;
 
-        try {
-            validateRoles(rolesEntity);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
+        SecurityManager securityManager = factory.getInstance();
+        SecurityUtils.setSecurityManager(securityManager);
 
-        CheckEntities checkEntities = new CheckEntities();
-        try {
-            checkEntities.checkRoleByLabel(rolesEntity);
-        } catch (InvalidEntityException exception) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roles.labelExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+        this.currentUser = SecurityUtils.getSubject();
+        log.info(String.valueOf(currentUser));
+        this.session = currentUser.getSession();
+        if (this.currentUser.isPermitted("addRoles")) {
+
+            try {
+                validateRoles(rolesEntity);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                return;
+            }
+
+            CheckEntities checkEntities = new CheckEntities();
+            try {
+                checkEntities.checkRoleByLabel(rolesEntity);
+            } catch (InvalidEntityException exception) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roles.labelExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
 //            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
-        rolesEntity.setActive(true);
+                return;
+            }
+            rolesEntity.setActive(true);
 
-        EntityManager em = EMF.getEM();
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            dao.register(em, rolesEntity);
-            tx.commit();
-            log.info("Persist ok");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.createOk"), null);
+            EntityManager em = EMF.getEM();
+            EntityTransaction tx = null;
+            try {
+                tx = em.getTransaction();
+                tx.begin();
+                dao.register(em, rolesEntity);
+                tx.commit();
+                log.info("Persist ok");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.createOk"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } catch (Exception ex) {
+                if (tx != null && tx.isActive()) tx.rollback();
+                log.info("Persist echec");
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } finally {
+                em.clear();
+                em.clear();
+            }
+        } else {
+            log.info("Sorry, you aren't permissions.");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.info("Persist echec");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } finally {
-            em.clear();
-            em.clear();
         }
 
     }
@@ -200,42 +227,57 @@ public class RolesBean extends ExtendBean implements Serializable {
     protected void updateRole(RolesEntity rolesEntity) {
         FacesMessage msg;
 
-        try {
-            validateRoles(rolesEntity);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
+        SecurityManager securityManager = factory.getInstance();
+        SecurityUtils.setSecurityManager(securityManager);
 
-        CheckEntities checkEntities = new CheckEntities();
-        try {
-            checkEntities.checkRoleByLabel(rolesEntity);
-        } catch (InvalidEntityException exception) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roles.labelExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        //    log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
-        rolesEntity.setActive(true);
+        this.currentUser = SecurityUtils.getSubject();
+        log.info(String.valueOf(currentUser));
+        this.session = currentUser.getSession();
+        if (this.currentUser.isPermitted("updateRolesPermissions")) {
 
-        EntityManager em = EMF.getEM();
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            dao.update(em, rolesEntity);
-            tx.commit();
-            log.info("Persist ok");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.updateOk"), null);
+            try {
+                validateRoles(rolesEntity);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                return;
+            }
+
+            CheckEntities checkEntities = new CheckEntities();
+            try {
+                checkEntities.checkRoleByLabel(rolesEntity);
+            } catch (InvalidEntityException exception) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roles.labelExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                //    log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                return;
+            }
+            rolesEntity.setActive(true);
+
+            EntityManager em = EMF.getEM();
+            EntityTransaction tx = null;
+            try {
+                tx = em.getTransaction();
+                tx.begin();
+                dao.update(em, rolesEntity);
+                tx.commit();
+                log.info("Persist ok");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.updateOk"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } catch (Exception ex) {
+                if (tx != null && tx.isActive()) tx.rollback();
+                log.info("Persist echec");
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } finally {
+                em.clear();
+                em.clear();
+            }
+
+        } else {
+            log.info("Sorry, you aren't permissions.");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.info("Persist echec");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } finally {
-            em.clear();
-            em.clear();
         }
     }
 
@@ -243,36 +285,49 @@ public class RolesBean extends ExtendBean implements Serializable {
         FacesMessage msg;
         log.info(String.valueOf(id));
 
-        EntityManager em = EMF.getEM();
-        RolesEntity rolesEntity1 = dao.findById(em, id);
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
+        SecurityManager securityManager = factory.getInstance();
+        SecurityUtils.setSecurityManager(securityManager);
 
-        List<RolesEntity> rolesEntityList2 = dao.findForDeleteSafe(em, rolesEntity1.getId());
-        log.info(String.valueOf(rolesEntityList2));
+        this.currentUser = SecurityUtils.getSubject();
+        log.info(String.valueOf(currentUser));
+        this.session = currentUser.getSession();
+        if (this.currentUser.isPermitted("deleteRoles")) {
+            EntityManager em = EMF.getEM();
+            RolesEntity rolesEntity1 = dao.findById(em, id);
 
-        if (dao.findForDeleteSafe(em, rolesEntity1.getId()) == null || dao.findForDeleteSafe(em, rolesEntity1.getId()).size() == 0) {
-            rolesEntity1.setActive(false);
+            List<RolesEntity> rolesEntityList2 = dao.findForDeleteSafe(em, rolesEntity1.getId());
+            log.info(String.valueOf(rolesEntityList2));
 
-            EntityTransaction tx = null;
-            try {
-                tx = em.getTransaction();
-                tx.begin();
-                dao.update(em, rolesEntity1);
-                tx.commit();
-                log.info("Delete ok");
-                rolesEntityList = findAll();
-                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.deleted"), null);
+            if (dao.findForDeleteSafe(em, rolesEntity1.getId()) == null || dao.findForDeleteSafe(em, rolesEntity1.getId()).size() == 0) {
+                rolesEntity1.setActive(false);
+
+                EntityTransaction tx = null;
+                try {
+                    tx = em.getTransaction();
+                    tx.begin();
+                    dao.update(em, rolesEntity1);
+                    tx.commit();
+                    log.info("Delete ok");
+                    rolesEntityList = findAll();
+                    msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.deleted"), null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                } catch (Exception ex) {
+                    if (tx != null && tx.isActive()) tx.rollback();
+                    log.error("Delete Error");
+                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                } finally {
+                    em.clear();
+                    em.close();
+                }
+            } else {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "role.activeUserHaveTheRole"), null);
                 FacesContext.getCurrentInstance().addMessage(null, msg);
-            } catch (Exception ex) {
-                if (tx != null && tx.isActive()) tx.rollback();
-                log.error("Delete Error");
-                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-            } finally {
-                em.clear();
-                em.close();
             }
         } else {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "role.activeUserHaveTheRole"), null);
+            log.info("Sorry, you aren't permissions.");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
 
@@ -283,29 +338,44 @@ public class RolesBean extends ExtendBean implements Serializable {
         FacesMessage msg;
         log.info(String.valueOf(id));
 
-        EntityManager em = EMF.getEM();
-        RolesEntity rolesEntity1 = dao.findById(em, id);
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
+        SecurityManager securityManager = factory.getInstance();
+        SecurityUtils.setSecurityManager(securityManager);
 
-        rolesEntity1.setActive(true);
+        this.currentUser = SecurityUtils.getSubject();
+        log.info(String.valueOf(currentUser));
+        this.session = currentUser.getSession();
+        if (this.currentUser.isPermitted("deleteRoles")) {
 
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            dao.update(em, rolesEntity1);
-            tx.commit();
-            log.info("Delete ok");
-            rolesEntityList = findAll();
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.activate"), null);
+            EntityManager em = EMF.getEM();
+            RolesEntity rolesEntity1 = dao.findById(em, id);
+
+            rolesEntity1.setActive(true);
+
+            EntityTransaction tx = null;
+            try {
+                tx = em.getTransaction();
+                tx.begin();
+                dao.update(em, rolesEntity1);
+                tx.commit();
+                log.info("Delete ok");
+                rolesEntityList = findAll();
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "role.activate"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } catch (Exception ex) {
+                if (tx != null && tx.isActive()) tx.rollback();
+                log.error("Delete Error");
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } finally {
+                em.clear();
+                em.close();
+            }
+
+        } else {
+            log.info("Sorry, you aren't permissions.");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.error("Delete Error");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } finally {
-            em.clear();
-            em.close();
         }
     }
 

@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -134,12 +133,6 @@ public class UsersBean extends ExtendBean implements Serializable {
 
     @Inject
     AccessControlBean accessControlBean;
-
-    public void validateLength() {
-        if (userEntityNew.getEmail() != null && userEntityNew.getEmail().length() < 2) {
-            FacesContext.getCurrentInstance().addMessage("mail", new FacesMessage(FacesMessage.SEVERITY_ERROR, "error.notEnoughChar", "2"));
-        }
-    }
 
     public void initialiseDialogUserId(Integer idUser) {
         //  userForDialog = new UsersEntity();
@@ -468,8 +461,6 @@ public class UsersBean extends ExtendBean implements Serializable {
         if (this.currentUser.isPermitted("deleteUsers")) {
             log.info(String.valueOf(id));
 
-
-            // UsersEntity usersEntity1 = dao.findById(em, id);
             UsersEntity usersEntity1 = findById(id);
 
             usersEntity1.setActive(false);
@@ -685,13 +676,6 @@ public class UsersBean extends ExtendBean implements Serializable {
                     return;
                 }
 
-         /*   try {
-                checkEntities.checkUserByUsername(usersEntityOther);
-            } catch (InvalidEntityException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-                return;
-            }
-            usersEntityOther.setUsername(usersEntityOther.getUsername());*/
             }
 
 
@@ -849,24 +833,6 @@ public class UsersBean extends ExtendBean implements Serializable {
 
 
     /**
-     * Auto complete for RolesType
-     *
-     * @param search String
-     * @return list of rolesEntity
-     */
-    public List<RolesEntity> completeRolesAjax(String search) {
-
-        String searchLowerCase = search.toLowerCase();
-
-        List<RolesEntity> rolesEntitiesDropDown = findRoleAjaxList();
-        log.info(String.valueOf(rolesEntitiesDropDown));
-        log.info(String.valueOf(rolesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList())));
-
-        return rolesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
-
-    }
-
-    /**
      * Find rolesTypes entities
      *
      * @return List RolesEntity
@@ -883,14 +849,6 @@ public class UsersBean extends ExtendBean implements Serializable {
         return rolesEntities;
     }
 
-    /* private void findByUsernameAndPass(UsersEntity entity) {
-         List<String> errors = UsersValidator.connection(entity);
-         if (!errors.isEmpty()) {
-             log.error("Connexion is not valide {}", entity);
-             throw new InvalidEntityException("Le mot de passe ou le pseudo ne sont pas valide", ErrorCodes.USER_NOT_VALID, errors);
-         }
-     }
- */
     private void validateUsers(UsersEntity entity) {
         List<String> errors = UsersValidator.validate(entity);
         if (!errors.isEmpty()) {
@@ -992,4 +950,5 @@ public class UsersBean extends ExtendBean implements Serializable {
     protected void generatePDF(String password) {
         PDFUtil.generatePDF(userEntityNew, password);
     }
+
 }
