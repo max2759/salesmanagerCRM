@@ -557,38 +557,6 @@ public class CheckEntities extends ExtendBean implements Serializable {
             );
         }
 
-     /*   if (!username.isEmpty()) {
-            EntityManager em = EMF.getEM();
-            log.info(username);
-            String username1 = username;
-            log.info(username1);
-            UsersEntity usersEntity1 = usersDao.findByUsername(em, username + number);
-            if (usersEntity1 != null) {
-                while (usersEntity1 != null) {
-
-                    Random random = new Random();
-                    number = random.nextInt(9 - 1);
-                    log.info(String.valueOf(number));
-                    if (number < 10) {
-                        log.info("dans - de 10: "+number);
-                        number = 0 + number;
-                        log.info(String.valueOf(number));
-                        log.info(String.valueOf(number));
-                        username1 = username + "0" + number;
-                        log.info(username1);
-                        usersEntity1 = usersDao.findByUsername(em, username1 + number);
-                    }
-
-                }
-
-            }
-            return username1 + number;
-        }else{
-            throw new InvalidEntityException(
-                    "L'utilisateur est vide: ", ErrorCodes.USER_NOT_FOUND
-            );
-        }*/
-
     }
 
 

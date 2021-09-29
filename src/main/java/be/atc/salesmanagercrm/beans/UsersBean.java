@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -135,12 +134,6 @@ public class UsersBean extends ExtendBean implements Serializable {
     @Inject
     AccessControlBean accessControlBean;
 
-    public void validateLength() {
-        if (userEntityNew.getEmail() != null && userEntityNew.getEmail().length() < 2) {
-            FacesContext.getCurrentInstance().addMessage("mail", new FacesMessage(FacesMessage.SEVERITY_ERROR, "error.notEnoughChar", "2"));
-        }
-    }
-
     public void initialiseDialogUserId(Integer idUser) {
         //  userForDialog = new UsersEntity();
         log.info(String.valueOf(idUser));
@@ -174,6 +167,11 @@ public class UsersBean extends ExtendBean implements Serializable {
         createNewUserEntity();
     }
 
+    /**
+     * create an user
+     *
+     * @param entityToAdd
+     */
     protected void register(UsersEntity entityToAdd) {
 
         String username;
@@ -316,13 +314,18 @@ public class UsersBean extends ExtendBean implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             }
         } else {
-            log.info("Sorry, lightsaber1 rings are for schwartz masters only.");
+            log.info("Sorry, you aren't permissions.");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
 
     }
 
+    /**
+     * connect an user. Use Shiro
+     *
+     * @throws IOException
+     */
     public void connection() throws IOException {
         //Example using most common scenario of username/password pair:
         //https://shiro.apache.org/authentication.html
@@ -352,7 +355,7 @@ public class UsersBean extends ExtendBean implements Serializable {
             checkEntities.checkUserActiveForConnection(usersEntity);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "user"), null);
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "user.inactive"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
@@ -447,14 +450,17 @@ public class UsersBean extends ExtendBean implements Serializable {
     }
 
 
+    /**
+     * delete an user
+     *
+     * @param id
+     */
     public void delete(int id) {
 
         FacesMessage msg;
         if (this.currentUser.isPermitted("deleteUsers")) {
             log.info(String.valueOf(id));
 
-
-            // UsersEntity usersEntity1 = dao.findById(em, id);
             UsersEntity usersEntity1 = findById(id);
 
             usersEntity1.setActive(false);
@@ -480,51 +486,61 @@ public class UsersBean extends ExtendBean implements Serializable {
                 em.close();
             }
         } else {
-
-            log.info("Sorry, lightsaber1 rings are for schwartz masters only.");
+            log.info("Sorry, you aren't permissions.");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
 
 
+    /**
+     * activate an user
+     *
+     * @param id
+     */
     public void activate(int id) {
         FacesMessage msg;
+        if (this.currentUser.isPermitted("deleteUsers")) {
 
-        CheckEntities checkEntities = new CheckEntities();
-        //UsersEntity usersEntity1 = dao.findById(em, id);
-        UsersEntity usersEntity1 = findById(id);
+            CheckEntities checkEntities = new CheckEntities();
 
-        try {
-            checkEntities.checkRoleForConnection(usersEntity1);
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roleInactive"), null);
+            UsersEntity usersEntity1 = findById(id);
+
+            try {
+                checkEntities.checkRoleForConnection(usersEntity1);
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roleInactive"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                return;
+            }
+
+            usersEntity1.setActive(true);
+
+            EntityManager em = EMF.getEM();
+            EntityTransaction tx = null;
+            try {
+                tx = em.getTransaction();
+                tx.begin();
+                dao.update(em, usersEntity1);
+                tx.commit();
+                log.info("Delete ok");
+                loadListEntities();
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.reactivate"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } catch (Exception ex) {
+                if (tx != null && tx.isActive()) tx.rollback();
+                log.error("Delete Error");
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } finally {
+                em.clear();
+                em.close();
+            }
+        } else {
+            log.info("Sorry, you aren't permissions.");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return;
-        }
-
-        usersEntity1.setActive(true);
-
-        EntityManager em = EMF.getEM();
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            dao.update(em, usersEntity1);
-            tx.commit();
-            log.info("Delete ok");
-            loadListEntities();
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.reactivate"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.error("Delete Error");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } finally {
-            em.clear();
-            em.close();
         }
     }
 
@@ -612,87 +628,90 @@ public class UsersBean extends ExtendBean implements Serializable {
         findAllUsers();
     }
 
+    /**
+     * Uodate the user by an administrator
+     *
+     * @param usersEntityOther
+     */
     private void updateUsersAdmin(UsersEntity usersEntityOther) {
         FacesMessage msg;
-        log.info("begin updateUsrAdmin" + usersEntityOther.getUsername());
-        log.info(String.valueOf(usersEntity.getEmail()));
+        if (this.currentUser.isPermitted("updateUsers")) {
+            log.info("begin updateUsrAdmin" + usersEntityOther.getUsername());
+            log.info(String.valueOf(usersEntity.getEmail()));
 
-//pour les mdp, comparer en db AVANT hashage si il correspondent. Si ils corresepondent pas, on le hash et on le modifie
-        // !!! verifier avant d'"hasher le mdp si la regex est ok et si ce n'est pas un mdp deja hashé
-
-        CheckEntities checkEntities = new CheckEntities();
-        UsersEntity usersEntityOld;
-        try {
-            usersEntityOld = findById(usersEntityOther.getId());
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return;
-        }
-
-        try {
-            validateRoles(usersEntityOther);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roleNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return;
-        }
-
-
-        String usernameOld = usersEntityOld.getUsername();
-        if (usernameOld.equals(usersEntityOther.getUsername())) {
+            CheckEntities checkEntities = new CheckEntities();
+            UsersEntity usersEntityOld;
             try {
-                validateUsersUpdateByAdminNoChange(usersEntityOther);
+                usersEntityOld = findById(usersEntityOther.getId());
+            } catch (EntityNotFoundException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                return;
+            }
+
+            try {
+                validateRoles(usersEntityOther);
             } catch (InvalidEntityException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roleNotExist"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
+            }
+
+
+            String usernameOld = usersEntityOld.getUsername();
+            if (usernameOld.equals(usersEntityOther.getUsername())) {
+                try {
+                    validateUsersUpdateByAdminNoChange(usersEntityOther);
+                } catch (InvalidEntityException exception) {
+                    log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                    return;
+                }
+            } else {
+                try {
+                    validateUsersUpdateByAdmin(usersEntityOther);
+                } catch (InvalidEntityException exception) {
+                    log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                    return;
+                }
+
+            }
+
+
+            try {
+                checkEntities.checkRole(usersEntityOther.getRolesByIdRoles());
+            } catch (EntityNotFoundException exception) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "role.desactived"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+                return;
+            }
+
+            EntityManager em = EMF.getEM();
+            EntityTransaction tx = null;
+            try {
+                tx = em.getTransaction();
+                tx.begin();
+                dao.update(em, usersEntityOther);
+                tx.commit();
+                loadListEntities();
+                log.info("Persist ok");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.updated"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } catch (Exception ex) {
+                if (tx != null && tx.isActive()) tx.rollback();
+                log.info("Persist echec");
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } finally {
+                em.clear();
+                em.clear();
             }
         } else {
-            try {
-                validateUsersUpdateByAdmin(usersEntityOther);
-            } catch (InvalidEntityException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-                return;
-            }
-
-         /*   try {
-                checkEntities.checkUserByUsername(usersEntityOther);
-            } catch (InvalidEntityException exception) {
-                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-                return;
-            }
-            usersEntityOther.setUsername(usersEntityOther.getUsername());*/
-        }
-
-
-        try {
-            checkEntities.checkRole(usersEntityOther.getRolesByIdRoles());
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            return;
-        }
-
-        EntityManager em = EMF.getEM();
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            dao.update(em, usersEntityOther);
-            tx.commit();
-            loadListEntities();
-            log.info("Persist ok");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "user.updated"), null);
+            log.info("Sorry, you aren't permissions.");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.info("Persist echec");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } finally {
-            em.clear();
-            em.clear();
         }
 
     }
@@ -704,8 +723,6 @@ public class UsersBean extends ExtendBean implements Serializable {
         FacesMessage msg;
         log.info("begin updateUsrByUser" + usersEntity.getUsername());
 
-//pour les mdp, comparer en db AVANT hashage si il correspondent. Si ils corresepondent pas, on le hash et on le modifie
-        // !!! verifier avant d'"hasher le mdp si la regex est ok et si ce n'est pas un mdp deja hashé
         log.info(password2);
         log.info(password1);
         try {
@@ -715,7 +732,7 @@ public class UsersBean extends ExtendBean implements Serializable {
             return;
         }
 
-        if (password2 != null || !password2.equals("")) {
+        if (password2 != null && !password2.equals("")) {
             String password = encrypt(usersEntity.getPassword());
             usersEntity.setPassword(password);
         }
@@ -790,7 +807,11 @@ public class UsersBean extends ExtendBean implements Serializable {
         return new Sha256Hash(password).toString();
     }
 
-
+    /**
+     * create a password aleatoire
+     *
+     * @return passwword
+     */
     private char[] aleaPassword() {
         int length = 8;
         String symbol = "-/.^&*_!@%=+>)";
@@ -812,24 +833,6 @@ public class UsersBean extends ExtendBean implements Serializable {
 
 
     /**
-     * Auto complete for RolesType
-     *
-     * @param search String
-     * @return list of rolesEntity
-     */
-    public List<RolesEntity> completeRolesAjax(String search) {
-
-        String searchLowerCase = search.toLowerCase();
-
-        List<RolesEntity> rolesEntitiesDropDown = findRoleAjaxList();
-        log.info(String.valueOf(rolesEntitiesDropDown));
-        log.info(String.valueOf(rolesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList())));
-
-        return rolesEntitiesDropDown.stream().filter(t -> t.getLabel().toLowerCase().contains(searchLowerCase)).collect(Collectors.toList());
-
-    }
-
-    /**
      * Find rolesTypes entities
      *
      * @return List RolesEntity
@@ -846,14 +849,6 @@ public class UsersBean extends ExtendBean implements Serializable {
         return rolesEntities;
     }
 
-    /* private void findByUsernameAndPass(UsersEntity entity) {
-         List<String> errors = UsersValidator.connection(entity);
-         if (!errors.isEmpty()) {
-             log.error("Connexion is not valide {}", entity);
-             throw new InvalidEntityException("Le mot de passe ou le pseudo ne sont pas valide", ErrorCodes.USER_NOT_VALID, errors);
-         }
-     }
- */
     private void validateUsers(UsersEntity entity) {
         List<String> errors = UsersValidator.validate(entity);
         if (!errors.isEmpty()) {
@@ -904,8 +899,6 @@ public class UsersBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * for the case when username haven't change
-     *
      * @param entity
      */
     private void validateUsersUpdateByAdminNoChange(UsersEntity entity) {
@@ -957,4 +950,5 @@ public class UsersBean extends ExtendBean implements Serializable {
     protected void generatePDF(String password) {
         PDFUtil.generatePDF(userEntityNew, password);
     }
+
 }

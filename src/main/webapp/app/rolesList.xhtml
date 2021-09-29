@@ -91,7 +91,8 @@
 
                                 <h:panelGroup rendered="#{not role.active}">
                                     <p:commandLink update="@form"
-                                                   action="#{rolesBean.activate(role.id)}">
+                                                   action="#{rolesBean.activate(role.id)}"
+                                                   rendered="#{usersBean.currentUser.isPermitted('deleteRoles')}">
                                         <i class="ui-icon ui-icon-update"/>
                                         <f:param name="idEntity" value="#{role.id}"/>
                                         <f:param name="typeEntities" value="all"/>

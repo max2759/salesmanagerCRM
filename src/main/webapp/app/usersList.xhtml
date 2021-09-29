@@ -11,7 +11,7 @@
 
         <f:metadata>
             <f:viewAction action="#{usersBean.loadListEntities}"/>
-            <f:viewAction action="#{rolesBean.findAllRoles}"/>
+            <f:viewAction action="#{rolesBean.findAllActiveRoles}"/>
             <f:viewAction action="#{permissionsBean.findAllPermissions}"/>
         </f:metadata>
 
@@ -39,11 +39,13 @@
 
                             <p:ajax event="tabChange" update="@form msgs"/>
 
-                            <p:tab id="displayActiveUsers" title="#{bundle['users.userActive']}">
+                            <p:tab id="displayActiveUsers"
+                                   title="#{bundle['users.userActive']} (#{usersBean.usersEntitiesActive.size()})">
                                 <fxs:listUsers id="listUsers"/>
                             </p:tab>
 
-                            <p:tab id="displayDisableUsers" title="#{bundle['users.userDisable']}">
+                            <p:tab id="displayDisableUsers"
+                                   title="#{bundle['users.userDisable']} (#{usersBean.usersEntitiesDisable.size()})">
                                 <fxs:listDisableUsers id="listDisableUsers"/>
                             </p:tab>
 
