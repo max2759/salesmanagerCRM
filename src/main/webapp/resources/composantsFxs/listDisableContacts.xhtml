@@ -64,13 +64,13 @@
             </h:outputText>
          </p:column>
 
-         <p:column rendered="#{usersBean.currentUser.isPermitted('deleteContacts')}">
-             <p:commandLink update="@(form) msgs"
-                            action="#{contactsBean.activateContactbyIdContact}"
-                            rendered="#{usersBean.currentUser.isPermitted('deleteContacts')}">
-                 <i class="ui-icon ui-icon-update"/>
-                 <f:param name="contactsID" value="#{contacts.id}"></f:param>
-             </p:commandLink>
+         <p:column rendered="#{usersBean.currentUser.isPermitted('deleteContacts')}" colspan="1" width="70">
+            <p:commandLink update="@(form) msgs"
+                           action="#{contactsBean.activateContactbyIdContact}"
+                           rendered="#{usersBean.currentUser.isPermitted('deleteContacts')}">
+               <i class="ui-icon ui-icon-update"/>
+               <f:param name="contactsID" value="#{contacts.id}"></f:param>
+            </p:commandLink>
          </p:column>
 
       </p:dataTable>

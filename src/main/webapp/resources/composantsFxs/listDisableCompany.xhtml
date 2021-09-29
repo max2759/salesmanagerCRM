@@ -74,7 +74,7 @@
                         value="#{empty companies.branchActivitiesByIdBranchActivities.label ? '--' : companies.branchActivitiesByIdBranchActivities.label}"/>
             </p:column>
 
-            <p:column rendered="#{usersBean.currentUser.isPermitted('deleteCompagnies')}">
+            <p:column rendered="#{usersBean.currentUser.isPermitted('deleteCompagnies')}" colspan="1" width="70">
                 <p:commandLink update="@(form) msgs"
                                action="#{companiesBean.activateCompanyByIdCompany}"
                                rendered="#{usersBean.currentUser.isPermitted('deleteCompagnies')}">
