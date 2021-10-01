@@ -68,6 +68,8 @@ public class CompanyTypesBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * Return companyTypesEntity by its ID
+     *
      * @param id id
      * @return optionalCompanyTypesEntity
      */

@@ -8,6 +8,9 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Maximilien Zabbara
+ */
 public class CompaniesContactsDaoImpl extends EntityFinderImpl<CompaniesContactsEntity> implements CompaniesContactsDao {
 
     @Override

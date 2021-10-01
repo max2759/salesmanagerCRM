@@ -26,6 +26,14 @@ public class BranchActivitiesConverter implements Converter {
 
     private final BranchActivitiesBean branchActivitiesBean = new BranchActivitiesBean();
 
+    /**
+     * Get object
+     *
+     * @param facesContext FacesContext
+     * @param uiComponent  UIComponent
+     * @param value        String
+     * @return Object
+     */
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
 
@@ -57,6 +65,14 @@ public class BranchActivitiesConverter implements Converter {
         }
     }
 
+    /**
+     * Get String
+     *
+     * @param facesContext FacesContext
+     * @param uiComponent  UIComponent
+     * @param value        Object
+     * @return String
+     */
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value) {
         if (value != null) {

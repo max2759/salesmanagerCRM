@@ -10,9 +10,29 @@ import java.util.Optional;
  */
 public interface AddressesDao {
 
+    /**
+     * Find AddressEntity by id Company
+     *
+     * @param em EntityManager
+     * @param id int
+     * @return Optional<AddressesEntity>
+     */
     Optional<AddressesEntity> findByIdCompanies(EntityManager em, int id);
 
+    /**
+     * Find AddressEntity by id Contacts
+     *
+     * @param em EntityManager
+     * @param id int
+     * @return Optional<AddressesEntity>
+     */
     Optional<AddressesEntity> findByIdContacts(EntityManager em, int id);
 
+    /**
+     * Update AddressEntity
+     *
+     * @param em              EntityManager
+     * @param addressesEntity AddressesEntity
+     */
     void update(EntityManager em, AddressesEntity addressesEntity);
 }

@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author Zabbara Maximilien
+ * @author Maximilien Zabbara
  */
 @Slf4j
 @FacesValidator("companyEmailValidator")

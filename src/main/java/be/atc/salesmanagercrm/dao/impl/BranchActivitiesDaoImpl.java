@@ -7,8 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
+
+/**
+ * @author Maximilien Zabbara
+ */
 @Slf4j
 public class BranchActivitiesDaoImpl extends EntityFinderImpl<BranchActivitiesEntity> implements BranchActivitiesDao {
 
@@ -35,18 +38,8 @@ public class BranchActivitiesDaoImpl extends EntityFinderImpl<BranchActivitiesEn
     @Override
     public List<BranchActivitiesEntity> findByLabel(EntityManager em, String label) {
         return em.createNamedQuery("BranchActivities.findByLabel",
-                BranchActivitiesEntity.class)
-                .setParameter("label", label)
-                .getResultList();
-    }
-
-    @Override
-    public Optional<BranchActivitiesEntity> findByLabelEntity(EntityManager em, String label) {
-        return em.createNamedQuery("BranchActivities.findByLabel",
                         BranchActivitiesEntity.class)
                 .setParameter("label", label)
-                .getResultList()
-                .stream()
-                .findFirst();
+                .getResultList();
     }
 }

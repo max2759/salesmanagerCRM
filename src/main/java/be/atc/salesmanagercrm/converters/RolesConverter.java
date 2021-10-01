@@ -14,6 +14,9 @@ import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 import java.util.Locale;
 
+/**
+ * @author Marie-Elise Larché
+ */
 @Slf4j
 @FacesConverter(value = "rolesConverter")
 public class RolesConverter implements Converter {

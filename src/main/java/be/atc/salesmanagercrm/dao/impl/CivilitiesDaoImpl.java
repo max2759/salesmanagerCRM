@@ -7,6 +7,10 @@ import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+/**
+ * @author Maximilien Zabbara
+ */
 public class CivilitiesDaoImpl extends EntityFinderImpl<CivilitiesEntity> implements CivilitiesDao {
 
     @Override

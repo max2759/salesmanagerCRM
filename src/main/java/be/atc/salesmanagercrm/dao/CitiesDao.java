@@ -7,7 +7,19 @@ import java.util.List;
 
 public interface CitiesDao {
 
+    /**
+     * Find all CitiesEntity
+     *
+     * @return List<CitiesEntity>
+     */
     List<CitiesEntity> findAll();
 
+    /**
+     * Find CitiesEntity by its id
+     *
+     * @param em EntityManager
+     * @param id int
+     * @return CitiesEntity
+     */
     CitiesEntity findById(EntityManager em, int id);
 }

@@ -243,7 +243,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
      */
     public void loadListEntities() {
         log.info("CompaniesBean => method : loadListEntities()");
-        this.companiesEntities = findAllCompaniesByIdUser(usersBean.getUsersEntity().getId());
+        this.companiesEntities = findCompaniesEntityByIdUser(usersBean.getUsersEntity());
 
         this.companiesEntityList = companiesEntities.stream().filter(CompaniesEntity::isActive).collect(Collectors.toList());
         this.companiesEntitiesDisableList = companiesEntities.stream().filter(c -> !c.isActive()).collect(Collectors.toList());
@@ -275,28 +275,8 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         return entityGroup.getLabel().charAt(0);
     }
 
-
     /**
-     * Find all Companies entities by userID
-     *
-     * @param id id
-     * @return List CompaniesEntities
-     */
-    protected List<CompaniesEntity> findAllCompaniesByIdUser(int id) {
-        log.info("CompaniesBean => method : findAllCompaniesByIdUser()");
-        log.info("Start method findAll");
-
-        EntityManager em = EMF.getEM();
-        List<CompaniesEntity> companiesEntities = companiesDao.findAllCompaniesByIdUser(em, id);
-
-        em.clear();
-        em.close();
-
-        return companiesEntities;
-    }
-
-    /**
-     * Find Companies entities by id User
+     * Find all Companies entities by id User
      *
      * @param usersEntity UsersEntity
      * @return List CompaniesEntity
@@ -358,50 +338,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
                 ));
     }
 
-    public List<CompaniesEntity> callFindByIdCompaniAndByIdUser(int id) {
-        log.info("CompaniesBean => method : callFindByIdCompaniAndByIdUser()");
-        return findByIdCompaniAndByIdUser(id, usersBean.getUsersEntity());
-    }
-
-    /**
-     * Return list of Companies by its id and idUser
-     *
-     * @param id          id Companies
-     * @param usersEntity UsersEntity
-     * @return CompaniesEntity
-     */
-    private List<CompaniesEntity> findByIdCompaniAndByIdUser(int id, UsersEntity usersEntity) {
-        log.info("CompaniesBean => method : findByIdCompaniAndByIdUser()");
-        FacesMessage msg;
-
-        if (id == 0) {
-            log.error("Company ID is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
-        }
-        if (usersEntity == null) {
-            log.error("User Entity is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
-        }
-
-        EntityManager em = EMF.getEM();
-
-        try {
-            return companiesDao.findByIdCompaniAndByIdUser(em, id, usersEntity.getId());
-        } catch (Exception ex) {
-            log.info("Nothing");
-            throw new EntityNotFoundException(
-                    "Aucune entreprise avec l ID " + id + " et l ID User " + usersEntity.getId() + " n a ete trouvee dans la BDD",
-                    ErrorCodes.COMPANY_NOT_FOUND
-            );
-        } finally {
-            em.clear();
-            em.close();
-        }
-    }
 
     /**
      * Create new instance for objects
@@ -461,7 +397,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
             }
 
             try {
-                companiesEntity = findById(idCompany);
+                companiesEntity = findByIdCompanyAndByIdUser(idCompany, usersBean.getUsersEntity());
             } catch (EntityNotFoundException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
                 facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, JsfUtils.returnMessage(getLocale(), "company.error"), null);
@@ -473,39 +409,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         addressesBean.getAddressByIdCompany();
     }
 
-    /**
-     * Find Companies by id
-     *
-     * @param id Companies
-     * @return CompaniesEntity
-     */
-    protected CompaniesEntity findById(int id) {
-        log.info("CompaniesBean => method : findById()");
-
-        FacesMessage msg;
-
-        if (id == 0) {
-            log.error("Companies ID is null");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "company.error"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return null;
-        }
-
-        EntityManager em = EMF.getEM();
-        Optional<CompaniesEntity> optionalCompaniesEntity;
-        try {
-            optionalCompaniesEntity = companiesDao.findById(em, id);
-        } finally {
-            em.clear();
-            em.close();
-        }
-
-        return optionalCompaniesEntity.orElseThrow(() ->
-                new EntityNotFoundException(
-                        "Aucune entreprise avec l ID " + id + " n a ete trouvee dans la BDD",
-                        ErrorCodes.COMPANY_NOT_FOUND
-                ));
-    }
 
     /**
      * Public method that call update company
@@ -634,7 +537,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         EntityTransaction tx = null;
 
         try {
-            companiesEntityToActivate = findById(id);
+            companiesEntityToActivate = findByIdCompanyAndByIdUser(id, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
@@ -685,7 +588,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         EntityTransaction tx = null;
 
         try {
-            companiesEntityToDelete = findById(id);
+            companiesEntityToDelete = findByIdCompanyAndByIdUser(id, usersBean.getUsersEntity());
         } catch (EntityNotFoundException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "companyNotExist"), null);
