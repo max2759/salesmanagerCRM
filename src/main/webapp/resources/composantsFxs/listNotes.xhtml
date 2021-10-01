@@ -29,6 +29,7 @@
                      rowsPerPageTemplate="10,20,50"
                      filteredValue="#{notesBean.notesEntitiesFiltered}"
                      rowStyleClass="styleDataTableEdit"
+                     styleClass="my-table-classe"
         >
 
             <p:ajax event="rowEdit" listener="#{notesBean.onRowEdit}" update="@this msgs"/>
@@ -69,7 +70,6 @@
                                                      cols="100"
                                                      maxlength="255"
                                                      autoResize="false" label="Name">
-                                        <p:ajax update="msg" global="false" event="keyup"/>
                                     </p:inputTextarea>
                                     <label>#{bundle['notes.messageHolder']}</label>
                                     <p:message id="msg" for="acTitleNote"/>
