@@ -28,12 +28,13 @@
                      paginatorPosition="bottom"
                      rowsPerPageTemplate="10,20,50"
                      rowStyleClass="styleDataTableEdit"
+                     styleClass="my-table-classe"
         >
 
             <p:ajax event="rowEdit" listener="#{tasksBean.onRowEdit}" update="@this msgs"/>
             <p:ajax event="rowEditCancel" listener="#{tasksBean.onRowCancel}" update="@this msgs"/>
 
-            <p:column styleClass="dataTableCellEditorInput">
+            <p:column styleClass="dataTableCellEditorInput ">
                 <div class="align-start justify-between">
                     <div class="display-inline-flex align-center">
                         <h:outputText styleClass="boldText" value="#{bundle['task']} "/>
@@ -71,7 +72,6 @@
                                                  maxlength="255"
                                                  requiredMessage="#{bundle['task.validator.title']}"
                                                  label="#{bundle['title']}">
-                                        <p:ajax update="msg" global="false" event="keyup"/>
                                     </p:inputText>
                                     <label>#{bundle['title']}</label>
                                     <p:message id="msg" for="acTitleUpdate"/>
@@ -143,7 +143,6 @@
                                                 validatorMessage="#{bundle['task.validator.dateEnd']}"
                                                 id="datetimeUpdate" pattern="dd/MM/yyyy HH:mm"
                                                 mindate="#{task.creationDate}">
-                                        <p:ajax update="msgDateTime" global="false" event="change"/>
                                     </p:calendar>
                                     <label>#{bundle['dueDate']}:</label>
                                     <p:message id="msgDateTime" for="datetimeUpdate"/>

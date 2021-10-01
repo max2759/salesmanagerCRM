@@ -57,7 +57,7 @@
 }
 
 .columnEditDelte {
-    width: 85px;
+    width: 70px;
 }
 
 .styleEditorOutPut {
@@ -169,4 +169,8 @@ body .ui-datatable tbody tr .ui-cell-editor-input input {
 .dataTableCellEditorInput {
     padding-top: 15px !important;
     padding-left: 15px !important;
+}
+
+.my-table-classe THEAD {
+    display: none;
 }
