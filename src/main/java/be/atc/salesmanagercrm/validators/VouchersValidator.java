@@ -20,6 +20,12 @@ public class VouchersValidator {
     @Getter
     private static final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
+    /**
+     * Validate VouchersEntity Backend and return list of Errors
+     *
+     * @param entity VouchersEntity
+     * @return List<String>
+     */
     public static List<String> validate(VouchersEntity entity) {
         List<String> errors = new ArrayList<>();
         String errorMessage = null;

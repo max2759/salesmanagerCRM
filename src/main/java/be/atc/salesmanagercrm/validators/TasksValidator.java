@@ -20,6 +20,12 @@ public class TasksValidator {
     @Getter
     private static final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
+    /**
+     * Validate TasksEntity Backend and return list of Errors
+     *
+     * @param entity TasksEntity
+     * @return List<String>
+     */
     public static List<String> validate(TasksEntity entity) {
 
         List<String> errors = new ArrayList<>();

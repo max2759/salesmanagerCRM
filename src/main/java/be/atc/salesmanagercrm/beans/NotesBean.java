@@ -197,9 +197,9 @@ public class NotesBean extends ExtendBean implements Serializable {
 
     }
 
-
     /**
      * On cancel delete
+     * @param event         RowEditEvent<NotesEntity>
      */
     public void onRowCancel(RowEditEvent<NotesEntity> event) {
         log.info("NotesBean => method : onRowCancel(RowEditEvent<NotesEntity> event)");
@@ -253,7 +253,7 @@ public class NotesBean extends ExtendBean implements Serializable {
     /**
      * Save Note Entity !
      *
-     * @param entity NotesEntity
+     * @param entity        NotesEntity
      */
     protected void save(NotesEntity entity) {
         log.info("NotesBean => method : save(NotesEntity entity)");
@@ -330,8 +330,9 @@ public class NotesBean extends ExtendBean implements Serializable {
     /**
      * Find Note by ID
      *
-     * @param id NotesEntity
-     * @return Notes Entity
+     * @param id            int 'id NotesEntity'
+     * @param usersEntity   UsersEntity
+     * @return NotesEntity
      */
     protected NotesEntity findById(int id, UsersEntity usersEntity) {
         log.info("NotesBean => method : findById(int id, int idUser)");
@@ -370,8 +371,8 @@ public class NotesBean extends ExtendBean implements Serializable {
     /**
      * Find Notes entities by id Contact
      *
-     * @param contactsEntity ContactsEntity
-     * @return List NotesEntity
+     * @param contactsEntity        ContactsEntity
+     * @return List<NotesEntity>
      */
     protected List<NotesEntity> findNotesEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity) {
         log.info("NotesBean => method : findNotesEntityByContactsByIdContacts(int id, int idUser)");
@@ -401,7 +402,7 @@ public class NotesBean extends ExtendBean implements Serializable {
     /**
      * Find Notes Entities by CompaniesEntity and UsersEntity
      *
-     * @param companiesEntity CompaniesEntity
+     * @param companiesEntity       CompaniesEntity
      * @return List NotesEntity
      */
     protected List<NotesEntity> findNotesEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity) {
@@ -433,7 +434,7 @@ public class NotesBean extends ExtendBean implements Serializable {
 
     /**
      * Find All Notes Entities
-     *
+     * @param usersEntity   UsersEntity
      * @return List NotesEntity
      */
     protected List<NotesEntity> findAll(UsersEntity usersEntity) {
@@ -458,8 +459,8 @@ public class NotesBean extends ExtendBean implements Serializable {
 
     /**
      * delete note by id
-     *
-     * @param id note
+     * @param id                int
+     * @param usersEntity       UsersEntity
      */
     protected void delete(int id, UsersEntity usersEntity) {
         log.info("NotesBean => method : delete(int id, int idUser)");
@@ -517,7 +518,7 @@ public class NotesBean extends ExtendBean implements Serializable {
     /**
      * Update NoteEntity
      *
-     * @param entity NoteEntity
+     * @param entity            NoteEntity
      */
     protected void update(NotesEntity entity) {
         log.info("NotesBean => method : update(NotesEntity entity)");
@@ -602,7 +603,7 @@ public class NotesBean extends ExtendBean implements Serializable {
     /**
      * Validate Note !
      *
-     * @param entity NotesEntity
+     * @param entity            NotesEntity
      */
     private void validateNote(NotesEntity entity) {
         log.info("NotesBean => method : validateNote(NotesEntity entity)");

@@ -15,6 +15,8 @@ import javax.faces.convert.FacesConverter;
 import java.util.Locale;
 
 /**
+ * Transaction Phase converter
+ *
  * @author Younes Arifi
  */
 @Slf4j
@@ -24,6 +26,13 @@ public class TransactionPhasesConverter implements Converter {
     private final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
     private final TransactionPhasesBean transactionPhasesBean = new TransactionPhasesBean();
 
+    /**
+     * Get object
+     * @param context FacesContext
+     * @param component UIComponent
+     * @param value String
+     * @return Object
+     */
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
 
@@ -46,6 +55,14 @@ public class TransactionPhasesConverter implements Converter {
 
     }
 
+    /**
+     * Get String
+     *
+     * @param context   FacesContext
+     * @param component UIComponent
+     * @param value     Object
+     * @return String
+     */
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         return null;

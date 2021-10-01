@@ -10,7 +10,21 @@ import java.util.List;
  */
 public interface VoucherHistoriesDao {
 
+    /**
+     * Save VouchersHistoriesEntity
+     *
+     * @param em     EntityManager
+     * @param entity VoucherHistoriesEntity
+     */
     void save(EntityManager em, VoucherHistoriesEntity entity);
 
+    /**
+     * Find All VouchersHistories by Id Voucher
+     *
+     * @param em        EntityManager
+     * @param idVoucher int
+     * @param idUser    int
+     * @return List<VoucherHistoriesEntity>
+     */
     List<VoucherHistoriesEntity> findAllByIdUserAndByIdVoucher(EntityManager em, int idVoucher, int idUser);
 }

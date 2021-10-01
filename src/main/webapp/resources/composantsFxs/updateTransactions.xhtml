@@ -115,7 +115,7 @@
                             <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}"
                                            value="#{transactionsBean.transactionsEntity.endDate}">
                                 <f:convertDateTime type="localDate"
-                                                   pattern="&nbsp;dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                                                   pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
                             </p:outputLabel>
                         </h:panelGroup>
                     </div>

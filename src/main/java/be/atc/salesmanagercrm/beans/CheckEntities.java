@@ -71,7 +71,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
     /**
      * Check if Contact exist in DB
      *
-     * @param entity : ContactsEntity
+     * @param entity ContactsEntity
      */
     public void checkContact(ContactsEntity entity) {
         if (entity == null) {
@@ -99,7 +99,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
     /**
      * Check if company exist in DB
      *
-     * @param entity : CompaniesEntity
+     * @param entity    CompaniesEntity
      */
     public void checkCompany(CompaniesEntity entity) {
         if (entity == null) {
@@ -128,7 +128,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
     /**
      * Check if user exist in DB
      *
-     * @param entity : UsersEntity
+     * @param entity    UsersEntity
      */
 
     public void checkUser(UsersEntity entity) {
@@ -224,7 +224,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
     /**
      * Check if TaskType exist in DB
      *
-     * @param entity : TaskTypesEntity
+     * @param entity    TaskTypesEntity
      */
     public void checkTaskType(TaskTypesEntity entity) {
         if (entity == null) {
@@ -253,7 +253,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
     /**
      * Check if VoucherStatus exit in DB
      *
-     * @param entity VoucherStatusEntity
+     * @param entity    VoucherStatusEntity
      */
     public void checkVoucherStatus(VoucherStatusEntity entity) {
         if (entity == null) {
@@ -395,7 +395,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
     /**
      * Check if TransactionType exit in DB
      *
-     * @param entity TransactionTypesEntity
+     * @param entity    TransactionTypesEntity
      */
     public void checkTransactionTypes(TransactionTypesEntity entity) {
         if (entity == null) {
@@ -423,7 +423,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
     /**
      * Check if TransactionPhase exit in DB
      *
-     * @param entity TransactionPhasesEntity
+     * @param entity    TransactionPhasesEntity
      */
     public void checkTransactionPhases(TransactionPhasesEntity entity) {
         if (entity == null) {

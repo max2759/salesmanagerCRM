@@ -181,8 +181,8 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
     /**
      * Find Tasktype by ID
      *
-     * @param id TaskTypesEntity
-     * @return TaskType Entity
+     * @param id        TaskTypesEntity
+     * @return TaskTypesEntity
      */
     protected TaskTypesEntity findById(int id) {
         log.info("TaskTypesBean => method : findById(int id)");
@@ -213,8 +213,8 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
     /**
      * Find Tasktype by LABEL
      *
-     * @param label TaskTypesEntity
-     * @return TaskType Entity
+     * @param label             TaskTypesEntity
+     * @return TaskTypesEntity
      */
     public TaskTypesEntity findByLabel(String label) {
         log.info("TaskTypesBean => method : findByLabel(String label)");
@@ -246,7 +246,7 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
     /**
      * Update TasksEntity
      *
-     * @param entity TasksEntity
+     * @param entity            TasksEntity
      */
     protected void update(TaskTypesEntity entity) {
         log.info("TaskTypesBean => method : update(TaskTypesEntity entity)");
@@ -298,7 +298,7 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
     /**
      * Find All task types Entities
      *
-     * @return List TaskTypesEntity
+     * @return List             TaskTypesEntity
      */
     protected List<TaskTypesEntity> findAll() {
         log.info("TaskTypesBean => method : findAll()");
@@ -309,7 +309,7 @@ public class TaskTypesBean extends ExtendBean implements Serializable {
     /**
      * Validate TaskTypes !
      *
-     * @param entity TaskTypesEntity
+     * @param entity            TaskTypesEntity
      */
     private void validateTaskType(TaskTypesEntity entity) {
         log.info("TaskTypesBean => method : validateTaskType(TaskTypesEntity entity)");

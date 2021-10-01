@@ -20,6 +20,14 @@ public class RolesConverter implements Converter {
     private final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
     private final RolesBean rolesBean = new RolesBean();
 
+    /**
+     * Get Object
+     *
+     * @param facesContext FacesContext
+     * @param uiComponent  UIComponent
+     * @param value        uiComponent
+     * @return Object
+     */
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
         log.info("value:  " + value);
@@ -41,6 +49,14 @@ public class RolesConverter implements Converter {
 
     }
 
+    /**
+     * Get String
+     *
+     * @param facesContext FacesContext
+     * @param uiComponent  UIComponent
+     * @param o            Object
+     * @return String
+     */
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object o) {
         return null;

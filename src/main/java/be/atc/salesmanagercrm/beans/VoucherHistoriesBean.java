@@ -38,6 +38,12 @@ public class VoucherHistoriesBean extends ExtendBean implements Serializable {
     private List<VoucherHistoriesEntity> voucherHistoriesEntitiesFiltered;
 
 
+    /**
+     * Find All Vouchers Histories for 1 voucher
+     *
+     * @param idVoucher   int
+     * @param usersEntity UsersEntity
+     */
     public void findAllEntities(int idVoucher, UsersEntity usersEntity) {
         voucherHistoriesEntities = findAllByIdUserAndByIdVoucher(idVoucher, usersEntity);
     }
@@ -45,7 +51,7 @@ public class VoucherHistoriesBean extends ExtendBean implements Serializable {
     /**
      * Find Vouchers entities by id company
      *
-     * @param idVoucher id VouchersEntity
+     * @param idVoucher int
      * @return List VouchersEntities
      */
     protected List<VoucherHistoriesEntity> findAllByIdUserAndByIdVoucher(int idVoucher, UsersEntity usersEntity) {

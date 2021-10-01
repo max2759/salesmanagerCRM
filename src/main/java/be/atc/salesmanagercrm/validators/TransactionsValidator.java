@@ -17,6 +17,12 @@ public class TransactionsValidator {
     @Getter
     private static final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
+    /**
+     * Validate TransactionsEntity Backend and return list of Errors
+     *
+     * @param entity TransactionsEntity
+     * @return List<String>
+     */
     public static List<String> validate(TransactionsEntity entity) {
         List<String> errors = new ArrayList<>();
         String errorMessage = null;

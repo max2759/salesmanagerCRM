@@ -83,7 +83,7 @@ public class TransactionTypesBean extends ExtendBean implements Serializable {
     /**
      * Find TransactionTypesEntity by LABEL
      *
-     * @param label TransactionTypesEntity
+     * @param label     String
      * @return TransactionTypesEntity
      */
     public TransactionTypesEntity findByLabel(String label) {

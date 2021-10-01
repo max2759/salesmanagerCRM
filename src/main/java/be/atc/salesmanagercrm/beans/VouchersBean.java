@@ -286,8 +286,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Find Voucher entity by id
      *
-     * @param id          Voucher
-     * @param usersEntity UsersEntity
+     * @param id            Voucher
+     * @param usersEntity   UsersEntity
      * @return VouchersEntity
      */
     protected VouchersEntity findById(int id, UsersEntity usersEntity) {
@@ -328,9 +328,9 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Find vouchers entities by id contact
      *
-     * @param contactsEntity ContactsEntity
-     * @param usersEntity    UsersEntity
-     * @return List VouchersEntities
+     * @param contactsEntity        ContactsEntity
+     * @param usersEntity           UsersEntity
+     * @return List                 VouchersEntities
      */
     protected List<VouchersEntity> findVouchersEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity) {
         log.info("VouchersBean => method : findVouchersEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity)");
@@ -362,8 +362,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Find vouchers entities by id company
      *
-     * @param companiesEntity CompaniesEntity
-     * @param usersEntity     UsersEntity
+     * @param companiesEntity       CompaniesEntity
+     * @param usersEntity           UsersEntity
      * @return List VouchersEntities
      */
     protected List<VouchersEntity> findVouchersEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity) {
@@ -395,7 +395,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Find All vouchers Entities
      *
-     * @param usersEntity UsersEntity
+     * @param usersEntity       UsersEntity
      * @return List VouchersEntity
      */
     protected List<VouchersEntity> findAll(UsersEntity usersEntity) {
@@ -422,7 +422,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Update VouchersEntity
      *
-     * @param entity VouchersEntity
+     * @param entity            VouchersEntity
      */
     protected void update(VouchersEntity entity) {
         log.info("VouchersBean => method : update(VouchersEntity entity)");
@@ -542,7 +542,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Validate Voucher !
      *
-     * @param entity VouchersEntity
+     * @param entity        VouchersEntity
      */
     private void validateVoucher(VouchersEntity entity) {
         log.info("VouchersBean => method : validateVoucher(VouchersEntity entity)");
@@ -557,7 +557,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Validate Voucher Date End
      *
-     * @param entity VouchersEntity
+     * @param entity        VouchersEntity
      */
     private void validateVoucherDateEnd(VouchersEntity entity) {
         log.info("VouchersBean => method : validateVoucherDateEnd(VouchersEntity entity)");
@@ -573,7 +573,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Save Voucher Histories ! Use after create or update
      *
-     * @param entity VouchersEntity
+     * @param entity        VouchersEntity
      * @return VoucherHistoriesEntity
      */
     private VoucherHistoriesEntity saveVoucherHistories(VouchersEntity entity) {
@@ -591,7 +591,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * If status is : 'fermé' => Set End Date at now
      *
-     * @param entity VouchersEntity
+     * @param entity    VouchersEntity
      * @return VouchersEntity
      */
     private VouchersEntity checkStatusAndSetClosingDate(VouchersEntity entity) {
@@ -617,7 +617,7 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Count all active vouchers
      *
-     * @param usersEntity userEntity
+     * @param usersEntity       userEntity
      * @return resultCount
      */
     protected Long countActiveVouchers(UsersEntity usersEntity) {
@@ -646,8 +646,8 @@ public class VouchersBean extends ExtendBean implements Serializable {
     /**
      * Count all vouchers not Fermé
      *
-     * @param usersEntity   UsersEntity
-     * @param voucherStatus String
+     * @param usersEntity       UsersEntity
+     * @param voucherStatus     String
      * @return Long
      */
     protected Long countVouchersActiveStatus(UsersEntity usersEntity, String voucherStatus) {

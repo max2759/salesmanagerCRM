@@ -11,9 +11,28 @@ import java.util.Optional;
  */
 public interface TransactionTypesDao {
 
+    /**
+     * Find Transaction Type By Id
+     *
+     * @param em EntityManager
+     * @param id int
+     * @return TransactionTypesEntity
+     */
     TransactionTypesEntity findById(EntityManager em, int id);
 
+    /**
+     * Find All TransactionTypesEntities
+     *
+     * @return List<TransactionTypesEntity>
+     */
     List<TransactionTypesEntity> findAll();
 
+    /**
+     * Find TransactionTypesEntity By Label
+     *
+     * @param em    EntityManager
+     * @param label String
+     * @return Optional<TransactionTypesEntity>
+     */
     Optional<TransactionTypesEntity> findByLabel(EntityManager em, String label);
 }

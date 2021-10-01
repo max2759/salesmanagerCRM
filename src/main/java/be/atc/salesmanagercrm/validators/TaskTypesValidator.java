@@ -17,6 +17,12 @@ public class TaskTypesValidator {
     @Getter
     private static final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
+    /**
+     * Validate TaskTypesEntity Backend and return list of Errors
+     *
+     * @param entity TaskTypesEntity
+     * @return List<String>
+     */
     public static List<String> validate(TaskTypesEntity entity) {
         List<String> errors = new ArrayList<>();
         String errorMessage = null;
