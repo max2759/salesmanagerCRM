@@ -17,7 +17,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Locale;
 
-
+/**
+ * @author Arifi Younes
+ */
 @RequestScoped
 @Slf4j
 @Named

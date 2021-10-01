@@ -10,7 +10,19 @@ import java.util.List;
  */
 public interface ContactTypesDao {
 
+    /**
+     * Find ContactTypesEntity by its id
+     *
+     * @param em EntityManager
+     * @param id int
+     * @return ContactTypesEntity
+     */
     ContactTypesEntity findById(EntityManager em, int id);
 
+    /**
+     * Find all ContactTypesEntity
+     *
+     * @return List<ContactTypesEntity>
+     */
     List<ContactTypesEntity> findAll();
 }

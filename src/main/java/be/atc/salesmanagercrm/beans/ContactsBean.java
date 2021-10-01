@@ -314,6 +314,11 @@ public class ContactsBean extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * Deselect company in contactDetails
+     *
+     * @param event event
+     */
     public void onItemUnselect(UnselectEvent event) {
         log.info("ContactsBean => method : onItemUnselect()");
 
@@ -322,24 +327,6 @@ public class ContactsBean extends ExtendBean implements Serializable {
         facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "contacts.removed"), null);
 
         FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-    }
-
-    /**
-     * Find all ContactTypes entities
-     *
-     * @return List of Contact Types
-     */
-    public List<ContactsEntity> findAll() {
-        log.info("ContactsBean => method : findAll()");
-
-        EntityManager em = EMF.getEM();
-
-        List<ContactsEntity> contactsEntityList1 = contactsDao.findAll();
-
-        em.clear();
-        em.close();
-
-        return contactsEntityList1;
     }
 
     /**
@@ -430,34 +417,6 @@ public class ContactsBean extends ExtendBean implements Serializable {
         addressesBean.getAddressByIdContacts();
     }
 
-    protected ContactsEntity findById(int id) {
-        log.info("ContactsBean => method : findById()");
-
-        FacesMessage facesMessage;
-
-        if (id == 0) {
-            log.error("Contact ID is null");
-            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "contact.error"), null);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-            throw new InvalidEntityException("L'Id du contact n'existe pas", ErrorCodes.CONTACT_NOT_VALID);
-        }
-
-        EntityManager em = EMF.getEM();
-        Optional<ContactsEntity> optionalContactsEntity;
-        try {
-            optionalContactsEntity = contactsDao.findById(em, id);
-        } finally {
-            em.clear();
-            em.close();
-        }
-
-        return optionalContactsEntity.orElseThrow(() ->
-                new EntityNotFoundException(
-                        "Aucun contact avec l ID " + id + " n'a été trouvé dans la DB",
-                        ErrorCodes.CONTACT_NOT_FOUND
-                ));
-    }
-
     /**
      * Create new instance for objects
      */
@@ -500,7 +459,6 @@ public class ContactsBean extends ExtendBean implements Serializable {
      * @param entityGroup ContactsEntity
      * @return list of firstname from ContactsEntity
      */
-
     public char getContactsEntityGroup(ContactsEntity entityGroup) {
         log.info("ContactsBean => method : getContactsEntityGroup()");
         return entityGroup.getFirstname().charAt(0);
@@ -725,7 +683,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * public method for countAllCompanies()
+     * public method for countAllContacts()
      */
     public void countAllContactsEntity() {
         log.info("ContactsBean => method : countAllContactsEntity()");

@@ -7,6 +7,9 @@ import be.atc.salesmanagercrm.utils.EntityFinderImpl;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+/**
+ * @author Maximilien Zabbara
+ */
 public class ContactTypesDaoImpl extends EntityFinderImpl<ContactTypesEntity> implements ContactTypesDao {
 
     @Override

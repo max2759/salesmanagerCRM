@@ -27,6 +27,14 @@ public class CitiesConverter implements Converter {
     @Getter
     private final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
+    /**
+     * Get Object
+     *
+     * @param facesContext FacesContext
+     * @param uiComponent  UIComponent
+     * @param value        String
+     * @return Object
+     */
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
 
@@ -58,7 +66,14 @@ public class CitiesConverter implements Converter {
         }
     }
 
-
+    /**
+     * Get String
+     *
+     * @param facesContext FacesContext
+     * @param uiComponent  UIComponent
+     * @param value        Object
+     * @return String
+     */
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value) {
         if (value != null) {

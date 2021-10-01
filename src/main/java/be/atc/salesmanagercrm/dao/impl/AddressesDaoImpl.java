@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import javax.persistence.EntityManager;
 import java.util.Optional;
 
+/**
+ * @author Maximilien Zabbara
+ */
 @Slf4j
 public class AddressesDaoImpl extends EntityFinderImpl<AddressesEntity> implements AddressesDao {
 
