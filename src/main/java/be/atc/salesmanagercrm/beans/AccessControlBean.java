@@ -59,7 +59,7 @@ public class AccessControlBean extends ExtendBean implements Serializable {
     /**
      * Check user access
      *
-     * @param value String
+     * @param value     String
      */
     public void checkPermission(String value) {
         log.info("AccessControlBean => method : checkPermission(String value)");

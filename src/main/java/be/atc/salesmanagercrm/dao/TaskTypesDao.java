@@ -11,13 +11,44 @@ import java.util.Optional;
  */
 public interface TaskTypesDao {
 
+    /**
+     * Save TaskTypesEntity
+     *
+     * @param em     EntityManager
+     * @param entity TaskTypesEntity
+     */
     void save(EntityManager em, TaskTypesEntity entity);
 
+    /**
+     * Find TaskTypesEntity by id
+     *
+     * @param em EntityManager
+     * @param id TaskTypesEntity
+     * @return TaskTypesEntity
+     */
     TaskTypesEntity findById(EntityManager em, int id);
 
+    /**
+     * Find All TaskTypesEntities
+     *
+     * @return List<TaskTypesEntity>
+     */
     List<TaskTypesEntity> findAll();
 
+    /**
+     * Update TaskTypesEntity
+     *
+     * @param em     EntityManager
+     * @param entity TaskTypesEntity
+     */
     void update(EntityManager em, TaskTypesEntity entity);
 
+    /**
+     * Find TaskTypesEntity by label
+     *
+     * @param em    EntityManager
+     * @param label String
+     * @return Optional<TaskTypesEntity>
+     */
     Optional<TaskTypesEntity> findByLabel(EntityManager em, String label);
 }

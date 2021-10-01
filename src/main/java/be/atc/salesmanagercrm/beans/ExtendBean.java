@@ -11,6 +11,9 @@ import javax.faces.context.FacesContext;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * @author Younes Arifi
+ */
 @Slf4j
 public abstract class ExtendBean {
 
@@ -26,8 +29,8 @@ public abstract class ExtendBean {
     /**
      * Méthode pour retourner les paramètres récupéré
      *
-     * @param name Param form
-     * @return param(name)
+     * @param name String
+     * @return String
      */
     public String getParam(String name) {
         FacesContext fc = FacesContext.getCurrentInstance();
@@ -38,8 +41,8 @@ public abstract class ExtendBean {
     /**
      * Méthode pour afficher les messages dans les pages
      *
-     * @param severity FacesMessage.SEVERITY_INFO, FacesMessage.SEVERITY_WARN, FacesMessage.SEVERITY_ERROR, FacesMessage.SEVERITY_FATAL...
-     * @param message  message à afficher
+     * @param severity      FacesMessage.Severity
+     * @param message       String
      */
     public void getFacesMessage(FacesMessage.Severity severity, String message) {
         FacesMessage msg;

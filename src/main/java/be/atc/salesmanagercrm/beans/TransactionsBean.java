@@ -325,8 +325,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Find Transaction entity by id
      *
-     * @param id          Transaction
-     * @param usersEntity UsersEntity
+     * @param id            Transaction
+     * @param usersEntity   UsersEntity
      * @return TransactionsEntity
      */
     protected TransactionsEntity findById(int id, UsersEntity usersEntity) {
@@ -367,8 +367,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Find Transactions entities by id contact
      *
-     * @param contactsEntity ContactsEntity
-     * @param usersEntity    UsersEntity
+     * @param contactsEntity    ContactsEntity
+     * @param usersEntity       UsersEntity
      * @return List TransactionsEntities
      */
     protected List<TransactionsEntity> findTransactionsEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity) {
@@ -401,7 +401,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Find Transactions entities by id company
      *
-     * @param companiesEntity CompaniesEntity
+     * @param companiesEntity       CompaniesEntity
      * @return List TransactionsEntities
      */
     protected List<TransactionsEntity> findTransactionsEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity) {
@@ -484,7 +484,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Update TransactionsEntity
      *
-     * @param entity TransactionsEntity
+     * @param entity            TransactionsEntity
      */
     protected void update(TransactionsEntity entity) {
         log.info("TransactionsBean => method : update(TransactionsEntity entity)");
@@ -605,8 +605,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Logical Delete transaction
      *
-     * @param id          int
-     * @param usersEntity UsersEntity
+     * @param id                int
+     * @param usersEntity       UsersEntity
      */
     protected void delete(int id, UsersEntity usersEntity) {
         log.info("TransactionsBean => method : delete(int id, TransactionsEntity entity)");
@@ -664,8 +664,8 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Count Transaction Active by Phase
      *
-     * @param usersEntity      UsersEntity
-     * @param phaseTransaction String
+     * @param usersEntity           UsersEntity
+     * @param phaseTransaction      String
      * @return Long
      */
     protected Long countTransactionsActivePhase(UsersEntity usersEntity, String phaseTransaction) {
@@ -688,7 +688,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Validate Transaction !
      *
-     * @param entity TransactionsEntity
+     * @param entity        TransactionsEntity
      */
     private void validateTransaction(TransactionsEntity entity) {
         log.info("TransactionsBean => method : validateTransaction(TransactionsEntity entity)");
@@ -703,7 +703,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Validate Transaction Date End
      *
-     * @param entity TransactionsEntity
+     * @param entity        TransactionsEntity
      */
     private void validateTransactionDateEnd(TransactionsEntity entity) {
         log.info("TransactionsBean => method : validateTransactionDateEnd(TransactionsEntity entity)");
@@ -719,7 +719,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Save Transaction Histories ! Use after create or update
      *
-     * @param entity TransactionsEntity
+     * @param entity        TransactionsEntity
      * @return TransactionHistoriesEntity
      */
     private TransactionHistoriesEntity saveTransactionHistories(TransactionsEntity entity) {
@@ -746,7 +746,7 @@ public class TransactionsBean extends ExtendBean implements Serializable {
     /**
      * Count all active transactions
      *
-     * @param usersEntity userEntity
+     * @param usersEntity       userEntity
      * @return resultCount
      */
     protected Long countActiveTransactions(UsersEntity usersEntity) {

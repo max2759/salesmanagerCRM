@@ -84,7 +84,7 @@ public class VoucherStatusBean extends ExtendBean implements Serializable {
     /**
      * Find VoucherStatusEntity by LABEL
      *
-     * @param label VoucherStatusEntity
+     * @param label     VoucherStatusEntity
      * @return VoucherStatusEntity
      */
     public VoucherStatusEntity findByLabel(String label) {
@@ -116,7 +116,7 @@ public class VoucherStatusBean extends ExtendBean implements Serializable {
     /**
      * Find All VoucherStatus Entities
      *
-     * @return List VoucherStatusEntity
+     * @return List     VoucherStatusEntity
      */
     protected List<VoucherStatusEntity> findAll() {
         log.info("VoucherStatusBean => method : findAll()");

@@ -22,6 +22,12 @@ public class NotesValidator {
     @Setter
     private static Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
+    /**
+     * Validate NotesEntity Backend and return list of Errors
+     *
+     * @param entity NotesEntity
+     * @return List<String>
+     */
     public static List<String> validate(NotesEntity entity) {
 
         List<String> errors = new ArrayList<>();

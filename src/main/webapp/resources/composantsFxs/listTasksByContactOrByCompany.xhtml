@@ -48,7 +48,7 @@
                         <h:outputText rendered="#{empty task.endDate ? false : true}" value="#{task.endDate}"
                                       styleClass="flex-shrink-0 justify-end">
                             <f:convertDateTime type="localDate"
-                                               pattern="&nbsp;dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
+                                               pattern="dd/MM/yyyy ' #{bundle['at']} ' HH:mm"/>
                         </h:outputText>
                     </div>
                 </div>

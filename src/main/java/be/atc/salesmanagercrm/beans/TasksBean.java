@@ -208,7 +208,7 @@ public class TasksBean extends ExtendBean implements Serializable {
     /**
      * Method for update
      *
-     * @param event RowEditEvent<NotesEntity>
+     * @param event RowEditEvent<TasksEntity>
      */
     public void onRowEdit(RowEditEvent<TasksEntity> event) {
         log.info("TasksBean => method : onRowEdit(RowEditEvent<TasksEntity> event)");
@@ -238,8 +238,9 @@ public class TasksBean extends ExtendBean implements Serializable {
 
     /**
      * On cancel delete
+     * @param event         RowEditEvent<TasksEntity>
      */
-    public void onRowCancel(RowEditEvent<NotesEntity> event) {
+    public void onRowCancel(RowEditEvent<TasksEntity> event) {
         log.info("TasksBean => method : onRowCancel()");
         getFacesMessage(FacesMessage.SEVERITY_INFO, "canceled");
     }
@@ -311,7 +312,7 @@ public class TasksBean extends ExtendBean implements Serializable {
     /**
      * Method to change status of task
      *
-     * @param event AjaxBehaviorEvent
+     * @param event             AjaxBehaviorEvent
      */
     public void updateStatus(AjaxBehaviorEvent event) {
         log.info("TasksBean => method : updateStatus(AjaxBehaviorEvent event)");
@@ -344,7 +345,7 @@ public class TasksBean extends ExtendBean implements Serializable {
     /**
      * method to know which entity to reload
      *
-     * @param typeLoad String
+     * @param typeLoad              String
      */
     public void loadListEntities(String typeLoad) {
 
@@ -406,7 +407,7 @@ public class TasksBean extends ExtendBean implements Serializable {
     /**
      * Save Task Entity
      *
-     * @param entity TasksEntity
+     * @param entity            TasksEntity
      */
     protected void save(TasksEntity entity) {
         log.info("TasksBean => method : save(TasksEntity entity)");
@@ -506,8 +507,9 @@ public class TasksBean extends ExtendBean implements Serializable {
     /**
      * Find Task by ID
      *
-     * @param id TasksEntity
-     * @return Task Entity
+     * @param id                int
+     * @param usersEntity       UsersEntity
+     * @return Task             TasksEntity
      */
     protected TasksEntity findById(int id, UsersEntity usersEntity) {
         log.info("TasksBean => method : findById(int id, UsersEntity usersEntity)");
@@ -546,7 +548,8 @@ public class TasksBean extends ExtendBean implements Serializable {
     /**
      * Find tasks entities by id contact
      *
-     * @param contactsEntity ContactsEntity
+     * @param contactsEntity        ContactsEntity
+     * @param usersEntity           UsersEntity
      * @return List TasksEntities
      */
     protected List<TasksEntity> findTasksEntityByContactsByIdContacts(ContactsEntity contactsEntity, UsersEntity usersEntity) {
@@ -578,7 +581,8 @@ public class TasksBean extends ExtendBean implements Serializable {
     /**
      * Find tasks entities by id company
      *
-     * @param companiesEntity CompaniesEntity
+     * @param companiesEntity           CompaniesEntity
+     * @param usersEntity               UsersEntity
      * @return List TasksEntities
      */
     protected List<TasksEntity> findTasksEntityByCompaniesByIdCompanies(CompaniesEntity companiesEntity, UsersEntity usersEntity) {
@@ -610,7 +614,7 @@ public class TasksBean extends ExtendBean implements Serializable {
 
     /**
      * Find All tasks Entities
-     *
+     * @param usersEntity               UsersEntity
      * @return List TasksEntity
      */
     protected List<TasksEntity> findAll(UsersEntity usersEntity) {
@@ -635,6 +639,7 @@ public class TasksBean extends ExtendBean implements Serializable {
 
     /**
      * Find all tasks finished
+     * @param usersEntity               UsersEntity
      */
     protected List<TasksEntity> findTasksFinished(UsersEntity usersEntity) {
         log.info("TasksBean => method : findTasksFinished(UsersEntity usersEntity)");
@@ -659,7 +664,8 @@ public class TasksBean extends ExtendBean implements Serializable {
     /**
      * delete task by id
      *
-     * @param id Task
+     * @param id                        Task
+     * @param usersEntity               UsersEntity
      */
     protected void delete(int id, UsersEntity usersEntity) {
         log.info("TasksBean => method : delete(int id, UsersEntity usersEntity)");
@@ -718,7 +724,7 @@ public class TasksBean extends ExtendBean implements Serializable {
     /**
      * Update TasksEntity
      *
-     * @param entity TasksEntity
+     * @param entity                TasksEntity
      */
     protected void update(TasksEntity entity) {
         log.info("TasksBean => method : update(TasksEntity entity)");
@@ -822,7 +828,7 @@ public class TasksBean extends ExtendBean implements Serializable {
     /**
      * Validate Task !
      *
-     * @param entity TasksEntity
+     * @param entity            TasksEntity
      */
     private void validateTask(TasksEntity entity) {
         log.info("TasksBean => method : validateTask(TasksEntity entity)");
@@ -837,7 +843,7 @@ public class TasksBean extends ExtendBean implements Serializable {
     /**
      * Valide Task date End
      *
-     * @param entity TasksEntity
+     * @param entity            TasksEntity
      */
     private void validateTaskDateEnd(TasksEntity entity) {
         log.info("TasksBean => method : validateTaskDateEnd(TasksEntity entity)");

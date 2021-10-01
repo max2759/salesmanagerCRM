@@ -52,7 +52,7 @@ public class TransactionPhasesBean extends ExtendBean implements Serializable {
     /**
      * Find TransactionPhasesEntity by ID
      *
-     * @param id TransactionPhasesEntity
+     * @param id int
      * @return TransactionPhasesEntity
      */
     protected TransactionPhasesEntity findById(int id) {
@@ -84,7 +84,7 @@ public class TransactionPhasesBean extends ExtendBean implements Serializable {
     /**
      * Find TransactionPhasesEntity by LABEL
      *
-     * @param label TransactionPhasesEntity
+     * @param label             TransactionPhasesEntity
      * @return TransactionPhasesEntity
      */
     public TransactionPhasesEntity findByLabel(String label) {
