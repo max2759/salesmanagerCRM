@@ -33,7 +33,7 @@
         >
 
             <p:ajax event="rowEdit" listener="#{notesBean.onRowEdit}" update="@this msgs"/>
-            <p:ajax event="rowEditCancel" listener="#{notesBean.onRowCancel}" update="msgs"/>
+            <p:ajax event="rowEditCancel" listener="#{notesBean.onRowCancel}" update="@this msgs"/>
 
             <p:column styleClass="dataTableCellEditorInput">
                 <div class="align-start justify-between">

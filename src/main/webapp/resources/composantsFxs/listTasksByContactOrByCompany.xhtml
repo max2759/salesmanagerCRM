@@ -34,7 +34,7 @@
             <p:ajax event="rowEdit" listener="#{tasksBean.onRowEdit}" update="@this msgs"/>
             <p:ajax event="rowEditCancel" listener="#{tasksBean.onRowCancel}" update="@this msgs"/>
 
-            <p:column styleClass="dataTableCellEditorInput ">
+            <p:column styleClass="dataTableCellEditorInput">
                 <div class="align-start justify-between">
                     <div class="display-inline-flex align-center">
                         <h:outputText styleClass="boldText" value="#{bundle['task']} "/>
