@@ -77,9 +77,8 @@
                         <p:menuitem id="um_TaskTypes" value="#{bundle['taskTypes.title']}" icon="&#xE871;"
                                     outcome="/app/tasktypes"
                                     rendered="#{usersBean.currentUser.isPermitted('showTaskTypes')}"/>
-                        <p:menuitem id="um_Conversation" value="#{bundle['convers']}" icon="&#xE871;"
-                                    outcome="/app/conversations"/>
                         <p:menuitem id="um_ConversationsList" value="#{bundle['conversationList']}" icon="&#xE871;"
+                                    rendered="#{usersBean.currentUser.isPermitted('showConversations')}"
                                     outcome="/app/conversationsList"/>
                     </pa:menu>
                 </h:form>
