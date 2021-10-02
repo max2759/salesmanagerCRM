@@ -77,6 +77,11 @@ public class RolesBean extends ExtendBean implements Serializable {
     @Setter
     private Session session;
 
+    /**
+     * call modal
+     *
+     * @param idRole int
+     */
     public void initialiseDialogRoleId(Integer idRole) {
         if (idRole == null || idRole < 1) {
             return;
@@ -85,19 +90,37 @@ public class RolesBean extends ExtendBean implements Serializable {
         rolesEntity = dao.findById(EMF.getEM(), idRole);
     }
 
+    /**
+     * set roleEntityNew to new
+     */
     public void createNewRoleEntity() {
         rolesEntityNew = new RolesEntity();
     }
 
+    /**
+     * find a role with an id
+     *
+     * @param em EntityManager
+     * @param id oint
+     * @return RolesEntity
+     */
     public RolesEntity findById(EntityManager em, int id) {
         return dao.findById(em, id);
     }
 
+    /**
+     * call findAllActive
+     */
     public void findAllActiveRoles() {
         rolesEntityList = findAllActive();
         log.info(String.valueOf(rolesEntityList));
     }
 
+    /**
+     * find all active roles
+     *
+     * @return List<RolesEntity>
+     */
     protected List<RolesEntity> findAllActive() {
         log.info("begin findallactive");
         EntityManager em = EMF.getEM();
@@ -109,21 +132,22 @@ public class RolesBean extends ExtendBean implements Serializable {
         return rolesEntities;
     }
 
+    /**
+     * call findAll()
+     */
     public void findAllRoles() {
         log.info("bgin findallrole " + usersBean.getUsersEntity().getId());
 
-        //test a typed permission (not instance-level)
-        //   if (getCurrentUser().isPermitted("addRoles")) {
         rolesEntityList = findAll();
         log.info(String.valueOf(rolesEntityList));
         log.info("Tu as l'autorisation Test.");
-    /*    } else {
-            log.info("Sorry, lightsaber1 rings are for schwartz masters only.");
-        }
-*/
-
     }
 
+    /**
+     * find all roles order by active
+     *
+     * @return List<RolesEntity>
+     */
     protected List<RolesEntity> findAll() {
         log.info("begin findall");
         EntityManager em = EMF.getEM();
@@ -135,6 +159,12 @@ public class RolesBean extends ExtendBean implements Serializable {
         return rolesEntities;
     }
 
+    /**
+     * find a role with a label
+     *
+     * @param label String
+     * @return RolesEntity
+     */
     public RolesEntity findByLabel(String label) {
         if (label == null) {
             log.info("label null in rolebean");
@@ -155,13 +185,20 @@ public class RolesBean extends ExtendBean implements Serializable {
 
     }
 
+    /**
+     * call addRoles
+     */
     public void addEntity() {
         addRoles(this.rolesEntityNew);
         rolesEntityList = findAll();
     }
 
+    /**
+     * creazte a role
+     *
+     * @param rolesEntity
+     */
     public void addRoles(RolesEntity rolesEntity) {
-        //rolesEntity = rolesBean.findById(em, idRole);
         FacesMessage msg;
 
         Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
@@ -218,12 +255,20 @@ public class RolesBean extends ExtendBean implements Serializable {
 
     }
 
+    /**
+     * call updateRoles();
+     */
     public void updateEntity() {
         updateRole(this.rolesEntity);
         rolesEntityList = findAll();
     }
 
 
+    /**
+     * update a role
+     *
+     * @param rolesEntity RolesEntity
+     */
     protected void updateRole(RolesEntity rolesEntity) {
         FacesMessage msg;
 
@@ -249,7 +294,7 @@ public class RolesBean extends ExtendBean implements Serializable {
             } catch (InvalidEntityException exception) {
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roles.labelExist"), null);
                 FacesContext.getCurrentInstance().addMessage(null, msg);
-                //    log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
                 return;
             }
             rolesEntity.setActive(true);
@@ -281,6 +326,11 @@ public class RolesBean extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * delete a role
+     *
+     * @param id int
+     */
     public void delete(int id) {
         FacesMessage msg;
         log.info(String.valueOf(id));
@@ -295,6 +345,12 @@ public class RolesBean extends ExtendBean implements Serializable {
         if (this.currentUser.isPermitted("deleteRoles")) {
             EntityManager em = EMF.getEM();
             RolesEntity rolesEntity1 = dao.findById(em, id);
+
+            if (rolesEntity1.getId() == 1) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "roleAdmin"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                return;
+            }
 
             List<RolesEntity> rolesEntityList2 = dao.findForDeleteSafe(em, rolesEntity1.getId());
             log.info(String.valueOf(rolesEntityList2));
@@ -330,10 +386,13 @@ public class RolesBean extends ExtendBean implements Serializable {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
-
-
     }
 
+    /**
+     * active a role delete
+     *
+     * @param id int
+     */
     public void activate(int id) {
         FacesMessage msg;
         log.info(String.valueOf(id));
@@ -379,7 +438,11 @@ public class RolesBean extends ExtendBean implements Serializable {
         }
     }
 
-
+    /**
+     * verifications for role
+     *
+     * @param entity RolesEntity
+     */
     private void validateRoles(RolesEntity entity) {
         List<String> errors = RolesValidator.validate(entity);
         if (!errors.isEmpty()) {

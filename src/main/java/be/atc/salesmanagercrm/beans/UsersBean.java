@@ -18,7 +18,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.mgt.SecurityManager;
@@ -148,9 +151,13 @@ public class UsersBean extends ExtendBean implements Serializable {
         userEntityNew = new UsersEntity();
     }
 
-
+    /**
+     * use if a firstname or lastname has less 3 characters
+     *
+     * @param n int
+     * @return String
+     */
     public static String getRandomStr(int n) {
-        //choisissez un caractére au hasard à partir de cette chaîne
         String str = "abcdefghijklmnopqrstuvxyz";
 
         StringBuilder s = new StringBuilder(n);
@@ -162,6 +169,9 @@ public class UsersBean extends ExtendBean implements Serializable {
         return s.toString();
     }
 
+    /**
+     * call register
+     */
     public void registerEntity() {
         register(userEntityNew);
         createNewUserEntity();
@@ -170,7 +180,7 @@ public class UsersBean extends ExtendBean implements Serializable {
     /**
      * create an user
      *
-     * @param entityToAdd
+     * @param entityToAdd entityToAdd
      */
     protected void register(UsersEntity entityToAdd) {
 
@@ -184,24 +194,10 @@ public class UsersBean extends ExtendBean implements Serializable {
             log.info(String.valueOf(entityToAdd));
 
             Subject currentUser = SecurityUtils.getSubject();
-            //test a typed permission (not instance-level)
+
             if (currentUser.isPermitted("addUsers")) {
                 log.info("Tu as l'autorisation Test.");
 
-
-                //regex password + hash + pseudo unique
-                //  log.info(String.valueOf(usersEntity.getEmail()));
-                //log.info(String.valueOf(rolesEntity.getId()));
-                //String idRoles = String.valueOf(rolesEntity.getId());
-                //int idRole = Integer.parseInt(idRoles);
-
-                //log.info(String.valueOf(usersEntity.getRolesByIdRoles())); //null
-                //RolesEntity rolesEntity = new RolesEntity();
-                //rolesEntity.setId(rolesEntity.getId());
-
-
-                //mettre dans un try catch + fermer l'em
-                //rolesEntity = rolesBean.findById(em, idRole);
                 try {
                     validateUsers(entityToAdd);
                 } catch (InvalidEntityException exception) {
@@ -217,7 +213,6 @@ public class UsersBean extends ExtendBean implements Serializable {
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                     return;
                 }
-
 
                 String firstName3Cara;
                 String lastName3Cara;
@@ -247,7 +242,6 @@ public class UsersBean extends ExtendBean implements Serializable {
                 int number = random.nextInt(99 - 1);
 
                 CheckEntities checkEntities = new CheckEntities();
-
 
                 username = checkEntities.checkUserByUsernameAuto(usernameWithoutNumber, number);
 
@@ -323,12 +317,9 @@ public class UsersBean extends ExtendBean implements Serializable {
 
     /**
      * connect an user. Use Shiro
-     *
-     * @throws IOException
+     * @throws IOException InvalidEntityException
      */
     public void connection() throws IOException {
-        //Example using most common scenario of username/password pair:
-        //https://shiro.apache.org/authentication.html
         FacesMessage msg;
         log.info(passwordCo);
 
@@ -339,17 +330,9 @@ public class UsersBean extends ExtendBean implements Serializable {
             return;
         }
 
-        //String password = usersEntity.getPassword();
         String hashPass = encrypt(passwordCo);
 
         CheckEntities checkEntities = new CheckEntities();
- /*       try {
-            checkEntities.checkUserByUsernameAndPassword(usersEntity, hashPass);
-        } catch (EntityNotFoundException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            return;
-        }
-*/
 
         try {
             checkEntities.checkUserActiveForConnection(usersEntity);
@@ -365,7 +348,7 @@ public class UsersBean extends ExtendBean implements Serializable {
         SecurityUtils.setSecurityManager(securityManager);
 
         UsernamePasswordToken token = new UsernamePasswordToken(usersEntity.getUsername(), hashPass);
-        // log.info(String.valueOf(new UsernamePasswordToken(usersEntity.getUsername(), hashPass)));
+
         log.info(String.valueOf(token));
         this.currentUser = SecurityUtils.getSubject();
         log.info(String.valueOf(currentUser));
@@ -373,12 +356,9 @@ public class UsersBean extends ExtendBean implements Serializable {
 
         if (!this.currentUser.isAuthenticated()) {
 
-//            token.setRememberMe(true);
-
             try {
                 this.currentUser.login(token);
             } catch (UnknownAccountException uae) {
-                //message ici a chque fois
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userOrPasswordFalse"), null);
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 log.info("There is no user with username or wrong password of " + token.getPrincipal());
@@ -395,41 +375,11 @@ public class UsersBean extends ExtendBean implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return;
             }
-            // ... catch more exceptions here (maybe custom ones specific to your application?
-            catch (AuthenticationException ae) {
-                //unexpected condition?  error?
-            }
         }
-
 
         log.info("User [" + this.currentUser.getPrincipal() + "] logged in successfully.");
 
         log.info("test role : " + this.currentUser);
-        //test a role:
-       /* if (this.currentUser.hasRole("Admin")) {
-            log.info("Bravo tu es Admin");
-        } else {
-            log.info("Hello, mere mortal.");
-        }
-
-        //test a typed permission (not instance-level)
-        if (this.currentUser.isPermitted("addUsers")) {
-            log.info("Tu as l'autorisation Test.");
-        } else {
-            log.info("Sorry, lightsaber1 rings are for schwartz masters only.");
-        }
-        if (this.currentUser.isPermitted("test22")) {
-            log.info("You may use a lightsaber ring.  Use it wisely.");
-        } else {
-            log.info("Sorry, lightsaber rings are for schwartz masters only.");
-        }
-
-        if (this.currentUser.isPermitted("test2")) {
-            log.info("Tu as l'autorisation Test2.");
-        } else {
-            log.info("Sorry, lightsaber rings are for schwartz masters only.");
-        }
-*/
 
 
         session.setAttribute("idUser", usersEntity.getId());
@@ -452,8 +402,7 @@ public class UsersBean extends ExtendBean implements Serializable {
 
     /**
      * delete an user
-     *
-     * @param id
+     * @param id int
      */
     public void delete(int id) {
 
@@ -496,7 +445,7 @@ public class UsersBean extends ExtendBean implements Serializable {
     /**
      * activate an user
      *
-     * @param id
+     * @param id int
      */
     public void activate(int id) {
         FacesMessage msg;
@@ -545,12 +494,20 @@ public class UsersBean extends ExtendBean implements Serializable {
     }
 
 
+    /**
+     * call loadListEntities
+     */
     public void findAllUsers() {
         log.info("bgin findallusers");
         loadListEntities();
 
     }
 
+    /**
+     * find all users
+     *
+     * @return List<UsersEntity>
+     */
     protected List<UsersEntity> findAll() {
         log.info("begin findall");
         EntityManager em = EMF.getEM();
@@ -562,6 +519,12 @@ public class UsersBean extends ExtendBean implements Serializable {
         return usersEntities;
     }
 
+    /**
+     * find an user with id
+     *
+     * @param id int
+     * @return UsersEntity
+     */
     protected UsersEntity findById(int id) {
         log.info("UsersBean => method : findById(int id)");
 
@@ -592,6 +555,12 @@ public class UsersBean extends ExtendBean implements Serializable {
     }
 
 
+    /**
+     * find an user with an username
+     *
+     * @param label String
+     * @return UsersEntity
+     */
     protected UsersEntity findByUsername(String label) {
         log.info("UsersBean => method : findByUsername(String label)");
 
@@ -621,17 +590,18 @@ public class UsersBean extends ExtendBean implements Serializable {
         }
     }
 
-
+    /**
+     * call findAllUsers
+     */
     public void updateByAdmin() {
         updateUsersAdmin(this.usersEntityOther);
-        //usersEntityList = findAll();
         findAllUsers();
     }
 
     /**
      * Uodate the user by an administrator
      *
-     * @param usersEntityOther
+     * @param usersEntityOther usersEntityOther
      */
     private void updateUsersAdmin(UsersEntity usersEntityOther) {
         FacesMessage msg;
@@ -675,9 +645,7 @@ public class UsersBean extends ExtendBean implements Serializable {
                     log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
                     return;
                 }
-
             }
-
 
             try {
                 checkEntities.checkRole(usersEntityOther.getRolesByIdRoles());
@@ -713,10 +681,10 @@ public class UsersBean extends ExtendBean implements Serializable {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
-
     }
 
     /**
+     * update user account by the owner account
      * @param usersEntity UsersEntity
      */
     public void userUpdateByUser(UsersEntity usersEntity) {
@@ -802,7 +770,12 @@ public class UsersBean extends ExtendBean implements Serializable {
         return usersEntities;
     }
 
-
+    /**
+     * encrypt an password, use sha256
+     *
+     * @param password String
+     * @return String
+     */
     private String encrypt(String password) {
         return new Sha256Hash(password).toString();
     }
@@ -849,6 +822,11 @@ public class UsersBean extends ExtendBean implements Serializable {
         return rolesEntities;
     }
 
+    /**
+     * validation register
+     *
+     * @param entity UsersEntity
+     */
     private void validateUsers(UsersEntity entity) {
         List<String> errors = UsersValidator.validate(entity);
         if (!errors.isEmpty()) {
@@ -857,6 +835,11 @@ public class UsersBean extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * validate role
+     *
+     * @param entity UsersEntity
+     */
     private void validateRoles(UsersEntity entity) {
         FacesMessage msg;
         CheckEntities checkEntities = new CheckEntities();
@@ -866,7 +849,6 @@ public class UsersBean extends ExtendBean implements Serializable {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            return;
         }
     }
 
@@ -880,7 +862,7 @@ public class UsersBean extends ExtendBean implements Serializable {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "user"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            //return;
+
         }
 
     }
@@ -888,7 +870,7 @@ public class UsersBean extends ExtendBean implements Serializable {
     /**
      * for the case when username is different
      *
-     * @param entity
+     * @param entity entity
      */
     private void validateUsersUpdateByAdmin(UsersEntity entity) {
         List<String> errors = UsersValidator.validateUpdateByAdmin(entity);
@@ -899,7 +881,7 @@ public class UsersBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * @param entity
+     * @param entity entity
      */
     private void validateUsersUpdateByAdminNoChange(UsersEntity entity) {
         List<String> errors = UsersValidator.validateUpdateByAdminNoChange(entity);
@@ -909,6 +891,11 @@ public class UsersBean extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * @param entity    UsersEntity
+     * @param password2 String
+     * @param password1 String
+     */
     private void validateUsersUpdateByUser(UsersEntity entity, String password2, String password1) {
         List<String> errors = UsersValidator.validateUpdateByUser(entity, password2, password1);
         if (!errors.isEmpty()) {
@@ -917,6 +904,10 @@ public class UsersBean extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * @param entity     UsersEntity
+     * @param passwordCo String
+     */
     private void validateConnection(UsersEntity entity, String passwordCo) {
         List<String> errors = UsersValidator.connection(entity, passwordCo);
         if (!errors.isEmpty()) {
@@ -925,6 +916,9 @@ public class UsersBean extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * logout an user
+     */
     public void logOut() {
         this.currentUser = SecurityUtils.getSubject();
         this.currentUser.logout();
@@ -947,6 +941,11 @@ public class UsersBean extends ExtendBean implements Serializable {
         return "/app/usersList?faces-redirect=true";
     }
 
+    /**
+     * genere the pdf after register
+     *
+     * @param password String
+     */
     protected void generatePDF(String password) {
         PDFUtil.generatePDF(userEntityNew, password);
     }

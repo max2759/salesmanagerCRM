@@ -18,18 +18,6 @@ public class UsersDaoImpl implements UsersDao {
         return em.find(UsersEntity.class, id);
     }
 
-    @Override
-    public UsersEntity findNUserByUsernameAndPassword(EntityManager em, String username, String password) {
-        try {
-            return em.createNamedQuery("Users.findNUserByUsernameAndPassword",
-                    UsersEntity.class)
-                    .setParameter("username", username)
-                    .setParameter("password", password)
-                    .getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
 
     @Override
     public UsersEntity findByUsername(EntityManager em, String username) {
@@ -59,30 +47,6 @@ public class UsersDaoImpl implements UsersDao {
         return em.createNamedQuery("Users.findAllUsers",
                 UsersEntity.class)
                 .getResultList();
-    }
-
-    @Override
-    public UsersEntity findPassword(EntityManager em, int id) {
-        try {
-            return em.createNamedQuery("Users.findPassword",
-                    UsersEntity.class)
-                    .setParameter("id", id)
-                    .getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public UsersEntity findUsername(EntityManager em, int id) {
-        try {
-            return em.createNamedQuery("Users.findUsername",
-                    UsersEntity.class)
-                    .setParameter("id", id)
-                    .getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
     }
 
     @Override

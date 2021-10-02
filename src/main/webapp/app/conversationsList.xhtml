@@ -87,7 +87,8 @@
                                                    rendered="#{usersBean.currentUser.isPermitted('deleteConversations')}"
                                                    action="#{conversationsBean.delete(convers)}">
                                         <i class="ui-icon ui-icon-delete-forever"></i>
-                                        <p:confirm header="#{bundle['confirmation']}" message="#{bundle['areYouSure']}"
+                                        <p:confirm header="#{bundle['confirmation']}"
+                                                   message="#{bundle['conversation.delete']}"
                                                    icon="fa fa-warning"/>
 
                                         <f:param name="idEntity" value="#{c.id}"/>

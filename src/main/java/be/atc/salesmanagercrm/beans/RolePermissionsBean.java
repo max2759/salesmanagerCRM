@@ -102,6 +102,9 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
     private Session session;
 
 
+    /**
+     * @param event AjaxBehaviorEvent
+     */
     public void selectOrUnselectAllPermissions(AjaxBehaviorEvent event) {
         log.info("RolePermissionsBean : Method => selectAllPermission()");
 
@@ -116,22 +119,19 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
         }
     }
 
-
+    /**
+     * @param em EntityManager
+     * @param id int
+     * @return RolesPermissionsEntity
+     */
     public RolesPermissionsEntity findById(EntityManager em, int id) {
         return dao.findById(em, id);
     }
 
-    public List<RolesPermissionsEntity> fndRolePermByIdRole(EntityManager em, int id) {
-        return dao.findPermissionWithRole(em, id);
-    }
 
-
-    public void findAllRolesPermissions() {
-        log.info("bgin findallrole");
-        rolesPermissionsEntityList = findAll();
-        log.info(String.valueOf(rolesPermissionsEntityList));
-    }
-
+    /**
+     * @return List<RolesPermissionsEntity>
+     */
     protected List<RolesPermissionsEntity> findAll() {
         log.info("begin findall");
         EntityManager em = EMF.getEM();
@@ -143,6 +143,9 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
         return rolesPermissionsEntities;
     }
 
+    /**
+     * is call for the first ID role : admin
+     */
     public void findPermissionWhithIdRole() {
 
         findAllPermissionsIWithdRole(1);
@@ -363,5 +366,15 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
         rolesPermissionsEntity = dao.findById(EMF.getEM(), idRolePermission);
     }
 
+    public List<RolesPermissionsEntity> fndRolePermByIdRole(EntityManager em, int id) {
+        return dao.findPermissionWithRole(em, id);
+    }
+
+
+    public void findAllRolesPermissions() {
+        log.info("bgin findallrole");
+        rolesPermissionsEntityList = findAll();
+        log.info(String.valueOf(rolesPermissionsEntityList));
+    }
 
 }

@@ -50,12 +50,18 @@ public class PermissionsBean extends ExtendBean implements Serializable {
     @Setter
     private List<PermissionsEntity> permissionsEntitiesList;
 
+    /**
+     * call findAll()
+     */
     public void findAllPermissions() {
         log.info("bgin findallpermissions");
         permissionsEntityList = findAll();
         log.info(String.valueOf(permissionsEntityList));
     }
 
+    /**
+     * @return List<PermissionsEntity>
+     */
     protected List<PermissionsEntity> findAll() {
         log.info("begin findall");
         EntityManager em = EMF.getEM();
@@ -67,7 +73,10 @@ public class PermissionsBean extends ExtendBean implements Serializable {
         return permissionsEntities;
     }
 
-
+    /**
+     * @param label
+     * @return PermissionsEntity
+     */
     public PermissionsEntity findByLabel(String label) {
         if (label == null) {
             log.info("label null in permbean");

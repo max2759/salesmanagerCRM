@@ -51,7 +51,8 @@
                 </div>
 
                 <div class="ui-g-12 button-container">
-                    <p:commandButton value="Valider" action="#{usersBean.connection}" update="msgs"/>
+                    <p:commandButton value="#{bundle['conncection.connection']}" action="#{usersBean.connection}"
+                                     update="msgs" icon="ui-icon-person"/>
                 </div>
             </h:form>
         </div>
