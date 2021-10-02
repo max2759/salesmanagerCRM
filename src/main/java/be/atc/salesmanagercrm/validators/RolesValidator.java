@@ -1,7 +1,5 @@
 package be.atc.salesmanagercrm.validators;
 
-import be.atc.salesmanagercrm.dao.RolesDao;
-import be.atc.salesmanagercrm.dao.impl.RolesDaoImpl;
 import be.atc.salesmanagercrm.entities.RolesEntity;
 import be.atc.salesmanagercrm.utils.JsfUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +21,7 @@ public class RolesValidator {
         FacesMessage msg;
         Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
         List<String> errors = new ArrayList<>();
-        RolesDao dao = new RolesDaoImpl();
+
 
         log.info(String.valueOf(entity));
         if (entity == null) {

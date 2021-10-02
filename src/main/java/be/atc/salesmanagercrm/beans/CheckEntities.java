@@ -511,6 +511,11 @@ public class CheckEntities extends ExtendBean implements Serializable {
     }
 
 
+    /**
+     * @param username String
+     * @param number   int
+     * @return String
+     */
     public String checkUserByUsernameAuto(String username, int number) {
         if (!username.isEmpty()) {
             UsersEntity usersEntity1;
@@ -542,9 +547,7 @@ public class CheckEntities extends ExtendBean implements Serializable {
                         usersEntity1 = usersDao.findByUsername(em, username1);
                         log.info("je suis dans le else");
                     }
-
                 }
-
             }
 
             em.clear();
@@ -556,7 +559,6 @@ public class CheckEntities extends ExtendBean implements Serializable {
                     "L'utilisateur est vide: ", ErrorCodes.USER_NOT_FOUND
             );
         }
-
     }
 
 
@@ -636,6 +638,9 @@ public class CheckEntities extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * @param entity RolesEntity
+     */
     public void checkForSafeDeleteRole(RolesEntity entity) {
         if (entity == null) {
             log.error("Role Entity is null");
@@ -662,6 +667,9 @@ public class CheckEntities extends ExtendBean implements Serializable {
     }
 
 
+    /**
+     * @param entity UsersEntity
+     */
     public void checkRoleForConnection(UsersEntity entity) {
         if (entity == null) {
             log.error("User Entity is null");
@@ -685,6 +693,9 @@ public class CheckEntities extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * @param entity UsersEntity
+     */
     public void checkRoleByLabel(UsersEntity entity) {
         if (entity == null) {
             log.error("role is null");

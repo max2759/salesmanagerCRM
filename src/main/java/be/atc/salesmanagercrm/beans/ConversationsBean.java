@@ -71,6 +71,9 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     private UsersBean usersBean;
 
 
+    /**
+     * call add();
+     */
     public void addEntity() {
         add(this.conversationsEntity);
         get10convers();
@@ -78,6 +81,11 @@ public class ConversationsBean extends ExtendBean implements Serializable {
 
     }
 
+    /**
+     * create a message
+     *
+     * @param conversationsEntity ConversationsEntity
+     */
     public void add(ConversationsEntity conversationsEntity) {
         FacesMessage msg;
         log.info(String.valueOf(usersBean.getUsersEntity().getId()));
@@ -122,12 +130,19 @@ public class ConversationsBean extends ExtendBean implements Serializable {
         }
     }
 
-
+    /**
+     * call updateConvers
+     */
     public void updateEntity() {
         updateConvers(this.conversationsEntity);
         conversationsEntityList = findAll();
     }
 
+    /**
+     * update a message
+     *
+     * @param entity ConversationsEntity
+     */
     protected void updateConvers(ConversationsEntity entity) {
         FacesMessage msg;
         try {
@@ -159,9 +174,14 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     }
 
 
+    /**
+     * delete a role
+     *
+     * @param entity ConversationsEntity
+     */
     public void delete(ConversationsEntity entity) {
         FacesMessage msg;
-        //verifs
+
         try {
             validateConvers(conversationsEntity);
         } catch (InvalidEntityException exception) {
@@ -194,6 +214,11 @@ public class ConversationsBean extends ExtendBean implements Serializable {
 
     }
 
+    /**
+     * active a role
+     *
+     * @param entity ConversationsEntity
+     */
     public void activate(ConversationsEntity entity) {
         FacesMessage msg;
         log.info("conversationListActive");
@@ -230,6 +255,9 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     }
 
 
+    /**
+     * call find10convers
+     */
     public void get10convers() {
         conversationsEntityList = find10convers();
 
@@ -237,6 +265,11 @@ public class ConversationsBean extends ExtendBean implements Serializable {
 
     }
 
+    /**
+     * find 50 last conversations
+     *
+     * @return List<ConversationsEntity>
+     */
     private List<ConversationsEntity> find10convers() {
         log.info("begin findall");
         EntityManager em = EMF.getEM();
@@ -248,12 +281,18 @@ public class ConversationsBean extends ExtendBean implements Serializable {
         return conversationsEntities;
     }
 
+    /**
+     * find all conversations
+     */
     public void findAllConversations() {
         log.info("bgin findallrole");
         conversationsEntityList = findAll();
 
     }
 
+    /**
+     * @return List<ConversationsEntity>
+     */
     protected List<ConversationsEntity> findAll() {
         log.info("begin findall");
         EntityManager em = EMF.getEM();
@@ -265,6 +304,9 @@ public class ConversationsBean extends ExtendBean implements Serializable {
         return conversationsEntities;
     }
 
+    /**
+     * @param entity ConversationsEntity
+     */
     private void validateConversations(ConversationsEntity entity) {
         List<String> errors = ConversationsValidator.validate(entity);
         if (!errors.isEmpty()) {
@@ -273,6 +315,9 @@ public class ConversationsBean extends ExtendBean implements Serializable {
         }
     }
 
+    /**
+     * @param entity ConversationsEntity
+     */
     private void validateConvers(ConversationsEntity entity) {
         List<String> errors = ConversationsValidator.validateEntity(entity);
         if (!errors.isEmpty()) {

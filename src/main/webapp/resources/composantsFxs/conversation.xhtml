@@ -19,6 +19,7 @@
             <h:form id="chatForm">
                 <ul>
                     <p:dataScroller id="dataScrollerChat" value="#{conversationsBean.conversationsEntityList}"
+                                    class="scroller"
                                     var="convers" chunkSize="100"
                                     scrollHeight="500" mode="inline">
                         <li class="#{convers.usersByIdUsers.username eq usersBean.usersEntity.username ? 'clearfix message-own' : 'clearfix message-from'}">

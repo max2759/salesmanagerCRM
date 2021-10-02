@@ -69,7 +69,7 @@
                                 <h:panelGroup rendered="#{role.active}">
                                     <p:commandLink update="@(form)"
                                                    action="#{rolesBean.delete(role.id)}"
-                                                   rendered="#{usersBean.currentUser.isPermitted('deleteRoles')}">
+                                                   rendered="#{usersBean.currentUser.isPermitted('deleteRoles') and role.id != 1}">
 
                                         <p:confirm header="#{bundle['confirmation']}"
                                                    message="#{bundle['role.confirmeDelete']}"
