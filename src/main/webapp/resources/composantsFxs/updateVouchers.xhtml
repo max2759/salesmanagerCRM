@@ -183,7 +183,7 @@
                                         resetValues="true"
                                         oncomplete="if (!args.validationFailed){PF('dlg2').hide()}; PF('displayAllEntities').filter();"
                                         action="#{vouchersBean.updateEntity}"/>
-                            <p:menuitem icon="ui-icon-update"
+                            <p:menuitem icon="ui-icon-history"
                                         rendered="#{usersBean.currentUser.isPermitted('showVoucherHistories')}"
                                         outcome="voucherDetails"
                                         value="#{bundle['viewHistory']}">

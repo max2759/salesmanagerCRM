@@ -54,9 +54,9 @@
 
         <f:metadata>
             <f:viewAction action="#{companiesBean.countActiveCompaniesEntity}"/>
-            <f:viewAction action="#{companiesBean.countAllCompaniesEntity}"/>
+            <f:viewAction action="#{companiesBean.calculatePercentCompanies}"/>
             <f:viewAction action="#{contactsBean.countActiveContactsEntity}"/>
-            <f:viewAction action="#{contactsBean.countAllContactsEntity}"/>
+            <f:viewAction action="#{contactsBean.calculatePercentContact}"/>
             <f:viewAction action="#{transactionsBean.countActiveTransactionsEntity}"/>
             <f:viewAction action="#{transactionsBean.calculPercentTransactionConclueAnnule}"/>
             <f:viewAction action="#{vouchersBean.countActiveVouchersEntity}"/>
@@ -66,6 +66,7 @@
             <f:viewAction action="#{tasksBean.listEntities}"/>
             <f:viewAction action="#{tasksBean.setCalendar}"/>
             <f:viewAction action="#{tasksBean.listEntitiesDueToday}"/>
+
         </f:metadata>
 
 
@@ -75,10 +76,10 @@
                     <span class="overview-box-name">#{bundle['company.numberActiveCompany']}</span>
                     <span class="overview-box-count">#{companiesBean.countActiveCompanies}</span>
                     <h:outputText class="overview-box-badge" id="countCompanies"
-                                  value="#{companiesBean.countActiveCompanies/companiesBean.countAllCompanies}">
+                                  value="#{companiesBean.percentActiveCompaniesByAllCompanies}">
                         <f:convertNumber type="percent"
-                                         maxIntegerDigits="2"
-                                         maxFractionDigits="4"/>
+                                         maxIntegerDigits="4"
+                                         maxFractionDigits="0"/>
                     </h:outputText>
                     <p:tooltip id="toolTipCompaniesPercent" for="countCompanies"
                                value="#{bundle['company.percentValue']}" position="bottom" showEffect="clip"
@@ -91,10 +92,10 @@
                     <span class="overview-box-name">#{bundle['contacts.numberActiveContacts']}</span>
                     <span class="overview-box-count">#{contactsBean.countActiveContacts}</span>
                     <h:outputText class="overview-box-badge" id="countContacts"
-                                  value="#{contactsBean.countActiveContacts/contactsBean.countAllContacts}">
+                                  value="#{contactsBean.percentActiveContactsByAllContact}">
                         <f:convertNumber type="percent"
-                                         maxIntegerDigits="2"
-                                         maxFractionDigits="4"/>
+                                         maxIntegerDigits="4"
+                                         maxFractionDigits="0"/>
                     </h:outputText>
                     <p:tooltip id="toolTipContactsPercent" for="countContacts"
                                value="#{bundle['contacts.percentValue']}" position="bottom" showEffect="clip"

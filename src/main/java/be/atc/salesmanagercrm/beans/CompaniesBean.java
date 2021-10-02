@@ -77,7 +77,7 @@ public class CompaniesBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
-    private Long countAllCompanies;
+    private double percentActiveCompaniesByAllCompanies;
 
     @Inject
     private AddressesBean addressesBean;
@@ -630,6 +630,16 @@ public class CompaniesBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * method to calculate the rate of active companies by all companies
+     */
+    public void calculatePercentCompanies() {
+        long activeCompanies = countActiveCompanies(usersBean.getUsersEntity());
+        long allCompanies = countAllCompanies(usersBean.getUsersEntity());
+
+        this.percentActiveCompaniesByAllCompanies = allCompanies != 0 ? (double) activeCompanies / (double) allCompanies : 0;
+    }
+
+    /**
      * public method for countActiveCompanies()
      */
     public void countActiveCompaniesEntity() {
@@ -665,15 +675,6 @@ public class CompaniesBean extends ExtendBean implements Serializable {
         }
 
         return resultCount;
-    }
-
-    /**
-     * public method for countAllCompanies()
-     */
-    public void countAllCompaniesEntity() {
-        log.info("CompaniesBean => method : countAllCompaniesEntity()");
-        this.countAllCompanies = countAllCompanies(usersBean.getUsersEntity());
-
     }
 
     /**
