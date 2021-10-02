@@ -63,7 +63,7 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
     @Getter
     @Setter
-    private Long countAllContacts;
+    private double percentActiveContactsByAllContact;
 
     @Getter
     @Setter
@@ -645,12 +645,21 @@ public class ContactsBean extends ExtendBean implements Serializable {
     }
 
     /**
+     * method to calculate the rate of active contacts by all contacts
+     */
+    public void calculatePercentContact() {
+        long activeContacts = countActiveContacts(usersBean.getUsersEntity());
+        long allContacts = countAllContacts(usersBean.getUsersEntity());
+
+        this.percentActiveContactsByAllContact = allContacts != 0 ? (double) activeContacts / (double) allContacts : 0;
+    }
+
+    /**
      * public method for countActiveContacts()
      */
     public void countActiveContactsEntity() {
         log.info("ContactsBean => method : countActiveContactsEntity()");
         this.countActiveContacts = countActiveContacts(usersBean.getUsersEntity());
-
     }
 
     /**
@@ -681,16 +690,6 @@ public class ContactsBean extends ExtendBean implements Serializable {
 
         return resultCount;
     }
-
-    /**
-     * public method for countAllContacts()
-     */
-    public void countAllContactsEntity() {
-        log.info("ContactsBean => method : countAllContactsEntity()");
-        this.countAllContacts = countAllContacts(usersBean.getUsersEntity());
-
-    }
-
 
     /**
      * Count all contacts
