@@ -15,6 +15,7 @@
 <cc:implementation>
     <f:view>
         <p:commandButton value="#{bundle['notes.create']}"
+                         resetValues="true"
                          rendered="#{usersBean.currentUser.isPermitted('addNotes')}"
                          update="detailsRight:formTabView detailsRight:createNotes:formCreateNotes msgs"
                          onclick="PF('createDialogNotes').show();" styleClass="NavyButton marginBottom15"
