@@ -27,6 +27,14 @@ public class UserNameFrontValidator implements Validator {
     @Setter
     private static Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
+    /**
+     * Validate lenght
+     *
+     * @param context   FacesContext
+     * @param component UIComponent
+     * @param value     Object
+     * @throws ValidatorException
+     */
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
 
@@ -52,6 +60,11 @@ public class UserNameFrontValidator implements Validator {
         return JsfUtils.returnMessage(locale, "error.notEnoughChar");
     }
 
+    /**
+     * Function to validate length
+     *
+     * @param entity UsersEntity
+     */
     public void validateLength(UsersEntity entity) {
 
         if (entity.getFirstname() != null && entity.getFirstname().length() < 2) {
@@ -59,13 +72,6 @@ public class UserNameFrontValidator implements Validator {
             throw new InvalidOperationException(
                     "longueur trop courte " + entity.getFirstname(), ErrorCodes.USER_NOT_VALID
             );
-          /*  errorMessage = JsfUtils.returnMessage(getLocale(), "error.notEnoughChar");
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-*/
-            //  FacesContext.getCurrentInstance().addMessage("mail", new FacesMessage(FacesMessage.SEVERITY_INFO, "error.notEnoughChar", "2"));
         }
     }
-
-
 }

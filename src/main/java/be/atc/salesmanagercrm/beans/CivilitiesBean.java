@@ -73,7 +73,7 @@ public class CivilitiesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * Find Civility by Id
+     * Find Civility by ID
      *
      * @param id id
      * @return CivilitiesEntity

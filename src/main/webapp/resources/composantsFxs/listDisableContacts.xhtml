@@ -69,7 +69,7 @@
                            action="#{contactsBean.activateContactbyIdContact}"
                            rendered="#{usersBean.currentUser.isPermitted('deleteContacts')}">
                <i class="ui-icon ui-icon-update"/>
-               <f:param name="contactsID" value="#{contacts.id}"></f:param>
+               <f:param name="contactsID" value="#{contacts.id}"/>
             </p:commandLink>
          </p:column>
 

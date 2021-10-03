@@ -178,7 +178,7 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
     /**
      * find all permissions by role
      *
-     * @param idRole
+     * @param idRole int
      */
     public void findAllPermissionsIWithdRole(int idRole) {
         log.info("bgin findallrole");

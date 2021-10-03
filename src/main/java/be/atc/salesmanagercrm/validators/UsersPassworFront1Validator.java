@@ -65,7 +65,7 @@ public class UsersPassworFront1Validator implements Validator {
                 Matcher matcher = pattern.matcher(entity.getPassword());
                 boolean bool = matcher.matches();
                 log.info(String.valueOf(bool));
-                if (bool == false) {
+                if (!bool) {
                     log.warn("wrong regex password", entity.getPassword());
                     throw new InvalidOperationException(
                             "Le mot de passe doit posséder au minimum 8 caractéres, 1 chiffre, 1 caractére spécial et une majuscule " + entity.getPassword(), ErrorCodes.USER_BAD_PASS_REGEX

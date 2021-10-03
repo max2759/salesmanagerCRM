@@ -1,6 +1,5 @@
 package be.atc.salesmanagercrm.validators;
 
-import be.atc.salesmanagercrm.beans.CheckEntities;
 import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidOperationException;
@@ -30,11 +29,16 @@ public class UsersEmailFrontValidator implements Validator {
     @Setter
     private static Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
+    /**
+     * Validator for email
+     *
+     * @param context   FacesContext
+     * @param component UIComponent
+     * @param value     Object
+     * @throws ValidatorException
+     */
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-
-        CheckEntities checkEntities = new CheckEntities();
-
         UsersEntity usersEntity = new UsersEntity();
         usersEntity.setEmail((String) value);
 
@@ -76,7 +80,7 @@ public class UsersEmailFrontValidator implements Validator {
             Matcher matcher = pattern.matcher(entity.getEmail());
             boolean bool = matcher.matches();
 
-            if (bool == false) {
+            if (!bool) {
                 log.warn("wrong regex email", entity.getEmail());
                 throw new InvalidOperationException(
                         "Votre adresse mail n'est pas valide " + entity.getEmail(), ErrorCodes.USER_BAD_EMAIL_REGEX
@@ -85,21 +89,17 @@ public class UsersEmailFrontValidator implements Validator {
         }
     }
 
+    /**
+     * Validate lenth function
+     *
+     * @param entity UsersEntity
+     */
     public void validateLength(UsersEntity entity) {
-        String errorMessage;
-
         if (entity.getEmail() != null && entity.getEmail().length() < 2) {
             log.warn("longueur trop courte", entity.getEmail());
             throw new InvalidOperationException(
                     "longueur trop courte " + entity.getEmail(), ErrorCodes.USER_BAD_EMAIL_REGEX
             );
-          /*  errorMessage = JsfUtils.returnMessage(getLocale(), "error.notEnoughChar");
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-*/
-            //  FacesContext.getCurrentInstance().addMessage("mail", new FacesMessage(FacesMessage.SEVERITY_INFO, "error.notEnoughChar", "2"));
         }
     }
-
-
 }

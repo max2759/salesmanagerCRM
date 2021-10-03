@@ -4,7 +4,6 @@ import be.atc.salesmanagercrm.dao.PermissionsDao;
 import be.atc.salesmanagercrm.entities.PermissionsEntity;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +21,7 @@ public class PermissionsDaoImpl implements PermissionsDao {
     @Override
     public List<PermissionsEntity> findAllPermissions(EntityManager em) {
         return em.createNamedQuery("Permissions.findAllPermissions",
-                PermissionsEntity.class)
+                        PermissionsEntity.class)
                 .getResultList();
     }
 
@@ -34,16 +33,12 @@ public class PermissionsDaoImpl implements PermissionsDao {
 
     @Override
     public Optional<PermissionsEntity> findByLabel(EntityManager em, String label) {
-        try {
-            return em.createNamedQuery("Permissions.findByLabel",
-                    PermissionsEntity.class)
-                    .setParameter("label", label)
-                    .getResultList()
-                    .stream()
-                    .findFirst();
-        } catch (NoResultException e) {
-            return null;
-        }
+        return em.createNamedQuery("Permissions.findByLabel",
+                        PermissionsEntity.class)
+                .setParameter("label", label)
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
 }

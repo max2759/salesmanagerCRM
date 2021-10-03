@@ -22,7 +22,6 @@ public class ConversationsValidator {
     private static final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     public static List<String> validate(ConversationsEntity entity) {
-        Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
         FacesMessage msg;
         String errorMessage = null;
 
@@ -33,6 +32,9 @@ public class ConversationsValidator {
             errors.add("La reception des données à échouée");
             errors.add("Veuillez recommencer votre message");
             errorMessage = JsfUtils.returnMessage(getLocale(), "message.empty") + "\n" + JsfUtils.returnMessage(getLocale(), "message.empty");
+
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             return errors;
         }
         if (entity.getMessage() == null || entity.getMessage().isEmpty()) {

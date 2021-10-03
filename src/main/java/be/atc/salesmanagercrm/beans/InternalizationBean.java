@@ -28,13 +28,10 @@ public class InternalizationBean implements Serializable {
 
     /**
      * This method sets the current locale in language User
-     *
-     * @return String
      */
-    public String changeLanguage() {
+    public void changeLanguage() {
         locale = new Locale(language);
         FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
-        return null;
     }
 
     public String getLanguage() {

@@ -72,7 +72,7 @@ public class RoleLabelFrontValidator extends ExtendBean implements Validator {
         if (entity.getLabel() != null && entity.getLabel().charAt(0) == ' ') {
             log.warn("au moins 1 caractére", entity.getLabel());
             throw new InvalidOperationException(
-                    "au moiins 1 caractére " + entity.getLabel(), ErrorCodes.ROLES_NOT_VALID
+                    "au moins 1 caractére " + entity.getLabel(), ErrorCodes.ROLES_NOT_VALID
             );
         }
     }

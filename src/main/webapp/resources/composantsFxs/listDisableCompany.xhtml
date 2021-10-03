@@ -79,7 +79,7 @@
                                action="#{companiesBean.activateCompanyByIdCompany}"
                                rendered="#{usersBean.currentUser.isPermitted('deleteCompagnies')}">
                     <i class="ui-icon ui-icon-update"/>
-                    <f:param name="companiesID" value="#{companies.id}"></f:param>
+                    <f:param name="companiesID" value="#{companies.id}"/>
                 </p:commandLink>
             </p:column>
 

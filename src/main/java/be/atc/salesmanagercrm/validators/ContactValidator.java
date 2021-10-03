@@ -143,9 +143,7 @@ public class ContactValidator {
 
         log.info("Iban replaced : " + companyIbanReplaced);
 
-        boolean validIban = Modulo97.verifyCheckDigits(companyIbanReplaced);
-
-        return validIban;
+        return Modulo97.verifyCheckDigits(companyIbanReplaced);
     }
 
 }

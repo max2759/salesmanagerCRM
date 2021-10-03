@@ -194,9 +194,9 @@ public class RolesBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * creazte a role
+     * create a role
      *
-     * @param rolesEntity
+     * @param rolesEntity RolesEntity
      */
     public void addRoles(RolesEntity rolesEntity) {
         FacesMessage msg;
