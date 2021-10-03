@@ -86,7 +86,7 @@
                                     <p:commandLink update="@form msg"
                                                    rendered="#{usersBean.currentUser.isPermitted('deleteConversations')}"
                                                    action="#{conversationsBean.delete(convers)}">
-                                        <i class="ui-icon ui-icon-delete-forever"></i>
+                                        <i class="ui-icon ui-icon-delete-forever"/>
                                         <p:confirm header="#{bundle['confirmation']}"
                                                    message="#{bundle['conversation.delete']}"
                                                    icon="fa fa-warning"/>
@@ -114,16 +114,6 @@
                                 </h:panelGroup>
 
 
-                                <!--<p:column colspan="1" width="70">
-                                    <p:commandLink
-                                            actionListener="#{conversationsBean.initialiseDialogConversId(convers.id)}"
-                                            update="updateConversationDialogForm:updateConversationDialog"
-                                            oncomplete="PF('updateConversation').show();return false;"
-                                            styleClass="NavyButton">
-                                        <i class="ui-icon ui-icon-create"></i>
-                                    </p:commandLink>
-    -->
-
                             </p:column>
 
 
@@ -135,28 +125,6 @@
             </div>
 
 
-            <h:form id="updateConversationDialogForm">
-
-                <p:dialog header="Modal Dialog" widgetVar="updateConversation" modal="true"
-                          responsive="true" id="updateConversationDialog">
-
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
-
-                        <h:panelGroup styleClass="md-inputfield" style="margin-bottom:10px;">
-                            <p:inputText value="#{conversationsBean.conversationsEntity.message}"
-                                         placeholder="#{conversationsBean.conversationsForDialog.message}">
-                            </p:inputText>
-
-                            <label>#{bundle['message']}</label>
-                        </h:panelGroup>
-
-
-                        <p:commandButton value="Confirmer Valider" action="#{conversationsBean.updateEntity}"
-                                         update="@(form) msg"/>
-                    </p:panelGrid>
-                </p:dialog>
-
-            </h:form>
 
 
         </h:body>

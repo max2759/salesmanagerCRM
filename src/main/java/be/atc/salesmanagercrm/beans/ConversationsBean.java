@@ -14,6 +14,8 @@ import be.atc.salesmanagercrm.validators.ConversationsValidator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -69,6 +71,13 @@ public class ConversationsBean extends ExtendBean implements Serializable {
 
     @Inject
     private UsersBean usersBean;
+
+    @Getter
+    @Setter
+    private Subject currentUser;
+    @Getter
+    @Setter
+    private Session session;
 
 
     /**
@@ -130,49 +139,6 @@ public class ConversationsBean extends ExtendBean implements Serializable {
         }
     }
 
-    /**
-     * call updateConvers
-     */
-    public void updateEntity() {
-        updateConvers(this.conversationsEntity);
-        conversationsEntityList = findAll();
-    }
-
-    /**
-     * update a message
-     *
-     * @param entity ConversationsEntity
-     */
-    protected void updateConvers(ConversationsEntity entity) {
-        FacesMessage msg;
-        try {
-            validateConversations(conversationsEntity);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
-
-        EntityManager em = EMF.getEM();
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            dao.update(em, entity);
-            tx.commit();
-            log.info("Persist ok");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "updateMessageOk"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.info("Persist echec");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } finally {
-            em.clear();
-            em.clear();
-        }
-    }
-
 
     /**
      * delete a role
@@ -182,34 +148,40 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     public void delete(ConversationsEntity entity) {
         FacesMessage msg;
 
-        try {
-            validateConvers(conversationsEntity);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
+        if (this.currentUser.isPermitted("deleteConversations")) {
+            try {
+                validateConvers(conversationsEntity);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                return;
+            }
 
-        entity.setActive(false);
+            entity.setActive(false);
 
-        EntityManager em = EMF.getEM();
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            dao.update(em, entity);
-            tx.commit();
-            log.info("Persist ok");
-            conversationsEntityList = findAll();
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "deleteMessageOk"), null);
+            EntityManager em = EMF.getEM();
+            EntityTransaction tx = null;
+            try {
+                tx = em.getTransaction();
+                tx.begin();
+                dao.update(em, entity);
+                tx.commit();
+                log.info("Persist ok");
+                conversationsEntityList = findAll();
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "deleteMessageOk"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } catch (Exception ex) {
+                if (tx != null && tx.isActive()) tx.rollback();
+                log.info("Persist echec");
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } finally {
+                em.clear();
+                em.clear();
+            }
+        } else {
+            log.info("Sorry, you aren't permissions.");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.info("Persist echec");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } finally {
-            em.clear();
-            em.clear();
         }
 
     }
@@ -221,37 +193,42 @@ public class ConversationsBean extends ExtendBean implements Serializable {
      */
     public void activate(ConversationsEntity entity) {
         FacesMessage msg;
-        log.info("conversationListActive");
-        try {
-            validateConvers(conversationsEntity);
-        } catch (InvalidEntityException exception) {
-            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
-            return;
-        }
+        if (this.currentUser.isPermitted("deleteConversations")) {
+            log.info("conversationListActive");
+            try {
+                validateConvers(conversationsEntity);
+            } catch (InvalidEntityException exception) {
+                log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
+                return;
+            }
 
-        entity.setActive(true);
+            entity.setActive(true);
 
-        EntityManager em = EMF.getEM();
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
-            dao.update(em, entity);
-            tx.commit();
-            log.info("Persist ok");
-            conversationsEntityList = findAll();
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "activateMessage"), null);
+            EntityManager em = EMF.getEM();
+            EntityTransaction tx = null;
+            try {
+                tx = em.getTransaction();
+                tx.begin();
+                dao.update(em, entity);
+                tx.commit();
+                log.info("Persist ok");
+                conversationsEntityList = findAll();
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, JsfUtils.returnMessage(getLocale(), "activateMessage"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } catch (Exception ex) {
+                if (tx != null && tx.isActive()) tx.rollback();
+                log.info("Persist echec");
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } finally {
+                em.clear();
+                em.clear();
+            }
+        } else {
+            log.info("Sorry, you aren't permissions.");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            log.info("Persist echec");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "errorOccured"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } finally {
-            em.clear();
-            em.clear();
         }
-
     }
 
 
