@@ -1,6 +1,5 @@
 package be.atc.salesmanagercrm.validators;
 
-import be.atc.salesmanagercrm.beans.CheckEntities;
 import be.atc.salesmanagercrm.entities.UsersEntity;
 import be.atc.salesmanagercrm.exceptions.ErrorCodes;
 import be.atc.salesmanagercrm.exceptions.InvalidOperationException;
@@ -26,18 +25,15 @@ public class UsersPasswordFrontValidator implements Validator {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        CheckEntities checkEntities = new CheckEntities();
 
         UsersEntity usersEntity = new UsersEntity();
         usersEntity.setPassword((String) value);
-
-        String errorMessage = null;
 
         try {
             checkPasswordRegexe(usersEntity);
         } catch (InvalidOperationException exception) {
             log.warn("Code erreur : " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
-            errorMessage = JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" + JsfUtils.returnMessage(getLocale(), "task.validator.title");
+            String errorMessage = JsfUtils.returnMessage(getLocale(), "passwordBadRegex") + "\n" + JsfUtils.returnMessage(getLocale(), "task.validator.title");
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
             throw new ValidatorException(new FacesMessage(getMessageErrorPaswword()));
@@ -66,7 +62,7 @@ public class UsersPasswordFrontValidator implements Validator {
             Matcher matcher = pattern.matcher(entity.getPassword());
             boolean bool = matcher.matches();
             log.info(String.valueOf(bool));
-            if (bool == false) {
+            if (!bool) {
                 log.warn("wrong regex password", entity.getPassword());
                 throw new InvalidOperationException(
                         "Le mot de passe doit posséder au minimum 8 caractéres, 1 chiffre, 1 caractére spécial et une majuscule " + entity.getPassword(), ErrorCodes.USER_BAD_PASS_REGEX

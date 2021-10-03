@@ -13,14 +13,6 @@ import java.util.Optional;
  */
 public class VoucherStatusDaoImpl extends EntityFinderImpl<VoucherStatusEntity> implements VoucherStatusDao {
 
-
-    /**
-     * test
-     *
-     * @param em
-     * @param id
-     * @return
-     */
     @Override
     public VoucherStatusEntity findById(EntityManager em, int id) {
         return em.find(VoucherStatusEntity.class, id);

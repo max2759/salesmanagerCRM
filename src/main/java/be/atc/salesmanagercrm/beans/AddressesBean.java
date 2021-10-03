@@ -77,7 +77,7 @@ public class AddressesBean extends ExtendBean implements Serializable {
      * Find address by ID Company
      *
      * @param id id
-     * @return AddressesEntity AddressesEntity
+     * @return AddressesEntity
      */
     protected AddressesEntity findByIdCompanies(int id) {
 
@@ -114,7 +114,7 @@ public class AddressesBean extends ExtendBean implements Serializable {
      * Find address by ID Contacts
      *
      * @param id id
-     * @return AddressesEntity AddressesEntity
+     * @return AddressesEntity
      */
     protected AddressesEntity findByIdContacts(int id) {
 

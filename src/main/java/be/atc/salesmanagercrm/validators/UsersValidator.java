@@ -63,10 +63,10 @@ public class UsersValidator {
             errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "mailRegex") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "mailRegex") + "\n";
         }
 
-       /* if (entity.getUsername() == null || entity.getUsername().isEmpty()) {
-            errors.add("Votre pseudo ne peux pas être vide");
+        if (errorMessage != null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
-*/
         return errors;
     }
 
@@ -108,7 +108,6 @@ public class UsersValidator {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
-
 
         return errors;
     }
@@ -245,6 +244,11 @@ public class UsersValidator {
         if (passwordCo == null || passwordCo.isEmpty()) {
             errors.add("Le mot de passe est vide");
             errorMessage = errorMessage == null ? JsfUtils.returnMessage(getLocale(), "passwordEmpty") + "\n" : errorMessage + JsfUtils.returnMessage(getLocale(), "passwordEmpty") + "\n";
+        }
+
+        if (errorMessage != null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
 
         return errors;

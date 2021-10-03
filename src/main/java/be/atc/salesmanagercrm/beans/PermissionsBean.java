@@ -74,13 +74,13 @@ public class PermissionsBean extends ExtendBean implements Serializable {
     }
 
     /**
-     * @param label
+     * @param label String
      * @return PermissionsEntity
      */
     public PermissionsEntity findByLabel(String label) {
         if (label == null) {
             log.info("label null in permbean");
-            new EntityNotFoundException("aucune permission avec le perml " + label + " n'a été trouvé en db", ErrorCodes.PERMISSION_NOT_FOUND);
+            throw new EntityNotFoundException("aucune permission avec le perml " + label + " n'a été trouvé en db", ErrorCodes.PERMISSION_NOT_FOUND);
         }
 
         EntityManager em = EMF.getEM();

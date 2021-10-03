@@ -44,8 +44,6 @@ class VouchersBeanTest {
         VouchersEntity entity = new VouchersEntity();
 
         entity.setUsersByIdUsers(usersEntity);
-//        entity.setPriority(EnumPriority.ELEVEE);
-//        entity.setEndDate(LocalDateTime.now().plusMonths(1));
         entity.setTitle("Voucher Test");
         entity.setVoucherStatusByIdVoucherStatus(voucherStatusEntity);
 

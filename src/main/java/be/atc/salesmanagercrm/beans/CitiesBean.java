@@ -60,7 +60,7 @@ public class CitiesBean extends ExtendBean implements Serializable {
      * Find City by ID
      *
      * @param id CitiesEntity
-     * @return CitiesEntity CitiesEntity
+     * @return CitiesEntity
      */
     public CitiesEntity findById(int id) {
         log.info("CitiesBean => method : findById()");
@@ -116,8 +116,7 @@ public class CitiesBean extends ExtendBean implements Serializable {
 
         List<CitiesEntity> citiesEntityListForm = findCitiesEntityList();
         String space = " ";
-        List<CitiesEntity> test = citiesEntityListForm.stream().filter(t -> (t.getLabel().concat(space.concat(t.getPostalCode())).toLowerCase().contains(queryLowerCase)) || (t.getPostalCode().concat(space.concat(t.getLabel())).toLowerCase().contains(queryLowerCase))).collect(Collectors.toList());
-        return test;
+        return citiesEntityListForm.stream().filter(t -> (t.getLabel().concat(space.concat(t.getPostalCode())).toLowerCase().contains(queryLowerCase)) || (t.getPostalCode().concat(space.concat(t.getLabel())).toLowerCase().contains(queryLowerCase))).collect(Collectors.toList());
     }
 
 

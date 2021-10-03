@@ -35,9 +35,7 @@ public class RolesValidator {
             errors.add("Le nom de rôle est vide");
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(locale, "role.empty"), null);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-        }/*else if(dao.findByLabel(em, entity.getLabel()) != null){
-            errors.add("Votre nom de rôle existe déjà");
-        }*/
+        }
 
         return errors;
     }

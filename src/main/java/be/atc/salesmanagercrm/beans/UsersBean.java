@@ -219,22 +219,19 @@ public class UsersBean extends ExtendBean implements Serializable {
 
                 if (entityToAdd.getFirstname().length() >= 3) {
                     firstName3Cara = entityToAdd.getFirstname().substring(0, 3);
-                    log.info(firstName3Cara);
                 } else {
                     String randomLetter = getRandomStr(1);
                     firstName3Cara = entityToAdd.getFirstname().substring(0, 2) + randomLetter;
-                    log.info(firstName3Cara);
                 }
+                log.info(firstName3Cara);
 
                 if (entityToAdd.getLastname().length() >= 3) {
                     lastName3Cara = entityToAdd.getLastname().substring(0, 3);
-                    log.info(lastName3Cara);
                 } else {
                     String randomLetter = getRandomStr(1);
                     lastName3Cara = entityToAdd.getLastname().substring(0, 2) + randomLetter;
-                    log.info(lastName3Cara);
                 }
-
+                log.info(lastName3Cara);
 
                 String usernameWithoutNumber = firstName3Cara + lastName3Cara;
 
@@ -925,18 +922,38 @@ public class UsersBean extends ExtendBean implements Serializable {
         accessControlBean.isNotLogged();
     }
 
+    /**
+     * Go to userUpdateByUser
+     *
+     * @return String
+     */
     public String goToProfilePage() {
         return "/app/userUpdateByUser?faces-redirect=true";
     }
 
+    /**
+     * Go to rolesList
+     *
+     * @return String
+     */
     public String goToRolesPage() {
         return "/app/rolesList?faces-redirect=true";
     }
 
+    /**
+     * Go to addRolePermissions
+     *
+     * @return String
+     */
     public String goToRolesPermissionsPage() {
         return "/app/addRolePermissions?faces-redirect=true";
     }
 
+    /**
+     * Go to usersList
+     *
+     * @return String
+     */
     public String goToUserListPage() {
         return "/app/usersList?faces-redirect=true";
     }

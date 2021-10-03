@@ -62,7 +62,7 @@ public class CompanyBankAccountValidator implements Validator {
     /**
      * Check format of bank account is correct
      *
-     * @param companiesEntity
+     * @param companiesEntity CompaniesEntity
      */
     public void checkBankAccountFormat(CompaniesEntity companiesEntity) {
 

@@ -8,7 +8,6 @@ import org.apache.shiro.subject.Subject;
 
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ComponentSystemEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -31,29 +30,6 @@ public class AccessControlBean extends ExtendBean implements Serializable {
     public void isNotLogged() {
         log.info("AccessControlBean => method : isNotLogged()");
         nav.performNavigation("/connection.xhtml?faces-redirect=true");
-    }
-
-    /**
-     * Check permission user.
-     *
-     * @param event ComponentSystemEvent
-     */
-    public void checkPermission(ComponentSystemEvent event) {
-        log.info("AccessControlBean => method : checkPermission(ComponentSystemEvent event)");
-
-        Subject currentUser = SecurityUtils.getSubject();
-
-        if (currentUser.isAuthenticated()) {
-            String permission = (String) event.getComponent().getAttributes().get("permRequired");
-
-            if (!currentUser.isPermitted(permission)) {
-                log.info("Vous n'avez la permission : " + permission + ". Accès refusé");
-                hasNotPermission();
-            }
-
-        } else {
-            isNotLogged();
-        }
     }
 
     /**
