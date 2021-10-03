@@ -9,7 +9,7 @@ import java.util.Objects;
 @Table(name = "contacts", schema = "salesmanagercrm")
 @NamedQueries({
         @NamedQuery(name = "Contacts.findContactsEntityByIdUser", query = "select c from ContactsEntity c where (c.usersByIdUsers.id = :idUser and c.active=true)"),
-        @NamedQuery(name = "Contacts.findAllContactsEntityByIdUser", query = "select c from ContactsEntity c where (c.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Contacts.findAllContactsEntityByIdUser", query = "select c from ContactsEntity c where (c.usersByIdUsers.id = :idUser) order by c.registerDate desc"),
         @NamedQuery(name = "Contacts.findByIdContactAndByIdUser", query = "select c from ContactsEntity c where (c.id = :id and c.usersByIdUsers.id = :idUser)"),
         @NamedQuery(name = "Contacts.countActiveContacts", query = "select COUNT(c.lastname) from ContactsEntity c where (c.active = true and c.usersByIdUsers.id = :idUser)"),
         @NamedQuery(name = "Contacts.countAllContacts", query = "select COUNT(c.lastname) from ContactsEntity c where (c.usersByIdUsers.id = :idUser)"),

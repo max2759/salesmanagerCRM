@@ -10,7 +10,7 @@ import java.util.Objects;
 @NamedQueries({
         @NamedQuery(name = "Companies.countActiveCompanies", query = "SELECT count(c.label) FROM CompaniesEntity c WHERE c.active=true and c.usersByIdUsers.id=:idUser"),
         @NamedQuery(name = "Companies.countAllCompanies", query = "SELECT count(c.label) FROM CompaniesEntity c WHERE c.usersByIdUsers.id=:idUser"),
-        @NamedQuery(name = "Companies.findCompaniesEntityByIdUser", query = "select c from CompaniesEntity c where (c.usersByIdUsers.id = :idUser)"),
+        @NamedQuery(name = "Companies.findCompaniesEntityByIdUser", query = "select c from CompaniesEntity c where (c.usersByIdUsers.id = :idUser) order by c.registerDate desc"),
         @NamedQuery(name = "Companies.findByIdCompanyAndByIdUser", query = "select c from CompaniesEntity c where (c.id = :id and c.usersByIdUsers.id = :idUser)"),
         @NamedQuery(name = "Companies.findById", query = "select c from CompaniesEntity c where c.id=:id"),
 })

@@ -66,7 +66,8 @@
             <f:viewAction action="#{tasksBean.listEntities}"/>
             <f:viewAction action="#{tasksBean.setCalendar}"/>
             <f:viewAction action="#{tasksBean.listEntitiesDueToday}"/>
-
+            <f:viewAction action="#{contactsBean.findAllActiveContacts}"/>
+            <f:viewAction action="#{companiesBean.findAllActiveCompanies}"/>
         </f:metadata>
 
 
@@ -162,103 +163,14 @@
             </div>
 
 
-            <div class="ui-g-12 ui-lg-2 ui-fluid contact-form">
-                <p:panel header="Contact Us" style="min-height:360px" styleClass="ui-shadow-content">
-                    <div class="ui-g">
-                        <div class="ui-g-12">
-                            <p:selectOneMenu id="console" value="#{selectOneMenuView.console}" autoWidth="false">
-                                <f:selectItem itemLabel="Select One" itemValue=""/>
-                                <f:selectItem itemLabel="Xbox One" itemValue="Xbox One"/>
-                                <f:selectItem itemLabel="PS4" itemValue="PS4"/>
-                                <f:selectItem itemLabel="Wii U" itemValue="Wii U"/>
-                            </p:selectOneMenu>
-                        </div>
-                        <div class="ui-g-12">
-                            <h:panelGroup styleClass="md-inputfield">
-                                <p:inputText/>
-                                <label>Name</label>
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12">
-                            <h:panelGroup styleClass="md-inputfield">
-                                <p:inputText/>
-                                <label>Age</label>
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12">
-                            <h:panelGroup styleClass="md-inputfield">
-                                <p:inputText/>
-                                <label>Message</label>
-                            </h:panelGroup>
-                        </div>
-                    </div>
-                    <p:commandButton type="button" value="Send" icon="ui-icon-send"></p:commandButton>
+            <div class="ui-g-12 ui-lg-2 contacts">
+                <p:panel header="#{bundle['company.title']}" style="min-height:400px" styleClass="ui-shadow-content">
+                    <fxs:dashboardCompanies/>
                 </p:panel>
             </div>
             <div class="ui-g-12 ui-lg-2 contacts">
-                <p:panel header="Contacts" style="min-height:360px" styleClass="ui-shadow-content">
-                    <ul>
-                        <li class="clearfix">
-                            <p:graphicImage name="images/profile-image.png" library="barcelona-layout" width="45"/>
-                            <div class="contact-info">
-                                <span class="name">Jane White (me)</span>
-                                <span class="location">jane@pf-barcelona.com</span>
-                            </div>
-                            <div class="contact-actions">
-                                <span class="connection-status online">online</span>
-                                <i class="fa fa-paper-plane-o"></i>
-                                <i class="fa fa-phone"></i>
-                            </div>
-                        </li>
-                        <li class="clearfix">
-                            <p:graphicImage name="images/avatar1.png" library="barcelona-layout" width="45"/>
-                            <div class="contact-info">
-                                <span class="name">Joshua Williams</span>
-                                <span class="location">joshua@pf-barcelona.com</span>
-                            </div>
-                            <div class="contact-actions">
-                                <span class="connection-status online">online</span>
-                                <i class="fa fa-paper-plane-o"></i>
-                                <i class="fa fa-phone"></i>
-                            </div>
-                        </li>
-                        <li class="clearfix">
-                            <p:graphicImage name="images/avatar2.png" library="barcelona-layout" width="45"/>
-                            <div class="contact-info">
-                                <span class="name">Emily Clark</span>
-                                <span class="location">emily@pf-barcelona.com</span>
-                            </div>
-                            <div class="contact-actions">
-                                <span class="connection-status offline">offline</span>
-                                <i class="fa fa-paper-plane-o"></i>
-                                <i class="fa fa-phone"></i>
-                            </div>
-                        </li>
-                        <li class="clearfix">
-                            <p:graphicImage name="images/avatar3.png" library="barcelona-layout" width="45"/>
-                            <div class="contact-info">
-                                <span class="name">Tim Johnson</span>
-                                <span class="location">tim@pf-barcelona.com</span>
-                            </div>
-                            <div class="contact-actions">
-                                <span class="connection-status online">online</span>
-                                <i class="fa fa-paper-plane-o"></i>
-                                <i class="fa fa-phone"></i>
-                            </div>
-                        </li>
-                        <li class="clearfix">
-                            <p:graphicImage name="images/avatar4.png" library="barcelona-layout" width="45"/>
-                            <div class="contact-info">
-                                <span class="name">David Stark</span>
-                                <span class="location">kelly@pf-barcelona.com</span>
-                            </div>
-                            <div class="contact-actions">
-                                <span class="connection-status offline">offline</span>
-                                <i class="fa fa-paper-plane-o"></i>
-                                <i class="fa fa-phone"></i>
-                            </div>
-                        </li>
-                    </ul>
+                <p:panel header="#{bundle['contacts.title']}" style="min-height:400px" styleClass="ui-shadow-content">
+                    <fxs:dashboardContacts/>
                 </p:panel>
             </div>
             <div class="ui-g-12 ui-lg-8 task-list">
