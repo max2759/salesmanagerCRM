@@ -15,6 +15,7 @@
 <cc:implementation>
     <f:view>
         <p:commandButton value="#{bundle['tasks.create']}"
+                         resetValues="true"
                          rendered="#{usersBean.currentUser.isPermitted('addTasks')}"
                          update="detailsRight:formTabView detailsRight:createTasks:formCreateTask msgs"
                          onclick="PF('createDialogTask').show();" styleClass="NavyButton marginBottom15"
