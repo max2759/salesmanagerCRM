@@ -9,7 +9,7 @@
     <ui:define name="content">
 
 
-        <p:growl id="msg" life="2000"></p:growl>
+        <p:growl id="msg" life="2000"/>
 
 
         <div class="ui-g">
@@ -51,7 +51,7 @@
                                         <p:ajax process="@(form) msgPass1"
                                                 update="msgPass1 usersUpdateForm:update"
                                                 event="keyup" resetValues="true"/>
-                                        <f:validator validatorId="userUpdatePasswordValidator"></f:validator>
+                                        <f:validator validatorId="userUpdatePasswordValidator"/>
                                     </p:password>
                                     <label>#{bundle['user.password']}</label>
                                     <p:message id="msgPass1" for="password"/>
@@ -76,7 +76,7 @@
                                         <p:ajax process="@form"
                                                 update="msgMail usersUpdateForm:update"
                                                 event="keyup" resetValues="true"/>
-                                        <f:validator validatorId="userEmailValidator"></f:validator>
+                                        <f:validator validatorId="userEmailValidator"/>
                                     </p:inputText>
                                     <label for="email">#{bundle['email']}</label>
                                     <p:message id="msgMail" for="email"/>
