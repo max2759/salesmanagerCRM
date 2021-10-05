@@ -148,8 +148,8 @@ public class ConversationsBean extends ExtendBean implements Serializable {
     public void delete(ConversationsEntity entity) {
         FacesMessage msg;
 
-        if (this.currentUser.isPermitted("deleteConversations")) {
-            try {
+
+        try {
                 validateConvers(conversationsEntity);
             } catch (InvalidEntityException exception) {
                 log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
@@ -178,11 +178,7 @@ public class ConversationsBean extends ExtendBean implements Serializable {
                 em.clear();
                 em.clear();
             }
-        } else {
-            log.info("Sorry, you aren't permissions.");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "accessDenied.label"), null);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
+
 
     }
 

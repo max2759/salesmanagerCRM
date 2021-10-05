@@ -49,7 +49,7 @@
                                                 autocomplete="false"
                                                 validatorMessage="#{bundle['users.regexPassError']}">
                                         <p:ajax process="@(form) msgPass1"
-                                                update="msgPass1 usersUpdateForm:update"
+                                                update="msgPass1 msgPass2 usersUpdateForm:update"
                                                 event="keyup" resetValues="true"/>
                                         <f:validator validatorId="userUpdatePasswordValidator"/>
                                     </p:password>

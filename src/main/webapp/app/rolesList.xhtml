@@ -69,7 +69,9 @@
                                 <h:panelGroup rendered="#{role.active}">
                                     <p:commandLink update="@(form)"
                                                    action="#{rolesBean.delete(role.id)}"
-                                                   rendered="#{usersBean.currentUser.isPermitted('deleteRoles') and role.id != 1}">
+                                                   rendered="#{usersBean.currentUser.isPermitted('deleteRoles') and role.id != 1}"
+                                                   oncomplete="PF('displayAllEntities').filter();"
+                                    >
 
                                         <p:confirm header="#{bundle['confirmation']}"
                                                    message="#{bundle['role.confirmeDelete']}"
@@ -92,7 +94,8 @@
                                 <h:panelGroup rendered="#{not role.active}">
                                     <p:commandLink update="@form"
                                                    action="#{rolesBean.activate(role.id)}"
-                                                   rendered="#{usersBean.currentUser.isPermitted('deleteRoles')}">
+                                                   rendered="#{usersBean.currentUser.isPermitted('deleteRoles')}"
+                                                   oncomplete="PF('displayAllEntities').filter();">
                                         <i class="ui-icon ui-icon-update"/>
                                         <f:param name="idEntity" value="#{role.id}"/>
                                         <f:param name="typeEntities" value="all"/>
