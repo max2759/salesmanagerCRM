@@ -33,7 +33,7 @@
 
             <p:column styleClass="companyNameColumn" headerText="#{bundle['company.label']}"
                       filterBy="#{companies.label}"
-                      filterMatchMode="contains">
+                      filterMatchMode="contains" sortBy="#{companies.label}">
                 <p:link outcome="companydetails">
                     <h:outputText value="#{companies.label}"/>
                     <f:param name="companyID" value="#{companies.id}"/>

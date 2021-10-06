@@ -52,11 +52,6 @@
                 <p:watermark for="@(.contactsEmail)" value="#{bundle['contacts.searchByContactsEmail']}"/>
             </p:column>
 
-
-            <p:column headerText="#{bundle['contacts.ownership']}" sortBy="#{contacts.usersByIdUsers.firstname}">
-                <h:outputText value="#{contacts.usersByIdUsers.firstname} #{contacts.usersByIdUsers.lastname}"/>
-            </p:column>
-
             <p:column headerText="#{bundle['company.registerDate']}" sortBy="#{contacts.registerDate}">
                 <h:outputText value="#{contacts.registerDate}">
                     <f:convertDateTime type="localDate"
