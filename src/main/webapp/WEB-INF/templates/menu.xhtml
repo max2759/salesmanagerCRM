@@ -33,39 +33,47 @@
                 </h:form>
             </pa:tab>
 
-            <pa:tab icon="people" title="#{bundle['contacts.title']}">
+            <pa:tab icon="people" title="#{bundle['contacts.title']}"
+                    rendered="#{usersBean.currentUser.isPermitted('showCompagnies') or usersBean.currentUser.isPermitted('showContacts')}">
                 <h:form id="menu-contacts">
                     <pa:menu widgetVar="me">
                         <p:menuitem id="um_Company" value="#{bundle['company.title']}" icon="&#xE871;"
+                                    rendered="#{usersBean.currentUser.isPermitted('showCompagnies')}"
                                     outcome="/app/company"/>
                         <p:menuitem id="um_Contacts" value="#{bundle['contacts.title']}" icon="&#xE871;"
+                                    rendered="#{usersBean.currentUser.isPermitted('showContacts')}"
                                     outcome="/app/contacts"/>
                     </pa:menu>
                 </h:form>
             </pa:tab>
 
-            <pa:tab icon="business" title="#{bundle['menu.sales']}">
+            <pa:tab icon="business" title="#{bundle['menu.sales']}"
+                    rendered="#{usersBean.currentUser.isPermitted('showTransactions') or usersBean.currentUser.isPermitted('showTasks') }">
                 <h:form id="menu-task">
                     <pa:menu widgetVar="me">
                         <p:menuitem id="um_Transactions" value="#{bundle['transactions.title']}" icon="&#xE871;"
+                                    rendered="#{usersBean.currentUser.isPermitted('showTransactions')}"
                                     outcome="/app/transactions"/>
                         <p:menuitem id="um_allTasks" value="#{bundle['tasks.title']}" icon="&#xE871;"
+                                    rendered="#{usersBean.currentUser.isPermitted('showTasks')}"
                                     outcome="/app/alltasks"/>
                     </pa:menu>
                 </h:form>
             </pa:tab>
 
-            <pa:tab icon="receipt" title="#{bundle['menu.services']}">
+            <pa:tab icon="receipt" title="#{bundle['menu.services']}"
+                    rendered="#{usersBean.currentUser.isPermitted('showVouchers')}">
                 <h:form id="menu-service">
                     <pa:menu widgetVar="me">
                         <p:menuitem id="um_Vouchers" value="#{bundle['vouchers.title']}" icon="&#xE871;"
+                                    rendered="#{usersBean.currentUser.isPermitted('showVouchers')}"
                                     outcome="/app/vouchers"/>
                     </pa:menu>
                 </h:form>
             </pa:tab>
 
             <pa:tab icon="build" title="#{bundle['menu.appSettings']}"
-                    rendered="#{usersBean.currentUser.isPermitted('showJobTitles') or usersBean.currentUser.isPermitted('showBranchActivities') or usersBean.currentUser.isPermitted('showTaskTypes')}">
+                    rendered="#{usersBean.currentUser.isPermitted('showJobTitles') or usersBean.currentUser.isPermitted('showBranchActivities') or usersBean.currentUser.isPermitted('showTaskTypes') or usersBean.currentUser.isPermitted('showConversations')}">
                 <h:form id="menu-adminBuild">
                     <pa:menu widgetVar="me">
                         <p:menuitem id="um_JobTitles" value="#{bundle['jobTitles.title']}" icon="&#xE871;"
