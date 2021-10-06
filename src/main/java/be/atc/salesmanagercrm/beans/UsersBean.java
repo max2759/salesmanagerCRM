@@ -708,7 +708,7 @@ public class UsersBean extends ExtendBean implements Serializable {
         }
 
         if (password2 != null && !password2.equals("")) {
-            String password = encrypt(usersEntity.getPassword());
+            String password = encrypt(password2);
             usersEntity.setPassword(password);
         }
 
