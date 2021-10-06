@@ -321,11 +321,21 @@ public class UsersBean extends ExtendBean implements Serializable {
         log.info(passwordCo);
 
         try {
+            usersEntity = findByUsername(usersEntity.getUsername());
+        } catch (EntityNotFoundException exception) {
+            log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, JsfUtils.returnMessage(getLocale(), "userNotExist"), null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
+        try {
             validateConnection(usersEntity, passwordCo);
         } catch (InvalidEntityException exception) {
             log.warn("Code ERREUR " + exception.getErrorCodes().getCode() + " - " + exception.getMessage() + " : " + exception.getErrors().toString());
             return;
         }
+
 
         String hashPass = encrypt(passwordCo);
 
