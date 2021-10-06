@@ -29,31 +29,39 @@
                                 styleClass="mgin-bottom-logo"/>
             </div>
             <h:form>
-                <div class="ui-g-12">
-                    <h:panelGroup styleClass="md-inputfield">
-                        <p:inputText id="username" value="#{usersBean.usersEntity.username}" required="true"/>
-                        <p:outputLabel for="username" value="#{bundle['user.username']}"/>
-                        <p:messages for="username">
-                            <p:autoUpdate/>
-                        </p:messages>
-                    </h:panelGroup>
-                </div>
-                <div class="ui-g-12">
-                    <h:panelGroup styleClass="md-inputfield">
-                        <p:password id="password" value="#{usersBean.passwordCo}" required="true"
-                                    feedback="false"/>
-                        <p:outputLabel for="password" value="#{bundle['user.password']}"/>
-                        <p:messages for="password" showDetail="true">
-                            <p:autoUpdate/>
-                        </p:messages>
+                <h:panelGroup layout="block" id="loginPanel">
+                    <div class="ui-g-12">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="username" value="#{usersBean.usersEntity.username}" required="true"/>
+                            <p:outputLabel for="username" value="#{bundle['user.username']}"/>
+                            <p:messages for="username">
+                                <p:autoUpdate/>
+                            </p:messages>
+                        </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:password id="password" value="#{usersBean.passwordCo}" required="true"
+                                        feedback="false"/>
+                            <p:outputLabel for="password" value="#{bundle['user.password']}"/>
+                            <p:messages for="password" showDetail="true">
+                                <p:autoUpdate/>
+                            </p:messages>
 
-                    </h:panelGroup>
-                </div>
+                        </h:panelGroup>
+                    </div>
 
-                <div class="ui-g-12 button-container">
-                    <p:commandButton value="#{bundle['conncection.connection']}" action="#{usersBean.connection}"
-                                     update="msgs" icon="ui-icon-person"/>
-                </div>
+                    <div class="ui-g-12 button-container">
+                        <p:commandButton value="#{bundle['conncection.connection']}" action="#{usersBean.connection}"
+                                         update="msgs" icon="ui-icon-person" id="commandBtnLogin"/>
+                    </div>
+                </h:panelGroup>
+                <p:blockUI block="loginPanel" trigger="commandBtnLogin">
+                    <p>#{bundle['wait']}</p>
+                    <div class="spinner-pos">
+                        <i class="pi pi-spin pi-spinner" style="font-size: 4em"></i>
+                    </div>
+                </p:blockUI>
             </h:form>
         </div>
     </div>
