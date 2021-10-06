@@ -39,12 +39,11 @@
 
                     <div class="ui-g-12 ui-md-6 ui-lg-11 ui-fluid ">
                         <p:inputText id="message" value="#{conversationsBean.conversationsEntity.message}"
-                                     placeholder="#{bundle['enterMessage']}"/>
+                                     placeholder="#{bundle['enterMessage']}" minlength="1"/>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-1">
 
                         <p:commandLink action="#{conversationsBean.addEntity}"
-                                       rendered="#{usersBean.currentUser.isPermitted('addConversations')}"
                                        update="@form"
                                        process="@form">
                             <i class="fa fa-send fa-lg"/>

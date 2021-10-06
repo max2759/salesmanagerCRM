@@ -160,11 +160,8 @@ public class RolePermissionsBean extends ExtendBean implements Serializable {
     }
 
     public void findPermissionWhithIdRoleList() {
-        List<RolesPermissionsEntity> rp1 = findAll();
-        for (RolesPermissionsEntity rp2 : rp1) {
-            permissionsEntitiesRole.remove(rp2.getPermissionsByIdPermissions());
-        }
 
+        permissionsEntitiesRole = new ArrayList<>();
         findAllPermissionsIWithdRole(rolesPermissionsEntity.getRolesByIdRoles().getId());
         for (RolesPermissionsEntity rp : rolesPermissionsEntityList) {
             permissionsEntitiesRole.add(rp.getPermissionsByIdPermissions());
