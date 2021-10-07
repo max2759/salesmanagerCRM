@@ -10,13 +10,33 @@ Cette application a été réalisée par :
 
 - Zabbara Maximilien
 
-# Getting Started
+# Lancement
 
-Data Base :
+### Base de données :
 
 ```
 Créer une base de donnée et la nommer salesmanagercrm
 
-Utiliser le fichier SQL situé dans le dossier 
+Utiliser le fichier SQL situé dans la racine du projet salesmanagercrm.sql
 
 ```
+
+### Identifiants
+
+#### Admin
+
+Nom d'utilisateur : Admin
+
+Mot de passe: Test1234!
+
+#### Utilisateur
+
+Nom d'utilisateur : LewHam42
+
+Mot de passe: Test1234!
+
+#### Guest
+
+Nom d'utilisateur : LioMes49
+
+Mot de passe: Test1234!
