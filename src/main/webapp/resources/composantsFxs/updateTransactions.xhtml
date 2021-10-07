@@ -78,7 +78,7 @@
                     <div class="ui-g-12 ui-lg-4">
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inplace rendered="#{usersBean.currentUser.isPermitted('updateTransactions')}"
-                                       emptyLabel="..." label="#{transactionsBean.transactionsEntity.amount}">
+                                       emptyLabel="..." label="#{transactionsBean.transactionsEntity.amount} €">
                                 <p:inputNumber id="amount" value="#{transactionsBean.transactionsEntity.amount}"
                                                symbol=" €"
                                                minValue="0"
@@ -90,7 +90,7 @@
                             </p:inplace>
                             <p:message id="msgAmount" for="amount"/>
                             <p:outputLabel rendered="#{not usersBean.currentUser.isPermitted('updateTransactions')}"
-                                           value="#{transactionsBean.transactionsEntity.amount}"/>
+                                           value="#{transactionsBean.transactionsEntity.amount} €"/>
                         </h:panelGroup>
                     </div>
 
